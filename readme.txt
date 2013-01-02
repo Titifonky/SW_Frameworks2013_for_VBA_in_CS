@@ -1,6 +1,6 @@
-SolidWorks Frameworks2013 pour VBA codé en CS
+ï»¿SolidWorks Frameworks2013 pour VBA codÃ© en CS
 
 Auteur : 
 - Titifonky
 
-Generer une dll permettant d'etendre les possiblité du VBA
+Generer une dll permettant d'etendre les possiblitÃ© du VBA
