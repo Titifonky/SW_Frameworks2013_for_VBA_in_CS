@@ -3,4 +3,4 @@
 Auteur : 
 - Titifonky
 
-Generer une dll permettant d'etendre les possiblité du VBA
+Generer une dll permettant d'étendre les possiblité du VBA
