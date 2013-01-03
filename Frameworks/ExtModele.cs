@@ -122,7 +122,7 @@ namespace Frameworks2013
             {
                 _swModele = ModeleDoc;
                 _SW = Sw;
-                if (!((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece)))
+                if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
                     _Composant = new ExtComposant();
                     _Composant.Init(_swModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true),this);

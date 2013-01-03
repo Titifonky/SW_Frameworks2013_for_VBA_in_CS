@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace Frameworks2013
@@ -27,6 +29,7 @@ namespace Frameworks2013
         private Boolean _PrendreEnCompteConfig = true;
         private Boolean _PrendreEnCompteExclus = false;
         private Boolean _PrendreEnCompteSupprime = false;
+        //private List<ExtComposant> _ListeComposants;
 
         #endregion
 

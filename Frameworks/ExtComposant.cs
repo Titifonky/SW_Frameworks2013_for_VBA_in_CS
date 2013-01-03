@@ -18,7 +18,7 @@ namespace Frameworks2013
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; }
         Boolean Init(Component2 Composant, ExtModele Modele);
-        Array ComposantsEnfants(Boolean PrendreEnCompteSupprime = false);
+        ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -116,8 +116,12 @@ namespace Frameworks2013
         {
             List<ExtComposant> Liste = new List<ExtComposant>();
             
+            if (_swComposant.IGetChildrenCount() == 0)
+                return Liste;
+
             foreach (Component2 Composant in _swComposant.GetChildren())
             {
+                /// Si le composant est supprimé mais qu'on a decidé de le prendre en compte, c'est bon
                 if ((Composant.IsSuppressed() == false) | PrendreEnCompteSupprime)
                 {
                     ExtModele ModeleExt = _Modele.SW.Modele(Composant.GetPathName());
@@ -133,10 +137,15 @@ namespace Frameworks2013
 
         }
 
-        public Array ComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
+        public ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
         {
-            //Array Arr = ListComposantsEnfants(PrendreEnCompteSupprime).ToArray();
-            return ListComposantsEnfants(PrendreEnCompteSupprime).ToArray();
+            List<ExtComposant> pListeComps = ListComposantsEnfants(PrendreEnCompteSupprime);
+            ArrayList pArrayComps = new ArrayList();
+
+            if (pListeComps.Count > 0)
+                pArrayComps = new ArrayList(pListeComps);
+
+            return pArrayComps;
         }
 
         #endregion
