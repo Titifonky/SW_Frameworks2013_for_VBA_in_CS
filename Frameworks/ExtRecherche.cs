@@ -7,10 +7,13 @@ namespace Frameworks2013
     [Guid("928FDEF6-5529-11E2-A516-706D6188709B")]
     public interface IExtRecherche
     {
-        ExtModele Modele { get; set; }
+        ExtModele Modele { get;}
         Boolean PrendreEnCompteConfig { get; set; }
         Boolean PrendreEnCompteExclus { get; set; }
         Boolean PrendreEnCompteSupprime { get; set; }
+        Boolean Init(ExtModele Modele);
+        String NomCle(ExtComposant Composant);
+
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -40,7 +43,6 @@ namespace Frameworks2013
         public ExtModele Modele
         {
             get { return _Modele; }
-            set { _Modele = value; }
         }
 
         public Boolean PrendreEnCompteConfig
@@ -64,6 +66,26 @@ namespace Frameworks2013
         #endregion
 
         #region "Méthodes"
+
+        public Boolean Init(ExtModele Modele)
+        {
+            if (!(Modele.Equals(null)))
+            {
+                _Modele = Modele;
+                return true;
+            }
+            return false;
+        }
+
+        public String NomCle(ExtComposant Composant)
+        {
+            String pNomCle = Composant.Modele.Chemin;
+            if (_PrendreEnCompteConfig)
+                pNomCle = pNomCle + " " + Composant.Configuration.Nom;
+
+            return pNomCle;
+        }
+
         #endregion
     }
 }

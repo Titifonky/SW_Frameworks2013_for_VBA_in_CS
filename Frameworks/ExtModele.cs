@@ -9,9 +9,13 @@ namespace Frameworks2013
     [Guid("0F8FAD5B-D9CB-469F-A165-70867728950E")]
     public interface IExtModele
     {
-        ExtSldWorks SW { get; set; }
-        ModelDoc2 swModele { get; set; }
-        ExtRecherche NouvelleRecherche();
+        ModelDoc2 swModele { get; }
+        ExtSldWorks SW { get; }
+        ExtComposant Composant { get; set; }
+        TypeFichier_e TypeDuModele { get; }
+        String Chemin { get; }
+        ExtRecherche NouvelleRecherche { get; }
+        Boolean Init(ModelDoc2 ModeleDoc, ExtSldWorks Sw);
         void Activer();
         void Sauver();
         void Fermer();
@@ -28,8 +32,9 @@ namespace Frameworks2013
     {
         #region "Variables locales"
 
-        private ExtSldWorks _SW;
         private ModelDoc2 _swModele;
+        private ExtSldWorks _SW;
+        private ExtComposant _Composant;
         private int Erreur = 0;
         private int Warning = 0;
 
@@ -45,26 +50,86 @@ namespace Frameworks2013
 
         #region "Propriétés"
 
-        public ExtSldWorks SW
-        {
-            get { return _SW; }
-            set { _SW = value; }
-        }
-
         public ModelDoc2 swModele
         {
             get { return _swModele; }
-            set { _swModele = value; }
+        }
+
+        public ExtSldWorks SW
+        {
+            get { return _SW; }
+        }
+
+        public ExtComposant Composant
+        {
+            get { return _Composant; }
+            set { _Composant = value; }
+        }
+
+        public TypeFichier_e TypeDuModele
+        {
+            get
+            {
+                TypeFichier_e Type;
+
+                switch (_swModele.GetType())
+                {
+                    case (int)swDocumentTypes_e.swDocASSEMBLY:
+                        Type = TypeFichier_e.cAssemblage;
+                        break;
+
+                    case (int)swDocumentTypes_e.swDocPART:
+                        Type = TypeFichier_e.cPiece;
+                        break;
+
+                    case (int)swDocumentTypes_e.swDocDRAWING:
+                        Type = TypeFichier_e.cDessin;
+                        break;
+
+                    default:
+                        Type = TypeFichier_e.cAucun;
+                        break;
+                }
+
+                return Type;
+            }
+        }
+
+        public String Chemin
+        {
+            get { return _swModele.GetPathName(); }
+        }
+
+        /// <summary>
+        /// Renvoi un nouvel objet Recherche
+        /// </summary>
+        public ExtRecherche NouvelleRecherche
+        {
+            get
+            {
+                ExtRecherche pNouvelleRecherche = new ExtRecherche();
+                return pNouvelleRecherche;
+            }
         }
 
         #endregion
 
         #region "Méthodes"
 
-        public ExtRecherche NouvelleRecherche()
+        public Boolean Init(ModelDoc2 ModeleDoc, ExtSldWorks Sw)
         {
-            ExtRecherche pNouvelleRecherche = new ExtRecherche();
-            return pNouvelleRecherche;
+            if (!((ModeleDoc.Equals(null)) && (ModeleDoc.Equals(null))))
+            {
+                _swModele = ModeleDoc;
+                _SW = Sw;
+                if (!((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece)))
+                {
+                    _Composant = new ExtComposant();
+                    _Composant.Init(_swModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true),this);
+                }
+                return true;
+            }
+            return false;
         }
 
         public void Activer()

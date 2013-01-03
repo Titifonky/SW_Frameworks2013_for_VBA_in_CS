@@ -11,8 +11,9 @@ namespace Frameworks2013
     [Guid("01A31113-9353-44cc-A1F4-C6F1210E4B30")]
     public interface IExtSldWorks
     {
-        SldWorks swSW { get; set; }
+        SldWorks swSW { get; }
         TypeFichier_e TypeDuModeleActif { get; }
+        Boolean Init(SldWorks SldWks);
         ExtConstantes Constantes();
         ExtDebug Debug();
         ExtModele Modele(String Chemin = "");
@@ -57,9 +58,30 @@ namespace Frameworks2013
         public SldWorks swSW
         {
             get { return _swSW; }
-            set
+        }
+
+        /// <summary>
+        /// Retourner le type du document actif
+        /// </summary>
+        public TypeFichier_e TypeDuModeleActif
+        {
+            get
             {
-                _swSW = value;
+                ExtModele Modele = new ExtModele() ;
+                Modele.Init(_swSW.ActiveDoc(), this);
+                return Modele.TypeDuModele;
+            }
+        }
+
+        #endregion
+
+        #region "Méthodes"
+
+        public Boolean Init(SldWorks SldWks)
+        {
+            if (!(SldWks.Equals(null)))
+            {
+                _swSW = SldWks;
 
                 /// A chaque initialisation de l'objet SW, on vide le debug et on inscrit la version de SW
                 /// Ca evite de chercher trop loin
@@ -76,46 +98,11 @@ namespace Frameworks2013
                 _Debug.AjouterLigne("SOLIDWORKS");
                 _Debug.AjouterLigne("Version de base : " + VersionDeBase + "    Version courante : " + VersionCourante + "    Hotfixe : " + Hotfixe);
                 _Debug.AjouterLigne("------------------------------------------------------------------------------------------------");
+                return true;
             }
+            return false;
+            
         }
-
-        /// <summary>
-        /// Retourner le type du document actif
-        /// </summary>
-        public TypeFichier_e TypeDuModeleActif
-        {
-            get
-            {
-                ModelDoc2 Modele = _swSW.ActiveDoc() ;
-                TypeFichier_e Type;
-
-                switch (Modele.GetType())
-                {
-                    case (int)swDocumentTypes_e.swDocASSEMBLY :
-                        Type = TypeFichier_e.cAssemblage ;
-                        break;
-
-                    case (int)swDocumentTypes_e.swDocPART:
-                        Type = TypeFichier_e.cPiece;
-                        break;
-
-                    case (int)swDocumentTypes_e.swDocDRAWING:
-                        Type = TypeFichier_e.cDessin;
-                        break;
-
-                    default :
-                        Type = TypeFichier_e.cAucun;
-                        break;
-                }
-
-                Modele = null;
-                return Type;
-            }
-        }
-
-        #endregion
-
-        #region "Méthodes"
         
         /// <summary>
         /// Renvoi le modele actif ou ouvre le fichier à partir du chemin passé en parametre.
@@ -126,12 +113,11 @@ namespace Frameworks2013
         public ExtModele Modele(String Chemin = "")
         {
             ExtModele pModele = new ExtModele();
-            pModele.SW = this;
 
             if (String.IsNullOrEmpty(Chemin))
-                pModele.swModele = _swSW.ActiveDoc;
+                pModele.Init(_swSW.ActiveDoc,this);
             else
-                pModele.swModele = Ouvrir(Chemin);
+                pModele.Init(Ouvrir(Chemin),this);
 
             return pModele;
         }

@@ -7,5 +7,5 @@ namespace Frameworks2013
         {
             return string.Join(Chaine, new string[Nb + 1]);
         }
-    }  
+    } 
 }
