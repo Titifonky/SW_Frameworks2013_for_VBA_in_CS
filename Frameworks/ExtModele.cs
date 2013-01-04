@@ -118,7 +118,8 @@ namespace Frameworks2013
 
         public Boolean Init(ModelDoc2 ModeleDoc, ExtSldWorks Sw)
         {
-            if (!((ModeleDoc.Equals(null)) && (ModeleDoc.Equals(null))))
+
+            if (!((ModeleDoc.Equals(null)) && (Sw.Equals(null))))
             {
                 _swModele = ModeleDoc;
                 _SW = Sw;

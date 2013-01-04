@@ -115,15 +115,16 @@ namespace Frameworks2013
             ExtModele pModele = new ExtModele();
 
             if (String.IsNullOrEmpty(Chemin))
-                pModele.Init(_swSW.ActiveDoc,this);
+                pModele.Init(_swSW.ActiveDoc(), this);
             else
-                pModele.Init(Ouvrir(Chemin),this);
+                pModele.Init(Ouvrir(Chemin), this);
 
             return pModele;
         }
 
         /// <summary>
         /// Ouvre un fichier à partir de son chemin
+        /// Verifie s'il est déjà ouvert, auquel cas ce dernier est renvoyé
         /// </summary>
         /// <param name="Chemin"></param>
         /// <returns></returns>
