@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System.Collections.Generic;
 
 namespace Framework2013
 {
@@ -14,7 +15,6 @@ namespace Framework2013
         ExtComposant Composant { get; set; }
         TypeFichier_e TypeDuModele { get; }
         String Chemin { get; }
-        ExtRecherche NouvelleRecherche { get; }
         Boolean Init(ModelDoc2 ModeleDoc, ExtSldWorks Sw);
         void Activer();
         void Sauver();
@@ -71,46 +71,26 @@ namespace Framework2013
         {
             get
             {
-                TypeFichier_e Type;
-
                 switch (_swModele.GetType())
                 {
                     case (int)swDocumentTypes_e.swDocASSEMBLY:
-                        Type = TypeFichier_e.cAssemblage;
-                        break;
+                        return TypeFichier_e.cAssemblage;
 
                     case (int)swDocumentTypes_e.swDocPART:
-                        Type = TypeFichier_e.cPiece;
-                        break;
+                        return TypeFichier_e.cPiece;
 
                     case (int)swDocumentTypes_e.swDocDRAWING:
-                        Type = TypeFichier_e.cDessin;
-                        break;
+                        return TypeFichier_e.cDessin;
 
                     default:
-                        Type = TypeFichier_e.cAucun;
-                        break;
+                        return TypeFichier_e.cAucun;
                 }
-
-                return Type;
             }
         }
 
         public String Chemin
         {
             get { return _swModele.GetPathName(); }
-        }
-
-        /// <summary>
-        /// Renvoi un nouvel objet Recherche
-        /// </summary>
-        public ExtRecherche NouvelleRecherche
-        {
-            get
-            {
-                ExtRecherche pNouvelleRecherche = new ExtRecherche();
-                return pNouvelleRecherche;
-            }
         }
 
         #endregion
@@ -178,5 +158,15 @@ namespace Framework2013
         }
 
         #endregion
+
+        int IComparable<ExtModele>.CompareTo(ExtModele Modele)
+        {
+            return _swModele.GetPathName().CompareTo(Modele.swModele.GetPathName());
+        }
+
+        int IComparer<ExtModele>.Compare(ExtModele x, ExtModele y)
+        {
+            return x.swModele.GetPathName().CompareTo(y.swModele.GetPathName());
+        }
     }
 }

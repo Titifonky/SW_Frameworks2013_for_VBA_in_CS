@@ -17,6 +17,7 @@ namespace Framework2013
         int Nb { get; set; }
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; }
+        ExtRecherche NouvelleRecherche { get; }
         Boolean Init(Component2 Composant, ExtModele Modele);
         ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false);
     }
@@ -85,6 +86,18 @@ namespace Framework2013
                 if (!(_swComposant.IsSuppressed() == false))
                     return true;
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Renvoi un nouvel objet Recherche
+        /// </summary>
+        public ExtRecherche NouvelleRecherche
+        {
+            get
+            {
+                ExtRecherche pNouvelleRecherche = new ExtRecherche();
+                return pNouvelleRecherche;
             }
         }
 
@@ -162,12 +175,16 @@ namespace Framework2013
 
         int IComparable<ExtComposant>.CompareTo(ExtComposant Comp)
         {
-            return _swComposant.GetPathName().CompareTo(Comp._swComposant.GetPathName());
+            String Nom1 = _swComposant.GetPathName() + _Configuration.Nom;
+            String Nom2 = Comp.swComposant.GetPathName() + Comp.Configuration.Nom;
+            return Nom1.CompareTo(Nom2);
         }
 
         int IComparer<ExtComposant>.Compare(ExtComposant x, ExtComposant y)
         {
-            return x._Modele.swModele.GetPathName().CompareTo(y._Modele.swModele.GetPathName());
+            String Nom1 = x.swComposant.GetPathName() + x.Configuration.Nom;
+            String Nom2 = y.swComposant.GetPathName() + y.Configuration.Nom;
+            return Nom1.CompareTo(Nom2);
         }
     }
 }

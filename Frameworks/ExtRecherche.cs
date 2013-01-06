@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,13 +10,13 @@ namespace Framework2013
     [Guid("A8C91882-5820-11E2-A1E0-98046188709B")]
     public interface IExtRecherche
     {
-        ExtModele Modele { get;}
+        ExtComposant Composant { get;}
         Boolean PrendreEnCompteConfig { get; set; }
         Boolean PrendreEnCompteExclus { get; set; }
         Boolean PrendreEnCompteSupprime { get; set; }
-        Boolean Init(ExtModele Modele);
+        Boolean Init(ExtComposant Composant);
         String NomCle(ExtComposant Composant);
-
+        ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -26,11 +27,11 @@ namespace Framework2013
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
 
-        private ExtModele _Modele;
+        private ExtComposant _Composant;
         private Boolean _PrendreEnCompteConfig = true;
         private Boolean _PrendreEnCompteExclus = false;
         private Boolean _PrendreEnCompteSupprime = false;
-        //private List<ExtComposant> _ListeComposants;
+        private List<ExtComposant> _ListeComposants;
 
         #endregion
 
@@ -44,9 +45,9 @@ namespace Framework2013
 
         #region "Propriétés"
 
-        public ExtModele Modele
+        public ExtComposant Composant
         {
-            get { return _Modele; }
+            get { return _Composant; }
         }
 
         public Boolean PrendreEnCompteConfig
@@ -71,15 +72,15 @@ namespace Framework2013
 
         #region "Méthodes"
 
-        public Boolean Init(ExtModele Modele)
+        public Boolean Init(ExtComposant Composant)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (!(Modele == null))
+            if (!(Composant == null))
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-                _Modele = Modele;
+                _Composant = Composant;
                 return true;
             }
 
@@ -94,6 +95,85 @@ namespace Framework2013
                 pNomCle = pNomCle + " " + Composant.Configuration.Nom;
 
             return pNomCle;
+        }
+
+        private void RecListComposants(ExtComposant ComposantRacine, TypeFichier_e TypeComposant, String NomComposant = "")
+        {
+            foreach (ExtComposant Comp in ComposantRacine.ComposantsEnfants(_PrendreEnCompteSupprime))
+            {
+                if (!Comp.EstExclu | _PrendreEnCompteExclus)
+                {
+                    if ((Comp.Modele.TypeDuModele == TypeComposant) && (Path.GetFileName(Comp.Modele.Chemin) == NomComposant))
+                    {
+                        if (_ListeComposants.Exists(C => NomCle(C) == NomCle(Comp)))
+                        {
+                            ExtComposant Composant = _ListeComposants.Find
+                        }
+
+                    }
+                }
+            }
+
+            //For Each ComposantListe In ComposantRacine.ListedesComposantsEnfants(PrendreEnCompteSupprime)
+        
+            //    If (ComposantListe.EstExclu Imp pPrendreEnCompteExclus) Then
+            
+            //        If ComposantListe.Modele.Est(TypeComposant) And (ComposantListe.Modele.Fichier.NomDuFichier Like NomComposant) Then
+                
+            //            Cle = NomCle(ComposantListe)
+                
+            //            If CleExiste(pCollPieces, Cle) Then
+            //                Set Composant = pCollPieces.Item(Cle)
+            //                Composant.Nb = Composant.Nb + 1
+            //            Else
+            //                Set Composant = New ExtComposant
+            //                Set Composant = ComposantListe
+            //                Composant.Nb = 1
+            //                pCollPieces.Add Composant, Cle
+            //            End If
+                    
+            //        End If
+            
+            //        If ComposantListe.Modele.Est(cAssemblage) And Not (ComposantListe.EstSupprime) Then
+            //            ListerLesComposants ComposantListe, TypeComposant, NomComposant
+            //        End If
+            
+            //    End If
+        
+            //Next ComposantListe
+        }
+
+        internal List<ExtComposant> ListComposants(TypeFichier_e TypeComposant, String NomComposant = "")
+        {
+            _ListeComposants = new List<ExtComposant>();
+
+            switch (_Composant.Modele.TypeDuModele)
+            {
+                case TypeFichier_e.cAssemblage :
+                    if(_Composant.swComposant.IGetChildrenCount() == 0)
+                    {
+                        RecListComposants(_Composant, TypeComposant, NomComposant + "*");
+                    }
+                    break;
+                default:
+                    _ListeComposants.Add(_Composant);
+                    break;
+            }
+
+            _ListeComposants.Sort();
+
+            return _ListeComposants;
+        }
+
+        public ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "")
+        {
+            List<ExtComposant> pListeComps = ListComposants(TypeComposant, NomComposant);
+            ArrayList pArrayComps = new ArrayList();
+
+            if (pListeComps.Count > 0)
+                pArrayComps = new ArrayList(pListeComps);
+
+            return pArrayComps;
         }
 
         #endregion
