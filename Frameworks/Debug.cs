@@ -6,36 +6,33 @@ using SolidWorks.Interop.swconst;
 
 namespace Framework2013
 {
-    [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("B49F2CE6-5820-11E2-96DC-9A046188709B")]
-    public interface IExtDebug
+    internal sealed class Debug
     {
-        int NbTabulations { get; set; }
-        Boolean Init(ExtSldWorks SW);
-        void ExecutionAjouterLigne(String Ligne);
-        void ErreurAjouterLigne(String Ligne);
-    }
+        private static Debug _instance = null;
+        private static readonly object _Lock = new object();
 
-    [ClassInterface(ClassInterfaceType.None)]
-    [Guid("B91D00E0-5820-11E2-BECC-9E046188709B")]
-    [ProgId("Frameworks.ExtDebug")]
-    public class ExtDebug : IExtDebug
-    {
         private ExtSldWorks _SW;
         private int _NbTabulations = 0;
         private String _Tab = "   ";
         private String _CheminFichierExecution;
-        private String _CheminFichierErreur;
-
-        #region "Constructeur\Destructeur"
-
-        public ExtDebug()
-        {
-        }
-
-        #endregion
+        private String _CheminFichierDebug;
 
         #region "Propriétés"
+
+        public static Debug Instance
+        {
+            get
+            {
+                lock (_Lock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new Debug();
+                    }
+                }
+                return _instance;
+            }
+        }
 
         public int NbTabulations
         {
@@ -46,21 +43,29 @@ namespace Framework2013
 
         #endregion
 
+        #region "Constructeur\Destructeur"
+
+        public Debug()
+        {
+        }
+
+        #endregion
+
         #region "Méthodes"
 
         public Boolean Init(ExtSldWorks SW)
         {
-            if (!(SW.Equals(null)))
+            if (!(SW == null))
             {
                 _SW = SW;
                 String pDossierMacros = _SW.swSW.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swFileLocationsMacros);
 
                 _CheminFichierExecution = Path.Combine(pDossierMacros, "Execution.txt");
-                _CheminFichierErreur = Path.Combine(pDossierMacros, "Erreur.txt");
+                _CheminFichierDebug = Path.Combine(pDossierMacros, "Debug.txt");
                 StreamWriter pFichierExecution = new StreamWriter(_CheminFichierExecution, false, System.Text.Encoding.Unicode);
-                StreamWriter pFichierErreur = new StreamWriter(_CheminFichierErreur, false, System.Text.Encoding.Unicode);
+                StreamWriter pFichierDebug = new StreamWriter(_CheminFichierDebug, false, System.Text.Encoding.Unicode);
                 pFichierExecution.Close();
-                pFichierErreur.Close();
+                pFichierDebug.Close();
 
                 return true;
             }
@@ -75,11 +80,11 @@ namespace Framework2013
             pFichierExecution.Close();
         }
 
-        public void ErreurAjouterLigne(String Ligne)
+        public void DebugAjouterLigne(String Ligne)
         {
-            StreamWriter pFichierErreur = new StreamWriter(_CheminFichierErreur, true, System.Text.Encoding.Unicode);
-            pFichierErreur.WriteLine(_Tab.Repeter(_NbTabulations) + Ligne);
-            pFichierErreur.Close();
+            StreamWriter pFichierDebug = new StreamWriter(_CheminFichierDebug, true, System.Text.Encoding.Unicode);
+            pFichierDebug.WriteLine(Ligne);
+            pFichierDebug.Close();
         }
 
         #endregion

@@ -12,8 +12,6 @@ namespace Framework2013
     public interface IExtSldWorks
     {
         SldWorks swSW { get; }
-        ExtConstantes Constantes { get; }
-        ExtDebug Debug { get; }
         TypeFichier_e TypeDuModeleActif { get; }
         String VersionDeBase { get; }
         String VersionCourante { get; }
@@ -28,10 +26,9 @@ namespace Framework2013
     public class ExtSldWorks : IExtSldWorks
     {
         #region "Variables locales"
+        private Debug _Debug = Debug.Instance;
 
         private SldWorks _swSW;
-        private ExtConstantes _Constantes = new ExtConstantes();
-        private ExtDebug _Debug = new ExtDebug();
         private String _VersionDeBase;
         private String _VersionCourante;
         private String _Hotfixe;
@@ -46,13 +43,6 @@ namespace Framework2013
         {
         }
 
-        ~ExtSldWorks()
-        {
-            _swSW = null;
-            _Constantes = null;
-            _Debug = null;
-        }
-
         #endregion
 
         #region "Propriétés"
@@ -63,22 +53,6 @@ namespace Framework2013
         public SldWorks swSW
         {
             get { return _swSW; }
-        }
-
-        /// <summary>
-        /// Retourne l'objet contenant les constantes
-        /// </summary>
-        public ExtConstantes Constantes
-        {
-            get { return _Constantes; }
-        }
-
-        /// <summary>
-        /// Retourne l'objet de debug
-        /// </summary>
-        public ExtDebug Debug
-        {
-            get { return _Debug; }
         }
 
         /// <summary>
@@ -117,11 +91,11 @@ namespace Framework2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (!(SldWks.Equals(null)))
+            if (!(SldWks == null))
             {
                 _swSW = SldWks;
                 _Debug.Init(this);
-                _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
                 /// A chaque initialisation de l'objet SW, on vide le debug et on inscrit la version de SW
                 /// Ca evite de chercher trop loin
 
@@ -148,17 +122,17 @@ namespace Framework2013
         public ExtModele Modele(String Chemin = "")
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
             ExtModele pModele = new ExtModele();
             if (String.IsNullOrEmpty(Chemin))
             {
-                _Debug.ErreurAjouterLigne("\t" + this.GetType().Name + " -> " + "SldWorks.ActiveDoc");
+                _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "SldWorks.ActiveDoc");
                 pModele.Init(_swSW.ActiveDoc, this);
             }
             else
             {
-                _Debug.ErreurAjouterLigne("\t" + this.GetType().Name + " -> " + "Ouvrir");
+                _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Ouvrir " + Chemin);
                 pModele.Init(Ouvrir(Chemin), this);
             }
 
@@ -174,7 +148,7 @@ namespace Framework2013
         private ModelDoc2 Ouvrir(String Chemin)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
             foreach (ModelDoc2 Modele in _swSW.GetDocuments())
             {

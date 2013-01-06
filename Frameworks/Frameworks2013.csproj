@@ -68,14 +68,11 @@
   <ItemGroup>
     <Compile Include="ExtConfiguration.cs" />
     <Compile Include="ExtComposant.cs" />
-    <Compile Include="ExtPiece.cs" />
-    <Compile Include="ExtAssemblage.cs" />
     <Compile Include="FxChaine.cs" />
-    <Compile Include="ExtDebug.cs" />
+    <Compile Include="Debug.cs" />
     <Compile Include="ExtConstantes.cs" />
     <Compile Include="ExtModele.cs" />
     <Compile Include="ExtSldWorks.cs" />
-    <Compile Include="ExtDessin.cs" />
     <Compile Include="ExtRecherche.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

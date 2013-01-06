@@ -24,6 +24,7 @@ namespace Framework2013
     public class ExtRecherche : IExtRecherche
     {
         #region "Variables locales"
+        private Debug _Debug = Debug.Instance;
 
         private ExtModele _Modele;
         private Boolean _PrendreEnCompteConfig = true;
@@ -72,14 +73,17 @@ namespace Framework2013
 
         public Boolean Init(ExtModele Modele)
         {
-            if (!(Modele.Equals(null)))
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+
+            if (!(Modele == null))
             {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
                 _Modele = Modele;
                 return true;
             }
 
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Modele.SW.Debug.ErreurAjouterLigne(Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             return false;
         }
 

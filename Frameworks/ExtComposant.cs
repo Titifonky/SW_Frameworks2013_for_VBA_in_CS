@@ -27,10 +27,10 @@ namespace Framework2013
     public class ExtComposant : IExtComposant, IComparable<ExtComposant>, IComparer<ExtComposant>
     {
         #region "Variables locales"
+        private Debug _Debug = Debug.Instance;
 
         private Component2 _swComposant;
         private ExtModele _Modele;
-        private ExtDebug _Debug;
         private ExtConfiguration _Configuration;
         private int _Nb = 0;
 
@@ -96,31 +96,34 @@ namespace Framework2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (!((Composant.Equals(null)) && (Modele.Equals(null))))
+            if (!((Composant == null) && (Modele == null)))
             {
-                _Debug = Modele.SW.Debug;
-                _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _swComposant = Composant;
                 _Modele = Modele;
                 _Nb = 1;
 
-                Configuration Config;
+                Configuration pConfiguration;
                 if (String.IsNullOrEmpty(_swComposant.ReferencedConfiguration))
-                    Config = _Modele.swModele.GetActiveConfiguration();
+                    pConfiguration = _Modele.swModele.GetActiveConfiguration();
                 else
-                    Config = _Modele.swModele.GetConfigurationByName(_swComposant.ReferencedConfiguration);
+                    pConfiguration = _Modele.swModele.GetConfigurationByName(_swComposant.ReferencedConfiguration);
 
                 _Configuration = new ExtConfiguration();
-                _Configuration.Init(Config, _Modele);
+                _Configuration.Init(pConfiguration, _Modele);
                 return true;
             }
-
+            
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             return false;
         }
 
         internal List<ExtComposant> ListComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
         {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
             List<ExtComposant> Liste = new List<ExtComposant>();
             
             if (_swComposant.IGetChildrenCount() == 0)
@@ -135,8 +138,6 @@ namespace Framework2013
                     ExtComposant CompExt = new ExtComposant();
                     CompExt.Init(Composant, ModeleExt);
                     ModeleExt.Composant = CompExt;
-                    _Modele.SW.Debug.ErreurAjouterLigne(ModeleExt.Chemin);
-                    _Modele.SW.Debug.ExecutionAjouterLigne(ModeleExt.Chemin);
                     Liste.Add(CompExt);
                 }
             }

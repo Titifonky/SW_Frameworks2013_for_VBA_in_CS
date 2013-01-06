@@ -31,10 +31,10 @@ namespace Framework2013
     public class ExtModele : IExtModele
     {
         #region "Variables locales"
+        private Debug _Debug = Debug.Instance;
 
         private ModelDoc2 _swModele;
         private ExtSldWorks _SW;
-        private ExtDebug _Debug;
         private ExtComposant _Composant;
         private int Erreur = 0;
         private int Warning = 0;
@@ -121,22 +121,22 @@ namespace Framework2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (!((ModeleDoc.Equals(null)) && (Sw.Equals(null))))
+            if (!((ModeleDoc == null) && (Sw == null)))
             {
                 _swModele = ModeleDoc;
                 _SW = Sw;
-                _Debug = Sw.Debug;
-                _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
-                    _Debug.ErreurAjouterLigne("\t" + this.GetType().Name + " -> " + "Referencement du composant");
+                    _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Referencement du composant");
                     _Composant = new ExtComposant();
-                    _Composant.Init(_swModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true),this);
+                    _Composant.Init(_swModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this);
                 }
                 return true;
             }
 
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             return false;
         }
 
@@ -149,7 +149,7 @@ namespace Framework2013
 
         public void Sauver()
         {
-            _swModele.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent,ref Erreur, ref Warning);
+            _swModele.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Erreur, ref Warning);
         }
 
         public void Fermer()

@@ -21,10 +21,10 @@ namespace Framework2013
     public class ExtConfiguration : IExtConfiguration
     {
         #region "Variables locales"
-
+        private Debug _Debug = Debug.Instance;
+        
         private Configuration _swConfiguration;
         private ExtModele _Modele;
-        private ExtDebug _Debug;
 
         #endregion
 
@@ -62,16 +62,17 @@ namespace Framework2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (!((Config.Equals(null)) && (Modele.Equals(null))))
+            if (!((Config == null) && (Modele == null)))
             {
-                _Debug = Modele.SW.Debug;
-                _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _swConfiguration = Config;
                 _Modele = Modele;
 
                 return true;
             }
+            
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             return false;
         }
 
