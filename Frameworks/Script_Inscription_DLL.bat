@@ -22,6 +22,6 @@ set FichierTLB=%%i
 
 echo Chemin de la TLB : %FichierTLB%
 echo --------------------------------------------------------
-C:\Windows\Microsoft.NET\Framework64\v4.0.30319\regasm.exe %NomDLL% /codebase /tlb:"%FichierTLB%"
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe %NomDLL% /codebase /tlb:"%FichierTLB%"
 echo --------------------------------------------------------
 Pause

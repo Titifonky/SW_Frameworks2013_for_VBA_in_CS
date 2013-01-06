@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("098E5D1A-5585-11E2-9230-89E06188709B")]
+    [Guid("BF2ED17A-5820-11E2-8160-9F046188709B")]
     public interface IExtComposant
     {
         Component2 swComposant { get; }
@@ -22,7 +22,7 @@ namespace Frameworks2013
     }
 
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("10679F3E-5585-11E2-B541-8FE06188709B")]
+    [Guid("C46318AE-5820-11E2-A863-A3046188709B")]
     [ProgId("Frameworks.ExtComposant")]
     public class ExtComposant : IExtComposant, IComparable<ExtComposant>, IComparer<ExtComposant>
     {
@@ -30,6 +30,7 @@ namespace Frameworks2013
 
         private Component2 _swComposant;
         private ExtModele _Modele;
+        private ExtDebug _Debug;
         private ExtConfiguration _Configuration;
         private int _Nb = 0;
 
@@ -93,8 +94,13 @@ namespace Frameworks2013
 
         public Boolean Init(Component2 Composant, ExtModele Modele)
         {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+
             if (!((Composant.Equals(null)) && (Modele.Equals(null))))
             {
+                _Debug = Modele.SW.Debug;
+                _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
                 _swComposant = Composant;
                 _Modele = Modele;
                 _Nb = 1;
@@ -109,6 +115,7 @@ namespace Frameworks2013
                 _Configuration.Init(Config, _Modele);
                 return true;
             }
+
             return false;
         }
 
@@ -128,6 +135,8 @@ namespace Frameworks2013
                     ExtComposant CompExt = new ExtComposant();
                     CompExt.Init(Composant, ModeleExt);
                     ModeleExt.Composant = CompExt;
+                    _Modele.SW.Debug.ErreurAjouterLigne(ModeleExt.Chemin);
+                    _Modele.SW.Debug.ExecutionAjouterLigne(ModeleExt.Chemin);
                     Liste.Add(CompExt);
                 }
             }

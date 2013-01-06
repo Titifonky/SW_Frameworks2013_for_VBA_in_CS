@@ -3,10 +3,10 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("AB42D550-558F-11E2-801F-870D6288709B")]
+    [Guid("93F8AAEE-5820-11E2-A4D1-91046188709B")]
     public interface IExtConfiguration
     {
         Configuration swConfiguration { get; }
@@ -16,7 +16,7 @@ namespace Frameworks2013
     }
 
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("B1FC377E-558F-11E2-BF68-8E0D6288709B")]
+    [Guid("9818CA82-5820-11E2-852A-92046188709B")]
     [ProgId("Frameworks.ExtConfiguration")]
     public class ExtConfiguration : IExtConfiguration
     {
@@ -24,6 +24,7 @@ namespace Frameworks2013
 
         private Configuration _swConfiguration;
         private ExtModele _Modele;
+        private ExtDebug _Debug;
 
         #endregion
 
@@ -59,8 +60,13 @@ namespace Frameworks2013
 
         public Boolean Init(Configuration Config, ExtModele Modele)
         {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+
             if (!((Config.Equals(null)) && (Modele.Equals(null))))
             {
+                _Debug = Modele.SW.Debug;
+                _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
                 _swConfiguration = Config;
                 _Modele = Modele;
 

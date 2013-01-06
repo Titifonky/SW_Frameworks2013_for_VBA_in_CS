@@ -3,10 +3,10 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("0F8FAD5B-D9CB-469F-A165-70867728950E")]
+    [Guid("66AE684E-5820-11E2-BCFB-5D046188709B")]
     public interface IExtModele
     {
         ModelDoc2 swModele { get; }
@@ -26,7 +26,7 @@ namespace Frameworks2013
     }
 
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("7C9E6679-7425-40DE-944B-E07FC1F90AE7")]
+    [Guid("6AFCE66E-5820-11E2-B651-77046188709B")]
     [ProgId("Frameworks.ExtModele")]
     public class ExtModele : IExtModele
     {
@@ -34,6 +34,7 @@ namespace Frameworks2013
 
         private ModelDoc2 _swModele;
         private ExtSldWorks _SW;
+        private ExtDebug _Debug;
         private ExtComposant _Composant;
         private int Erreur = 0;
         private int Warning = 0;
@@ -118,18 +119,24 @@ namespace Frameworks2013
 
         public Boolean Init(ModelDoc2 ModeleDoc, ExtSldWorks Sw)
         {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
             if (!((ModeleDoc.Equals(null)) && (Sw.Equals(null))))
             {
                 _swModele = ModeleDoc;
                 _SW = Sw;
+                _Debug = Sw.Debug;
+                _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
+                    _Debug.ErreurAjouterLigne("\t" + this.GetType().Name + " -> " + "Referencement du composant");
                     _Composant = new ExtComposant();
                     _Composant.Init(_swModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true),this);
                 }
                 return true;
             }
+
             return false;
         }
 

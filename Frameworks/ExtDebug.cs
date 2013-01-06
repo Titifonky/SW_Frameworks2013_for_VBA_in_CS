@@ -1,26 +1,31 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("088A8454-50F6-11E2-AD1F-B6DF6188709B")]
+    [Guid("B49F2CE6-5820-11E2-96DC-9A046188709B")]
     public interface IExtDebug
     {
-        String Contenu { get; }
         int NbTabulations { get; set; }
-        void AjouterLigne(String Ligne);
-        void Effacer();
+        Boolean Init(ExtSldWorks SW);
+        void ExecutionAjouterLigne(String Ligne);
+        void ErreurAjouterLigne(String Ligne);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("10D61CCC-50F6-11E2-B9F2-BADF6188709B")]
+    [Guid("B91D00E0-5820-11E2-BECC-9E046188709B")]
     [ProgId("Frameworks.ExtDebug")]
     public class ExtDebug : IExtDebug
     {
-        string _Texte = "";
-        int _NbTabulations = 0;
-        string _Tab = "   ";
+        private ExtSldWorks _SW;
+        private int _NbTabulations = 0;
+        private String _Tab = "   ";
+        private String _CheminFichierExecution;
+        private String _CheminFichierErreur;
 
         #region "Constructeur\Destructeur"
 
@@ -38,22 +43,43 @@ namespace Frameworks2013
             set { _NbTabulations = value; }
         }
 
-        public String Contenu
-        {
-            get { return _Texte; }
-        }
 
         #endregion
 
         #region "Méthodes"
 
-        public void AjouterLigne(String Ligne)
+        public Boolean Init(ExtSldWorks SW)
         {
-            _Texte = _Texte + Environment.NewLine + _Tab.Repeter(_NbTabulations) + Ligne;
+            if (!(SW.Equals(null)))
+            {
+                _SW = SW;
+                String pDossierMacros = _SW.swSW.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swFileLocationsMacros);
+
+                _CheminFichierExecution = Path.Combine(pDossierMacros, "Execution.txt");
+                _CheminFichierErreur = Path.Combine(pDossierMacros, "Erreur.txt");
+                StreamWriter pFichierExecution = new StreamWriter(_CheminFichierExecution, false, System.Text.Encoding.Unicode);
+                StreamWriter pFichierErreur = new StreamWriter(_CheminFichierErreur, false, System.Text.Encoding.Unicode);
+                pFichierExecution.Close();
+                pFichierErreur.Close();
+
+                return true;
+            }
+
+            return false;
         }
-        public void Effacer()
+
+        public void ExecutionAjouterLigne(String Ligne)
         {
-            _Texte = "";
+            StreamWriter pFichierExecution = new StreamWriter(_CheminFichierExecution, true, System.Text.Encoding.Unicode);
+            pFichierExecution.WriteLine(_Tab.Repeter(_NbTabulations) + Ligne);
+            pFichierExecution.Close();
+        }
+
+        public void ErreurAjouterLigne(String Ligne)
+        {
+            StreamWriter pFichierErreur = new StreamWriter(_CheminFichierErreur, true, System.Text.Encoding.Unicode);
+            pFichierErreur.WriteLine(_Tab.Repeter(_NbTabulations) + Ligne);
+            pFichierErreur.Close();
         }
 
         #endregion

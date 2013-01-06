@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("ED380DD2-551B-11E2-9642-634E6188709B")]
+    [Guid("795533EC-5820-11E2-875F-83046188709B")]
     public interface IExtDessin
     {
     }
 
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("F4965E62-551B-11E2-92B7-6B4E6188709B")]
+    [Guid("7E7EFEE8-5820-11E2-B8E9-84046188709B")]
     [ProgId("Frameworks.ExtDessin")]
     public class ExtDessin : ExtModele, IExtDessin
     {

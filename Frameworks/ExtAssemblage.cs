@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("532A9140-513F-11E2-9642-A0DC6088709B")]
+    [Guid("CACBFAD0-5820-11E2-B60C-A9046188709B")]
     public interface IExtAssemblage
     {
     }
 
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("CDF7E002-5136-11E2-9D4E-44CD6088709B")]
+    [Guid("CF8CC568-5820-11E2-B525-AA046188709B")]
     [ProgId("Frameworks.ExtAssemblage")]
     public class ExtAssemblage : ExtModele , IExtAssemblage
     {

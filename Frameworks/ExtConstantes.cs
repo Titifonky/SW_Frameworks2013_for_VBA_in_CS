@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Frameworks2013
+namespace Framework2013
 {
 
     #region "Enumérations"
@@ -72,7 +72,7 @@ namespace Frameworks2013
     #endregion
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("78322EBA-506F-11E2-AD84-26056188709B")]
+    [Guid("88C88900-5820-11E2-B398-88046188709B")]
     public interface IExtConstantes
     {
         String CONFIG_DEPLIEE { get; set; }
@@ -88,7 +88,7 @@ namespace Frameworks2013
     }
 
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("9853F1B0-506F-11E2-AE27-2E056188709B")]
+    [Guid("8CDA8822-5820-11E2-BC18-89046188709B")]
     [ProgId("Frameworks.ExtConstantes")]
     public class ExtConstantes : IExtConstantes
     {

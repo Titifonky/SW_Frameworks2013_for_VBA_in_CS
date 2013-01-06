@@ -4,23 +4,26 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
-namespace Frameworks2013
+namespace Framework2013
 {
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("01A31113-9353-44cc-A1F4-C6F1210E4B30")]
+    [Guid("9ED6BE92-5820-11E2-9D5D-93046188709B")]
     public interface IExtSldWorks
     {
         SldWorks swSW { get; }
+        ExtConstantes Constantes { get; }
+        ExtDebug Debug { get; }
         TypeFichier_e TypeDuModeleActif { get; }
+        String VersionDeBase { get; }
+        String VersionCourante { get; }
+        String Hotfixe { get; }
         Boolean Init(SldWorks SldWks);
-        ExtConstantes Constantes();
-        ExtDebug Debug();
         ExtModele Modele(String Chemin = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("E2F07CD4-CE73-4102-B35D-119362624C47")]
+    [Guid("A2E9795C-5820-11E2-9CA7-94046188709B")]
     [ProgId("Frameworks.ExtSldWorks")]
     public class ExtSldWorks : IExtSldWorks
     {
@@ -29,6 +32,9 @@ namespace Frameworks2013
         private SldWorks _swSW;
         private ExtConstantes _Constantes = new ExtConstantes();
         private ExtDebug _Debug = new ExtDebug();
+        private String _VersionDeBase;
+        private String _VersionCourante;
+        private String _Hotfixe;
         private int Erreur = 0;
         private int Warning = 0;
 
@@ -38,7 +44,6 @@ namespace Frameworks2013
 
         public ExtSldWorks()
         {
-
         }
 
         ~ExtSldWorks()
@@ -61,6 +66,22 @@ namespace Frameworks2013
         }
 
         /// <summary>
+        /// Retourne l'objet contenant les constantes
+        /// </summary>
+        public ExtConstantes Constantes
+        {
+            get { return _Constantes; }
+        }
+
+        /// <summary>
+        /// Retourne l'objet de debug
+        /// </summary>
+        public ExtDebug Debug
+        {
+            get { return _Debug; }
+        }
+
+        /// <summary>
         /// Retourner le type du document actif
         /// </summary>
         public TypeFichier_e TypeDuModeleActif
@@ -73,33 +94,47 @@ namespace Frameworks2013
             }
         }
 
+        public String VersionDeBase
+        {
+            get { return _VersionDeBase; }
+        }
+
+        public String VersionCourante
+        {
+            get { return _VersionCourante; }
+        }
+
+        public String Hotfixe
+        {
+            get { return _Hotfixe; }
+        }
+
         #endregion
 
         #region "Méthodes"
 
         public Boolean Init(SldWorks SldWks)
         {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+
             if (!(SldWks.Equals(null)))
             {
                 _swSW = SldWks;
-
+                _Debug.Init(this);
+                _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
                 /// A chaque initialisation de l'objet SW, on vide le debug et on inscrit la version de SW
                 /// Ca evite de chercher trop loin
 
-                _Debug.Effacer();
-
-                String VersionDeBase;
-                String VersionCourante;
-                String Hotfixe;
-
-                _swSW.GetBuildNumbers2(out VersionDeBase, out VersionCourante, out Hotfixe);
-                _Debug.AjouterLigne("    ");
-                _Debug.AjouterLigne("================================================================================================");
-                _Debug.AjouterLigne("SOLIDWORKS");
-                _Debug.AjouterLigne("Version de base : " + VersionDeBase + "    Version courante : " + VersionCourante + "    Hotfixe : " + Hotfixe);
-                _Debug.AjouterLigne("------------------------------------------------------------------------------------------------");
+                _swSW.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
+                _Debug.ExecutionAjouterLigne("    ");
+                _Debug.ExecutionAjouterLigne("================================================================================================");
+                _Debug.ExecutionAjouterLigne("SOLIDWORKS");
+                _Debug.ExecutionAjouterLigne("Version de base : " + VersionDeBase + "    Version courante : " + VersionCourante + "    Hotfixe : " + Hotfixe);
+                _Debug.ExecutionAjouterLigne("------------------------------------------------------------------------------------------------");
                 return true;
             }
+
+            
             return false;
             
         }
@@ -112,12 +147,20 @@ namespace Frameworks2013
         /// <returns></returns>
         public ExtModele Modele(String Chemin = "")
         {
-            ExtModele pModele = new ExtModele();
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
+            ExtModele pModele = new ExtModele();
             if (String.IsNullOrEmpty(Chemin))
-                pModele.Init(_swSW.ActiveDoc(), this);
+            {
+                _Debug.ErreurAjouterLigne("\t" + this.GetType().Name + " -> " + "SldWorks.ActiveDoc");
+                pModele.Init(_swSW.ActiveDoc, this);
+            }
             else
+            {
+                _Debug.ErreurAjouterLigne("\t" + this.GetType().Name + " -> " + "Ouvrir");
                 pModele.Init(Ouvrir(Chemin), this);
+            }
 
             return pModele;
         }
@@ -130,6 +173,9 @@ namespace Frameworks2013
         /// <returns></returns>
         private ModelDoc2 Ouvrir(String Chemin)
         {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.ErreurAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
             foreach (ModelDoc2 Modele in _swSW.GetDocuments())
             {
                 if (Modele.GetPathName() == Chemin)
@@ -154,24 +200,6 @@ namespace Frameworks2013
             }
 
             return _swSW.OpenDoc6(Chemin, (int)Type, (int)swOpenDocOptions_e.swOpenDocOptions_Silent,"", ref Erreur, ref Warning);
-        }
-
-        /// <summary>
-        /// Retourne l'objet contenant les constantes
-        /// </summary>
-        /// <returns></returns>
-        public ExtConstantes Constantes()
-        {
-            return _Constantes;
-        }
-
-        /// <summary>
-        /// Retourne l'objet de debug
-        /// </summary>
-        /// <returns></returns>
-        public ExtDebug Debug()
-        {
-            return _Debug;
         }
 
         #endregion

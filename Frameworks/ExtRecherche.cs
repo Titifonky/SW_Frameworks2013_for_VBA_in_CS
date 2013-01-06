@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("928FDEF6-5529-11E2-A516-706D6188709B")]
+    [Guid("A8C91882-5820-11E2-A1E0-98046188709B")]
     public interface IExtRecherche
     {
         ExtModele Modele { get;}
@@ -19,7 +19,7 @@ namespace Frameworks2013
     }
 
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("9D886364-5529-11E2-8524-726D6188709B")]
+    [Guid("AD74AE82-5820-11E2-9F7B-99046188709B")]
     [ProgId("Frameworks.ExtRecherche")]
     public class ExtRecherche : IExtRecherche
     {
@@ -77,6 +77,9 @@ namespace Frameworks2013
                 _Modele = Modele;
                 return true;
             }
+
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Modele.SW.Debug.ErreurAjouterLigne(Methode.Name);
             return false;
         }
 
