@@ -14,9 +14,9 @@ namespace Framework2013
         Component2 swComposant { get; }
         ExtModele Modele { get; }
         ExtConfiguration Configuration { get; }
-        int Nb { get; set; }
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; }
+        int Nb { get; set; }
         ExtRecherche NouvelleRecherche { get; }
         Boolean Init(Component2 Composant, ExtModele Modele);
         ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false);
@@ -25,7 +25,7 @@ namespace Framework2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("C46318AE-5820-11E2-A863-A3046188709B")]
     [ProgId("Frameworks.ExtComposant")]
-    public class ExtComposant : IExtComposant, IComparable<ExtComposant>, IComparer<ExtComposant>
+    public class ExtComposant : IExtComposant, IComparable<ExtComposant>, IComparer<ExtComposant>,IEquatable<ExtComposant>
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
@@ -97,6 +97,7 @@ namespace Framework2013
             get
             {
                 ExtRecherche pNouvelleRecherche = new ExtRecherche();
+                pNouvelleRecherche.Init(this);
                 return pNouvelleRecherche;
             }
         }
@@ -162,6 +163,9 @@ namespace Framework2013
 
         public ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
         {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
             List<ExtComposant> pListeComps = ListComposantsEnfants(PrendreEnCompteSupprime);
             ArrayList pArrayComps = new ArrayList();
 
@@ -180,11 +184,18 @@ namespace Framework2013
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<ExtComposant>.Compare(ExtComposant x, ExtComposant y)
+        int IComparer<ExtComposant>.Compare(ExtComposant Comp1, ExtComposant Comp2)
         {
-            String Nom1 = x.swComposant.GetPathName() + x.Configuration.Nom;
-            String Nom2 = y.swComposant.GetPathName() + y.Configuration.Nom;
+            String Nom1 = Comp1.swComposant.GetPathName() + Comp1.Configuration.Nom;
+            String Nom2 = Comp2.swComposant.GetPathName() + Comp2.Configuration.Nom;
             return Nom1.CompareTo(Nom2);
+        }
+
+        bool IEquatable<ExtComposant>.Equals(ExtComposant Comp)
+        {
+            String Nom1 = _swComposant.GetPathName() + _Configuration.Nom;
+            String Nom2 = Comp.swComposant.GetPathName() + Comp.Configuration.Nom;
+            return Nom1 == Nom2;
         }
     }
 }

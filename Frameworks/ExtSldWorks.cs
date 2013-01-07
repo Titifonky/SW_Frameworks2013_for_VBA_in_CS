@@ -153,7 +153,10 @@ namespace Framework2013
             foreach (ModelDoc2 Modele in _swSW.GetDocuments())
             {
                 if (Modele.GetPathName() == Chemin)
+                {
+                    _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Fichier déjà ouvert : " + Chemin);
                     return Modele;
+                }
             }
 
             swDocumentTypes_e Type = 0;
@@ -173,6 +176,7 @@ namespace Framework2013
                     return null;
             }
 
+            _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Ouvre le fichier : " + Chemin);
             return _swSW.OpenDoc6(Chemin, (int)Type, (int)swOpenDocOptions_e.swOpenDocOptions_Silent,"", ref Erreur, ref Warning);
         }
 

@@ -29,7 +29,7 @@ namespace Framework2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("6AFCE66E-5820-11E2-B651-77046188709B")]
     [ProgId("Frameworks.ExtModele")]
-    public class ExtModele : IExtModele, IComparable<ExtModele>, IComparer<ExtModele>
+    public class ExtModele : IExtModele, IComparable<ExtModele>, IComparer<ExtModele>, IEquatable<ExtModele>
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
@@ -165,9 +165,14 @@ namespace Framework2013
             return _swModele.GetPathName().CompareTo(Modele.swModele.GetPathName());
         }
 
-        int IComparer<ExtModele>.Compare(ExtModele x, ExtModele y)
+        int IComparer<ExtModele>.Compare(ExtModele Modele1, ExtModele Modele2)
         {
-            return x.swModele.GetPathName().CompareTo(y.swModele.GetPathName());
+            return Modele1.swModele.GetPathName().CompareTo(Modele2.swModele.GetPathName());
+        }
+
+        bool IEquatable<ExtModele>.Equals(ExtModele Modele)
+        {
+            return Modele.swModele.GetPathName() == _swModele.GetPathName();
         }
     }
 }

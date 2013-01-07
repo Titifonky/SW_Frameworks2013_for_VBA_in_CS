@@ -14,8 +14,8 @@ namespace Framework2013
         Boolean PrendreEnCompteConfig { get; set; }
         Boolean PrendreEnCompteExclus { get; set; }
         Boolean PrendreEnCompteSupprime { get; set; }
+        Boolean RenvoyerComposantRacine { get; set; }
         Boolean Init(ExtComposant Composant);
-        String NomCle(ExtComposant Composant);
         ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "");
     }
 
@@ -31,7 +31,7 @@ namespace Framework2013
         private Boolean _PrendreEnCompteConfig = true;
         private Boolean _PrendreEnCompteExclus = false;
         private Boolean _PrendreEnCompteSupprime = false;
-        private List<ExtComposant> _ListeComposants;
+        private Boolean _RenvoyerComposantRacine = false;
 
         #endregion
 
@@ -68,6 +68,12 @@ namespace Framework2013
             set { _PrendreEnCompteSupprime = value; }
         }
 
+        public Boolean RenvoyerComposantRacine
+        {
+            get { return _RenvoyerComposantRacine; }
+            set { _RenvoyerComposantRacine = value; }
+        }
+
         #endregion
 
         #region "Méthodes"
@@ -88,7 +94,7 @@ namespace Framework2013
             return false;
         }
 
-        public String NomCle(ExtComposant Composant)
+        private String NomCle(ExtComposant Composant)
         {
             String pNomCle = Composant.Modele.Chemin;
             if (_PrendreEnCompteConfig)
@@ -97,93 +103,75 @@ namespace Framework2013
             return pNomCle;
         }
 
-        private void RecListComposants(ExtComposant ComposantRacine, TypeFichier_e TypeComposant, String NomComposant = "")
+        private void RecListComposants(ExtComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, ExtComposant> DicComposants, String NomComposant = "")
         {
-            ExtComposant Composant;
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-            foreach (ExtComposant Comp in ComposantRacine.ComposantsEnfants(_PrendreEnCompteSupprime))
+            foreach (ExtComposant Comp in ComposantRacine.ListComposantsEnfants(_PrendreEnCompteSupprime))
             {
                 if (!Comp.EstExclu | _PrendreEnCompteExclus)
                 {
-                    if ((Comp.Modele.TypeDuModele == TypeComposant) && Path.GetFileName(Comp.Modele.Chemin).Contains(NomComposant))
+                    if (Comp.Modele.TypeDuModele == TypeComposant)//&& Path.GetFileName(Comp.Modele.Chemin).Contains(NomComposant)
                     {
-                        Composant = new ExtComposant();
-
-                        if (_ListeComposants.Exists(C => NomCle(C) == NomCle(Comp)))
+                        ExtComposant Composant = new ExtComposant();
+                        
+                        if (DicComposants.ContainsKey(NomCle(Comp)))
                         {
-                            Composant = _ListeComposants.Find(C => NomCle(C) == NomCle(Comp));
+                            Composant = DicComposants[NomCle(Comp)];
                             Composant.Nb += 1;
                         }
                         else
                         {
                             Composant = Comp;
                             Composant.Nb = 1;
-                            _ListeComposants.Add(Composant);
+                            DicComposants.Add(NomCle(Composant), Composant);
                         }
 
                     }
 
                     if ((Comp.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (Comp.EstSupprime == false))
                     {
-                        RecListComposants(Comp, TypeComposant, NomComposant);
+                        RecListComposants(Comp, TypeComposant, DicComposants, NomComposant);
                     }
 
                 }
             }
-
-            //For Each ComposantListe In ComposantRacine.ListedesComposantsEnfants(PrendreEnCompteSupprime)
-        
-            //    If (ComposantListe.EstExclu Imp pPrendreEnCompteExclus) Then
-            
-            //        If ComposantListe.Modele.Est(TypeComposant) And (ComposantListe.Modele.Fichier.NomDuFichier Like NomComposant) Then
-                
-            //            Cle = NomCle(ComposantListe)
-                
-            //            If CleExiste(pCollPieces, Cle) Then
-            //                Set Composant = pCollPieces.Item(Cle)
-            //                Composant.Nb = Composant.Nb + 1
-            //            Else
-            //                Set Composant = New ExtComposant
-            //                Set Composant = ComposantListe
-            //                Composant.Nb = 1
-            //                pCollPieces.Add Composant, Cle
-            //            End If
-                    
-            //        End If
-            
-            //        If ComposantListe.Modele.Est(cAssemblage) And Not (ComposantListe.EstSupprime) Then
-            //            ListerLesComposants ComposantListe, TypeComposant, NomComposant
-            //        End If
-            
-            //    End If
-        
-            //Next ComposantListe
         }
 
         internal List<ExtComposant> ListComposants(TypeFichier_e TypeComposant, String NomComposant = "")
         {
-            _ListeComposants = new List<ExtComposant>();
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-            switch (_Composant.Modele.TypeDuModele)
-            {
-                case TypeFichier_e.cAssemblage :
-                    if(_Composant.swComposant.IGetChildrenCount() == 0)
-                    {
-                        RecListComposants(_Composant, TypeComposant, NomComposant);
-                    }
-                    break;
-                default:
-                    _ListeComposants.Add(_Composant);
-                    break;
-            }
+            Dictionary<String, ExtComposant> pDicComposants = new Dictionary<string, ExtComposant>();
 
-            _ListeComposants.Sort();
+            // On renvoi le composant de base seulement s'il a le meme type que ceux recherché (TypeComposant)
+            if ((_RenvoyerComposantRacine == true) && (_Composant.Modele.TypeDuModele == TypeComposant))
+                pDicComposants.Add(NomCle(_Composant), _Composant);
 
-            return _ListeComposants;
+            // Si le composant est un assemblage contenant plusieurs composants, on renvoi la liste des composants recherchés
+            if ((_Composant.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (_Composant.swComposant.IGetChildrenCount() > 0))
+                RecListComposants(_Composant, TypeComposant, pDicComposants, NomComposant);
+
+            // Nouvelle liste à renvoyer
+            List<ExtComposant> pListeComposants = new List<ExtComposant>();
+
+            // Si le dictionnaire n'est pas vide, on rempli la liste avec les valeurs du dictionnaire
+            if (pDicComposants.Count > 0)
+                pListeComposants = new List<ExtComposant>(pDicComposants.Values);
+
+            // On trie et c'est parti
+            pListeComposants.Sort();
+
+            return pListeComposants;
         }
 
         public ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "")
         {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
             List<ExtComposant> pListeComps = ListComposants(TypeComposant, NomComposant);
             ArrayList pArrayComps = new ArrayList();
 
