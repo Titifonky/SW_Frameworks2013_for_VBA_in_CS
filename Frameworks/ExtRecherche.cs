@@ -99,18 +99,35 @@ namespace Framework2013
 
         private void RecListComposants(ExtComposant ComposantRacine, TypeFichier_e TypeComposant, String NomComposant = "")
         {
+            ExtComposant Composant;
+
             foreach (ExtComposant Comp in ComposantRacine.ComposantsEnfants(_PrendreEnCompteSupprime))
             {
                 if (!Comp.EstExclu | _PrendreEnCompteExclus)
                 {
-                    if ((Comp.Modele.TypeDuModele == TypeComposant) && (Path.GetFileName(Comp.Modele.Chemin) == NomComposant))
+                    if ((Comp.Modele.TypeDuModele == TypeComposant) && Path.GetFileName(Comp.Modele.Chemin).Contains(NomComposant))
                     {
+                        Composant = new ExtComposant();
+
                         if (_ListeComposants.Exists(C => NomCle(C) == NomCle(Comp)))
                         {
-                            ExtComposant Composant = _ListeComposants.Find
+                            Composant = _ListeComposants.Find(C => NomCle(C) == NomCle(Comp));
+                            Composant.Nb += 1;
+                        }
+                        else
+                        {
+                            Composant = Comp;
+                            Composant.Nb = 1;
+                            _ListeComposants.Add(Composant);
                         }
 
                     }
+
+                    if ((Comp.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (Comp.EstSupprime == false))
+                    {
+                        RecListComposants(Comp, TypeComposant, NomComposant);
+                    }
+
                 }
             }
 
@@ -152,7 +169,7 @@ namespace Framework2013
                 case TypeFichier_e.cAssemblage :
                     if(_Composant.swComposant.IGetChildrenCount() == 0)
                     {
-                        RecListComposants(_Composant, TypeComposant, NomComposant + "*");
+                        RecListComposants(_Composant, TypeComposant, NomComposant);
                     }
                     break;
                 default:

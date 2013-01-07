@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-using System.Collections.Generic;
 
 namespace Framework2013
 {
@@ -28,7 +29,7 @@ namespace Framework2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("6AFCE66E-5820-11E2-B651-77046188709B")]
     [ProgId("Frameworks.ExtModele")]
-    public class ExtModele : IExtModele
+    public class ExtModele : IExtModele, IComparable<ExtModele>, IComparer<ExtModele>
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
