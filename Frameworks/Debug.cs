@@ -55,7 +55,7 @@ namespace Framework2013
 
         public Boolean Init(ExtSldWorks SW)
         {
-            if (!(SW == null))
+            if (SW != null)
             {
                 _SW = SW;
                 String pDossierMacros = _SW.swSW.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swFileLocationsMacros);

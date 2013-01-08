@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
+using System.Text.RegularExpressions;
 
 namespace Framework2013
 {
@@ -12,7 +12,11 @@ namespace Framework2013
         Configuration swConfiguration { get; }
         ExtModele Modele { get; }
         String Nom { get; set; }
+        TypeConfig_e TypeConfig { get; }
+        ExtConfiguration ConfigurationParent { get; }
         Boolean Init(Configuration Config, ExtModele Modele);
+        Boolean Est(TypeConfig_e T);
+        Boolean Supprimer();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -22,8 +26,8 @@ namespace Framework2013
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
-        
-        private Configuration _swConfiguration;
+
+        private Configuration _SwConfiguration;
         private ExtModele _Modele;
 
         #endregion
@@ -38,20 +42,43 @@ namespace Framework2013
 
         #region "Propriétés"
 
-        public Configuration swConfiguration
+        public Configuration swConfiguration { get { return _SwConfiguration; } }
+
+        public ExtModele Modele { get { return _Modele; } }
+
+        public String Nom { get { return _SwConfiguration.Name; } set { _SwConfiguration.Name = value; } }
+
+        public TypeConfig_e TypeConfig
         {
-            get { return _swConfiguration; }
+            get
+            {
+                TypeConfig_e T = 0;
+                if (Regex.IsMatch(_SwConfiguration.Name, "*" + Constantes.CONFIG_DEPLIEE + "*"))
+                    T = TypeConfig_e.cDepliee;
+                else if (Regex.IsMatch(_SwConfiguration.Name, "*" + Constantes.CONFIG_PLIEE + "*"))
+                    T = TypeConfig_e.cPliee;
+
+                if (_SwConfiguration.IsDerived() != false)
+                    T |= TypeConfig_e.cDerivee;
+                else
+                    T |= TypeConfig_e.cDeBase;
+
+                return T;
+            }
         }
 
-        public ExtModele Modele
+        public ExtConfiguration ConfigurationParent
         {
-            get { return _Modele; }
-        }
-
-        public String Nom
-        {
-            get { return _swConfiguration.Name; }
-            set { _swConfiguration.Name = value; }
+            get
+            {
+                if (Est(TypeConfig_e.cDerivee))
+                {
+                    ExtConfiguration pConfigParent = new ExtConfiguration();
+                    pConfigParent.Init(swConfiguration.GetParent(), _Modele);
+                    return pConfigParent;
+                }
+                return null;
+            }
         }
 
         #endregion
@@ -62,18 +89,28 @@ namespace Framework2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (!((Config == null) && (Modele == null)))
+            if ((Config != null) && (Modele != null))
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-                _swConfiguration = Config;
+                _SwConfiguration = Config;
                 _Modele = Modele;
 
                 return true;
             }
-            
+
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             return false;
+        }
+
+        public Boolean Est(TypeConfig_e T)
+        {
+            return TypeConfig.HasFlag(T);
+        }
+
+        public Boolean Supprimer()
+        {
+            return _Modele.SwModele.DeleteConfiguration2(Nom);
         }
 
         #endregion

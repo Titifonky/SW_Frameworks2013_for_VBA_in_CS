@@ -23,6 +23,8 @@ namespace Framework2013
     cTousLesTypesDeCorps = cTole + cProfil + cAutre
     }
 
+    //Cet attribut permet de combiner les valeurs d'enumération
+    [Flags]
     public enum TypeConfig_e
     {
         cDeBase = 1,
@@ -71,20 +73,20 @@ namespace Framework2013
 
     #endregion
 
-    public static class ExtConstantes
+    public static class Constantes
     {
         #region "Variables locales"
 
-        public static String _CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
-        public static String _CONFIG_PLIEE = "#";
-        public static String _ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
-        public static String _EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
-        public static String _NO_DOSSIER = "NoDossier";
-        public static String _NOM_ELEMENT = "Element";
-        public static String _CUBE_DE_VISUALISATION = "Cube de visualisation";
-        public static String _MODELE_DE_DESSIN_LASER = "MacroLaser";
-        public static String _NOM_CORPS_DEPLIEE = "Etat déplié";
-        public static String _ETAT_D_AFFICHAGE = "Etat d'affichage-";
+        public static String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
+        public static String CONFIG_PLIEE = "#";
+        public static String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
+        public static String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
+        public static String NO_DOSSIER = "NoDossier";
+        public static String NOM_ELEMENT = "Element";
+        public static String CUBE_DE_VISUALISATION = "Cube de visualisation";
+        public static String MODELE_DE_DESSIN_LASER = "MacroLaser";
+        public static String NOM_CORPS_DEPLIEE = "Etat déplié";
+        public static String ETAT_D_AFFICHAGE = "Etat d'affichage-";
 
         #endregion
 

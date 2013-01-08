@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System.IO;
 
 namespace Framework2013
 {
@@ -11,11 +12,17 @@ namespace Framework2013
     [Guid("66AE684E-5820-11E2-BCFB-5D046188709B")]
     public interface IExtModele
     {
-        ModelDoc2 swModele { get; }
+        ModelDoc2 SwModele { get; }
         ExtSldWorks SW { get; }
         ExtComposant Composant { get; set; }
+        ExtAssemblage Assemblage { get; }
+        ExtPiece Piece { get; }
+        GestDeConfigurations GestDeConfigurations { get; }
         TypeFichier_e TypeDuModele { get; }
         String Chemin { get; }
+        String NomDuFichier { get; }
+        String NomDuFichierSansExt { get; }
+        String NomDuDossier { get; }
         Boolean Init(ModelDoc2 ModeleDoc, ExtSldWorks Sw);
         void Activer();
         void Sauver();
@@ -52,20 +59,42 @@ namespace Framework2013
 
         #region "Propriétés"
 
-        public ModelDoc2 swModele
+        public ModelDoc2 SwModele { get { return _swModele; } }
+
+        public ExtSldWorks SW { get { return _SW; } }
+
+        public ExtComposant Composant { get { return _Composant; } set { _Composant = value; } }
+
+        public ExtAssemblage Assemblage
         {
-            get { return _swModele; }
+            get
+            {
+                if (TypeDuModele == TypeFichier_e.cAssemblage)
+                    return (ExtAssemblage)this;
+                else
+                    return null;
+            }
         }
 
-        public ExtSldWorks SW
+        public ExtPiece Piece
         {
-            get { return _SW; }
+            get
+            {
+                if (TypeDuModele == TypeFichier_e.cPiece)
+                    return (ExtPiece)this;
+                else
+                    return null;
+            }
         }
 
-        public ExtComposant Composant
+        public GestDeConfigurations GestDeConfigurations
         {
-            get { return _Composant; }
-            set { _Composant = value; }
+            get
+            {
+                GestDeConfigurations pGestConfigs = new GestDeConfigurations();
+                pGestConfigs.Init(this);
+                return pGestConfigs;
+            }
         }
 
         public TypeFichier_e TypeDuModele
@@ -89,10 +118,10 @@ namespace Framework2013
             }
         }
 
-        public String Chemin
-        {
-            get { return _swModele.GetPathName(); }
-        }
+        public String Chemin { get { return _swModele.GetPathName(); } }
+        public String NomDuFichier { get { return Path.GetFileName(_swModele.GetPathName()); } }
+        public String NomDuFichierSansExt { get { return Path.GetFileNameWithoutExtension(_swModele.GetPathName()); } }
+        public String NomDuDossier { get { return Path.GetDirectoryName(_swModele.GetPathName()); } }
 
         #endregion
 
@@ -102,7 +131,7 @@ namespace Framework2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (!((ModeleDoc == null) && (Sw == null)))
+            if ((ModeleDoc != null) && (Sw != null))
             {
                 _swModele = ModeleDoc;
                 _SW = Sw;
@@ -162,17 +191,17 @@ namespace Framework2013
 
         int IComparable<ExtModele>.CompareTo(ExtModele Modele)
         {
-            return _swModele.GetPathName().CompareTo(Modele.swModele.GetPathName());
+            return _swModele.GetPathName().CompareTo(Modele.SwModele.GetPathName());
         }
 
         int IComparer<ExtModele>.Compare(ExtModele Modele1, ExtModele Modele2)
         {
-            return Modele1.swModele.GetPathName().CompareTo(Modele2.swModele.GetPathName());
+            return Modele1.SwModele.GetPathName().CompareTo(Modele2.SwModele.GetPathName());
         }
 
         bool IEquatable<ExtModele>.Equals(ExtModele Modele)
         {
-            return Modele.swModele.GetPathName() == _swModele.GetPathName();
+            return Modele.SwModele.GetPathName() == _swModele.GetPathName();
         }
     }
 }

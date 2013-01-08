@@ -30,7 +30,7 @@ namespace Framework2013
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
 
-        private Component2 _swComposant;
+        private Component2 _SwComposant;
         private ExtModele _Modele;
         private ExtConfiguration _Configuration;
         private int _Nb = 0;
@@ -49,7 +49,7 @@ namespace Framework2013
 
         public Component2 swComposant
         {
-            get { return _swComposant; }
+            get { return _SwComposant; }
         }
 
         public ExtModele Modele
@@ -72,18 +72,18 @@ namespace Framework2013
         {
             get
             {
-                if (!(_swComposant.ExcludeFromBOM == false))
+                if (_SwComposant.ExcludeFromBOM != false)
                     return true;
                 return false;
             }
-            set { _swComposant.ExcludeFromBOM = value; }
+            set { _SwComposant.ExcludeFromBOM = value; }
         }
 
         public Boolean EstSupprime
         {
             get
             {
-                if (!(_swComposant.IsSuppressed() == false))
+                if (_SwComposant.IsSuppressed() != false)
                     return true;
                 return false;
             }
@@ -110,19 +110,19 @@ namespace Framework2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (!((Composant == null) && (Modele == null)))
+            if ((Composant != null) && (Modele != null))
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-                _swComposant = Composant;
+                _SwComposant = Composant;
                 _Modele = Modele;
                 _Nb = 1;
 
                 Configuration pConfiguration;
-                if (String.IsNullOrEmpty(_swComposant.ReferencedConfiguration))
-                    pConfiguration = _Modele.swModele.GetActiveConfiguration();
+                if (String.IsNullOrEmpty(_SwComposant.ReferencedConfiguration))
+                    pConfiguration = _Modele.SwModele.GetActiveConfiguration();
                 else
-                    pConfiguration = _Modele.swModele.GetConfigurationByName(_swComposant.ReferencedConfiguration);
+                    pConfiguration = _Modele.SwModele.GetConfigurationByName(_SwComposant.ReferencedConfiguration);
 
                 _Configuration = new ExtConfiguration();
                 _Configuration.Init(pConfiguration, _Modele);
@@ -140,10 +140,10 @@ namespace Framework2013
 
             List<ExtComposant> Liste = new List<ExtComposant>();
             
-            if (_swComposant.IGetChildrenCount() == 0)
+            if (_SwComposant.IGetChildrenCount() == 0)
                 return Liste;
 
-            foreach (Component2 Composant in _swComposant.GetChildren())
+            foreach (Component2 Composant in _SwComposant.GetChildren())
             {
                 /// Si le composant est supprimé mais qu'on a decidé de le prendre en compte, c'est bon
                 if ((Composant.IsSuppressed() == false) | PrendreEnCompteSupprime)
@@ -179,7 +179,7 @@ namespace Framework2013
 
         int IComparable<ExtComposant>.CompareTo(ExtComposant Comp)
         {
-            String Nom1 = _swComposant.GetPathName() + _Configuration.Nom;
+            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
             String Nom2 = Comp.swComposant.GetPathName() + Comp.Configuration.Nom;
             return Nom1.CompareTo(Nom2);
         }
@@ -193,7 +193,7 @@ namespace Framework2013
 
         bool IEquatable<ExtComposant>.Equals(ExtComposant Comp)
         {
-            String Nom1 = _swComposant.GetPathName() + _Configuration.Nom;
+            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
             String Nom2 = Comp.swComposant.GetPathName() + Comp.Configuration.Nom;
             return Nom1 == Nom2;
         }

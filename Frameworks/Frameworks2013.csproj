@@ -8,7 +8,7 @@
     <ProjectGuid>{B8E3CE5C-63AF-4FEB-B34A-404827F7E406}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Frameworks2013</RootNamespace>
+    <RootNamespace>Framework2013</RootNamespace>
     <AssemblyName>Frameworks2013</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -73,10 +73,11 @@
     <Compile Include="ExtPiece.cs" />
     <Compile Include="FxChaine.cs" />
     <Compile Include="Debug.cs" />
-    <Compile Include="ExtConstantes.cs" />
+    <Compile Include="Constantes.cs" />
     <Compile Include="ExtModele.cs" />
     <Compile Include="ExtSldWorks.cs" />
     <Compile Include="ExtRecherche.cs" />
+    <Compile Include="GestDeConfigurations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

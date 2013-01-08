@@ -12,7 +12,7 @@ namespace Framework2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("5E46FC3E-5820-11E2-86E5-38046188709B")]
     [ProgId("Frameworks.ExtAssemblage")]
-    class ExtPiece : ExtModele, IExtPiece
+    public class ExtPiece : ExtModele, IExtPiece
     {
         #region "Variables locales"
         #endregion

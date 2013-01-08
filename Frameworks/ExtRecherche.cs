@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Framework2013
 {
@@ -10,7 +11,7 @@ namespace Framework2013
     [Guid("A8C91882-5820-11E2-A1E0-98046188709B")]
     public interface IExtRecherche
     {
-        ExtComposant Composant { get;}
+        ExtComposant Composant { get; }
         Boolean PrendreEnCompteConfig { get; set; }
         Boolean PrendreEnCompteExclus { get; set; }
         Boolean PrendreEnCompteSupprime { get; set; }
@@ -82,7 +83,7 @@ namespace Framework2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (!(Composant == null))
+            if (Composant != null)
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
@@ -103,24 +104,29 @@ namespace Framework2013
             return pNomCle;
         }
 
-        private void RecListComposants(ExtComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, ExtComposant> DicComposants, String NomComposant = "")
+        private void RecListListerComposants(ExtComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, ExtComposant> DicComposants, String NomComposant = "")
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
             foreach (ExtComposant Comp in ComposantRacine.ListComposantsEnfants(_PrendreEnCompteSupprime))
             {
+                // Operateur "Implique" sur la propriété EstExclu
                 if (!Comp.EstExclu | _PrendreEnCompteExclus)
                 {
-                    if (Comp.Modele.TypeDuModele == TypeComposant)//&& Path.GetFileName(Comp.Modele.Chemin).Contains(NomComposant)
+                    // Attention, Regex.IsMatch peut renvoyer une erreur si NomComposant est égal à un caractère spécial
+                    // du style "*" ou "[" et autre. Pb à corriger.
+                    if ((Comp.Modele.TypeDuModele == TypeComposant) && Regex.IsMatch(Comp.Modele.Chemin, NomComposant))
                     {
                         ExtComposant Composant = new ExtComposant();
-                        
+
+                        // S'il est déjà dans le dico, on on rajoute 1
                         if (DicComposants.ContainsKey(NomCle(Comp)))
                         {
                             Composant = DicComposants[NomCle(Comp)];
                             Composant.Nb += 1;
                         }
+                        // sinon on le rajoute
                         else
                         {
                             Composant = Comp;
@@ -130,16 +136,17 @@ namespace Framework2013
 
                     }
 
+                    // Si c'est un assemblage et qu'il n'est pas supprimé, on scan
                     if ((Comp.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (Comp.EstSupprime == false))
                     {
-                        RecListComposants(Comp, TypeComposant, DicComposants, NomComposant);
+                        RecListListerComposants(Comp, TypeComposant, DicComposants, NomComposant);
                     }
 
                 }
             }
         }
 
-        internal List<ExtComposant> ListComposants(TypeFichier_e TypeComposant, String NomComposant = "")
+        internal List<ExtComposant> ListListerComposants(TypeFichier_e TypeComposant, String NomComposant = "")
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
@@ -152,7 +159,7 @@ namespace Framework2013
 
             // Si le composant est un assemblage contenant plusieurs composants, on renvoi la liste des composants recherchés
             if ((_Composant.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (_Composant.swComposant.IGetChildrenCount() > 0))
-                RecListComposants(_Composant, TypeComposant, pDicComposants, NomComposant);
+                RecListListerComposants(_Composant, TypeComposant, pDicComposants, NomComposant);
 
             // Nouvelle liste à renvoyer
             List<ExtComposant> pListeComposants = new List<ExtComposant>();
@@ -172,7 +179,7 @@ namespace Framework2013
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-            List<ExtComposant> pListeComps = ListComposants(TypeComposant, NomComposant);
+            List<ExtComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
             ArrayList pArrayComps = new ArrayList();
 
             if (pListeComps.Count > 0)
