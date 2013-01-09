@@ -16,7 +16,7 @@ namespace Framework2013
         Boolean PrendreEnCompteExclus { get; set; }
         Boolean PrendreEnCompteSupprime { get; set; }
         Boolean RenvoyerComposantRacine { get; set; }
-        Boolean Init(ExtComposant Composant);
+        //Boolean Init(ExtComposant Composant)
         ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "");
     }
 
@@ -27,6 +27,7 @@ namespace Framework2013
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
+        private Boolean _EstInitialise = false;
 
         private ExtComposant _Composant;
         private Boolean _PrendreEnCompteConfig = true;
@@ -79,27 +80,42 @@ namespace Framework2013
 
         #region "Méthodes"
 
-        public Boolean Init(ExtComposant Composant)
+        internal ExtRecherche Init(ExtComposant Composant)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (Composant != null)
+            if ((Composant != null) && (Composant.Init() != null))
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _Composant = Composant;
-                return true;
+                _EstInitialise = true;
+
+                return this;
             }
 
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            return false;
+            _EstInitialise = false;
+            return null;
+        }
+
+        internal ExtRecherche Init()
+        {
+            if (_EstInitialise)
+                return this;
+            else
+                return null;
         }
 
         private String NomCle(ExtComposant Composant)
         {
-            String pNomCle = Composant.Modele.Chemin;
-            if (_PrendreEnCompteConfig)
-                pNomCle = pNomCle + " " + Composant.Configuration.Nom;
+            String pNomCle = "";
+            if ((Composant != null) && (Composant.Init() != null))
+            {
+                pNomCle = Composant.Modele.Chemin;
+                if (_PrendreEnCompteConfig)
+                    pNomCle = pNomCle + " " + Composant.Configuration.Nom;
+            }
 
             return pNomCle;
         }

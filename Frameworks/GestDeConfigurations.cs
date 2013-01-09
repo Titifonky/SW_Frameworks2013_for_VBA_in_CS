@@ -13,7 +13,7 @@ namespace Framework2013
     {
         ExtModele Modele { get; }
         ExtConfiguration ConfigurationActive { get; }
-        Boolean Init(ExtModele Modele);
+        //Boolean Init(ExtModele Modele);
         ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "");
         ExtConfiguration Configuration(String NomConfiguration);
         ExtConfiguration AjouterUneConfigurationDeBase(String NomConfiguration);
@@ -27,6 +27,7 @@ namespace Framework2013
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
+        private Boolean _EstInitialise = false;
 
         ExtModele _Modele;
 
@@ -43,15 +44,8 @@ namespace Framework2013
         {
             get
             {
-                Configuration pSwConfig = _Modele.SwModele.ConfigurationManager.ActiveConfiguration;
-                if (pSwConfig == null)
-                    return null;
-                else
-                {
-                    ExtConfiguration pConfig = new ExtConfiguration();
-                    pConfig.Init(pSwConfig, _Modele);
-                    return pConfig;
-                }
+                ExtConfiguration pConfig = new ExtConfiguration();
+                return pConfig.Init(_Modele.SwModele.ConfigurationManager.ActiveConfiguration, _Modele);
             }
         }
 
@@ -59,20 +53,31 @@ namespace Framework2013
 
         #region "Méthodes"
 
-        public Boolean Init(ExtModele Modele)
+        internal GestDeConfigurations Init(ExtModele Modele)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (Modele != null)
+            if ((Modele != null) && (Modele.Init() != null))
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _Modele = Modele;
-                return true;
+                _EstInitialise = true;
+
+                return this;
             }
 
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            return false;
+            _EstInitialise = false;
+            return null;
+        }
+
+        internal GestDeConfigurations Init()
+        {
+            if (_EstInitialise)
+                return this;
+            else
+                return null;
         }
 
         internal List<ExtConfiguration> ListListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "")
@@ -110,30 +115,21 @@ namespace Framework2013
 
         public ExtConfiguration Configuration(String NomConfiguration)
         {
-            Configuration pSwConfig = _Modele.SwModele.GetConfigurationByName(NomConfiguration);
-
-            if (pSwConfig != null)
-            {
-                ExtConfiguration pConfig = new ExtConfiguration();
-                pConfig.Init(pSwConfig, _Modele);
-                return pConfig;
-            }
-
-            return null;
+            ExtConfiguration pConfig = new ExtConfiguration();
+            return pConfig.Init(_Modele.SwModele.GetConfigurationByName(NomConfiguration), _Modele);
         }
 
         public ExtConfiguration AjouterUneConfigurationDeBase(String NomConfig)
         {
             ExtConfiguration pConfig = new ExtConfiguration();
-            pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfig,NomConfig,"",0,"",""), _Modele);
-            return pConfig;
+            return pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfig, NomConfig, "", 0, "", ""), _Modele);
         }
 
         public void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "")
         {
             foreach(ExtConfiguration Config in ListListerLesConfigs(TypeConfig_e.cDepliee,NomConfigurationPliee))
             {
-                
+                Config.Supprimer();
             }
         }
 

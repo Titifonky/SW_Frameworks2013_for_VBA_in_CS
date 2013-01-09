@@ -77,8 +77,8 @@ namespace Framework2013
     {
         #region "Variables locales"
 
-        public static String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
-        public static String CONFIG_PLIEE = "#";
+        public static String CONFIG_DEPLIEE = "^*SM-FLAT-PATTERN*";
+        public static String CONFIG_PLIEE = "^[0-9]";
         public static String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
         public static String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
         public static String NO_DOSSIER = "NoDossier";

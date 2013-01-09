@@ -23,7 +23,7 @@ namespace Framework2013
         String NomDuFichier { get; }
         String NomDuFichierSansExt { get; }
         String NomDuDossier { get; }
-        Boolean Init(ModelDoc2 ModeleDoc, ExtSldWorks Sw);
+        //Boolean Init(ModelDoc2 ModeleDoc, ExtSldWorks Sw);
         void Activer();
         void Sauver();
         void Fermer();
@@ -40,6 +40,7 @@ namespace Framework2013
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
+        private Boolean _EstInitialise = false;
 
         private ModelDoc2 _swModele;
         private ExtSldWorks _SW;
@@ -92,8 +93,7 @@ namespace Framework2013
             get
             {
                 GestDeConfigurations pGestConfigs = new GestDeConfigurations();
-                pGestConfigs.Init(this);
-                return pGestConfigs;
+                return pGestConfigs.Init(this);
             }
         }
 
@@ -127,15 +127,18 @@ namespace Framework2013
 
         #region "Méthodes"
 
-        public Boolean Init(ModelDoc2 ModeleDoc, ExtSldWorks Sw)
+        internal ExtModele Init(ModelDoc2 SwModele, ExtSldWorks Sw)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((ModeleDoc != null) && (Sw != null))
+            if ((SwModele != null) && (Sw != null))
             {
-                _swModele = ModeleDoc;
+                _swModele = SwModele;
                 _SW = Sw;
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
+                // On valide l'initialisation avant de recupérer le composant
+                _EstInitialise = true;
 
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
@@ -143,11 +146,23 @@ namespace Framework2013
                     _Composant = new ExtComposant();
                     _Composant.Init(_swModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this);
                 }
-                return true;
+
+                // Si le composant est valide, on envoi
+                if (_Composant.Init() != null)
+                    return this;
             }
 
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            return false;
+            _EstInitialise = false;
+            return null;
+        }
+
+        internal ExtModele Init()
+        {
+            if (_EstInitialise)
+                return this;
+            else
+                return null;
         }
 
         public void Activer()

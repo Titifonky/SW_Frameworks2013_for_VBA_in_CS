@@ -18,7 +18,7 @@ namespace Framework2013
         Boolean EstSupprime { get; }
         int Nb { get; set; }
         ExtRecherche NouvelleRecherche { get; }
-        Boolean Init(Component2 Composant, ExtModele Modele);
+        //Boolean Init(Component2 Composant, ExtModele Modele);
         ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false);
     }
 
@@ -29,6 +29,7 @@ namespace Framework2013
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
+        private Boolean _EstInitialise = false;
 
         private Component2 _SwComposant;
         private ExtModele _Modele;
@@ -106,31 +107,42 @@ namespace Framework2013
 
         #region "Méthodes"
 
-        public Boolean Init(Component2 Composant, ExtModele Modele)
+        internal ExtComposant Init(Component2 SwComposant, ExtModele Modele)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((Composant != null) && (Modele != null))
+            // On teste si le Modele est valide
+            if ((SwComposant != null) && (Modele != null) && (Modele.Init() != null))
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-
-                _SwComposant = Composant;
-                _Modele = Modele;
-                _Nb = 1;
-
-                Configuration pConfiguration;
-                if (String.IsNullOrEmpty(_SwComposant.ReferencedConfiguration))
-                    pConfiguration = _Modele.SwModele.GetActiveConfiguration();
-                else
-                    pConfiguration = _Modele.SwModele.GetConfigurationByName(_SwComposant.ReferencedConfiguration);
+                // On valide l'initialisation avant de recupérer la configuration
+                _EstInitialise = true;
 
                 _Configuration = new ExtConfiguration();
-                _Configuration.Init(pConfiguration, _Modele);
-                return true;
+                if (String.IsNullOrEmpty(SwComposant.ReferencedConfiguration))
+                    _Configuration.Init(Modele.SwModele.GetActiveConfiguration(), Modele);
+                else
+                    _Configuration.Init(Modele.SwModele.GetConfigurationByName(SwComposant.ReferencedConfiguration), Modele);
+
+                if (_Configuration.Init() != null)
+                {
+                    _SwComposant = SwComposant;
+                    _Modele = Modele;
+                    _Nb = 1;
+                    return this;
+                }
             }
             
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            return false;
+            _EstInitialise = false;
+            return null;
+        }
+
+        internal ExtComposant Init()
+        {
+            if (_EstInitialise)
+                return this;
+            else
+                return null;
         }
 
         internal List<ExtComposant> ListComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
@@ -143,16 +155,23 @@ namespace Framework2013
             if (_SwComposant.IGetChildrenCount() == 0)
                 return Liste;
 
-            foreach (Component2 Composant in _SwComposant.GetChildren())
+            foreach (Component2 SwComposant in _SwComposant.GetChildren())
             {
                 /// Si le composant est supprimé mais qu'on a decidé de le prendre en compte, c'est bon
-                if ((Composant.IsSuppressed() == false) | PrendreEnCompteSupprime)
+                if ((SwComposant.IsSuppressed() == false) | PrendreEnCompteSupprime)
                 {
-                    ExtModele ModeleExt = _Modele.SW.Modele(Composant.GetPathName());
-                    ExtComposant CompExt = new ExtComposant();
-                    CompExt.Init(Composant, ModeleExt);
-                    ModeleExt.Composant = CompExt;
-                    Liste.Add(CompExt);
+                    // Pour intitialiser le composant correctement il faut un peu de bidouille
+                    // sinon on à le droit à une belle reference circulaire
+                    // Donc d'abord, on recherche le modele du SwComposant
+                    ExtModele Modele = _Modele.SW.Modele(SwComposant.GetPathName());
+                    // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
+                    ExtComposant Composant = new ExtComposant();
+                    Composant.Init(SwComposant, Modele);
+                    // Et pour que les deux soit liés, on passe la ref du Composant que l'on vient de creer
+                    // au modele. Comme ca, Modele.Composant pointe sur Composant et Composant.Modele pointe sur Modele,
+                    // la boucle est bouclée
+                    Modele.Composant = Composant;
+                    Liste.Add(Composant);
                 }
             }
 

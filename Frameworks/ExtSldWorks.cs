@@ -91,7 +91,7 @@ namespace Framework2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if (!(SldWks == null))
+            if (SldWks != null)
             {
                 _swSW = SldWks;
                 _Debug.Init(this);
@@ -123,20 +123,17 @@ namespace Framework2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-
             ExtModele pModele = new ExtModele();
             if (String.IsNullOrEmpty(Chemin))
             {
                 _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "SldWorks.ActiveDoc");
-                pModele.Init(_swSW.ActiveDoc, this);
+                return pModele.Init(_swSW.ActiveDoc, this);
             }
             else
             {
                 _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Ouvrir " + Chemin);
-                pModele.Init(Ouvrir(Chemin), this);
+                return pModele.Init(Ouvrir(Chemin), this);
             }
-
-            return pModele;
         }
 
         /// <summary>
@@ -150,12 +147,12 @@ namespace Framework2013
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-            foreach (ModelDoc2 Modele in _swSW.GetDocuments())
+            foreach (ModelDoc2 pSwModele in _swSW.GetDocuments())
             {
-                if (Modele.GetPathName() == Chemin)
+                if (pSwModele.GetPathName() == Chemin)
                 {
                     _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Fichier déjà ouvert : " + Chemin);
-                    return Modele;
+                    return pSwModele;
                 }
             }
 
@@ -177,7 +174,8 @@ namespace Framework2013
             }
 
             _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Ouvre le fichier : " + Chemin);
-            return _swSW.OpenDoc6(Chemin, (int)Type, (int)swOpenDocOptions_e.swOpenDocOptions_Silent,"", ref Erreur, ref Warning);
+
+            return _swSW.OpenDoc6(Chemin, (int)Type, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref Erreur, ref Warning);
         }
 
         #endregion

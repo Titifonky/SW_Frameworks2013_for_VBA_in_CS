@@ -14,7 +14,7 @@ namespace Framework2013
         String Nom { get; set; }
         TypeConfig_e TypeConfig { get; }
         ExtConfiguration ConfigurationParent { get; }
-        Boolean Init(Configuration Config, ExtModele Modele);
+        //Boolean Init(Configuration Config, ExtModele Modele);
         Boolean Est(TypeConfig_e T);
         Boolean Supprimer();
     }
@@ -26,6 +26,7 @@ namespace Framework2013
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
+        private Boolean _EstInitialise = false;
 
         private Configuration _SwConfiguration;
         private ExtModele _Modele;
@@ -44,7 +45,7 @@ namespace Framework2013
 
         public Configuration swConfiguration { get { return _SwConfiguration; } }
 
-        public ExtModele Modele { get { return _Modele; } }
+        public ExtModele Modele { get { return _Modele.Init(); } }
 
         public String Nom { get { return _SwConfiguration.Name; } set { _SwConfiguration.Name = value; } }
 
@@ -53,9 +54,9 @@ namespace Framework2013
             get
             {
                 TypeConfig_e T = 0;
-                if (Regex.IsMatch(_SwConfiguration.Name, "*" + Constantes.CONFIG_DEPLIEE + "*"))
+                if (Regex.IsMatch(_SwConfiguration.Name, Constantes.CONFIG_DEPLIEE))
                     T = TypeConfig_e.cDepliee;
-                else if (Regex.IsMatch(_SwConfiguration.Name, "*" + Constantes.CONFIG_PLIEE + "*"))
+                else if (Regex.IsMatch(_SwConfiguration.Name, Constantes.CONFIG_PLIEE))
                     T = TypeConfig_e.cPliee;
 
                 if (_SwConfiguration.IsDerived() != false)
@@ -71,13 +72,8 @@ namespace Framework2013
         {
             get
             {
-                if (Est(TypeConfig_e.cDerivee))
-                {
-                    ExtConfiguration pConfigParent = new ExtConfiguration();
-                    pConfigParent.Init(swConfiguration.GetParent(), _Modele);
-                    return pConfigParent;
-                }
-                return null;
+                ExtConfiguration pConfigParent = new ExtConfiguration();
+                return pConfigParent.Init(swConfiguration.GetParent(), _Modele);
             }
         }
 
@@ -85,22 +81,32 @@ namespace Framework2013
 
         #region "Méthodes"
 
-        public Boolean Init(Configuration Config, ExtModele Modele)
+        internal ExtConfiguration Init(Configuration Config, ExtModele Modele)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((Config != null) && (Modele != null))
+            if ((Config != null) && (Modele != null) && (Modele.Init() != null))
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _SwConfiguration = Config;
                 _Modele = Modele;
+                _EstInitialise = true;
 
-                return true;
+                return this;
             }
 
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            return false;
+            _EstInitialise = false;
+            return null;
+        }
+
+        internal ExtConfiguration Init()
+        {
+            if (_EstInitialise)
+                return this;
+            else
+                return null;
         }
 
         public Boolean Est(TypeConfig_e T)
