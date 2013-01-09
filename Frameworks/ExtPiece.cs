@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Framework2013
+namespace Frameworks2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("57E51812-5820-11E2-82D5-34046188709B")]

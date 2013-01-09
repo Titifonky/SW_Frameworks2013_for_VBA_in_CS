@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
-namespace Framework2013
+namespace Frameworks2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("BF2ED17A-5820-11E2-8160-9F046188709B")]
@@ -196,6 +196,8 @@ namespace Framework2013
 
         #endregion
 
+        #region "Interfaces génériques"
+
         int IComparable<ExtComposant>.CompareTo(ExtComposant Comp)
         {
             String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
@@ -214,7 +216,9 @@ namespace Framework2013
         {
             String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
             String Nom2 = Comp.swComposant.GetPathName() + Comp.Configuration.Nom;
-            return Nom1 == Nom2;
+            return Nom1.Equals(Nom2);
         }
+
+        #endregion
     }
 }

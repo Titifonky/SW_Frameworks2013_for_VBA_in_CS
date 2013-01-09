@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
 using System.Text.RegularExpressions;
+using SolidWorks.Interop.sldworks;
 
-namespace Framework2013
+namespace Frameworks2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("93F8AAEE-5820-11E2-A4D1-91046188709B")]
@@ -22,7 +23,7 @@ namespace Framework2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("9818CA82-5820-11E2-852A-92046188709B")]
     [ProgId("Frameworks.ExtConfiguration")]
-    public class ExtConfiguration : IExtConfiguration
+    public class ExtConfiguration : IExtConfiguration, IComparable<ExtConfiguration>, IComparer<ExtConfiguration>, IEquatable<ExtConfiguration>
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
@@ -111,12 +112,37 @@ namespace Framework2013
 
         public Boolean Est(TypeConfig_e T)
         {
-            return TypeConfig.HasFlag(T);
+            return Convert.ToBoolean(TypeConfig & T);
         }
 
         public Boolean Supprimer()
         {
             return _Modele.SwModele.DeleteConfiguration2(Nom);
+        }
+
+        #endregion
+
+        #region "Interfaces génériques"
+
+        int IComparable<ExtConfiguration>.CompareTo(ExtConfiguration Conf)
+        {
+            String Nom1 = Modele.Chemin + Nom;
+            String Nom2 = Conf._Modele.Chemin + Conf.Nom;
+            return Nom1.CompareTo(Nom2);
+        }
+
+        int IComparer<ExtConfiguration>.Compare(ExtConfiguration Conf1, ExtConfiguration Conf2)
+        {
+            String Nom1 = Conf1._Modele.Chemin + Conf1.Nom;
+            String Nom2 = Conf2._Modele.Chemin + Conf2.Nom;
+            return Nom1.CompareTo(Nom2);
+        }
+
+        bool IEquatable<ExtConfiguration>.Equals(ExtConfiguration Conf)
+        {
+            String Nom1 = Modele.Chemin + Nom;
+            String Nom2 = Conf._Modele.Chemin + Conf.Nom;
+            return Nom1.Equals(Nom2);
         }
 
         #endregion

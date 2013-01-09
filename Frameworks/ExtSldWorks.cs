@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
-namespace Framework2013
+namespace Frameworks2013
 {
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]

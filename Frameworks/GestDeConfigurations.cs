@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Text.RegularExpressions;
 
-namespace Framework2013
+namespace Frameworks2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("040632B0-59D0-11E2-9576-4F376288709B")]
@@ -34,6 +34,11 @@ namespace Framework2013
         #endregion
 
         #region "Constructeur\Destructeur"
+
+        public GestDeConfigurations()
+        {
+        }
+
         #endregion
 
         #region "Propriétés"

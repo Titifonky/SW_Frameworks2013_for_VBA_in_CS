@@ -6,7 +6,7 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.IO;
 
-namespace Framework2013
+namespace Frameworks2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("66AE684E-5820-11E2-BCFB-5D046188709B")]
@@ -204,6 +204,8 @@ namespace Framework2013
 
         #endregion
 
+        #region "Interfaces génériques"
+
         int IComparable<ExtModele>.CompareTo(ExtModele Modele)
         {
             return _swModele.GetPathName().CompareTo(Modele.SwModele.GetPathName());
@@ -216,7 +218,9 @@ namespace Framework2013
 
         bool IEquatable<ExtModele>.Equals(ExtModele Modele)
         {
-            return Modele.SwModele.GetPathName() == _swModele.GetPathName();
+            return Modele.SwModele.GetPathName().Equals(_swModele.GetPathName());
         }
+
+        #endregion
     }
 }

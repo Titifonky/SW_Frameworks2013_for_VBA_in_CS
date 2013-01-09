@@ -1,26 +1,31 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Framework2013
+namespace Frameworks2013
 {
 
     #region "Enumérations"
 
+    //Cet attribut permet de combiner les valeurs d'enumération
+    [Flags]
     public enum TypeFichier_e
     {
         cAucun = 0,
         cAssemblage = 1,
         cPiece = 2,
         cDessin = 4,
-        cTousLesTypesDeFichier = 7,
+        cTousLesTypesDeFichier = cAssemblage + cPiece + cDessin
     }
 
+    //Cet attribut permet de combiner les valeurs d'enumération
+    [Flags]
     public enum TypeCorps_e
     {
-    cTole = 1,
-    cProfil = cTole * 2,
-    cAutre = cProfil * 2,
-    cTousLesTypesDeCorps = cTole + cProfil + cAutre
+        cAucun = 0,
+        cTole = 1,
+        cProfil = 2,
+        cAutre = 4,
+        cTousLesTypesDeCorps = cTole + cProfil + cAutre
     }
 
     //Cet attribut permet de combiner les valeurs d'enumération
@@ -31,7 +36,7 @@ namespace Framework2013
         cDerivee = 2,
         cDepliee = 4,
         cPliee = 8,
-        cToutesLesTypesDeConfig = 15
+        cToutesLesTypesDeConfig = cDeBase + cDerivee + cDepliee + cPliee
     }
 
     public enum EtatFonction_e
