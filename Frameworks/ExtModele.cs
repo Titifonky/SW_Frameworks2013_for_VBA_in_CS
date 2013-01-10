@@ -17,6 +17,7 @@ namespace Frameworks2013
         ExtComposant Composant { get; set; }
         ExtAssemblage Assemblage { get; }
         ExtPiece Piece { get; }
+        ExtDessin Dessin { get; }
         GestDeConfigurations GestDeConfigurations { get; }
         TypeFichier_e TypeDuModele { get; }
         String Chemin { get; }
@@ -71,7 +72,7 @@ namespace Frameworks2013
             get
             {
                 if (TypeDuModele == TypeFichier_e.cAssemblage)
-                    return (ExtAssemblage)this;
+                    return new ExtAssemblage();
                 else
                     return null;
             }
@@ -82,7 +83,18 @@ namespace Frameworks2013
             get
             {
                 if (TypeDuModele == TypeFichier_e.cPiece)
-                    return (ExtPiece)this;
+                    return new ExtPiece();
+                else
+                    return null;
+            }
+        }
+
+        public ExtDessin Dessin
+        {
+            get
+            {
+                if (TypeDuModele == TypeFichier_e.cDessin)
+                    return new ExtDessin();
                 else
                     return null;
             }

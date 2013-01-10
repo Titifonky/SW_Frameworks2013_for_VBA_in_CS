@@ -12,7 +12,7 @@ namespace Frameworks2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("CF8CC568-5820-11E2-B525-AA046188709B")]
     [ProgId("Frameworks.ExtAssemblage")]
-    public class ExtAssemblage : ExtModele , IExtAssemblage
+    public class ExtAssemblage : IExtAssemblage
     {
         #region "Variables locales"
         #endregion
