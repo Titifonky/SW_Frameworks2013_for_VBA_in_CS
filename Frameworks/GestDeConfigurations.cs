@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Text.RegularExpressions;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("040632B0-59D0-11E2-9576-4F376288709B")]

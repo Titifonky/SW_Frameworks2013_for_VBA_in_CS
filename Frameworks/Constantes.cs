@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Frameworks2013
+namespace Framework2013
 {
 
     #region "Enumérations"
@@ -14,7 +14,6 @@ namespace Frameworks2013
         cAssemblage = 1,
         cPiece = 2,
         cDessin = 4,
-        cTousLesTypesDeFichier = cAssemblage + cPiece + cDessin
     }
 
     //Cet attribut permet de combiner les valeurs d'enumération

@@ -6,7 +6,7 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.IO;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("66AE684E-5820-11E2-BCFB-5D046188709B")]

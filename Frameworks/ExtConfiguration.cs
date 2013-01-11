@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("93F8AAEE-5820-11E2-A4D1-91046188709B")]

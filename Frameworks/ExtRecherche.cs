@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("A8C91882-5820-11E2-A1E0-98046188709B")]
@@ -132,7 +132,7 @@ namespace Frameworks2013
                 {
                     // Attention, Regex.IsMatch peut renvoyer une erreur si NomComposant est égal à un caractère spécial
                     // du style "*" ou "[" et autre. Pb à corriger.
-                    if ((Comp.Modele.TypeDuModele == TypeComposant) && Regex.IsMatch(Comp.Modele.Chemin, NomComposant))
+                    if ( Convert.ToBoolean(Comp.Modele.TypeDuModele & TypeComposant) && Regex.IsMatch(Comp.Modele.Chemin, NomComposant))
                     {
                         ExtComposant Composant = new ExtComposant();
 
@@ -170,7 +170,7 @@ namespace Frameworks2013
             Dictionary<String, ExtComposant> pDicComposants = new Dictionary<string, ExtComposant>();
 
             // On renvoi le composant de base seulement s'il a le meme type que ceux recherché (TypeComposant)
-            if ((_RenvoyerComposantRacine == true) && (_Composant.Modele.TypeDuModele == TypeComposant))
+            if ((_RenvoyerComposantRacine == true) && Convert.ToBoolean(_Composant.Modele.TypeDuModele & TypeComposant))
                 pDicComposants.Add(NomCle(_Composant), _Composant);
 
             // Si le composant est un assemblage contenant plusieurs composants, on renvoi la liste des composants recherchés

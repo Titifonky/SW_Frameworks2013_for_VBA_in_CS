@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("CACBFAD0-5820-11E2-B60C-A9046188709B")]
@@ -12,7 +12,7 @@ namespace Frameworks2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("CF8CC568-5820-11E2-B525-AA046188709B")]
     [ProgId("Frameworks.ExtAssemblage")]
-    public class ExtAssemblage : IExtAssemblage
+    public class ExtAssemblage : ExtModele, IExtAssemblage
     {
         #region "Variables locales"
         #endregion

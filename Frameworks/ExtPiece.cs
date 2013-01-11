@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 
-namespace Frameworks2013
+namespace Framework2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("57E51812-5820-11E2-82D5-34046188709B")]
@@ -16,7 +16,7 @@ namespace Frameworks2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("5E46FC3E-5820-11E2-86E5-38046188709B")]
     [ProgId("Frameworks.ExtPiece")]
-    public class ExtPiece : IExtPiece
+    public class ExtPiece : ExtModele, IExtPiece
 
     {
         #region "Variables locales"
