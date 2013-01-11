@@ -88,7 +88,7 @@ namespace Framework_SW2013
             return null;
         }
 
-        internal List<ExtDossier> ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
+        internal List<ExtDossier> ListListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
         {
             List<ExtDossier> Liste = new List<ExtDossier>();
 
@@ -116,37 +116,19 @@ namespace Framework_SW2013
 
         }
 
-        //Public Function ListeDesDossiers(Optional TypeDeCorps As TypeCorps_e = cTousLesTypesDeCorps, Optional PrendreEnCompteExclus As Boolean = False) As Collection
-        //    Dim Dossier     As ExtDossier
-        //    Dim Fonction    As Feature
-        //    Dim DossierSw   As BodyFolder
-    
-        //    Set ListeDesDossiers = New Collection
-        //    Set Fonction = ListeDesPiecesSoudees.GetFirstSubFeature
-    
-        //    Do Until Fonction Is Nothing
-    
-        //        'Si c'est un dossier de pièces soudées
-        //        If Fonction.GetTypeName2 = "CutListFolder" Then
-            
-        //            Set DossierSw = Fonction.GetSpecificFeature2
-        //            Set Dossier = New ExtDossier
-            
-        //            If Dossier.SetDossier(DossierSw, Me) Then
-        //                If Dossier.Est(TypeDeCorps) And (Dossier.Exclu Imp PrendreEnCompteExclus) Then
-        //                    ListeDesDossiers.Add Dossier
-        //                End If
-        //            End If
-        //            Set Dossier = Nothing
-        //        End If
-        //        Set Fonction = Fonction.GetNextSubFeature
-        //    Loop
-    
-        //    Set Dossier = Nothing
-        //    Set Fonction = Nothing
-        //    Set DossierSw = Nothing
-        
-        //End Function
+        ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
+        {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
+            List<ExtDossier> pListeDossier = ListListeDesDossiers(TypeDeCorps, PrendreEnCompteExclus);
+            ArrayList pArrayDossiers = new ArrayList();
+
+            if (pListeDossier.Count > 0)
+                pArrayDossiers = new ArrayList(pListeDossier);
+
+            return pArrayDossiers;
+        }
 
         #endregion
 
