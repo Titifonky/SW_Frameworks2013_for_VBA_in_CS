@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 
-namespace Framework2013
+namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("413147BE-5B70-11E2-A5B0-4BF46188709B")]

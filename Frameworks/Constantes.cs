@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Framework2013
+namespace Framework_SW2013
 {
 
     #region "Enumérations"

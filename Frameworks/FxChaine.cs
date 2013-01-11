@@ -1,5 +1,5 @@
 ﻿
-namespace Framework2013
+namespace Framework_SW2013
 {
     internal static class StringExtension
     {
