@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frameworks2013", "Frameworks\Frameworks2013.csproj", "{B8E3CE5C-63AF-4FEB-B34A-404827F7E406}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework_SW2013", "Frameworks\Framework_SW2013.csproj", "{B8E3CE5C-63AF-4FEB-B34A-404827F7E406}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

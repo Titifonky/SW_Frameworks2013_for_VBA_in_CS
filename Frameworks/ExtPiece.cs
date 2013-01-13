@@ -10,14 +10,15 @@ namespace Framework_SW2013
     [Guid("57E51812-5820-11E2-82D5-34046188709B")]
     public interface IExtPiece
     {
+        PartDoc SwPiece { get; }
+        ExtModele Modele { get; }
         ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("5E46FC3E-5820-11E2-86E5-38046188709B")]
     [ProgId("Frameworks.ExtPiece")]
-    public class ExtPiece : ExtModele, IExtPiece
-
+    public class ExtPiece : IExtPiece
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
@@ -37,36 +38,35 @@ namespace Framework_SW2013
         #endregion
 
         #region "Propriétés"
+
+        public PartDoc SwPiece { get { return _swPiece; } }
+
+        public ExtModele Modele { get { return _Modele; } }
+
+        internal Boolean EstInitialise { get { return _EstInitialise; } }
+
         #endregion
 
         #region "Méthodes"
 
-        internal ExtPiece Init(ExtModele Modele)
+        internal Boolean Init(ExtModele Modele)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((Modele != null) && (Modele.TypeDuModele == TypeFichier_e.cPiece))
+            if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cPiece))
             {
-                
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-                
+
                 _Modele = Modele;
                 _swPiece = Modele.SwModele as PartDoc;
                 _EstInitialise = true;
-                return this;
+            }
+            else
+            {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             }
 
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            _EstInitialise = false;
-            return null;
-        }
-
-        internal ExtPiece Init()
-        {
-            if (_EstInitialise)
-                return this;
-            else
-                return null;
+            return _EstInitialise;
         }
 
         internal Feature ListeDesPiecesSoudees()
@@ -93,11 +93,11 @@ namespace Framework_SW2013
             List<ExtDossier> Liste = new List<ExtDossier>();
 
             Feature pFonction = ListeDesPiecesSoudees();
-            
+
             // S'il n'y a pas de liste, on arrete là
             if (pFonction == null)
                 return null;
-            
+
             pFonction = pFonction.GetFirstSubFeature();
 
             while (pFonction != null)
@@ -107,7 +107,7 @@ namespace Framework_SW2013
                     BodyFolder pSwDossier = pFonction.GetSpecificFeature2();
                     ExtDossier Dossier = new ExtDossier();
 
-                    if ((Dossier.Init(pSwDossier, this) != null) && (Dossier.Est(TypeDeCorps)) && (!Dossier.EstExclu | PrendreEnCompteExclus))
+                    if (Dossier.Init(pSwDossier, this) && (Dossier.Est(TypeDeCorps)) && (!Dossier.EstExclu | PrendreEnCompteExclus))
                         Liste.Add(Dossier);
                 }
             }
@@ -116,7 +116,7 @@ namespace Framework_SW2013
 
         }
 
-        ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
+        public ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);

@@ -16,7 +16,6 @@ namespace Framework_SW2013
         Boolean PrendreEnCompteExclus { get; set; }
         Boolean PrendreEnCompteSupprime { get; set; }
         Boolean RenvoyerComposantRacine { get; set; }
-        //Boolean Init(ExtComposant Composant)
         ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "");
     }
 
@@ -76,27 +75,29 @@ namespace Framework_SW2013
             set { _RenvoyerComposantRacine = value; }
         }
 
+        internal Boolean EstInitialise { get { return _EstInitialise; } }
+
         #endregion
 
         #region "Méthodes"
 
-        internal ExtRecherche Init(ExtComposant Composant)
+        internal Boolean Init(ExtComposant Composant)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((Composant != null) && (Composant.Init() != null))
+            if ((Composant != null) && Composant.EstInitialise)
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _Composant = Composant;
                 _EstInitialise = true;
-
-                return this;
+            }
+            else
+            {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             }
 
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            _EstInitialise = false;
-            return null;
+            return _EstInitialise;
         }
 
         internal ExtRecherche Init()
@@ -110,7 +111,7 @@ namespace Framework_SW2013
         private String NomCle(ExtComposant Composant)
         {
             String pNomCle = "";
-            if ((Composant != null) && (Composant.Init() != null))
+            if ((Composant != null) && Composant.EstInitialise)
             {
                 pNomCle = Composant.Modele.Chemin;
                 if (_PrendreEnCompteConfig)

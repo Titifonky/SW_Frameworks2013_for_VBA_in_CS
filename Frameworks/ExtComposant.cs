@@ -18,14 +18,13 @@ namespace Framework_SW2013
         Boolean EstSupprime { get; }
         int Nb { get; set; }
         ExtRecherche NouvelleRecherche { get; }
-        //Boolean Init(Component2 Composant, ExtModele Modele);
         ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("C46318AE-5820-11E2-A863-A3046188709B")]
     [ProgId("Frameworks.ExtComposant")]
-    public class ExtComposant : IExtComposant, IComparable<ExtComposant>, IComparer<ExtComposant>,IEquatable<ExtComposant>
+    public class ExtComposant : IExtComposant, IComparable<ExtComposant>, IComparer<ExtComposant>, IEquatable<ExtComposant>
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
@@ -48,26 +47,13 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public Component2 swComposant
-        {
-            get { return _SwComposant; }
-        }
+        public Component2 swComposant { get { return _SwComposant; } }
 
-        public ExtModele Modele
-        {
-            get { return _Modele; }
-        }
+        public ExtModele Modele { get { return _Modele; } }
 
-        public ExtConfiguration Configuration
-        {
-            get { return _Configuration; }
-        }
+        public ExtConfiguration Configuration { get { return _Configuration; } }
 
-        public int Nb
-        {
-            get { return _Nb; }
-            set { _Nb = value; }
-        }
+        public int Nb { get { return _Nb; } set { _Nb = value; } }
 
         public Boolean EstExclu
         {
@@ -98,51 +84,58 @@ namespace Framework_SW2013
             get
             {
                 ExtRecherche pNouvelleRecherche = new ExtRecherche();
-                pNouvelleRecherche.Init(this);
-                return pNouvelleRecherche;
+
+                if (pNouvelleRecherche.Init(this))
+                    return pNouvelleRecherche;
+
+                return null;
             }
         }
+
+        public Boolean EstInitialise { get { return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
-        internal ExtComposant Init(Component2 SwComposant, ExtModele Modele)
+        internal Boolean Init(Component2 SwComposant, ExtModele Modele)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
             // On teste si le Modele est valide
-            if ((SwComposant != null) && (Modele != null) && (Modele.Init() != null))
+            if ((SwComposant != null) && (Modele != null) && Modele.EstInitialise)
             {
                 // On valide l'initialisation avant de recupérer la configuration
                 _EstInitialise = true;
 
-                _Configuration = new ExtConfiguration();
-                if (String.IsNullOrEmpty(SwComposant.ReferencedConfiguration))
-                    _Configuration.Init(Modele.SwModele.GetActiveConfiguration(), Modele);
-                else
-                    _Configuration.Init(Modele.SwModele.GetConfigurationByName(SwComposant.ReferencedConfiguration), Modele);
+                Configuration pSwConfig;
 
-                if (_Configuration.Init() != null)
+                // Si la configuration referencé est vide, on recupère la configuration active.
+                if (String.IsNullOrEmpty(SwComposant.ReferencedConfiguration))
+                    pSwConfig = Modele.SwModele.GetActiveConfiguration();
+                else
+                    pSwConfig = Modele.SwModele.GetConfigurationByName(SwComposant.ReferencedConfiguration);
+
+                _Configuration = new ExtConfiguration();
+
+                // Si la config est ok
+                if (_Configuration.Init(pSwConfig, Modele))
                 {
                     _SwComposant = SwComposant;
                     _Modele = Modele;
                     _Nb = 1;
-                    return this;
+                }
+                else
+                {
+                    _EstInitialise = false;
                 }
             }
-            
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            _EstInitialise = false;
-            return null;
-        }
+            else // Sinon, on envoi pour le debug
+            {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+            }
 
-        internal ExtComposant Init()
-        {
-            if (_EstInitialise)
-                return this;
-            else
-                return null;
+            return _EstInitialise;
         }
 
         internal List<ExtComposant> ListComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
@@ -151,7 +144,7 @@ namespace Framework_SW2013
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
             List<ExtComposant> Liste = new List<ExtComposant>();
-            
+
             if (_SwComposant.IGetChildrenCount() == 0)
                 return Liste;
 

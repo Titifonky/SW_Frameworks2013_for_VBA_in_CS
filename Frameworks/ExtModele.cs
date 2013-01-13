@@ -24,7 +24,6 @@ namespace Framework_SW2013
         String NomDuFichier { get; }
         String NomDuFichierSansExt { get; }
         String NomDuDossier { get; }
-        //Boolean Init(ModelDoc2 ModeleDoc, ExtSldWorks Sw);
         void Activer();
         void Sauver();
         void Fermer();
@@ -71,10 +70,12 @@ namespace Framework_SW2013
         {
             get
             {
-                if (TypeDuModele == TypeFichier_e.cAssemblage)
-                    return new ExtAssemblage();
-                else
-                    return null;
+                ExtAssemblage Assemblage = new ExtAssemblage();
+
+                if (Assemblage.Init(this))
+                    return Assemblage;
+
+                return null;
             }
         }
 
@@ -82,10 +83,12 @@ namespace Framework_SW2013
         {
             get
             {
-                if (TypeDuModele == TypeFichier_e.cPiece)
-                    return new ExtPiece();
-                else
-                    return null;
+                ExtPiece Piece = new ExtPiece();
+
+                if (Piece.Init(this))
+                    return Piece;
+
+                return null;
             }
         }
 
@@ -135,11 +138,13 @@ namespace Framework_SW2013
         public String NomDuFichierSansExt { get { return Path.GetFileNameWithoutExtension(_swModele.GetPathName()); } }
         public String NomDuDossier { get { return Path.GetDirectoryName(_swModele.GetPathName()); } }
 
+        internal Boolean EstInitialise { get { return _EstInitialise; } }
+
         #endregion
 
         #region "Méthodes"
 
-        internal ExtModele Init(ModelDoc2 SwModele, ExtSldWorks Sw)
+        internal Boolean Init(ModelDoc2 SwModele, ExtSldWorks Sw)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
@@ -149,37 +154,29 @@ namespace Framework_SW2013
                 _SW = Sw;
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-                // On valide l'initialisation avant de recupérer le composant
+                // On valide l'initialisation
                 _EstInitialise = true;
 
+                // Si c'est un assemblage ou une pièce, on va chercher le composant associé
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
                     _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Referencement du composant");
                     _Composant = new ExtComposant();
-                    _Composant.Init(_swModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this);
+                    if (_Composant.Init(_swModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this) == false)
+                        _EstInitialise = false;
                 }
-
-                // Si le composant est valide, on envoi
-                if (_Composant.Init() != null)
-                    return this;
+            }
+            else
+            {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             }
 
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            _EstInitialise = false;
-            return null;
-        }
-
-        internal ExtModele Init()
-        {
-            if (_EstInitialise)
-                return this;
-            else
-                return null;
+            return _EstInitialise;
         }
 
         public void Activer()
         {
-            _SW.swSW.ActivateDoc3(_swModele.GetPathName(), true, 0, Erreur);
+            _SW.SwSW.ActivateDoc3(_swModele.GetPathName(), true, 0, Erreur);
             ZoomEtendu();
             Redessiner();
         }
@@ -191,7 +188,7 @@ namespace Framework_SW2013
 
         public void Fermer()
         {
-            _SW.swSW.CloseDoc(_swModele.GetPathName());
+            _SW.SwSW.CloseDoc(_swModele.GetPathName());
         }
 
         public void Redessiner()

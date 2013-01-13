@@ -8,6 +8,8 @@ namespace Framework_SW2013
     [Guid("413147BE-5B70-11E2-A5B0-4BF46188709B")]
     public interface IExtDossier
     {
+        BodyFolder SwDossier { get; }
+        ExtPiece Piece { get; }
         Boolean EstExclu { get; set; }
         Boolean Est(TypeCorps_e TypeDeCorps);
     }
@@ -36,17 +38,23 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        public BodyFolder SwDossier { get { return _swDossier; } }
+
+        public ExtPiece Piece { get { return _Piece; } }
+
         public Boolean EstExclu { get; set; }
+
+        internal Boolean EstInitialise { get { return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
-        internal ExtDossier Init(BodyFolder Dossier, ExtPiece Piece)
+        internal Boolean Init(BodyFolder Dossier, ExtPiece Piece)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((Dossier != null) && (Piece != null) && (Piece.Init() != null))
+            if ((Dossier != null) && (Piece != null) && Piece.EstInitialise)
             {
 
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
@@ -54,20 +62,12 @@ namespace Framework_SW2013
                 _Piece = Piece;
                 _swDossier = Dossier;
                 _EstInitialise = true;
-                return this;
             }
-
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            _EstInitialise = false;
-            return null;
-        }
-
-        internal ExtDossier Init()
-        {
-            if (_EstInitialise)
-                return this;
             else
-                return null;
+            {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+            }
+            return _EstInitialise;
         }
 
         public Boolean Est(TypeCorps_e TypeDeCorps)

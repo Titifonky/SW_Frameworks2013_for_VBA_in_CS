@@ -58,7 +58,7 @@ namespace Framework_SW2013
             if (SW != null)
             {
                 _SW = SW;
-                String pDossierMacros = _SW.swSW.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swFileLocationsMacros);
+                String pDossierMacros = _SW.SwSW.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swFileLocationsMacros);
 
                 _CheminFichierExecution = Path.Combine(pDossierMacros, "Execution.txt");
                 _CheminFichierDebug = Path.Combine(pDossierMacros, "Debug.txt");

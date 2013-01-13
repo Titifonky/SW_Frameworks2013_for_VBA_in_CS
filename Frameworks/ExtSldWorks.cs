@@ -11,7 +11,7 @@ namespace Framework_SW2013
     [Guid("9ED6BE92-5820-11E2-9D5D-93046188709B")]
     public interface IExtSldWorks
     {
-        SldWorks swSW { get; }
+        SldWorks SwSW { get; }
         TypeFichier_e TypeDuModeleActif { get; }
         String VersionDeBase { get; }
         String VersionCourante { get; }
@@ -27,6 +27,7 @@ namespace Framework_SW2013
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
+        private Boolean _EstInitialise = false;
 
         private SldWorks _swSW;
         private String _VersionDeBase;
@@ -50,7 +51,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Initialisation de l'objet ExtSldWorks pour commencer
         /// </summary>
-        public SldWorks swSW
+        public SldWorks SwSW
         {
             get { return _swSW; }
         }
@@ -83,6 +84,8 @@ namespace Framework_SW2013
             get { return _Hotfixe; }
         }
 
+        internal Boolean EstInitialise { get { return _EstInitialise; } }
+
         #endregion
 
         #region "Méthodes"
@@ -105,11 +108,10 @@ namespace Framework_SW2013
                 _Debug.ExecutionAjouterLigne("SOLIDWORKS");
                 _Debug.ExecutionAjouterLigne("Version de base : " + VersionDeBase + "    Version courante : " + VersionCourante + "    Hotfixe : " + Hotfixe);
                 _Debug.ExecutionAjouterLigne("------------------------------------------------------------------------------------------------");
-                return true;
+                _EstInitialise = true;
             }
 
-            
-            return false;
+            return _EstInitialise;
             
         }
         
@@ -127,13 +129,18 @@ namespace Framework_SW2013
             if (String.IsNullOrEmpty(Chemin))
             {
                 _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "SldWorks.ActiveDoc");
-                return pModele.Init(_swSW.ActiveDoc, this);
+                pModele.Init(_swSW.ActiveDoc, this);
             }
             else
             {
                 _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Ouvrir " + Chemin);
-                return pModele.Init(Ouvrir(Chemin), this);
+                pModele.Init(Ouvrir(Chemin), this);
             }
+
+            if (pModele.EstInitialise)
+                return pModele;
+            else
+                return null;
         }
 
         /// <summary>

@@ -13,9 +13,8 @@ namespace Framework_SW2013
     {
         ExtModele Modele { get; }
         ExtConfiguration ConfigurationActive { get; }
-        //Boolean Init(ExtModele Modele);
         ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "");
-        ExtConfiguration Configuration(String NomConfiguration);
+        ExtConfiguration ConfigurationAvecLeNom(String NomConfiguration);
         ExtConfiguration AjouterUneConfigurationDeBase(String NomConfiguration);
         void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "");
     }
@@ -50,9 +49,14 @@ namespace Framework_SW2013
             get
             {
                 ExtConfiguration pConfig = new ExtConfiguration();
-                return pConfig.Init(_Modele.SwModele.ConfigurationManager.ActiveConfiguration, _Modele);
+                if (pConfig.Init(_Modele.SwModele.ConfigurationManager.ActiveConfiguration, _Modele))
+                    return pConfig;
+                
+                return null;
             }
         }
+
+        internal Boolean EstInitialise { get { return _EstInitialise; } }
 
         #endregion
 
@@ -62,7 +66,7 @@ namespace Framework_SW2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((Modele != null) && (Modele.Init() != null))
+            if ((Modele != null) && Modele.EstInitialise)
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
@@ -91,7 +95,7 @@ namespace Framework_SW2013
 
             foreach (String pNomConfig in _Modele.SwModele.GetConfigurationNames())
             {
-                ExtConfiguration pConfig = Configuration(pNomConfig);
+                ExtConfiguration pConfig = ConfigurationAvecLeNom(pNomConfig);
                 ExtConfiguration pConfigParent = pConfig.ConfigurationParent;
                 string NomConfigParent = "";
 
@@ -118,16 +122,22 @@ namespace Framework_SW2013
             return pArrayConfigs;
         }
 
-        public ExtConfiguration Configuration(String NomConfiguration)
+        public ExtConfiguration ConfigurationAvecLeNom(String NomConfiguration)
         {
             ExtConfiguration pConfig = new ExtConfiguration();
-            return pConfig.Init(_Modele.SwModele.GetConfigurationByName(NomConfiguration), _Modele);
+            if (pConfig.Init(_Modele.SwModele.GetConfigurationByName(NomConfiguration), _Modele))
+                return pConfig;
+
+            return null;
         }
 
         public ExtConfiguration AjouterUneConfigurationDeBase(String NomConfig)
         {
             ExtConfiguration pConfig = new ExtConfiguration();
-            return pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfig, NomConfig, "", 0, "", ""), _Modele);
+            if (pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfig, NomConfig, "", 0, "", ""), _Modele))
+                return pConfig;
+
+            return null;
         }
 
         public void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "")

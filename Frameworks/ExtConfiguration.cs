@@ -15,7 +15,6 @@ namespace Framework_SW2013
         String Nom { get; set; }
         TypeConfig_e TypeConfig { get; }
         ExtConfiguration ConfigurationParent { get; }
-        //Boolean Init(Configuration Config, ExtModele Modele);
         Boolean Est(TypeConfig_e T);
         Boolean Supprimer();
     }
@@ -46,7 +45,7 @@ namespace Framework_SW2013
 
         public Configuration swConfiguration { get { return _SwConfiguration; } }
 
-        public ExtModele Modele { get { return _Modele.Init(); } }
+        public ExtModele Modele { get { return _Modele; } }
 
         public String Nom { get { return _SwConfiguration.Name; } set { _SwConfiguration.Name = value; } }
 
@@ -74,40 +73,37 @@ namespace Framework_SW2013
             get
             {
                 ExtConfiguration pConfigParent = new ExtConfiguration();
-                return pConfigParent.Init(swConfiguration.GetParent(), _Modele);
+                if (pConfigParent.Init(swConfiguration.GetParent(), _Modele))
+                    return pConfigParent;
+
+                return null;
             }
         }
+
+        internal Boolean EstInitialise { get { return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
-        internal ExtConfiguration Init(Configuration Config, ExtModele Modele)
+        internal Boolean Init(Configuration Config, ExtModele Modele)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((Config != null) && (Modele != null) && (Modele.Init() != null))
+            if ((Config != null) && (Modele != null) && Modele.EstInitialise)
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _SwConfiguration = Config;
                 _Modele = Modele;
                 _EstInitialise = true;
-
-                return this;
+            }
+            else
+            {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             }
 
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            _EstInitialise = false;
-            return null;
-        }
-
-        internal ExtConfiguration Init()
-        {
-            if (_EstInitialise)
-                return this;
-            else
-                return null;
+            return _EstInitialise;
         }
 
         public Boolean Est(TypeConfig_e T)
