@@ -15,6 +15,7 @@ namespace Framework_SW2013
         String Nom { get; set; }
         TypeConfig_e TypeConfig { get; }
         ExtConfiguration ConfigurationParent { get; }
+        GestDeProprietes GestDeProprietes { get; }
         Boolean Est(TypeConfig_e T);
         Boolean Supprimer();
     }
@@ -75,6 +76,18 @@ namespace Framework_SW2013
                 ExtConfiguration pConfigParent = new ExtConfiguration();
                 if (pConfigParent.Init(swConfiguration.GetParent(), _Modele))
                     return pConfigParent;
+
+                return null;
+            }
+        }
+
+        public GestDeProprietes GestDeProprietes
+        {
+            get
+            {
+                GestDeProprietes pGestProps = new GestDeProprietes();
+                if (pGestProps.Init(_SwConfiguration.CustomPropertyManager, _Modele))
+                    return pGestProps;
 
                 return null;
             }

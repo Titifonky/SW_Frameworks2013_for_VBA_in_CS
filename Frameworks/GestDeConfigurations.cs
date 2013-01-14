@@ -28,15 +28,13 @@ namespace Framework_SW2013
         private Debug _Debug = Debug.Instance;
         private Boolean _EstInitialise = false;
 
-        ExtModele _Modele;
+        private ExtModele _Modele;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public GestDeConfigurations()
-        {
-        }
+        public GestDeConfigurations() { }
 
         #endregion
 
@@ -62,7 +60,7 @@ namespace Framework_SW2013
 
         #region "Méthodes"
 
-        internal GestDeConfigurations Init(ExtModele Modele)
+        internal Boolean Init(ExtModele Modele)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
@@ -72,21 +70,13 @@ namespace Framework_SW2013
 
                 _Modele = Modele;
                 _EstInitialise = true;
-
-                return this;
+            }
+            else
+            {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             }
 
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
-            _EstInitialise = false;
-            return null;
-        }
-
-        internal GestDeConfigurations Init()
-        {
-            if (_EstInitialise)
-                return this;
-            else
-                return null;
+            return _EstInitialise;
         }
 
         internal List<ExtConfiguration> ListListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "")

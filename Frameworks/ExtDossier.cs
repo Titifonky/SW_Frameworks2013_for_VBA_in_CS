@@ -10,7 +10,10 @@ namespace Framework_SW2013
     {
         BodyFolder SwDossier { get; }
         ExtPiece Piece { get; }
+        String Nom { get; set; }
         Boolean EstExclu { get; set; }
+        TypeCorps_e TypeDeCorps { get; }
+        GestDeProprietes GestDeProprietes { get; }
         Boolean Est(TypeCorps_e TypeDeCorps);
     }
 
@@ -42,7 +45,42 @@ namespace Framework_SW2013
 
         public ExtPiece Piece { get { return _Piece; } }
 
-        public Boolean EstExclu { get; set; }
+        public String Nom { get { return _swDossier.GetFeature().Name; } set { _swDossier.GetFeature().Name = value; } }
+
+        public Boolean EstExclu
+        {
+            get
+            {
+                if (_swDossier.GetFeature().ExcludeFromCutList == false)
+                    return false;
+                else
+                    return true;
+            }
+            set
+            {
+                _swDossier.GetFeature().ExcludeFromCutList = value;
+            }
+        }
+
+        public TypeCorps_e TypeDeCorps
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public GestDeProprietes GestDeProprietes
+        {
+            get
+            {
+                GestDeProprietes pGestProps = new GestDeProprietes();
+                if (pGestProps.Init(_swDossier.GetFeature().CustomPropertyManager, _Piece.Modele))
+                    return pGestProps;
+
+                return null;
+            }
+        }
 
         internal Boolean EstInitialise { get { return _EstInitialise; } }
 
@@ -50,17 +88,17 @@ namespace Framework_SW2013
 
         #region "Méthodes"
 
-        internal Boolean Init(BodyFolder Dossier, ExtPiece Piece)
+        internal Boolean Init(BodyFolder SwDossier, ExtPiece Piece)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((Dossier != null) && (Piece != null) && Piece.EstInitialise)
+            if ((SwDossier != null) && (Piece != null) && Piece.EstInitialise)
             {
 
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _Piece = Piece;
-                _swDossier = Dossier;
+                _swDossier = SwDossier;
                 _EstInitialise = true;
             }
             else

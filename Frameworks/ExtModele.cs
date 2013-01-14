@@ -19,6 +19,7 @@ namespace Framework_SW2013
         ExtPiece Piece { get; }
         ExtDessin Dessin { get; }
         GestDeConfigurations GestDeConfigurations { get; }
+        GestDeProprietes GestDeProprietes { get; }
         TypeFichier_e TypeDuModele { get; }
         String Chemin { get; }
         String NomDuFichier { get; }
@@ -52,9 +53,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtModele()
-        {
-        }
+        public ExtModele(){}
 
         #endregion
 
@@ -108,7 +107,22 @@ namespace Framework_SW2013
             get
             {
                 GestDeConfigurations pGestConfigs = new GestDeConfigurations();
-                return pGestConfigs.Init(this);
+                if (pGestConfigs.Init(this))
+                    return pGestConfigs;
+                
+                return null;
+            }
+        }
+
+        public GestDeProprietes GestDeProprietes
+        {
+            get
+            {
+                GestDeProprietes pGestProps = new GestDeProprietes();
+                if (pGestProps.Init(_swModele.Extension.get_CustomPropertyManager("") ,this))
+                    return pGestProps;
+
+                return null;
             }
         }
 
