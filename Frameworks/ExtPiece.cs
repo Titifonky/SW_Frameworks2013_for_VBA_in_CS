@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 
 namespace Framework_SW2013
@@ -13,6 +14,7 @@ namespace Framework_SW2013
         PartDoc SwPiece { get; }
         ExtModele Modele { get; }
         ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false);
+        ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -31,9 +33,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtPiece()
-        {
-        }
+        public ExtPiece() { }
 
         #endregion
 
@@ -107,10 +107,37 @@ namespace Framework_SW2013
                     BodyFolder pSwDossier = pFonction.GetSpecificFeature2();
                     ExtDossier Dossier = new ExtDossier();
 
-                    if (Dossier.Init(pSwDossier, this) && (Dossier.Est(TypeDeCorps)) && (!Dossier.EstExclu | PrendreEnCompteExclus))
+                    if (Dossier.Init(pSwDossier, this) && (Dossier.TypeDeCorps == TypeDeCorps) && (!Dossier.EstExclu | PrendreEnCompteExclus))
                         Liste.Add(Dossier);
+
+                    Dossier = null;
                 }
+
+                pFonction = pFonction.GetNextFeature();
             }
+
+            return Liste;
+
+        }
+
+        internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        {
+            List<ExtFonction> Liste = new List<ExtFonction>();
+
+            Feature pSwFonction = _Modele.SwModele.FirstFeature();
+
+            while (pSwFonction != null)
+            {
+                ExtFonction pFonction = new ExtFonction();
+
+                if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pFonction.Init(pSwFonction, this))
+                    Liste.Add(pFonction);
+
+                pFonction = null;
+
+                pSwFonction = pSwFonction.GetNextFeature();
+            }
+
 
             return Liste;
 

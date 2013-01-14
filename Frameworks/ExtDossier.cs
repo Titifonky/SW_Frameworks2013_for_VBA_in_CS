@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 
 namespace Framework_SW2013
@@ -14,7 +17,8 @@ namespace Framework_SW2013
         Boolean EstExclu { get; set; }
         TypeCorps_e TypeDeCorps { get; }
         GestDeProprietes GestDeProprietes { get; }
-        Boolean Est(TypeCorps_e TypeDeCorps);
+        ExtCorps PremierCorps { get; }
+        ArrayList ListeDesCorps(String NomARechercher = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -66,7 +70,11 @@ namespace Framework_SW2013
         {
             get
             {
-                throw new NotImplementedException();
+                ExtCorps pCorps = PremierCorps;
+                if (pCorps.EstInitialise)
+                    return pCorps.TypeDeCorps;
+
+                return TypeCorps_e.cAucun;
             }
         }
 
@@ -82,6 +90,18 @@ namespace Framework_SW2013
             }
         }
 
+        ExtCorps PremierCorps
+        {
+            get
+            {
+                ExtCorps pCorps = new ExtCorps();
+                if ((_swDossier.GetBodyCount() > 0) && pCorps.Init(_swDossier.GetBodies()[0], _Piece))
+                    return pCorps;
+
+                return null;
+            }
+        }
+
         internal Boolean EstInitialise { get { return _EstInitialise; } }
 
         #endregion
@@ -92,7 +112,7 @@ namespace Framework_SW2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((SwDossier != null) && (Piece != null) && Piece.EstInitialise)
+            if ((SwDossier != null) && (SwDossier.GetBodyCount() > 0)  && (Piece != null) && Piece.EstInitialise)
             {
 
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
@@ -108,9 +128,35 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        public Boolean Est(TypeCorps_e TypeDeCorps)
+        internal List<ExtCorps> ListListeDesCorps(String NomARechercher = "")
         {
-            throw new NotImplementedException();
+            List<ExtCorps> pListeCorps = new List<ExtCorps>();
+
+            foreach (Body2 pSwCorps in _swDossier.GetBodies())
+            {
+                if (Regex.IsMatch(pSwCorps.Name,NomARechercher))
+                {
+                    ExtCorps Corps = new ExtCorps();
+                    if (Corps.Init(pSwCorps, _Piece))
+                        pListeCorps.Add(Corps);
+                }
+            }
+
+            return pListeCorps;
+        }
+
+        public ArrayList ListeDesCorps(String NomARechercher = "")
+        {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
+            List<ExtCorps> pListeCorps = ListListeDesCorps(NomARechercher);
+            ArrayList pArrayCorps = new ArrayList();
+
+            if (pListeCorps.Count > 0)
+                pArrayCorps = new ArrayList(pListeCorps);
+
+            return pArrayCorps;
         }
 
         #endregion
