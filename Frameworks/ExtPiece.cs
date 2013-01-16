@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 
+/////////////////////////// Implementation terminée ///////////////////////////
+
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -13,6 +15,7 @@ namespace Framework_SW2013
     {
         PartDoc SwPiece { get; }
         ExtModele Modele { get; }
+        Boolean Contient(TypeCorps_e T);
         ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false);
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
     }
@@ -27,7 +30,7 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private ExtModele _Modele;
-        private PartDoc _swPiece;
+        private PartDoc _SwPiece;
 
         #endregion
 
@@ -39,7 +42,7 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public PartDoc SwPiece { get { return _swPiece; } }
+        public PartDoc SwPiece { get { return _SwPiece; } }
 
         public ExtModele Modele { get { return _Modele; } }
 
@@ -58,7 +61,7 @@ namespace Framework_SW2013
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _Modele = Modele;
-                _swPiece = Modele.SwModele as PartDoc;
+                _SwPiece = Modele.SwModele as PartDoc;
                 _EstInitialise = true;
             }
             else
@@ -86,6 +89,47 @@ namespace Framework_SW2013
             }
 
             return null;
+        }
+        
+        /// <summary>
+        /// Renvoi Vrai si la piece contient des corps du type T
+        /// A tester. Peut dans certain cas renvoyer un resultat erroné. ex :
+        /// Si un corps de tolerie ou un profil a été créé puis supprimé,
+        /// la fonction existe mais plus le corps. Pb également dans le cas de corps combiné
+        /// </summary>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        public Boolean Contient(TypeCorps_e T)
+        {
+            if (Convert.ToBoolean(T & TypeCorps_e.cTole))
+            {
+                foreach (ExtFonction Fonction in ListListeDesFonctions())
+                {
+                    if ((Fonction.TypeDeLaFonction == "SMBaseFlange") || (Fonction.TypeDeLaFonction == "SolidToSheetMetal"))
+                        return true;
+                }
+
+                T = (TypeCorps_e)( T - TypeCorps_e.cTole);
+            }
+
+            if (Convert.ToBoolean(T & TypeCorps_e.cProfil))
+            {
+                foreach (ExtFonction Fonction in ListListeDesFonctions())
+                {
+                    if (Fonction.TypeDeLaFonction == "WeldMemberFeat")
+                        return true;
+                }
+
+                T = (TypeCorps_e)(T - TypeCorps_e.cProfil);
+            }
+
+            if (Convert.ToBoolean(T & TypeCorps_e.cAutre))
+            {
+                if (ListListeDesDossiers(TypeCorps_e.cAutre, false).Count > 0)
+                    return true;
+            }
+
+            return false;
         }
 
         internal List<ExtDossier> ListListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
@@ -122,7 +166,7 @@ namespace Framework_SW2013
 
         internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            List<ExtFonction> Liste = new List<ExtFonction>();
+            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
 
             Feature pSwFonction = _Modele.SwModele.FirstFeature();
 
@@ -131,15 +175,28 @@ namespace Framework_SW2013
                 ExtFonction pFonction = new ExtFonction();
 
                 if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pFonction.Init(pSwFonction, this))
-                    Liste.Add(pFonction);
+                    pListeFonctions.Add(pFonction);
 
-                pFonction = null;
+                if (AvecLesSousFonctions)
+                {
+                    Feature pSwSousFonction = pSwFonction.GetFirstSubFeature();
+
+                    while (pSwSousFonction != null)
+                    {
+                        ExtFonction pSousFonction = new ExtFonction();
+
+                        if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, this))
+                            pListeFonctions.Add(pSousFonction);
+
+                        pSwSousFonction = pSwSousFonction.GetNextSubFeature();
+                    }
+                }
 
                 pSwFonction = pSwFonction.GetNextFeature();
             }
 
 
-            return Liste;
+            return pListeFonctions;
 
         }
 
@@ -155,6 +212,20 @@ namespace Framework_SW2013
                 pArrayDossiers = new ArrayList(pListeDossier);
 
             return pArrayDossiers;
+        }
+
+        public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
+            List<ExtFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
+            ArrayList pArrayFonctions = new ArrayList();
+
+            if (pListeFonctions.Count > 0)
+                pArrayFonctions = new ArrayList(pListeFonctions);
+
+            return pArrayFonctions;
         }
 
         #endregion

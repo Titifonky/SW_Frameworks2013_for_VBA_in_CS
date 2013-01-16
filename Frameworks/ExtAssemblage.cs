@@ -24,20 +24,18 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private ExtModele _Modele;
-        private AssemblyDoc _swAssemblage;
+        private AssemblyDoc _SwAssemblage;
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtAssemblage()
-        {
-        }
+        public ExtAssemblage() { }
 
         #endregion
 
         #region "Propriétés"
 
-        public AssemblyDoc SwAssemblage { get { return _swAssemblage; } }
+        public AssemblyDoc SwAssemblage { get { return _SwAssemblage; } }
 
         public ExtModele Modele { get { return _Modele; } }
 
@@ -56,7 +54,7 @@ namespace Framework_SW2013
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _Modele = Modele;
-                _swAssemblage = Modele.SwModele as AssemblyDoc;
+                _SwAssemblage = Modele.SwModele as AssemblyDoc;
                 _EstInitialise = true;
             }
             else

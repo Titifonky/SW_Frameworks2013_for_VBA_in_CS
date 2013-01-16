@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 
+/////////////////////////// Implementation terminée ///////////////////////////
+
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -31,39 +33,28 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private ExtPiece _Piece;
-        private BodyFolder _swDossier;
+        private BodyFolder _SwDossier;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtDossier()
-        {
-        }
+        public ExtDossier() { }
 
         #endregion
 
         #region "Propriétés"
 
-        public BodyFolder SwDossier { get { return _swDossier; } }
+        public BodyFolder SwDossier { get { return _SwDossier; } }
 
         public ExtPiece Piece { get { return _Piece; } }
 
-        public String Nom { get { return _swDossier.GetFeature().Name; } set { _swDossier.GetFeature().Name = value; } }
+        public String Nom { get { return SwDossier.GetFeature().Name; } set { SwDossier.GetFeature().Name = value; } }
 
         public Boolean EstExclu
         {
-            get
-            {
-                if (_swDossier.GetFeature().ExcludeFromCutList == false)
-                    return false;
-                else
-                    return true;
-            }
-            set
-            {
-                _swDossier.GetFeature().ExcludeFromCutList = value;
-            }
+            get { return Convert.ToBoolean(SwDossier.GetFeature().ExcludeFromCutList); }
+            set { SwDossier.GetFeature().ExcludeFromCutList = value; }
         }
 
         public TypeCorps_e TypeDeCorps
@@ -83,19 +74,19 @@ namespace Framework_SW2013
             get
             {
                 GestDeProprietes pGestProps = new GestDeProprietes();
-                if (pGestProps.Init(_swDossier.GetFeature().CustomPropertyManager, _Piece.Modele))
+                if (pGestProps.Init(SwDossier.GetFeature().CustomPropertyManager, _Piece.Modele))
                     return pGestProps;
 
                 return null;
             }
         }
 
-        ExtCorps PremierCorps
+        public ExtCorps PremierCorps
         {
             get
             {
                 ExtCorps pCorps = new ExtCorps();
-                if ((_swDossier.GetBodyCount() > 0) && pCorps.Init(_swDossier.GetBodies()[0], _Piece))
+                if ((SwDossier.GetBodyCount() > 0) && pCorps.Init(SwDossier.GetBodies()[0], _Piece))
                     return pCorps;
 
                 return null;
@@ -112,13 +103,13 @@ namespace Framework_SW2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((SwDossier != null) && (SwDossier.GetBodyCount() > 0)  && (Piece != null) && Piece.EstInitialise)
+            if ((SwDossier != null) && (SwDossier.GetBodyCount() > 0) && (Piece != null) && Piece.EstInitialise)
             {
 
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _Piece = Piece;
-                _swDossier = SwDossier;
+                _SwDossier = SwDossier;
                 _EstInitialise = true;
             }
             else
@@ -132,13 +123,13 @@ namespace Framework_SW2013
         {
             List<ExtCorps> pListeCorps = new List<ExtCorps>();
 
-            foreach (Body2 pSwCorps in _swDossier.GetBodies())
+            foreach (Body2 pSwCorps in SwDossier.GetBodies())
             {
-                if (Regex.IsMatch(pSwCorps.Name,NomARechercher))
+                if (Regex.IsMatch(pSwCorps.Name, NomARechercher))
                 {
-                    ExtCorps Corps = new ExtCorps();
-                    if (Corps.Init(pSwCorps, _Piece))
-                        pListeCorps.Add(Corps);
+                    ExtCorps pCorps = new ExtCorps();
+                    if (pCorps.Init(pSwCorps, _Piece))
+                        pListeCorps.Add(pCorps);
                 }
             }
 

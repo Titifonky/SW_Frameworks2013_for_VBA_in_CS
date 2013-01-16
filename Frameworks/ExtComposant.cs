@@ -5,13 +5,15 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
+/////////////////////////// Implementation terminée ///////////////////////////
+
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("BF2ED17A-5820-11E2-8160-9F046188709B")]
     public interface IExtComposant
     {
-        Component2 swComposant { get; }
+        Component2 SwComposant { get; }
         ExtModele Modele { get; }
         ExtConfiguration Configuration { get; }
         Boolean EstExclu { get; set; }
@@ -39,15 +41,13 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtComposant()
-        {
-        }
+        public ExtComposant() { }
 
         #endregion
 
         #region "Propriétés"
 
-        public Component2 swComposant { get { return _SwComposant; } }
+        public Component2 SwComposant { get { return _SwComposant; } }
 
         public ExtModele Modele { get { return _Modele; } }
 
@@ -57,24 +57,11 @@ namespace Framework_SW2013
 
         public Boolean EstExclu
         {
-            get
-            {
-                if (_SwComposant.ExcludeFromBOM != false)
-                    return true;
-                return false;
-            }
-            set { _SwComposant.ExcludeFromBOM = value; }
+            get { return Convert.ToBoolean(SwComposant.ExcludeFromBOM); }
+            set { SwComposant.ExcludeFromBOM = value; }
         }
 
-        public Boolean EstSupprime
-        {
-            get
-            {
-                if (_SwComposant.IsSuppressed() != false)
-                    return true;
-                return false;
-            }
-        }
+        public Boolean EstSupprime { get { return Convert.ToBoolean(SwComposant.IsSuppressed()); } }
 
         /// <summary>
         /// Renvoi un nouvel objet Recherche
@@ -143,33 +130,33 @@ namespace Framework_SW2013
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-            List<ExtComposant> Liste = new List<ExtComposant>();
+            List<ExtComposant> pListe = new List<ExtComposant>();
 
-            if (_SwComposant.IGetChildrenCount() == 0)
-                return Liste;
+            if (SwComposant.IGetChildrenCount() == 0)
+                return pListe;
 
-            foreach (Component2 SwComposant in _SwComposant.GetChildren())
+            foreach (Component2 pSwComposant in SwComposant.GetChildren())
             {
                 /// Si le composant est supprimé mais qu'on a decidé de le prendre en compte, c'est bon
-                if ((SwComposant.IsSuppressed() == false) | PrendreEnCompteSupprime)
+                if ((pSwComposant.IsSuppressed() == false) | PrendreEnCompteSupprime)
                 {
                     // Pour intitialiser le composant correctement il faut un peu de bidouille
                     // sinon on à le droit à une belle reference circulaire
                     // Donc d'abord, on recherche le modele du SwComposant
-                    ExtModele Modele = _Modele.SW.Modele(SwComposant.GetPathName());
+                    ExtModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
                     // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
-                    ExtComposant Composant = new ExtComposant();
-                    Composant.Init(SwComposant, Modele);
+                    ExtComposant pComposant = new ExtComposant();
+                    pComposant.Init(pSwComposant, pModele);
                     // Et pour que les deux soit liés, on passe la ref du Composant que l'on vient de creer
                     // au modele. Comme ca, Modele.Composant pointe sur Composant et Composant.Modele pointe sur Modele,
                     // la boucle est bouclée
-                    Modele.Composant = Composant;
-                    Liste.Add(Composant);
+                    pModele.Composant = pComposant;
+                    pListe.Add(pComposant);
                 }
             }
 
-            Liste.Sort();
-            return Liste;
+            pListe.Sort();
+            return pListe;
 
         }
 
@@ -194,21 +181,21 @@ namespace Framework_SW2013
         int IComparable<ExtComposant>.CompareTo(ExtComposant Comp)
         {
             String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
-            String Nom2 = Comp.swComposant.GetPathName() + Comp.Configuration.Nom;
+            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
         int IComparer<ExtComposant>.Compare(ExtComposant Comp1, ExtComposant Comp2)
         {
-            String Nom1 = Comp1.swComposant.GetPathName() + Comp1.Configuration.Nom;
-            String Nom2 = Comp2.swComposant.GetPathName() + Comp2.Configuration.Nom;
+            String Nom1 = Comp1.SwComposant.GetPathName() + Comp1.Configuration.Nom;
+            String Nom2 = Comp2.SwComposant.GetPathName() + Comp2.Configuration.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
         bool IEquatable<ExtComposant>.Equals(ExtComposant Comp)
         {
             String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
-            String Nom2 = Comp.swComposant.GetPathName() + Comp.Configuration.Nom;
+            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom;
             return Nom1.Equals(Nom2);
         }
 

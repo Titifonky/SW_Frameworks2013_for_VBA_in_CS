@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
+/////////////////////////// Implementation terminée ///////////////////////////
+
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -38,42 +40,21 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtRecherche()
-        {
-        }
+        public ExtRecherche() { }
 
         #endregion
 
         #region "Propriétés"
 
-        public ExtComposant Composant
-        {
-            get { return _Composant; }
-        }
+        public ExtComposant Composant { get { return _Composant; } }
 
-        public Boolean PrendreEnCompteConfig
-        {
-            get { return _PrendreEnCompteConfig; }
-            set { _PrendreEnCompteConfig = value; }
-        }
+        public Boolean PrendreEnCompteConfig { get { return _PrendreEnCompteConfig; } set { _PrendreEnCompteConfig = value; } }
 
-        public Boolean PrendreEnCompteExclus
-        {
-            get { return _PrendreEnCompteExclus; }
-            set { _PrendreEnCompteExclus = value; }
-        }
+        public Boolean PrendreEnCompteExclus { get { return _PrendreEnCompteExclus; } set { _PrendreEnCompteExclus = value; } }
 
-        public Boolean PrendreEnCompteSupprime
-        {
-            get { return _PrendreEnCompteSupprime; }
-            set { _PrendreEnCompteSupprime = value; }
-        }
+        public Boolean PrendreEnCompteSupprime { get { return _PrendreEnCompteSupprime; } set { _PrendreEnCompteSupprime = value; } }
 
-        public Boolean RenvoyerComposantRacine
-        {
-            get { return _RenvoyerComposantRacine; }
-            set { _RenvoyerComposantRacine = value; }
-        }
+        public Boolean RenvoyerComposantRacine { get { return _RenvoyerComposantRacine; } set { _RenvoyerComposantRacine = value; } }
 
         internal Boolean EstInitialise { get { return _EstInitialise; } }
 
@@ -100,14 +81,6 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        internal ExtRecherche Init()
-        {
-            if (_EstInitialise)
-                return this;
-            else
-                return null;
-        }
-
         private String NomCle(ExtComposant Composant)
         {
             String pNomCle = "";
@@ -126,37 +99,37 @@ namespace Framework_SW2013
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-            foreach (ExtComposant Comp in ComposantRacine.ListComposantsEnfants(_PrendreEnCompteSupprime))
+            foreach (ExtComposant pComp in ComposantRacine.ListComposantsEnfants(_PrendreEnCompteSupprime))
             {
                 // Operateur "Implique" sur la propriété EstExclu
-                if (!Comp.EstExclu | _PrendreEnCompteExclus)
+                if (!pComp.EstExclu | _PrendreEnCompteExclus)
                 {
                     // Attention, Regex.IsMatch peut renvoyer une erreur si NomComposant est égal à un caractère spécial
                     // du style "*" ou "[" et autre. Pb à corriger.
-                    if ( Convert.ToBoolean(Comp.Modele.TypeDuModele & TypeComposant) && Regex.IsMatch(Comp.Modele.Chemin, NomComposant))
+                    if ( Convert.ToBoolean(pComp.Modele.TypeDuModele & TypeComposant) && Regex.IsMatch(pComp.Modele.Chemin, NomComposant))
                     {
-                        ExtComposant Composant = new ExtComposant();
+                        ExtComposant pComposant = new ExtComposant();
 
                         // S'il est déjà dans le dico, on on rajoute 1
-                        if (DicComposants.ContainsKey(NomCle(Comp)))
+                        if (DicComposants.ContainsKey(NomCle(pComp)))
                         {
-                            Composant = DicComposants[NomCle(Comp)];
-                            Composant.Nb += 1;
+                            pComposant = DicComposants[NomCle(pComp)];
+                            pComposant.Nb += 1;
                         }
                         // sinon on le rajoute
                         else
                         {
-                            Composant = Comp;
-                            Composant.Nb = 1;
-                            DicComposants.Add(NomCle(Composant), Composant);
+                            pComposant = pComp;
+                            pComposant.Nb = 1;
+                            DicComposants.Add(NomCle(pComposant), pComposant);
                         }
 
                     }
 
                     // Si c'est un assemblage et qu'il n'est pas supprimé, on scan
-                    if ((Comp.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (Comp.EstSupprime == false))
+                    if ((pComp.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (pComp.EstSupprime == false))
                     {
-                        RecListListerComposants(Comp, TypeComposant, DicComposants, NomComposant);
+                        RecListListerComposants(pComp, TypeComposant, DicComposants, NomComposant);
                     }
 
                 }
@@ -175,7 +148,7 @@ namespace Framework_SW2013
                 pDicComposants.Add(NomCle(_Composant), _Composant);
 
             // Si le composant est un assemblage contenant plusieurs composants, on renvoi la liste des composants recherchés
-            if ((_Composant.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (_Composant.swComposant.IGetChildrenCount() > 0))
+            if ((_Composant.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (_Composant.SwComposant.IGetChildrenCount() > 0))
                 RecListListerComposants(_Composant, TypeComposant, pDicComposants, NomComposant);
 
             // Nouvelle liste à renvoyer

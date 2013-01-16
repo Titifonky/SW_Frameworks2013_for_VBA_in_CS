@@ -6,6 +6,8 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.IO;
 
+/////////////////////////// Implementation terminée ///////////////////////////
+
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -43,7 +45,7 @@ namespace Framework_SW2013
         private Debug _Debug = Debug.Instance;
         private Boolean _EstInitialise = false;
 
-        private ModelDoc2 _swModele;
+        private ModelDoc2 _SwModele;
         private ExtSldWorks _SW;
         private ExtComposant _Composant;
         private int Erreur = 0;
@@ -53,13 +55,13 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtModele(){}
+        public ExtModele() { }
 
         #endregion
 
         #region "Propriétés"
 
-        public ModelDoc2 SwModele { get { return _swModele; } }
+        public ModelDoc2 SwModele { get { return _SwModele; } }
 
         public ExtSldWorks SW { get { return _SW; } }
 
@@ -109,7 +111,7 @@ namespace Framework_SW2013
                 GestDeConfigurations pGestConfigs = new GestDeConfigurations();
                 if (pGestConfigs.Init(this))
                     return pGestConfigs;
-                
+
                 return null;
             }
         }
@@ -119,7 +121,7 @@ namespace Framework_SW2013
             get
             {
                 GestDeProprietes pGestProps = new GestDeProprietes();
-                if (pGestProps.Init(_swModele.Extension.get_CustomPropertyManager("") ,this))
+                if (pGestProps.Init(SwModele.Extension.get_CustomPropertyManager(""), this))
                     return pGestProps;
 
                 return null;
@@ -130,7 +132,7 @@ namespace Framework_SW2013
         {
             get
             {
-                switch (_swModele.GetType())
+                switch (SwModele.GetType())
                 {
                     case (int)swDocumentTypes_e.swDocASSEMBLY:
                         return TypeFichier_e.cAssemblage;
@@ -147,10 +149,10 @@ namespace Framework_SW2013
             }
         }
 
-        public String Chemin { get { return _swModele.GetPathName(); } }
-        public String NomDuFichier { get { return Path.GetFileName(_swModele.GetPathName()); } }
-        public String NomDuFichierSansExt { get { return Path.GetFileNameWithoutExtension(_swModele.GetPathName()); } }
-        public String NomDuDossier { get { return Path.GetDirectoryName(_swModele.GetPathName()); } }
+        public String Chemin { get { return SwModele.GetPathName(); } }
+        public String NomDuFichier { get { return Path.GetFileName(SwModele.GetPathName()); } }
+        public String NomDuFichierSansExt { get { return Path.GetFileNameWithoutExtension(SwModele.GetPathName()); } }
+        public String NomDuDossier { get { return Path.GetDirectoryName(SwModele.GetPathName()); } }
 
         internal Boolean EstInitialise { get { return _EstInitialise; } }
 
@@ -164,7 +166,7 @@ namespace Framework_SW2013
 
             if ((SwModele != null) && (Sw != null))
             {
-                _swModele = SwModele;
+                _SwModele = SwModele;
                 _SW = Sw;
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
@@ -176,7 +178,7 @@ namespace Framework_SW2013
                 {
                     _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Referencement du composant");
                     _Composant = new ExtComposant();
-                    if (_Composant.Init(_swModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this) == false)
+                    if (_Composant.Init(_SwModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this) == false)
                         _EstInitialise = false;
                 }
             }
@@ -190,39 +192,39 @@ namespace Framework_SW2013
 
         public void Activer()
         {
-            _SW.SwSW.ActivateDoc3(_swModele.GetPathName(), true, 0, Erreur);
+            _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, 0, Erreur);
             ZoomEtendu();
             Redessiner();
         }
 
         public void Sauver()
         {
-            _swModele.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Erreur, ref Warning);
+            SwModele.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Erreur, ref Warning);
         }
 
         public void Fermer()
         {
-            _SW.SwSW.CloseDoc(_swModele.GetPathName());
+            _SW.SwSW.CloseDoc(SwModele.GetPathName());
         }
 
         public void Redessiner()
         {
-            _swModele.ActiveView.GraphicsRedraw();
+            SwModele.ActiveView.GraphicsRedraw();
         }
 
         public void Reconstruire()
         {
-            _swModele.EditRebuild3();
+            SwModele.EditRebuild3();
         }
 
         public void ForcerAToutReconstruire()
         {
-            _swModele.ForceRebuild3(false);
+            SwModele.ForceRebuild3(false);
         }
 
         public void ZoomEtendu()
         {
-            _swModele.ViewZoomtofit2();
+            SwModele.ViewZoomtofit2();
         }
 
         #endregion
@@ -231,7 +233,7 @@ namespace Framework_SW2013
 
         int IComparable<ExtModele>.CompareTo(ExtModele Modele)
         {
-            return _swModele.GetPathName().CompareTo(Modele.SwModele.GetPathName());
+            return _SwModele.GetPathName().CompareTo(Modele.SwModele.GetPathName());
         }
 
         int IComparer<ExtModele>.Compare(ExtModele Modele1, ExtModele Modele2)
@@ -241,7 +243,7 @@ namespace Framework_SW2013
 
         bool IEquatable<ExtModele>.Equals(ExtModele Modele)
         {
-            return Modele.SwModele.GetPathName().Equals(_swModele.GetPathName());
+            return Modele.SwModele.GetPathName().Equals(_SwModele.GetPathName());
         }
 
         #endregion

@@ -5,6 +5,9 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.IO;
+using System.Text.RegularExpressions;
+
+/////////////////////////// Implementation terminée ///////////////////////////
 
 namespace Framework_SW2013
 {
@@ -31,7 +34,7 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private ExtPiece _Piece;
-        private Body2 _swCorps;
+        private Body2 _SwCorps;
 
         #endregion
 
@@ -43,17 +46,17 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public Body2 SwCorps { get { return _swCorps; } }
+        public Body2 SwCorps { get { return _SwCorps; } }
 
         public ExtPiece Piece { get { return _Piece; } }
 
-        public String Nom { get { return _swCorps.Name; } set { _swCorps.Name = value; } }
+        public String Nom { get { return SwCorps.Name; } set { SwCorps.Name = value; } }
 
         public TypeCorps_e TypeDeCorps
         {
             get
             {
-                foreach (Feature Fonction in _swCorps.GetFeatures())
+                foreach (Feature Fonction in SwCorps.GetFeatures())
                 {
                     switch (Fonction.GetTypeName2())
                     {
@@ -90,6 +93,7 @@ namespace Framework_SW2013
         internal Boolean EstInitialise { get { return _EstInitialise; } }
 
         #endregion
+
         #region "Méthodes"
 
         internal Boolean Init(Body2 SwCorps, ExtPiece Piece)
@@ -102,7 +106,7 @@ namespace Framework_SW2013
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
                 _Piece = Piece;
-                _swCorps = SwCorps;
+                _SwCorps = SwCorps;
                 _EstInitialise = true;
             }
             else
@@ -112,14 +116,62 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        ExtFonction PremiereFonction()
+        public ExtFonction PremiereFonction()
         {
             ExtFonction pFonction = new ExtFonction();
 
-            if (pFonction.Init(_swCorps.GetFeatures()[0], _Piece))
+            if (pFonction.Init(SwCorps.GetFeatures()[0], _Piece))
                 return pFonction;
 
             return null;
+        }
+
+        internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        {
+            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
+
+            if (SwCorps.GetFeatureCount() == 0)
+                return pListeFonctions;
+
+            foreach (Feature pSwFonction in SwCorps.GetFeatures())
+            {
+                ExtFonction pFonction = new ExtFonction();
+
+                if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pFonction.Init(pSwFonction,_Piece))
+                    pListeFonctions.Add(pFonction);
+
+                if (AvecLesSousFonctions)
+                {
+                    Feature pSwSousFonction = pSwFonction.GetFirstSubFeature();
+
+                    while (pSwSousFonction != null)
+                    {
+                        ExtFonction pSousFonction = new ExtFonction();
+
+                        if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, _Piece))
+                            pListeFonctions.Add(pSousFonction);
+
+                        pSwSousFonction = pSwSousFonction.GetNextSubFeature();
+                    }
+                }
+            }
+
+            return pListeFonctions;
+
+        }
+
+        public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
+            List<ExtFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
+            ArrayList pArrayFonctions = new ArrayList();
+
+            if (pListeFonctions.Count > 0)
+                pArrayFonctions = new ArrayList(pListeFonctions);
+
+            return pArrayFonctions;
         }
 
         #endregion

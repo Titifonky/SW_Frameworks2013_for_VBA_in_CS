@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
+/////////////////////////// Implementation terminée ///////////////////////////
+
 namespace Framework_SW2013
 {
 
@@ -29,7 +31,7 @@ namespace Framework_SW2013
         private Debug _Debug = Debug.Instance;
         private Boolean _EstInitialise = false;
 
-        private SldWorks _swSW;
+        private SldWorks _SwSW;
         private String _VersionDeBase;
         private String _VersionCourante;
         private String _Hotfixe;
@@ -40,9 +42,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtSldWorks()
-        {
-        }
+        public ExtSldWorks() { }
 
         #endregion
 
@@ -51,10 +51,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Initialisation de l'objet ExtSldWorks pour commencer
         /// </summary>
-        public SldWorks SwSW
-        {
-            get { return _swSW; }
-        }
+        public SldWorks SwSW { get { return _SwSW; } }
 
         /// <summary>
         /// Retourner le type du document actif
@@ -64,25 +61,14 @@ namespace Framework_SW2013
             get
             {
                 ExtModele Modele = new ExtModele() ;
-                Modele.Init(_swSW.ActiveDoc(), this);
+                Modele.Init(_SwSW.ActiveDoc(), this);
                 return Modele.TypeDuModele;
             }
         }
 
-        public String VersionDeBase
-        {
-            get { return _VersionDeBase; }
-        }
-
-        public String VersionCourante
-        {
-            get { return _VersionCourante; }
-        }
-
-        public String Hotfixe
-        {
-            get { return _Hotfixe; }
-        }
+        public String VersionDeBase { get { return _VersionDeBase; } }
+        public String VersionCourante { get { return _VersionCourante; } }
+        public String Hotfixe { get { return _Hotfixe; } }
 
         internal Boolean EstInitialise { get { return _EstInitialise; } }
 
@@ -96,13 +82,13 @@ namespace Framework_SW2013
 
             if (SldWks != null)
             {
-                _swSW = SldWks;
+                _SwSW = SldWks;
                 _Debug.Init(this);
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
                 /// A chaque initialisation de l'objet SW, on vide le debug et on inscrit la version de SW
                 /// Ca evite de chercher trop loin
 
-                _swSW.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
+                _SwSW.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
                 _Debug.ExecutionAjouterLigne("    ");
                 _Debug.ExecutionAjouterLigne("================================================================================================");
                 _Debug.ExecutionAjouterLigne("SOLIDWORKS");
@@ -129,7 +115,7 @@ namespace Framework_SW2013
             if (String.IsNullOrEmpty(Chemin))
             {
                 _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "SldWorks.ActiveDoc");
-                pModele.Init(_swSW.ActiveDoc, this);
+                pModele.Init(_SwSW.ActiveDoc, this);
             }
             else
             {
@@ -154,7 +140,7 @@ namespace Framework_SW2013
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-            foreach (ModelDoc2 pSwModele in _swSW.GetDocuments())
+            foreach (ModelDoc2 pSwModele in _SwSW.GetDocuments())
             {
                 if (pSwModele.GetPathName() == Chemin)
                 {
@@ -182,7 +168,7 @@ namespace Framework_SW2013
 
             _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Ouvre le fichier : " + Chemin);
 
-            return _swSW.OpenDoc6(Chemin, (int)Type, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref Erreur, ref Warning);
+            return _SwSW.OpenDoc6(Chemin, (int)Type, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref Erreur, ref Warning);
         }
 
         #endregion

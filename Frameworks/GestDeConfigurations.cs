@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Text.RegularExpressions;
 
+/////////////////////////// Implementation terminée ///////////////////////////
+
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
