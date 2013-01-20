@@ -12,7 +12,7 @@ namespace Framework_SW2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("7E7EFEE8-5820-11E2-B8E9-84046188709B")]
     [ProgId("Frameworks.ExtDessin")]
-    public class ExtDessin : ExtModele, IExtDessin
+    public class ExtDessin : IExtDessin
     {
         #region "Variables locales"
         #endregion

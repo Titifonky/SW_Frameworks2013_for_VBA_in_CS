@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
 using System.Text.RegularExpressions;
+using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
@@ -14,9 +14,9 @@ namespace Framework_SW2013
     {
         CustomPropertyManager SwGestDeProprietes { get; }
         ExtModele Modele { get; }
-        Boolean AjouterPropriete(String NomPropriete, swCustomInfoType_e TypePropriete, String ValeurPropriete);
-        Boolean SupprimerPropriete(String NomPropriete);
-        String RecupererPropriete(String NomPropriete);
+        ExtPropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false);
+        ExtPropriete RecupererPropriete(String Nom);
+        ArrayList ListeDesProprietes(String NomARechercher = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -29,7 +29,7 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private ExtModele _Modele;
-        private CustomPropertyManager _swGestDeProprietes;
+        private CustomPropertyManager _SwGestDeProprietes;
 
         #endregion
 
@@ -41,7 +41,7 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public CustomPropertyManager SwGestDeProprietes { get { return _swGestDeProprietes; } }
+        public CustomPropertyManager SwGestDeProprietes { get { return _SwGestDeProprietes; } }
 
         public ExtModele Modele { get { return _Modele; } }
 
@@ -59,7 +59,7 @@ namespace Framework_SW2013
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
 
-                _swGestDeProprietes = SwGestionnaire;
+                _SwGestDeProprietes = SwGestionnaire;
                 _Modele = Modele;
                 _EstInitialise = true;
             }
@@ -71,35 +71,77 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        Boolean AjouterPropriete(String Nom, swCustomInfoType_e TypeProp, String Valeur)
+        /// <summary>
+        /// Ajoute une propriété à la piece.
+        /// </summary>
+        /// <param name="Nom"></param>
+        /// <param name="TypePropriete"></param>
+        /// <param name="Expression"></param>
+        /// <returns></returns>
+        public ExtPropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false)
         {
-            SupprimerPropriete(Nom);
-            if (_swGestDeProprietes.Add2(Nom, (int)TypeProp, Valeur) == 0)
-                return false;
-            else
-                return true;
+            if (EcraserExistante)
+            {
+                _SwGestDeProprietes.Delete(Nom);
+            }
+
+            ExtPropriete Propriete = new ExtPropriete();
+
+            // On initialise la propriete. Si elle n'existe pas on la créer.
+            
+            if ((Propriete.Init(this, Nom) == false) && (_SwGestDeProprietes.Add2(Nom, (int)TypePropriete, Expression) == 1))
+            {
+                // Si la propriete a été crée, on lui passe la bonne Expression
+                if (Propriete.Init(this, Nom))
+                    Propriete.Expression = Expression;
+            }
+
+            // Si tout est ok, on la renvoi
+            if (Propriete.EstInitialise)
+                return Propriete;
+
+            return null;
         }
 
-        Boolean SupprimerPropriete(String Nom)
+        public ExtPropriete RecupererPropriete(String Nom)
         {
-            if (_swGestDeProprietes.Delete(Nom) == 1)
-                return false;
-            else
-                return true;
+            ExtPropriete Propriete = new ExtPropriete();
+
+            if (Propriete.Init(this, Nom))
+                return Propriete;
+
+            return null;
         }
 
-        String RecupererPropriete(String Nom)
+        internal List<ExtPropriete> ListListeDesProprietes(String NomARechercher = "")
         {
-            String Val;
-            String ResVal;
+            List<ExtPropriete> pListeProps = new List<ExtPropriete>();
 
-            // Pour la compatibilité
-            if (_Modele.SW.VersionDeBase == "sw2013")
-                _swGestDeProprietes.Get4(Nom, true, out Val, out ResVal);
-            else
-                _swGestDeProprietes.Get2(Nom, out Val, out ResVal);
+            if (_SwGestDeProprietes.Count > 0)
+            {
+                foreach (String pNom in _SwGestDeProprietes.GetNames())
+                {
+                    ExtPropriete Prop = new ExtPropriete();
+                    if (Prop.Init(this, pNom) && Regex.IsMatch(pNom, NomARechercher))
+                        pListeProps.Add(Prop);
+                }
+            }
 
-            return ResVal;
+            return pListeProps;
+        }
+
+        public ArrayList ListeDesProprietes(String NomARechercher = "")
+        {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
+            List<ExtPropriete> pListeProprietes = ListListeDesProprietes(NomARechercher);
+            ArrayList pArrayProprietes = new ArrayList();
+
+            if (pListeProprietes.Count > 0)
+                pArrayProprietes = new ArrayList(pListeProprietes);
+
+            return pArrayProprietes;
         }
 
         #endregion

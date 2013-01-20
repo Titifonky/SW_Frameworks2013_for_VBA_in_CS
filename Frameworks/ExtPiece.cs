@@ -151,7 +151,7 @@ namespace Framework_SW2013
                     BodyFolder pSwDossier = pFonction.GetSpecificFeature2();
                     ExtDossier Dossier = new ExtDossier();
 
-                    if (Dossier.Init(pSwDossier, this) && (Dossier.TypeDeCorps == TypeDeCorps) && (!Dossier.EstExclu | PrendreEnCompteExclus))
+                    if (Dossier.Init(pSwDossier, this) && Convert.ToBoolean(Dossier.TypeDeCorps | TypeDeCorps) && (!Dossier.EstExclu | PrendreEnCompteExclus))
                         Liste.Add(Dossier);
 
                     Dossier = null;
