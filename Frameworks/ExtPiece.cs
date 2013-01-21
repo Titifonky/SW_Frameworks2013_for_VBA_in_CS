@@ -57,7 +57,7 @@ namespace Framework_SW2013
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cPiece))
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + Modele.Chemin);
 
                 _Modele = Modele;
                 _SwPiece = Modele.SwModele as PartDoc;
@@ -165,8 +165,6 @@ namespace Framework_SW2013
             return Liste;
 
         }
-
-        
 
         public ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
         {

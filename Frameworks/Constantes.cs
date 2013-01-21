@@ -65,9 +65,9 @@ namespace Framework_SW2013
     {
         public Double Lg; 
         public Double Ht; 
-        }
+    }
 
-    public struct Rectangle
+    public struct Coordonnees
     {
         public Double MinX;
         public Double MinY;

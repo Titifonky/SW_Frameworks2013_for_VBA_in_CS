@@ -1,43 +1,45 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 
 namespace Framework_SW2013
 {
+
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("CACBFAD0-5820-11E2-B60C-A9046188709B")]
-    public interface IExtAssemblage
+    [Guid("17F1BCFD-2428-4DF1-8338-8FFA142E2A97")]
+    public interface IExtFeuille
     {
-        AssemblyDoc SwAssemblage { get; }
-        ExtModele Modele { get; }
+        Sheet SwFeuille { get; }
+        ExtDessin Dessin { get; }
+        String Nom { get; set; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("CF8CC568-5820-11E2-B525-AA046188709B")]
-    [ProgId("Frameworks.ExtAssemblage")]
-    public class ExtAssemblage : IExtAssemblage
+    [Guid("AB11E456-34CF-4540-A7E3-E01D7C63E324")]
+    [ProgId("Frameworks.ExtFeuille")]
+    public class ExtFeuille : IExtFeuille
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
         private Boolean _EstInitialise = false;
 
-        private ExtModele _Modele;
-        private AssemblyDoc _SwAssemblage;
+        private ExtDessin _Dessin;
+        private Sheet _SwFeuille;
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtAssemblage() { }
+        public ExtFeuille() { }
 
         #endregion
 
         #region "Propriétés"
 
-        public AssemblyDoc SwAssemblage { get { return _SwAssemblage; } }
+        public Sheet SwFeuille { get { return _SwFeuille; } }
 
-        public ExtModele Modele { get { return _Modele; } }
+        public ExtDessin Dessin { get { return _Dessin; } }
+
+        public String Nom { get { return _SwFeuille.GetName(); } set { _SwFeuille.SetName(value); } }
 
         internal Boolean EstInitialise { get { return _EstInitialise; } }
 
@@ -45,26 +47,26 @@ namespace Framework_SW2013
 
         #region "Méthodes"
 
-        internal Boolean Init(ExtModele Modele)
+        internal Boolean Init(Sheet SwFeuille, ExtDessin Dessin)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cAssemblage))
+            if ((SwFeuille != null) && (Dessin != null) && Dessin.EstInitialise)
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + Modele.Chemin);
+                _Dessin = Dessin;
+                _SwFeuille = SwFeuille;
 
-                _Modele = Modele;
-                _SwAssemblage = Modele.SwModele as AssemblyDoc;
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
                 _EstInitialise = true;
             }
             else
             {
                 _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
             }
-
             return _EstInitialise;
         }
 
         #endregion
+
     }
 }

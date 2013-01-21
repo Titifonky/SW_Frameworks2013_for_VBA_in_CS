@@ -30,7 +30,6 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private ExtModele _Modele;
-
         #endregion
 
         #region "Constructeur\Destructeur"
