@@ -111,6 +111,7 @@ namespace Framework_SW2013
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
             _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
             ExtModele pModele = new ExtModele();
             if (String.IsNullOrEmpty(Chemin))
             {

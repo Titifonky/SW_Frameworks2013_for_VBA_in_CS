@@ -14,6 +14,7 @@ namespace Framework_SW2013
         String Nom { get; set; }
         ExtModele ModeleDeReference { get; }
         ExtConfiguration ConfigurationDeReference { get; }
+        ExtDimensionVue Dimensions { get; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -62,6 +63,19 @@ namespace Framework_SW2013
                 ExtConfiguration pConfig = new ExtConfiguration();
                 if (pConfig.Init(_SwVue.ReferencedDocument.GetConfigurationByName(_SwVue.ReferencedConfiguration), ModeleDeReference))
                     return pConfig;
+
+                return null;
+            }
+        }
+
+        public ExtDimensionVue Dimensions
+        {
+            get
+            {
+                ExtDimensionVue pDimensions = new ExtDimensionVue();
+
+                if (pDimensions.Init(this))
+                    return pDimensions;
 
                 return null;
             }

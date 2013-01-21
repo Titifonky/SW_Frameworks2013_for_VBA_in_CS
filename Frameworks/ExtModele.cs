@@ -73,6 +73,9 @@ namespace Framework_SW2013
         {
             get
             {
+                _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
                 ExtAssemblage Assemblage = new ExtAssemblage();
 
                 if (Assemblage.Init(this))
@@ -86,6 +89,9 @@ namespace Framework_SW2013
         {
             get
             {
+                _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
                 ExtPiece Piece = new ExtPiece();
 
                 if (Piece.Init(this))
@@ -99,10 +105,15 @@ namespace Framework_SW2013
         {
             get
             {
-                if (TypeDuModele == TypeFichier_e.cDessin)
-                    return new ExtDessin();
-                else
-                    return null;
+                _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
+                ExtDessin Dessin = new ExtDessin();
+
+                if (Dessin.Init(this))
+                    return Dessin;
+                
+                return null;
             }
         }
 

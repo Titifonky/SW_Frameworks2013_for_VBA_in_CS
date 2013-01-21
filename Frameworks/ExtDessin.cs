@@ -48,10 +48,11 @@ namespace Framework_SW2013
         {
             get
             {
-                ExtFeuille Feuille = new ExtFeuille();
-                if (Feuille.Init(_SwDessin.GetCurrentSheet(), this))
-                    return Feuille;
-                
+                ExtFeuille pFeuille = new ExtFeuille();
+                Sheet pSwFeuille = _SwDessin.GetCurrentSheet();
+                if (pFeuille.Init(pSwFeuille, this))
+                    return pFeuille;
+
                 return null;
             }
         }
@@ -84,9 +85,11 @@ namespace Framework_SW2013
 
         public ExtFeuille Feuille(String Nom)
         {
-            ExtFeuille Feuille = new ExtFeuille();
-            if (Feuille.Init(_SwDessin.get_Sheet(Nom), this))
-                return Feuille;
+            ExtFeuille pFeuille = new ExtFeuille();
+            Sheet pSwFeuille = _SwDessin.get_Sheet(Nom);
+
+            if (pFeuille.Init(pSwFeuille, this))
+                return pFeuille;
 
             return null;
         }
@@ -115,8 +118,9 @@ namespace Framework_SW2013
             foreach (String NomFeuille in _SwDessin.GetSheetNames())
             {
                 ExtFeuille pFeuille = new ExtFeuille();
+                Sheet pSwFeuille = _SwDessin.get_Sheet(NomFeuille);
 
-                if (Regex.IsMatch(NomFeuille, NomARechercher) && pFeuille.Init(_SwDessin.get_Sheet(NomFeuille),this))
+                if (Regex.IsMatch(NomFeuille, NomARechercher) && pFeuille.Init(pSwFeuille, this))
                 {
                     pListeFeuilles.Add(pFeuille);
                 }

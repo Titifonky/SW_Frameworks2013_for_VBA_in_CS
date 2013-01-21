@@ -42,18 +42,18 @@ namespace Framework_SW2013
             get
             {
                 Point pCentre;
-                Object[] pArrayResult;
+                Double[] pArrayResult;
                 pArrayResult = _Vue.SwVue.Position;
 
-                pCentre.X = (Double)pArrayResult[0];
-                pCentre.Y = (Double)pArrayResult[1];
+                pCentre.X = pArrayResult[0];
+                pCentre.Y = pArrayResult[1];
                 pCentre.Z = 0;
 
                 return pCentre;
             }
             set
             {
-                Object[] pCentre = { value.X, value.Y };
+                Double[] pCentre = { value.X, value.Y };
                 _Vue.SwVue.Position = pCentre;
             }
         }
