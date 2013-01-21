@@ -26,7 +26,7 @@ namespace Framework_SW2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("4ABD2208-5B70-11E2-A0B2-51F46188709B")]
     [ProgId("Frameworks.ExtPiece")]
-    public class ExtDossier : IExtDossier
+    public class ExtDossier : IExtDossier, IComparable<ExtDossier>, IComparer<ExtDossier>, IEquatable<ExtDossier>
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
@@ -105,11 +105,10 @@ namespace Framework_SW2013
 
             if ((SwDossier != null) && (SwDossier.GetBodyCount() > 0) && (Piece != null) && Piece.EstInitialise)
             {
-
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-
                 _Piece = Piece;
                 _SwDossier = SwDossier;
+                
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
                 _EstInitialise = true;
             }
             else
@@ -148,6 +147,31 @@ namespace Framework_SW2013
                 pArrayCorps = new ArrayList(pListeCorps);
 
             return pArrayCorps;
+        }
+
+        #endregion
+
+        #region "Interfaces génériques"
+
+        int IComparable<ExtDossier>.CompareTo(ExtDossier Dossier)
+        {
+            String Nom1 = _Piece.Modele.SwModele.GetPathName() + Nom;
+            String Nom2 = Dossier.Piece.Modele.SwModele.GetPathName() + Dossier.Nom;
+            return Nom1.CompareTo(Nom2);
+        }
+
+        int IComparer<ExtDossier>.Compare(ExtDossier Dossier1, ExtDossier Dossier2)
+        {
+            String Nom1 = Dossier1.Piece.Modele.SwModele.GetPathName() + Dossier1.Nom;
+            String Nom2 = Dossier2.Piece.Modele.SwModele.GetPathName() + Dossier2.Nom;
+            return Nom1.CompareTo(Nom2);
+        }
+
+        bool IEquatable<ExtDossier>.Equals(ExtDossier Dossier)
+        {
+            String Nom1 = _Piece.Modele.SwModele.GetPathName() + Nom;
+            String Nom2 = Dossier.Piece.Modele.SwModele.GetPathName() + Dossier.Nom;
+            return Nom1.Equals(Nom2);
         }
 
         #endregion

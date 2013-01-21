@@ -17,7 +17,6 @@ namespace Framework_SW2013
         ExtModele Modele { get; }
         Boolean Contient(TypeCorps_e T);
         ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false);
-        ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -74,7 +73,7 @@ namespace Framework_SW2013
 
         internal Feature ListeDesPiecesSoudees()
         {
-            Feature pFonctionPiecesSoudees = _Modele.SwModele.FirstFeature();
+            Feature pFonctionPiecesSoudees = _SwPiece.FirstFeature();
 
             while (pFonctionPiecesSoudees != null)
             {
@@ -103,7 +102,7 @@ namespace Framework_SW2013
         {
             if (Convert.ToBoolean(T & TypeCorps_e.cTole))
             {
-                foreach (ExtFonction Fonction in ListListeDesFonctions())
+                foreach (ExtFonction Fonction in _Modele.ListListeDesFonctions())
                 {
                     if ((Fonction.TypeDeLaFonction == "SMBaseFlange") || (Fonction.TypeDeLaFonction == "SolidToSheetMetal"))
                         return true;
@@ -114,7 +113,7 @@ namespace Framework_SW2013
 
             if (Convert.ToBoolean(T & TypeCorps_e.cProfil))
             {
-                foreach (ExtFonction Fonction in ListListeDesFonctions())
+                foreach (ExtFonction Fonction in _Modele.ListListeDesFonctions())
                 {
                     if (Fonction.TypeDeLaFonction == "WeldMemberFeat")
                         return true;
@@ -134,6 +133,9 @@ namespace Framework_SW2013
 
         internal List<ExtDossier> ListListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
         {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
             List<ExtDossier> Liste = new List<ExtDossier>();
 
             Feature pFonction = ListeDesPiecesSoudees();
@@ -164,41 +166,7 @@ namespace Framework_SW2013
 
         }
 
-        internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
-        {
-            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
-
-            Feature pSwFonction = _Modele.SwModele.FirstFeature();
-
-            while (pSwFonction != null)
-            {
-                ExtFonction pFonction = new ExtFonction();
-
-                if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pFonction.Init(pSwFonction, this))
-                    pListeFonctions.Add(pFonction);
-
-                if (AvecLesSousFonctions)
-                {
-                    Feature pSwSousFonction = pSwFonction.GetFirstSubFeature();
-
-                    while (pSwSousFonction != null)
-                    {
-                        ExtFonction pSousFonction = new ExtFonction();
-
-                        if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, this))
-                            pListeFonctions.Add(pSousFonction);
-
-                        pSwSousFonction = pSwSousFonction.GetNextSubFeature();
-                    }
-                }
-
-                pSwFonction = pSwFonction.GetNextFeature();
-            }
-
-
-            return pListeFonctions;
-
-        }
+        
 
         public ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
         {
@@ -212,20 +180,6 @@ namespace Framework_SW2013
                 pArrayDossiers = new ArrayList(pListeDossier);
 
             return pArrayDossiers;
-        }
-
-        public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
-        {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-
-            List<ExtFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
-            ArrayList pArrayFonctions = new ArrayList();
-
-            if (pListeFonctions.Count > 0)
-                pArrayFonctions = new ArrayList(pListeFonctions);
-
-            return pArrayFonctions;
         }
 
         #endregion

@@ -134,10 +134,10 @@ namespace Framework_SW2013
 
             if ((Config != null) && (Modele != null) && Modele.EstInitialise)
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-
                 _SwConfiguration = Config;
                 _Modele = Modele;
+
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
                 _EstInitialise = true;
             }
             else
@@ -180,22 +180,22 @@ namespace Framework_SW2013
 
         int IComparable<ExtConfiguration>.CompareTo(ExtConfiguration Conf)
         {
-            String Nom1 = Modele.Chemin + Nom;
-            String Nom2 = Conf._Modele.Chemin + Conf.Nom;
+            String Nom1 = _Modele.SwModele.GetPathName() + _SwConfiguration.Name;
+            String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf._SwConfiguration.Name;
             return Nom1.CompareTo(Nom2);
         }
 
         int IComparer<ExtConfiguration>.Compare(ExtConfiguration Conf1, ExtConfiguration Conf2)
         {
-            String Nom1 = Conf1._Modele.Chemin + Conf1.Nom;
-            String Nom2 = Conf2._Modele.Chemin + Conf2.Nom;
+            String Nom1 = Conf1._Modele.SwModele.GetPathName() + Conf1._SwConfiguration.Name;
+            String Nom2 = Conf2._Modele.SwModele.GetPathName() + Conf2._SwConfiguration.Name;
             return Nom1.CompareTo(Nom2);
         }
 
         bool IEquatable<ExtConfiguration>.Equals(ExtConfiguration Conf)
         {
-            String Nom1 = Modele.Chemin + Nom;
-            String Nom2 = Conf._Modele.Chemin + Conf.Nom;
+            String Nom1 = _Modele.SwModele.GetPathName() + _SwConfiguration.Name;
+            String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf._SwConfiguration.Name;
             return Nom1.Equals(Nom2);
         }
 

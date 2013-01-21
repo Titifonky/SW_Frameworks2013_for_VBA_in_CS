@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -111,6 +110,8 @@ namespace Framework_SW2013
                     _SwComposant = SwComposant;
                     _Modele = Modele;
                     _Nb = 1;
+
+                    _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Modele.Chemin);
                 }
                 else
                 {

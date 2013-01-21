@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
 using System.Text.RegularExpressions;
 
 /////////////////////////// Implementation terminée ///////////////////////////

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System.Collections.Generic;
 
 namespace Framework_SW2013
 {
@@ -21,7 +21,7 @@ namespace Framework_SW2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("6502CAB2-630B-11E2-B156-90F06088709B")]
     [ProgId("Frameworks.GestDeConfigurations")]
-    public class ExtPropriete : IExtPropriete
+    public class ExtPropriete : IExtPropriete, IComparable<ExtPropriete>, IComparer<ExtPropriete>, IEquatable<ExtPropriete>
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
@@ -115,7 +115,7 @@ namespace Framework_SW2013
 
                 if (!String.IsNullOrEmpty(this.Nom))
                 {
-                    _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+                    _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
                     _EstInitialise = true;
                 }
                 else
@@ -170,6 +170,31 @@ namespace Framework_SW2013
             }
             else
                 return false;
+        }
+
+        #endregion
+
+        #region "Interfaces génériques"
+
+        int IComparable<ExtPropriete>.CompareTo(ExtPropriete Prop)
+        {
+            String Nom1 = _GestDeProprietes.Modele.SwModele.GetPathName() + _Nom;
+            String Nom2 = Prop.GestDeProprietes.Modele.SwModele.GetPathName() + Prop.Nom;
+            return Nom1.CompareTo(Nom2);
+        }
+
+        int IComparer<ExtPropriete>.Compare(ExtPropriete Prop1, ExtPropriete Prop2)
+        {
+            String Nom1 = Prop1.GestDeProprietes.Modele.SwModele.GetPathName() + Prop1.Nom;
+            String Nom2 = Prop2.GestDeProprietes.Modele.SwModele.GetPathName() + Prop2.Nom;
+            return Nom1.CompareTo(Nom2);
+        }
+
+        bool IEquatable<ExtPropriete>.Equals(ExtPropriete Prop)
+        {
+            String Nom1 = _GestDeProprietes.Modele.SwModele.GetPathName() + _Nom;
+            String Nom2 = Prop.GestDeProprietes.Modele.SwModele.GetPathName() + Prop.Nom;
+            return Nom1.Equals(Nom2);
         }
 
         #endregion

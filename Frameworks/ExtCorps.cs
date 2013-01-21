@@ -27,7 +27,7 @@ namespace Framework_SW2013
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("DF347C75-F3B1-43AE-B7C4-393811BEBCB4")]
     [ProgId("Frameworks.ExtCorps")]
-    public class ExtCorps : IExtCorps
+    public class ExtCorps : IExtCorps, IComparable<ExtCorps>, IComparer<ExtCorps>, IEquatable<ExtCorps>
     {
         #region "Variables locales"
         private Debug _Debug = Debug.Instance;
@@ -102,11 +102,10 @@ namespace Framework_SW2013
 
             if ((SwCorps != null) && (Piece != null) && Piece.EstInitialise)
             {
-
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-
                 _Piece = Piece;
                 _SwCorps = SwCorps;
+
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
                 _EstInitialise = true;
             }
             else
@@ -120,24 +119,30 @@ namespace Framework_SW2013
         {
             ExtFonction pFonction = new ExtFonction();
 
-            if (pFonction.Init(SwCorps.GetFeatures()[0], _Piece))
+            if (pFonction.Init(SwCorps.GetFeatures()[0], _Piece.Modele))
                 return pFonction;
 
             return null;
         }
 
+        /// <summary>
+        /// Renvoi la liste des fonctions liées à un corps
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <param name="AvecLesSousFonctions"></param>
+        /// <returns></returns>
         internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
             List<ExtFonction> pListeFonctions = new List<ExtFonction>();
-
-            if (SwCorps.GetFeatureCount() == 0)
-                return pListeFonctions;
-
-            foreach (Feature pSwFonction in SwCorps.GetFeatures())
+            
+            foreach(Feature pSwFonction in _SwCorps.GetFeatures())
             {
                 ExtFonction pFonction = new ExtFonction();
 
-                if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pFonction.Init(pSwFonction,_Piece))
+                if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pFonction.Init(pSwFonction, _Piece.Modele))
                     pListeFonctions.Add(pFonction);
 
                 if (AvecLesSousFonctions)
@@ -148,13 +153,14 @@ namespace Framework_SW2013
                     {
                         ExtFonction pSousFonction = new ExtFonction();
 
-                        if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, _Piece))
+                        if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, _Piece.Modele))
                             pListeFonctions.Add(pSousFonction);
 
                         pSwSousFonction = pSwSousFonction.GetNextSubFeature();
                     }
                 }
             }
+
 
             return pListeFonctions;
 
@@ -172,6 +178,31 @@ namespace Framework_SW2013
                 pArrayFonctions = new ArrayList(pListeFonctions);
 
             return pArrayFonctions;
+        }
+
+        #endregion
+
+        #region "Interfaces génériques"
+
+        int IComparable<ExtCorps>.CompareTo(ExtCorps Corps)
+        {
+            String Nom1 =  _Piece.Modele.SwModele.GetPathName() + _SwCorps.Name;
+            String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
+            return Nom1.CompareTo(Nom2);
+        }
+
+        int IComparer<ExtCorps>.Compare(ExtCorps Corps1, ExtCorps Corps2)
+        {
+            String Nom1 = Corps1.Piece.Modele.SwModele.GetPathName() + Corps1.Nom;
+            String Nom2 = Corps2.Piece.Modele.SwModele.GetPathName() + Corps2.Nom;
+            return Nom1.CompareTo(Nom2);
+        }
+
+        bool IEquatable<ExtCorps>.Equals(ExtCorps Corps)
+        {
+            String Nom1 = _Piece.Modele.SwModele.GetPathName() + _SwCorps.Name;
+            String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
+            return Nom1.Equals(Nom2);
         }
 
         #endregion

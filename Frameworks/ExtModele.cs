@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-using System.IO;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -34,6 +35,7 @@ namespace Framework_SW2013
         void Reconstruire();
         void ForcerAToutReconstruire();
         void ZoomEtendu();
+        ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -168,7 +170,7 @@ namespace Framework_SW2013
             {
                 _SwModele = SwModele;
                 _SW = Sw;
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Chemin);
 
                 // On valide l'initialisation
                 _EstInitialise = true;
@@ -225,6 +227,59 @@ namespace Framework_SW2013
         public void ZoomEtendu()
         {
             SwModele.ViewZoomtofit2();
+        }
+
+        internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
+            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
+
+            Feature pSwFonction = _SwModele.FirstFeature();
+
+            while (pSwFonction != null)
+            {
+                ExtFonction pFonction = new ExtFonction();
+
+                if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pFonction.Init(pSwFonction, this))
+                    pListeFonctions.Add(pFonction);
+
+                if (AvecLesSousFonctions)
+                {
+                    Feature pSwSousFonction = pSwFonction.GetFirstSubFeature();
+
+                    while (pSwSousFonction != null)
+                    {
+                        ExtFonction pSousFonction = new ExtFonction();
+
+                        if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, this))
+                            pListeFonctions.Add(pSousFonction);
+
+                        pSwSousFonction = pSwSousFonction.GetNextSubFeature();
+                    }
+                }
+
+                pSwFonction = pSwFonction.GetNextFeature();
+            }
+
+
+            return pListeFonctions;
+
+        }
+
+        public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
+            List<ExtFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
+            ArrayList pArrayFonctions = new ArrayList();
+
+            if (pListeFonctions.Count > 0)
+                pArrayFonctions = new ArrayList(pListeFonctions);
+
+            return pArrayFonctions;
         }
 
         #endregion

@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-using System.IO;
-using System.Text.RegularExpressions;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -16,14 +15,15 @@ namespace Framework_SW2013
     public interface IExtFonction
     {
         Feature SwFonction { get; }
-        ExtPiece Piece { get; }
+        ExtModele Modele { get; }
         String Nom { get; set; }
         String TypeDeLaFonction { get; }
         EtatFonction_e Etat { get; }
         void Activer();
-        void Supprimer();
+        void Desactiver();
         void EnregistrerEtat();
         void RestaurerEtat();
+        ArrayList ListeDesCorps();
         ArrayList ListeDesSousFonctions(String NomARechercher = "");
     }
 
@@ -37,7 +37,7 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private EtatFonction_e _EtatEnregistre;
-        private ExtPiece _Piece;
+        private ExtModele _Modele;
         private Feature _SwFonction;
 
         #endregion
@@ -52,7 +52,7 @@ namespace Framework_SW2013
 
         public Feature SwFonction { get { return _SwFonction; } }
 
-        public ExtPiece Piece { get { return _Piece; } }
+        public ExtModele Modele { get { return _Modele; } }
 
         public String Nom { get { return SwFonction.Name; } set { SwFonction.Name = value; } }
 
@@ -66,7 +66,7 @@ namespace Framework_SW2013
         {
             get
             {
-                String NomConfig = _Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom;
+                String NomConfig = _Modele.GestDeConfigurations.ConfigurationActive.Nom;
                 Object[] pArrayConfig = { NomConfig };
                 Object[] pArrayResult;
 
@@ -85,17 +85,16 @@ namespace Framework_SW2013
 
         #region "Méthodes"
 
-        internal Boolean Init(Feature SwFonction, ExtPiece Piece)
+        internal Boolean Init(Feature SwFonction, ExtModele Modele)
         {
             _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
 
-            if ((SwFonction != null) && (Piece != null) && Piece.EstInitialise)
+            if ((SwFonction != null) && (Modele != null) && Modele.EstInitialise)
             {
-
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-
-                _Piece = Piece;
+                _Modele = Modele;
                 _SwFonction = SwFonction;
+
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
                 _EstInitialise = true;
             }
             else
@@ -109,18 +108,18 @@ namespace Framework_SW2013
         {
             String TypeFonction;
             String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
-            ModelDoc2 pSwModele = _Piece.Modele.SwModele;
+            ModelDoc2 pSwModele = _Modele.SwModele;
 
             pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, false, -1, null, 0);
             pSwModele.EditUnsuppress2();
             pSwModele.EditUnsuppressDependent2();
         }
 
-        public void Supprimer()
+        public void Desactiver()
         {
             String TypeFonction;
             String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
-            ModelDoc2 pSwModele = _Piece.Modele.SwModele;
+            ModelDoc2 pSwModele = _Modele.SwModele;
 
             pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, false, -1, null, 0);
             pSwModele.EditSuppress2();
@@ -136,7 +135,24 @@ namespace Framework_SW2013
             if (_EtatEnregistre == EtatFonction_e.cActivee)
                 Activer();
             else
-                Supprimer();
+                Desactiver();
+        }
+
+        internal List<ExtCorps> ListListeDesCorps()
+        {
+            List<ExtCorps> pListeCorps = new List<ExtCorps>();
+
+            if (_SwFonction.GetFaceCount() == 0)
+                return pListeCorps;
+
+            foreach (Face2 Face in _SwFonction.GetFaces())
+            {
+                ExtCorps Corps = new ExtCorps();
+                if (Corps.Init(Face.GetBody(), _Modele.Piece) && (pListeCorps.Contains(Corps) == false))
+                    pListeCorps.Add(Corps);
+            }
+
+            return pListeCorps;
         }
 
         internal List<ExtFonction> ListListeDesSousFonctions(string NomARechercher = "")
@@ -149,7 +165,7 @@ namespace Framework_SW2013
             {
                 ExtFonction pFonction = new ExtFonction();
 
-                if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher)) && pFonction.Init(pSwSousFonction,_Piece))
+                if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher)) && pFonction.Init(pSwSousFonction,_Modele))
                     pListeFonctions.Add(pFonction);
 
                 pSwSousFonction = pSwSousFonction.GetNextSubFeature();
@@ -158,6 +174,20 @@ namespace Framework_SW2013
 
             return pListeFonctions;
 
+        }
+
+        public ArrayList ListeDesCorps()
+        {
+            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+
+            List<ExtCorps> pListeCorps = ListListeDesCorps();
+            ArrayList pArrayCorps = new ArrayList();
+
+            if (pListeCorps.Count > 0)
+                pArrayCorps = new ArrayList(pListeCorps);
+
+            return pArrayCorps;
         }
 
         public ArrayList ListeDesSousFonctions(string NomARechercher = "")
