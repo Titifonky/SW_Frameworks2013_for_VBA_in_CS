@@ -4,4 +4,4 @@ Do
 	GUID = left(GUID, len(GUID)-3)
 	GUID = right(GUID, len(GUID)- 1)
 	Set TypeLib = Nothing
-Loop until InputBox("Générateur de GUID","GUID",GUID) = ""
+Loop until InputBox("GÃ©nÃ©rateur de GUID","GUID",GUID) = ""
