@@ -18,6 +18,7 @@ namespace Framework_SW2013
         String VersionDeBase { get; }
         String VersionCourante { get; }
         String Hotfixe { get; }
+        String Revision { get; }
         Boolean Init(SldWorks SldWks);
         ExtModele Modele(String Chemin = "");
     }
@@ -35,6 +36,7 @@ namespace Framework_SW2013
         private String _VersionDeBase;
         private String _VersionCourante;
         private String _Hotfixe;
+        private String _Revision;
         private int Erreur = 0;
         private int Warning = 0;
 
@@ -69,6 +71,7 @@ namespace Framework_SW2013
         public String VersionDeBase { get { return _VersionDeBase; } }
         public String VersionCourante { get { return _VersionCourante; } }
         public String Hotfixe { get { return _Hotfixe; } }
+        public String Revision { get { return _Revision; } }
 
         internal Boolean EstInitialise { get { return _EstInitialise; } }
 
@@ -89,6 +92,7 @@ namespace Framework_SW2013
                 /// Ca evite de chercher trop loin
 
                 _SwSW.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
+                _Revision = _SwSW.RevisionNumber();
                 _Debug.ExecutionAjouterLigne("    ");
                 _Debug.ExecutionAjouterLigne("================================================================================================");
                 _Debug.ExecutionAjouterLigne("SOLIDWORKS");

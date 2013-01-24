@@ -71,13 +71,6 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        /// <summary>
-        /// Ajoute une propriété à la piece.
-        /// </summary>
-        /// <param name="Nom"></param>
-        /// <param name="TypePropriete"></param>
-        /// <param name="Expression"></param>
-        /// <returns></returns>
         public ExtPropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false)
         {
             if (EcraserExistante)
