@@ -13,7 +13,7 @@ namespace Framework_SW2013
         cAucun = 0,
         cAssemblage = 1,
         cPiece = 2,
-        cDessin = 4,
+        cDessin = 4
     }
 
     //Cet attribut permet de combiner les valeurs d'enumération
