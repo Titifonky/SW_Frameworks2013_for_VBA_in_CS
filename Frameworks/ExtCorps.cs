@@ -52,6 +52,10 @@ namespace Framework_SW2013
 
         public String Nom { get { return SwCorps.Name; } set { SwCorps.Name = value; } }
 
+        /// <summary>
+        /// Retourne le type de corps <see cref="TypeCorps_e"/>
+        /// </summary>
+
         public TypeCorps_e TypeDeCorps
         {
             get
@@ -60,10 +64,13 @@ namespace Framework_SW2013
                 {
                     switch (Fonction.GetTypeName2())
                     {
-                        case "WeldMemberFeat":
-                            return TypeCorps_e.cProfil;
+                        case "SheetMetal":
+                        case "SMBaseFlange":
+                        case "SolidToSheetMetal":
                         case "FlatPattern":
                             return TypeCorps_e.cTole;
+                        case "WeldMemberFeat":
+                            return TypeCorps_e.cProfil;
                     }
                 }
 
@@ -75,7 +82,7 @@ namespace Framework_SW2013
         {
             get
             {
-                foreach (ExtDossier pDossier in _Piece.ListeDesDossiers(TypeDeCorps, true))
+                foreach (ExtDossier pDossier in _Piece.ListeDesDossiersDePiecesSoudees(TypeDeCorps, true))
                 {
                     foreach (ExtCorps pCorps in pDossier.ListListeDesCorps())
                     {
@@ -98,25 +105,27 @@ namespace Framework_SW2013
 
         internal Boolean Init(Body2 SwCorps, ExtPiece Piece)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((SwCorps != null) && (Piece != null) && Piece.EstInitialise)
             {
                 _Piece = Piece;
                 _SwCorps = SwCorps;
 
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
+                _Debug.DebugAjouterLigne("\t -> " + this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
         public ExtFonction PremiereFonction()
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             ExtFonction pFonction = new ExtFonction();
 
             if (pFonction.Init(SwCorps.GetFeatures()[0], _Piece.Modele))
@@ -126,15 +135,14 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Renvoi la liste des fonctions liées à un corps
+        /// Renvoi la liste des fonctions d'un corps
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
         internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtFonction> pListeFonctions = new List<ExtFonction>();
             
@@ -168,8 +176,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
             ArrayList pArrayFonctions = new ArrayList();

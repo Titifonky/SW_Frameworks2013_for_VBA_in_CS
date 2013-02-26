@@ -47,11 +47,11 @@ namespace Framework_SW2013
 
         internal Boolean Init(ExtModele Modele)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cAssemblage))
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + Modele.Chemin);
+                _Debug.DebugAjouterLigne("\t -> " + Modele.Chemin);
 
                 _Modele = Modele;
                 _SwAssemblage = Modele.SwModele as AssemblyDoc;
@@ -59,7 +59,7 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;

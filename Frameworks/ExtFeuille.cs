@@ -70,25 +70,27 @@ namespace Framework_SW2013
 
         internal Boolean Init(Sheet SwFeuille, ExtDessin Dessin)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((SwFeuille != null) && (Dessin != null) && Dessin.EstInitialise)
             {
                 _Dessin = Dessin;
                 _SwFeuille = SwFeuille;
 
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
+                _Debug.DebugAjouterLigne("\t -> " + this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
         internal List<ExtVue> ListListeDesVues(String NomARechercher = "")
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             List<ExtVue> pListeVues = new List<ExtVue>();
 
             object[] pObjVues;
@@ -109,8 +111,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesVues(String NomARechercher = "")
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtVue> pListeVues = ListListeDesVues(NomARechercher);
             ArrayList pArrayVues = new ArrayList();

@@ -130,19 +130,19 @@ namespace Framework_SW2013
 
         internal Boolean Init(Configuration Config, ExtModele Modele)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((Config != null) && (Modele != null) && Modele.EstInitialise)
             {
                 _SwConfiguration = Config;
                 _Modele = Modele;
 
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
+                _Debug.DebugAjouterLigne("\t -> " + this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;

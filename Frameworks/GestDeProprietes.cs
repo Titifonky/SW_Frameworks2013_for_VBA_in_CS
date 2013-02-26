@@ -53,19 +53,17 @@ namespace Framework_SW2013
 
         internal Boolean Init(CustomPropertyManager SwGestionnaire, ExtModele Modele)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((SwGestionnaire != null) && (Modele != null) && Modele.EstInitialise)
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-
                 _SwGestDeProprietes = SwGestionnaire;
                 _Modele = Modele;
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -73,6 +71,8 @@ namespace Framework_SW2013
 
         public ExtPropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false)
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             if (EcraserExistante)
             {
                 _SwGestDeProprietes.Delete(Nom);
@@ -98,6 +98,8 @@ namespace Framework_SW2013
 
         public ExtPropriete RecupererPropriete(String Nom)
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             ExtPropriete Propriete = new ExtPropriete();
 
             if (Propriete.Init(this, Nom))
@@ -108,6 +110,8 @@ namespace Framework_SW2013
 
         internal List<ExtPropriete> ListListeDesProprietes(String NomARechercher = "")
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             List<ExtPropriete> pListeProps = new List<ExtPropriete>();
 
             if (_SwGestDeProprietes.Count > 0)
@@ -125,8 +129,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesProprietes(String NomARechercher = "")
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtPropriete> pListeProprietes = ListListeDesProprietes(NomARechercher);
             ArrayList pArrayProprietes = new ArrayList();

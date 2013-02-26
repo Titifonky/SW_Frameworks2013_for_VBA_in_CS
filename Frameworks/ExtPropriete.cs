@@ -104,24 +104,23 @@ namespace Framework_SW2013
 
         internal Boolean Init(GestDeProprietes Gestionnaire, String Nom)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((Gestionnaire != null) && Gestionnaire.EstInitialise && !String.IsNullOrEmpty(Nom))
             {
-                
 
                 _GestDeProprietes = Gestionnaire;
                 _Nom = Nom;
 
                 if (!String.IsNullOrEmpty(this.Nom))
                 {
-                    _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
+                    _Debug.DebugAjouterLigne("\t -> " + this.Nom);
                     _EstInitialise = true;
                 }
                 else
                 {
                     _Nom = null;
-                    _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                    _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
                 }
             }
             

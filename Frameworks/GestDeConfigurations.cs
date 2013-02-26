@@ -46,6 +46,8 @@ namespace Framework_SW2013
         {
             get
             {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
                 ExtConfiguration pConfig = new ExtConfiguration();
                 if (pConfig.Init(_Modele.SwModele.ConfigurationManager.ActiveConfiguration, _Modele))
                     return pConfig;
@@ -62,18 +64,16 @@ namespace Framework_SW2013
 
         internal Boolean Init(ExtModele Modele)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((Modele != null) && Modele.EstInitialise)
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-
                 _Modele = Modele;
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -81,6 +81,8 @@ namespace Framework_SW2013
 
         internal List<ExtConfiguration> ListListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "")
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             List<ExtConfiguration> pListConfig = new List<ExtConfiguration>();
 
             foreach (String pNomConfig in _Modele.SwModele.GetConfigurationNames())
@@ -100,8 +102,7 @@ namespace Framework_SW2013
 
         public ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "")
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtConfiguration> pListeConfigs = ListListerLesConfigs(TypeConfig, NomConfigDeBase);
             ArrayList pArrayConfigs = new ArrayList();
@@ -114,6 +115,8 @@ namespace Framework_SW2013
 
         public ExtConfiguration ConfigurationAvecLeNom(String NomConfiguration)
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             ExtConfiguration pConfig = new ExtConfiguration();
             if (pConfig.Init(_Modele.SwModele.GetConfigurationByName(NomConfiguration), _Modele))
                 return pConfig;
@@ -123,6 +126,8 @@ namespace Framework_SW2013
 
         public ExtConfiguration AjouterUneConfigurationDeBase(String NomConfig)
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             ExtConfiguration pConfig = new ExtConfiguration();
             if (pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfig, NomConfig, "", 0, "", ""), _Modele))
                 return pConfig;
@@ -132,6 +137,8 @@ namespace Framework_SW2013
 
         public void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "")
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             foreach(ExtConfiguration Config in ListListerLesConfigs(TypeConfig_e.cDepliee,NomConfigurationPliee))
             {
                 Config.Supprimer();

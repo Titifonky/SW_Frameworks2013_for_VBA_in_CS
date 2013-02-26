@@ -41,6 +41,8 @@ namespace Framework_SW2013
         {
             get
             {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+                
                 Point pCentre;
                 Double[] pArrayResult;
                 pArrayResult = _Vue.SwVue.Position;
@@ -53,6 +55,8 @@ namespace Framework_SW2013
             }
             set
             {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
                 Double[] pCentre = { value.X, value.Y };
                 _Vue.SwVue.Position = pCentre;
             }
@@ -94,18 +98,17 @@ namespace Framework_SW2013
 
         internal Boolean Init(ExtVue Vue)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((Vue != null) && Vue.EstInitialise)
             {
                 _Vue = Vue;
 
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }

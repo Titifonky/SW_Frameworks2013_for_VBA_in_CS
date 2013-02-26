@@ -48,6 +48,8 @@ namespace Framework_SW2013
         {
             get
             {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
                 ExtFeuille pFeuille = new ExtFeuille();
                 Sheet pSwFeuille = _SwDessin.GetCurrentSheet();
                 if (pFeuille.Init(pSwFeuille, this))
@@ -65,11 +67,11 @@ namespace Framework_SW2013
 
         internal Boolean Init(ExtModele Modele)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cDessin))
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + Modele.Chemin);
+                _Debug.DebugAjouterLigne("\t -> " + Modele.Chemin);
 
                 _Modele = Modele;
                 _SwDessin = Modele.SwModele as DrawingDoc;
@@ -77,7 +79,7 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -85,6 +87,8 @@ namespace Framework_SW2013
 
         public ExtFeuille Feuille(String Nom)
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             ExtFeuille pFeuille = new ExtFeuille();
             Sheet pSwFeuille = _SwDessin.get_Sheet(Nom);
 
@@ -96,6 +100,8 @@ namespace Framework_SW2013
 
         public Boolean FeuilleExiste(String Nom)
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             if (_SwDessin.GetSheetCount() == 0)
                 return false;
 
@@ -110,6 +116,8 @@ namespace Framework_SW2013
 
         internal List<ExtFeuille> ListListeDesFeuilles(String NomARechercher = "")
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             List<ExtFeuille> pListeFeuilles = new List<ExtFeuille>();
 
             if (_SwDessin.GetSheetCount() == 0)
@@ -132,8 +140,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesFeuilles(String NomARechercher = "")
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtFeuille> pListeFeuilles = ListListeDesFeuilles(NomARechercher);
             ArrayList pArrayFeuilles = new ArrayList();

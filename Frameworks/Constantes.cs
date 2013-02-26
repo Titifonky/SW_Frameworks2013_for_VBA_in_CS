@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {
@@ -91,8 +92,29 @@ namespace Framework_SW2013
         public static String MODELE_DE_DESSIN_LASER = "MacroLaser";
         public static String NOM_CORPS_DEPLIEE = "Etat déplié";
         public static String ETAT_D_AFFICHAGE = "Etat d'affichage-";
+        public static String BIB_MATERIAUX = "C:/Users/billiet-pao/Solidworks/Materiaux/Matériaux Billiet.sldmat";
 
         #endregion
+
+        internal static swBodyType_e ConvertTypeCorps_eToSwBodyType_e(TypeCorps_e TypeCorps)
+        {
+            switch (TypeCorps)
+            {
+                case TypeCorps_e.cAucun:
+                    return swBodyType_e.swEmptyBody;
+                case TypeCorps_e.cAutre:
+                    return swBodyType_e.swGeneralBody;
+                case TypeCorps_e.cProfil:
+                    return swBodyType_e.swSolidBody;
+                case TypeCorps_e.cTole:
+                    return swBodyType_e.swSheetBody;
+                case TypeCorps_e.cTousLesTypesDeCorps:
+                    return swBodyType_e.swAllBodies;
+                default:
+                    return swBodyType_e.swAllBodies;
+            }
+
+        }
 
     }
 }

@@ -101,25 +101,27 @@ namespace Framework_SW2013
 
         internal Boolean Init(BodyFolder SwDossier, ExtPiece Piece)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((SwDossier != null) && (SwDossier.GetBodyCount() > 0) && (Piece != null) && Piece.EstInitialise)
             {
                 _Piece = Piece;
                 _SwDossier = SwDossier;
-                
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Nom);
+
+                _Debug.DebugAjouterLigne("\t -> " + this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
         internal List<ExtCorps> ListListeDesCorps(String NomARechercher = "")
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             List<ExtCorps> pListeCorps = new List<ExtCorps>();
 
             foreach (Body2 pSwCorps in SwDossier.GetBodies())
@@ -137,8 +139,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesCorps(String NomARechercher = "")
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtCorps> pListeCorps = ListListeDesCorps(NomARechercher);
             ArrayList pArrayCorps = new ArrayList();

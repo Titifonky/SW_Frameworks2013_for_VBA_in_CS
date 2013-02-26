@@ -63,18 +63,16 @@ namespace Framework_SW2013
 
         internal Boolean Init(ExtComposant Composant)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((Composant != null) && Composant.EstInitialise)
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-
                 _Composant = Composant;
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -82,6 +80,8 @@ namespace Framework_SW2013
 
         private String NomCle(ExtComposant Composant)
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            
             String pNomCle = "";
             if ((Composant != null) && Composant.EstInitialise)
             {
@@ -95,8 +95,7 @@ namespace Framework_SW2013
 
         private void RecListListerComposants(ExtComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, ExtComposant> DicComposants, String NomComposant = "")
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             foreach (ExtComposant pComp in ComposantRacine.ListComposantsEnfants(_PrendreEnCompteSupprime))
             {
@@ -137,8 +136,7 @@ namespace Framework_SW2013
 
         internal List<ExtComposant> ListListerComposants(TypeFichier_e TypeComposant, String NomComposant = "")
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             Dictionary<String, ExtComposant> pDicComposants = new Dictionary<string, ExtComposant>();
 
@@ -165,8 +163,7 @@ namespace Framework_SW2013
 
         public ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "")
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
             ArrayList pArrayComps = new ArrayList();

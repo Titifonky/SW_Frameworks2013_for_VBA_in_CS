@@ -81,28 +81,34 @@ namespace Framework_SW2013
 
         public Boolean Init(SldWorks SldWks)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-
-            if (SldWks != null)
+            try
             {
-                _SwSW = SldWks;
-                _Debug.Init(this);
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
-                /// A chaque initialisation de l'objet SW, on vide le debug et on inscrit la version de SW
-                /// Ca evite de chercher trop loin
 
-                _SwSW.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
-                _Revision = _SwSW.RevisionNumber();
-                _Debug.ExecutionAjouterLigne("    ");
-                _Debug.ExecutionAjouterLigne("================================================================================================");
-                _Debug.ExecutionAjouterLigne("SOLIDWORKS");
-                _Debug.ExecutionAjouterLigne("Version de base : " + VersionDeBase + "    Version courante : " + VersionCourante + "    Hotfixe : " + Hotfixe);
-                _Debug.ExecutionAjouterLigne("------------------------------------------------------------------------------------------------");
-                _EstInitialise = true;
+                if (SldWks != null)
+                {
+                    _SwSW = SldWks;
+                    _Debug.Init(this);
+                    _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+                    /// A chaque initialisation de l'objet SW, on vide le debug et on inscrit la version de SW
+                    /// Ca evite de chercher trop loin
+
+                    _SwSW.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
+                    _Revision = _SwSW.RevisionNumber();
+                    _Debug.DebugAjouterLigne("    ");
+                    _Debug.DebugAjouterLigne("================================================================================================");
+                    _Debug.DebugAjouterLigne("SOLIDWORKS");
+                    _Debug.DebugAjouterLigne("Version de base : " + VersionDeBase + "    Version courante : " + VersionCourante + "    Hotfixe : " + Hotfixe);
+                    _Debug.DebugAjouterLigne("------------------------------------------------------------------------------------------------");
+                    _EstInitialise = true;
+                }
+
+                return _EstInitialise;
             }
-
-            return _EstInitialise;
-            
+            catch (Exception ex)
+            {
+                _Debug.DebugAjouterLigne(ex.Source.ToString());
+                return false;
+            }
         }
         
         /// <summary>
@@ -113,18 +119,17 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ExtModele Modele(String Chemin = "")
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             ExtModele pModele = new ExtModele();
             if (String.IsNullOrEmpty(Chemin))
             {
-                _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "SldWorks.ActiveDoc");
+                _Debug.DebugAjouterLigne("\t -> " + "SldWorks.ActiveDoc");
                 pModele.Init(_SwSW.ActiveDoc, this);
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Ouvrir " + Chemin);
+                _Debug.DebugAjouterLigne("\t -> " + "Ouvrir " + Chemin);
                 pModele.Init(Ouvrir(Chemin), this);
             }
 
@@ -142,14 +147,13 @@ namespace Framework_SW2013
         /// <returns></returns>
         private ModelDoc2 Ouvrir(String Chemin)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             foreach (ModelDoc2 pSwModele in _SwSW.GetDocuments())
             {
                 if (pSwModele.GetPathName() == Chemin)
                 {
-                    _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Fichier déjà ouvert : " + Chemin);
+                    _Debug.DebugAjouterLigne("\t -> " + "Fichier déjà ouvert : " + Chemin);
                     return pSwModele;
                 }
             }
@@ -171,7 +175,7 @@ namespace Framework_SW2013
                     return null;
             }
 
-            _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Ouvre le fichier : " + Chemin);
+            _Debug.DebugAjouterLigne("\t -> " + "Ouvre le fichier : " + Chemin);
 
             return _SwSW.OpenDoc6(Chemin, (int)Type, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref Erreur, ref Warning);
         }

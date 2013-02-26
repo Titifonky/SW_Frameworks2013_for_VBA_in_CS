@@ -86,7 +86,7 @@ namespace Framework_SW2013
 
         internal Boolean Init(Component2 SwComposant, ExtModele Modele)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             // On teste si le Modele est valide
             if ((SwComposant != null) && (Modele != null) && Modele.EstInitialise)
@@ -111,7 +111,7 @@ namespace Framework_SW2013
                     _Modele = Modele;
                     _Nb = 1;
 
-                    _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Modele.Chemin);
+                    _Debug.DebugAjouterLigne("\t -> " + this.Modele.Chemin);
                 }
                 else
                 {
@@ -120,7 +120,7 @@ namespace Framework_SW2013
             }
             else // Sinon, on envoi pour le debug
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -128,8 +128,7 @@ namespace Framework_SW2013
 
         internal List<ExtComposant> ListComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtComposant> pListe = new List<ExtComposant>();
 
@@ -163,8 +162,7 @@ namespace Framework_SW2013
 
         public ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtComposant> pListeComps = ListComposantsEnfants(PrendreEnCompteSupprime);
             ArrayList pArrayComps = new ArrayList();

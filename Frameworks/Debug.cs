@@ -12,10 +12,9 @@ namespace Framework_SW2013
         private static readonly object _Lock = new object();
 
         private ExtSldWorks _SW;
-        private int _NbTabulations = 0;
-        private String _Tab = "   ";
-        private String _CheminFichierExecution;
         private String _CheminFichierDebug;
+        private Int32 _NbTab = 0;
+        private String _Tab = "    ";
 
         #region "Propriétés"
 
@@ -33,13 +32,6 @@ namespace Framework_SW2013
                 return _instance;
             }
         }
-
-        public int NbTabulations
-        {
-            get { return _NbTabulations; }
-            set { _NbTabulations = value; }
-        }
-
 
         #endregion
 
@@ -60,11 +52,8 @@ namespace Framework_SW2013
                 _SW = SW;
                 String pDossierMacros = _SW.SwSW.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swFileLocationsMacros);
 
-                _CheminFichierExecution = Path.Combine(pDossierMacros, "Execution.txt");
                 _CheminFichierDebug = Path.Combine(pDossierMacros, "Debug.txt");
-                StreamWriter pFichierExecution = new StreamWriter(_CheminFichierExecution, false, System.Text.Encoding.Unicode);
                 StreamWriter pFichierDebug = new StreamWriter(_CheminFichierDebug, false, System.Text.Encoding.Unicode);
-                pFichierExecution.Close();
                 pFichierDebug.Close();
 
                 return true;
@@ -73,18 +62,16 @@ namespace Framework_SW2013
             return false;
         }
 
-        public void ExecutionAjouterLigne(String Ligne)
-        {
-            StreamWriter pFichierExecution = new StreamWriter(_CheminFichierExecution, true, System.Text.Encoding.Unicode);
-            pFichierExecution.WriteLine(_Tab.Repeter(_NbTabulations) + Ligne);
-            pFichierExecution.Close();
-        }
-
         public void DebugAjouterLigne(String Ligne)
         {
             StreamWriter pFichierDebug = new StreamWriter(_CheminFichierDebug, true, System.Text.Encoding.Unicode);
-            pFichierDebug.WriteLine(Ligne);
+            
+            pFichierDebug.WriteLine(_Tab.Repeter(_NbTab) + Ligne);
             pFichierDebug.Close();
+        }
+
+        public void DebugFin()
+        {
         }
 
         #endregion

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -16,7 +17,8 @@ namespace Framework_SW2013
         PartDoc SwPiece { get; }
         ExtModele Modele { get; }
         Boolean Contient(TypeCorps_e T);
-        ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false);
+        ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false);
+        ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -41,23 +43,37 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Renvoi l'objet PartDoc
+        /// </summary>
         public PartDoc SwPiece { get { return _SwPiece; } }
 
+        /// <summary>
+        /// Renvoi l'objet ExtModele
+        /// </summary>
         public ExtModele Modele { get { return _Modele; } }
 
+        /// <summary>
+        /// Renvoi la valeur de l'initialisation
+        /// </summary>
         internal Boolean EstInitialise { get { return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Initialiser l'objet pièce
+        /// </summary>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
         internal Boolean Init(ExtModele Modele)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cPiece))
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + Modele.Chemin);
+                _Debug.DebugAjouterLigne("\t -> " + Modele.Chemin);
 
                 _Modele = Modele;
                 _SwPiece = Modele.SwModele as PartDoc;
@@ -65,14 +81,16 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
         }
 
-        internal Feature ListeDesPiecesSoudees()
+        internal Feature DossierDesCorps()
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             Feature pFonctionPiecesSoudees = _SwPiece.FirstFeature();
 
             while (pFonctionPiecesSoudees != null)
@@ -100,11 +118,16 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean Contient(TypeCorps_e T)
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             if (Convert.ToBoolean(T & TypeCorps_e.cTole))
             {
                 foreach (ExtFonction Fonction in _Modele.ListListeDesFonctions())
                 {
-                    if ((Fonction.TypeDeLaFonction == "SMBaseFlange") || (Fonction.TypeDeLaFonction == "SolidToSheetMetal"))
+                    if ((Fonction.TypeDeLaFonction == "SMBaseFlange")
+                        || (Fonction.TypeDeLaFonction == "SolidToSheetMetal")
+                        || (Fonction.TypeDeLaFonction == "SheetMetal")
+                        || (Fonction.TypeDeLaFonction == "FlatPattern"))
                         return true;
                 }
 
@@ -124,21 +147,63 @@ namespace Framework_SW2013
 
             if (Convert.ToBoolean(T & TypeCorps_e.cAutre))
             {
-                if (ListListeDesDossiers(TypeCorps_e.cAutre, false).Count > 0)
+                if (ListListeDesDossiersDePiecesSoudees(TypeCorps_e.cAutre, false).Count > 0)
                     return true;
             }
 
             return false;
         }
 
-        internal List<ExtDossier> ListListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
+        internal List<ExtCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
+            List<ExtCorps> Liste = new List<ExtCorps>();
+
+            Object[] TableauDesCorps = _SwPiece.GetBodies2((int)swBodyType_e.swAllBodies, PrendreEnCompteCache);
+
+            if (TableauDesCorps.Length > 0)
+            {
+                foreach (Object ObjetCorps in TableauDesCorps)
+                {
+                    Body2 pSwCorps = (Body2)ObjetCorps;
+                    ExtCorps pCorps = new ExtCorps();
+                    if (pCorps.Init(pSwCorps, this) && Convert.ToBoolean(pCorps.TypeDeCorps & TypeDeCorps))
+                        {
+                            Liste.Add(pCorps);
+                        }
+                }
+            }
+
+            return Liste;
+        }
+
+        /// <summary>
+        /// Renvoi la liste des corps de la pièces
+        /// </summary>
+        /// <param name="TypeDeCorps"></param>
+        /// <param name="PrendreEnCompteCache"></param>
+        /// <returns></returns>
+        public ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false)
+        {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
+            List<ExtCorps> pListeCorps = ListListeDesCorps(TypeDeCorps, PrendreEnCompteCache);
+            ArrayList pArrayCorps = new ArrayList();
+
+            if (pListeCorps.Count > 0)
+                pArrayCorps = new ArrayList(pListeCorps);
+
+            return pArrayCorps;
+        }
+
+        internal List<ExtDossier> ListListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
+        {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtDossier> Liste = new List<ExtDossier>();
 
-            Feature pFonction = ListeDesPiecesSoudees();
+            Feature pFonction = DossierDesCorps();
 
             // S'il n'y a pas de liste, on arrete là
             if (pFonction == null)
@@ -153,7 +218,7 @@ namespace Framework_SW2013
                     BodyFolder pSwDossier = pFonction.GetSpecificFeature2();
                     ExtDossier Dossier = new ExtDossier();
 
-                    if (Dossier.Init(pSwDossier, this) && Convert.ToBoolean(Dossier.TypeDeCorps | TypeDeCorps) && (!Dossier.EstExclu | PrendreEnCompteExclus))
+                    if (Dossier.Init(pSwDossier, this) && Convert.ToBoolean(Dossier.TypeDeCorps & TypeDeCorps) && (!Dossier.EstExclu | PrendreEnCompteExclus))
                         Liste.Add(Dossier);
 
                     Dossier = null;
@@ -166,12 +231,17 @@ namespace Framework_SW2013
 
         }
 
-        public ArrayList ListeDesDossiers(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
+        /// <summary>
+        /// Renvoi la liste des dossiers de pièces soudées de la pièce
+        /// </summary>
+        /// <param name="TypeDeCorps"></param>
+        /// <param name="PrendreEnCompteExclus"></param>
+        /// <returns></returns>
+        public ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
-            List<ExtDossier> pListeDossier = ListListeDesDossiers(TypeDeCorps, PrendreEnCompteExclus);
+            List<ExtDossier> pListeDossier = ListListeDesDossiersDePiecesSoudees(TypeDeCorps, PrendreEnCompteExclus);
             ArrayList pArrayDossiers = new ArrayList();
 
             if (pListeDossier.Count > 0)

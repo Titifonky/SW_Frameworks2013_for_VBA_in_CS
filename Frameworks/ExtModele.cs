@@ -73,8 +73,7 @@ namespace Framework_SW2013
         {
             get
             {
-                _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
                 ExtAssemblage Assemblage = new ExtAssemblage();
 
@@ -89,8 +88,7 @@ namespace Framework_SW2013
         {
             get
             {
-                _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
                 ExtPiece Piece = new ExtPiece();
 
@@ -105,8 +103,7 @@ namespace Framework_SW2013
         {
             get
             {
-                _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
                 ExtDessin Dessin = new ExtDessin();
 
@@ -121,6 +118,8 @@ namespace Framework_SW2013
         {
             get
             {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
                 GestDeConfigurations pGestConfigs = new GestDeConfigurations();
                 if (pGestConfigs.Init(this))
                     return pGestConfigs;
@@ -133,6 +132,8 @@ namespace Framework_SW2013
         {
             get
             {
+                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
                 GestDeProprietes pGestProps = new GestDeProprietes();
                 if (pGestProps.Init(SwModele.Extension.get_CustomPropertyManager(""), this))
                     return pGestProps;
@@ -175,13 +176,13 @@ namespace Framework_SW2013
 
         internal Boolean Init(ModelDoc2 SwModele, ExtSldWorks Sw)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             if ((SwModele != null) && (Sw != null))
             {
                 _SwModele = SwModele;
                 _SW = Sw;
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : " + this.Chemin);
+                _Debug.DebugAjouterLigne("\t -> " + this.Chemin);
 
                 // On valide l'initialisation
                 _EstInitialise = true;
@@ -189,7 +190,7 @@ namespace Framework_SW2013
                 // Si c'est un assemblage ou une pièce, on va chercher le composant associé
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
-                    _Debug.DebugAjouterLigne("\t" + this.GetType().Name + " -> " + "Referencement du composant");
+                    _Debug.DebugAjouterLigne("\t -> Referencement du composant");
                     _Composant = new ExtComposant();
                     if (_Composant.Init(_SwModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this) == false)
                         _EstInitialise = false;
@@ -197,7 +198,7 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name + " : Erreur d'initialisation");
+                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -205,6 +206,8 @@ namespace Framework_SW2013
 
         public void Activer()
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, 0, Erreur);
             ZoomEtendu();
             Redessiner();
@@ -212,38 +215,49 @@ namespace Framework_SW2013
 
         public void Sauver()
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             SwModele.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Erreur, ref Warning);
         }
 
         public void Fermer()
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             _SW.SwSW.CloseDoc(SwModele.GetPathName());
         }
 
         public void Redessiner()
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             SwModele.ActiveView.GraphicsRedraw();
         }
 
         public void Reconstruire()
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             SwModele.EditRebuild3();
         }
 
         public void ForcerAToutReconstruire()
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             SwModele.ForceRebuild3(false);
         }
 
         public void ZoomEtendu()
         {
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
             SwModele.ViewZoomtofit2();
         }
 
         internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtFonction> pListeFonctions = new List<ExtFonction>();
 
@@ -281,8 +295,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            _MethodBase Methode = System.Reflection.MethodBase.GetCurrentMethod();
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + Methode.Name);
+            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
             List<ExtFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
             ArrayList pArrayFonctions = new ArrayList();
