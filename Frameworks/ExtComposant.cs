@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
+using System.Reflection;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -28,7 +29,7 @@ namespace Framework_SW2013
     public class ExtComposant : IExtComposant, IComparable<ExtComposant>, IComparer<ExtComposant>, IEquatable<ExtComposant>
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private Component2 _SwComposant;
@@ -46,21 +47,21 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public Component2 SwComposant { get { return _SwComposant; } }
+        public Component2 SwComposant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwComposant; } }
 
-        public ExtModele Modele { get { return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
-        public ExtConfiguration Configuration { get { return _Configuration; } }
+        public ExtConfiguration Configuration { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Configuration; } }
 
-        public int Nb { get { return _Nb; } set { _Nb = value; } }
+        public int Nb { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Nb; } set { Debug.Info(MethodBase.GetCurrentMethod());  _Nb = value; } }
 
         public Boolean EstExclu
         {
-            get { return Convert.ToBoolean(SwComposant.ExcludeFromBOM); }
-            set { SwComposant.ExcludeFromBOM = value; }
+            get { Debug.Info(MethodBase.GetCurrentMethod());  return Convert.ToBoolean(SwComposant.ExcludeFromBOM); }
+            set { Debug.Info(MethodBase.GetCurrentMethod());  SwComposant.ExcludeFromBOM = value; }
         }
 
-        public Boolean EstSupprime { get { return Convert.ToBoolean(SwComposant.IsSuppressed()); } }
+        public Boolean EstSupprime { get { Debug.Info(MethodBase.GetCurrentMethod());  return Convert.ToBoolean(SwComposant.IsSuppressed()); } }
 
         /// <summary>
         /// Renvoi un nouvel objet Recherche
@@ -78,7 +79,7 @@ namespace Framework_SW2013
             }
         }
 
-        public Boolean EstInitialise { get { return _EstInitialise; } }
+        public Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -86,7 +87,7 @@ namespace Framework_SW2013
 
         internal Boolean Init(Component2 SwComposant, ExtModele Modele)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             // On teste si le Modele est valide
             if ((SwComposant != null) && (Modele != null) && Modele.EstInitialise)
@@ -111,7 +112,7 @@ namespace Framework_SW2013
                     _Modele = Modele;
                     _Nb = 1;
 
-                    _Debug.DebugAjouterLigne("\t -> " + this.Modele.Chemin);
+                    Debug.Info(this.Modele.Chemin);
                 }
                 else
                 {
@@ -120,7 +121,7 @@ namespace Framework_SW2013
             }
             else // Sinon, on envoi pour le debug
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -128,7 +129,7 @@ namespace Framework_SW2013
 
         internal List<ExtComposant> ListComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtComposant> pListe = new List<ExtComposant>();
 
@@ -162,7 +163,7 @@ namespace Framework_SW2013
 
         public ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtComposant> pListeComps = ListComposantsEnfants(PrendreEnCompteSupprime);
             ArrayList pArrayComps = new ArrayList();

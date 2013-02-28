@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -26,7 +27,7 @@ namespace Framework_SW2013
     public class ExtRecherche : IExtRecherche
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private ExtComposant _Composant;
@@ -45,17 +46,17 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public ExtComposant Composant { get { return _Composant; } }
+        public ExtComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } }
 
-        public Boolean PrendreEnCompteConfig { get { return _PrendreEnCompteConfig; } set { _PrendreEnCompteConfig = value; } }
+        public Boolean PrendreEnCompteConfig { get { Debug.Info(MethodBase.GetCurrentMethod());  return _PrendreEnCompteConfig; } set { Debug.Info(MethodBase.GetCurrentMethod());  _PrendreEnCompteConfig = value; } }
 
-        public Boolean PrendreEnCompteExclus { get { return _PrendreEnCompteExclus; } set { _PrendreEnCompteExclus = value; } }
+        public Boolean PrendreEnCompteExclus { get { Debug.Info(MethodBase.GetCurrentMethod());  return _PrendreEnCompteExclus; } set { Debug.Info(MethodBase.GetCurrentMethod());  _PrendreEnCompteExclus = value; } }
 
-        public Boolean PrendreEnCompteSupprime { get { return _PrendreEnCompteSupprime; } set { _PrendreEnCompteSupprime = value; } }
+        public Boolean PrendreEnCompteSupprime { get { Debug.Info(MethodBase.GetCurrentMethod());  return _PrendreEnCompteSupprime; } set { Debug.Info(MethodBase.GetCurrentMethod());  _PrendreEnCompteSupprime = value; } }
 
-        public Boolean RenvoyerComposantRacine { get { return _RenvoyerComposantRacine; } set { _RenvoyerComposantRacine = value; } }
+        public Boolean RenvoyerComposantRacine { get { Debug.Info(MethodBase.GetCurrentMethod());  return _RenvoyerComposantRacine; } set { Debug.Info(MethodBase.GetCurrentMethod());  _RenvoyerComposantRacine = value; } }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -63,7 +64,7 @@ namespace Framework_SW2013
 
         internal Boolean Init(ExtComposant Composant)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((Composant != null) && Composant.EstInitialise)
             {
@@ -72,7 +73,7 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -80,7 +81,7 @@ namespace Framework_SW2013
 
         private String NomCle(ExtComposant Composant)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
             
             String pNomCle = "";
             if ((Composant != null) && Composant.EstInitialise)
@@ -95,7 +96,7 @@ namespace Framework_SW2013
 
         private void RecListListerComposants(ExtComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, ExtComposant> DicComposants, String NomComposant = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             foreach (ExtComposant pComp in ComposantRacine.ListComposantsEnfants(_PrendreEnCompteSupprime))
             {
@@ -136,7 +137,7 @@ namespace Framework_SW2013
 
         internal List<ExtComposant> ListListerComposants(TypeFichier_e TypeComposant, String NomComposant = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             Dictionary<String, ExtComposant> pDicComposants = new Dictionary<string, ExtComposant>();
 
@@ -163,7 +164,7 @@ namespace Framework_SW2013
 
         public ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
             ArrayList pArrayComps = new ArrayList();

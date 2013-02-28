@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System.Reflection;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -33,7 +34,7 @@ namespace Framework_SW2013
     public class ExtFonction : IExtFonction
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private EtatFonction_e _EtatEnregistre;
@@ -50,13 +51,13 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public Feature SwFonction { get { return _SwFonction; } }
+        public Feature SwFonction { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwFonction; } }
 
-        public ExtModele Modele { get { return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
-        public String Nom { get { return SwFonction.Name; } set { SwFonction.Name = value; } }
+        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwFonction.Name; } set { Debug.Info(MethodBase.GetCurrentMethod());  SwFonction.Name = value; } }
 
-        public String TypeDeLaFonction { get { return SwFonction.GetTypeName2(); } }
+        public String TypeDeLaFonction { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwFonction.GetTypeName2(); } }
 
         /// <summary>
         /// Renvoi l'etat "Supprimer" ou "Actif" de la fonction
@@ -66,6 +67,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 String NomConfig = _Modele.GestDeConfigurations.ConfigurationActive.Nom;
                 Object[] pArrayConfig = { NomConfig };
                 Object[] pArrayResult;
@@ -79,7 +81,7 @@ namespace Framework_SW2013
             }
         }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -87,25 +89,25 @@ namespace Framework_SW2013
 
         internal Boolean Init(Feature SwFonction, ExtModele Modele)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((SwFonction != null) && (Modele != null) && Modele.EstInitialise)
             {
                 _Modele = Modele;
                 _SwFonction = SwFonction;
-                _Debug.DebugAjouterLigne("\t -> " + this.Nom);
+                Debug.Info(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
         public void Activer()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             String TypeFonction;
             String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
@@ -118,7 +120,7 @@ namespace Framework_SW2013
 
         public void Desactiver()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             String TypeFonction;
             String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
@@ -130,14 +132,14 @@ namespace Framework_SW2013
 
         public void EnregistrerEtat()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             _EtatEnregistre = Etat;
         }
 
         public void RestaurerEtat()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if (_EtatEnregistre == EtatFonction_e.cActivee)
                 Activer();
@@ -147,7 +149,7 @@ namespace Framework_SW2013
 
         internal List<ExtCorps> ListListeDesCorps()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtCorps> pListeCorps = new List<ExtCorps>();
 
@@ -166,7 +168,7 @@ namespace Framework_SW2013
 
         internal List<ExtFonction> ListListeDesSousFonctions(string NomARechercher = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtFonction> pListeFonctions = new List<ExtFonction>();
 
@@ -189,7 +191,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesCorps()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtCorps> pListeCorps = ListListeDesCorps();
             ArrayList pArrayCorps = new ArrayList();
@@ -202,7 +204,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesSousFonctions(string NomARechercher = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtFonction> pListeFonctions = ListListeDesSousFonctions(NomARechercher);
             ArrayList pArrayFonctions = new ArrayList();

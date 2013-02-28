@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
+using System.Reflection;
 
 namespace Framework_SW2013
 {
@@ -23,7 +24,7 @@ namespace Framework_SW2013
     public class ExtVue : IExtVue
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private ExtFeuille _Feuille;
@@ -38,16 +39,17 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public View SwVue { get { return _SwVue; } }
+        public View SwVue { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwVue; } }
 
-        public ExtFeuille Feuille { get { return _Feuille; } }
+        public ExtFeuille Feuille { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Feuille; } }
 
-        public String Nom { get { return _SwVue.GetName2(); } set { _SwVue.SetName2(value); } }
+        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwVue.GetName2(); } set { Debug.Info(MethodBase.GetCurrentMethod());  _SwVue.SetName2(value); } }
 
         public ExtModele ModeleDeReference
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 ExtModele pModele = new ExtModele();
                 if (pModele.Init(_SwVue.ReferencedDocument, _Feuille.Dessin.Modele.SW))
                     return pModele;
@@ -60,6 +62,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 ExtConfiguration pConfig = new ExtConfiguration();
                 if (pConfig.Init(_SwVue.ReferencedDocument.GetConfigurationByName(_SwVue.ReferencedConfiguration), ModeleDeReference))
                     return pConfig;
@@ -72,6 +75,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 ExtDimensionVue pDimensions = new ExtDimensionVue();
 
                 if (pDimensions.Init(this))
@@ -81,7 +85,7 @@ namespace Framework_SW2013
             }
         }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -89,19 +93,19 @@ namespace Framework_SW2013
 
         internal Boolean Init(View SwVue, ExtFeuille Feuille)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((SwVue != null) && (Feuille != null) && Feuille.EstInitialise)
             {
                 _Feuille = Feuille;
                 _SwVue = SwVue;
 
-                _Debug.DebugAjouterLigne("\t -> " + this.Nom);
+                Debug.Info(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }

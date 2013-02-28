@@ -6,6 +6,7 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -30,7 +31,7 @@ namespace Framework_SW2013
     public class ExtCorps : IExtCorps, IComparable<ExtCorps>, IComparer<ExtCorps>, IEquatable<ExtCorps>
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private ExtPiece _Piece;
@@ -46,11 +47,11 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public Body2 SwCorps { get { return _SwCorps; } }
+        public Body2 SwCorps { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwCorps; } }
 
-        public ExtPiece Piece { get { return _Piece; } }
+        public ExtPiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
 
-        public String Nom { get { return SwCorps.Name; } set { SwCorps.Name = value; } }
+        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwCorps.Name; } set { Debug.Info(MethodBase.GetCurrentMethod());  SwCorps.Name = value; } }
 
         /// <summary>
         /// Retourne le type de corps <see cref="TypeCorps_e"/>
@@ -60,6 +61,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 foreach (Feature Fonction in SwCorps.GetFeatures())
                 {
                     switch (Fonction.GetTypeName2())
@@ -82,6 +84,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 foreach (ExtDossier pDossier in _Piece.ListeDesDossiersDePiecesSoudees(TypeDeCorps, true))
                 {
                     foreach (ExtCorps pCorps in pDossier.ListListeDesCorps())
@@ -97,7 +100,7 @@ namespace Framework_SW2013
             }
         }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -105,26 +108,26 @@ namespace Framework_SW2013
 
         internal Boolean Init(Body2 SwCorps, ExtPiece Piece)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((SwCorps != null) && (Piece != null) && Piece.EstInitialise)
             {
                 _Piece = Piece;
                 _SwCorps = SwCorps;
 
-                _Debug.DebugAjouterLigne("\t -> " + this.Nom);
+                Debug.Info(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
         public ExtFonction PremiereFonction()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             ExtFonction pFonction = new ExtFonction();
 
@@ -142,7 +145,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtFonction> pListeFonctions = new List<ExtFonction>();
             
@@ -176,7 +179,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
             ArrayList pArrayFonctions = new ArrayList();

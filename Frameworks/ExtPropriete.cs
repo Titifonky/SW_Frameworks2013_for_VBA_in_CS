@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.swconst;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Framework_SW2013
 {
@@ -24,7 +25,7 @@ namespace Framework_SW2013
     public class ExtPropriete : IExtPropriete, IComparable<ExtPropriete>, IComparer<ExtPropriete>, IEquatable<ExtPropriete>
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private GestDeProprietes _GestDeProprietes;
@@ -39,12 +40,13 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public GestDeProprietes GestDeProprietes { get { return _GestDeProprietes; } }
+        public GestDeProprietes GestDeProprietes { get { Debug.Info(MethodBase.GetCurrentMethod());  return _GestDeProprietes; } }
 
         public String Nom
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 if (_GestDeProprietes.SwGestDeProprietes.Count > 0)
                 {
                     foreach (String pNom in _GestDeProprietes.SwGestDeProprietes.GetNames())
@@ -61,6 +63,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 if (!String.IsNullOrEmpty(this.Nom))
                 {
                     return (swCustomInfoType_e)_GestDeProprietes.SwGestDeProprietes.GetType2(_Nom);
@@ -73,6 +76,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 String Expression;
                 String Valeur;
 
@@ -80,13 +84,14 @@ namespace Framework_SW2013
 
                 return Expression;
             }
-            set { _GestDeProprietes.SwGestDeProprietes.Set(_Nom, value); }
+            set { Debug.Info(MethodBase.GetCurrentMethod());  _GestDeProprietes.SwGestDeProprietes.Set(_Nom, value); }
         }
 
         public String Valeur
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 String Expression;
                 String Valeur;
 
@@ -96,7 +101,7 @@ namespace Framework_SW2013
             }
         }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -104,7 +109,7 @@ namespace Framework_SW2013
 
         internal Boolean Init(GestDeProprietes Gestionnaire, String Nom)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((Gestionnaire != null) && Gestionnaire.EstInitialise && !String.IsNullOrEmpty(Nom))
             {
@@ -114,13 +119,13 @@ namespace Framework_SW2013
 
                 if (!String.IsNullOrEmpty(this.Nom))
                 {
-                    _Debug.DebugAjouterLigne("\t -> " + this.Nom);
+                    Debug.Info(this.Nom);
                     _EstInitialise = true;
                 }
                 else
                 {
                     _Nom = null;
-                    _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                    Debug.Info("\t !!!!! Erreur d'initialisation");
                 }
             }
             
@@ -129,6 +134,8 @@ namespace Framework_SW2013
 
         private void Get(out String Expression, out String Valeur)
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
             if (String.IsNullOrEmpty(this.Nom))
             {
                 _EstInitialise = false;
@@ -147,6 +154,8 @@ namespace Framework_SW2013
 
         public Boolean Renommer(String NvNom)
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
             swCustomInfoType_e pTypeDeLaPropriete = TypeDeLaPropriete;
             String pExpression = Expression;
             if (_GestDeProprietes.SwGestDeProprietes.Delete(_Nom) == 1)
@@ -160,6 +169,7 @@ namespace Framework_SW2013
 
         public Boolean Supprimer()
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if (_GestDeProprietes.SwGestDeProprietes.Delete(Nom) == 1)
             {

@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System.Reflection;
 
 namespace Framework_SW2013
 {
@@ -25,7 +26,7 @@ namespace Framework_SW2013
     public class GestDeProprietes : IGestDeProprietes
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private ExtModele _Modele;
@@ -41,11 +42,11 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public CustomPropertyManager SwGestDeProprietes { get { return _SwGestDeProprietes; } }
+        public CustomPropertyManager SwGestDeProprietes { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwGestDeProprietes; } }
 
-        public ExtModele Modele { get { return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -53,7 +54,7 @@ namespace Framework_SW2013
 
         internal Boolean Init(CustomPropertyManager SwGestionnaire, ExtModele Modele)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((SwGestionnaire != null) && (Modele != null) && Modele.EstInitialise)
             {
@@ -63,7 +64,7 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -71,7 +72,7 @@ namespace Framework_SW2013
 
         public ExtPropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if (EcraserExistante)
             {
@@ -98,7 +99,7 @@ namespace Framework_SW2013
 
         public ExtPropriete RecupererPropriete(String Nom)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             ExtPropriete Propriete = new ExtPropriete();
 
@@ -110,7 +111,7 @@ namespace Framework_SW2013
 
         internal List<ExtPropriete> ListListeDesProprietes(String NomARechercher = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtPropriete> pListeProps = new List<ExtPropriete>();
 
@@ -129,7 +130,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesProprietes(String NomARechercher = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtPropriete> pListeProprietes = ListListeDesProprietes(NomARechercher);
             ArrayList pArrayProprietes = new ArrayList();

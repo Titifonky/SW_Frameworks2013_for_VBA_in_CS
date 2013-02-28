@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System.Reflection;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -44,7 +45,7 @@ namespace Framework_SW2013
     public class ExtModele : IExtModele, IComparable<ExtModele>, IComparer<ExtModele>, IEquatable<ExtModele>
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private ModelDoc2 _SwModele;
@@ -63,17 +64,17 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public ModelDoc2 SwModele { get { return _SwModele; } }
+        public ModelDoc2 SwModele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwModele; } }
 
-        public ExtSldWorks SW { get { return _SW; } }
+        public ExtSldWorks SW { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SW; } }
 
-        public ExtComposant Composant { get { return _Composant; } set { _Composant = value; } }
+        public ExtComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } set { Debug.Info(MethodBase.GetCurrentMethod());  _Composant = value; } }
 
         public ExtAssemblage Assemblage
         {
             get
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+                Debug.Info(MethodBase.GetCurrentMethod());
 
                 ExtAssemblage Assemblage = new ExtAssemblage();
 
@@ -88,7 +89,7 @@ namespace Framework_SW2013
         {
             get
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+                Debug.Info(MethodBase.GetCurrentMethod());
 
                 ExtPiece Piece = new ExtPiece();
 
@@ -103,7 +104,7 @@ namespace Framework_SW2013
         {
             get
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+                Debug.Info(MethodBase.GetCurrentMethod());
 
                 ExtDessin Dessin = new ExtDessin();
 
@@ -118,7 +119,7 @@ namespace Framework_SW2013
         {
             get
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+                Debug.Info(MethodBase.GetCurrentMethod());
 
                 GestDeConfigurations pGestConfigs = new GestDeConfigurations();
                 if (pGestConfigs.Init(this))
@@ -132,7 +133,7 @@ namespace Framework_SW2013
         {
             get
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+                Debug.Info(MethodBase.GetCurrentMethod());
 
                 GestDeProprietes pGestProps = new GestDeProprietes();
                 if (pGestProps.Init(SwModele.Extension.get_CustomPropertyManager(""), this))
@@ -146,6 +147,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 switch (SwModele.GetType())
                 {
                     case (int)swDocumentTypes_e.swDocASSEMBLY:
@@ -163,12 +165,12 @@ namespace Framework_SW2013
             }
         }
 
-        public String Chemin { get { return SwModele.GetPathName(); } }
-        public String NomDuFichier { get { return Path.GetFileName(SwModele.GetPathName()); } }
-        public String NomDuFichierSansExt { get { return Path.GetFileNameWithoutExtension(SwModele.GetPathName()); } }
-        public String NomDuDossier { get { return Path.GetDirectoryName(SwModele.GetPathName()); } }
+        public String Chemin { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwModele.GetPathName(); } }
+        public String NomDuFichier { get { Debug.Info(MethodBase.GetCurrentMethod());  return Path.GetFileName(SwModele.GetPathName()); } }
+        public String NomDuFichierSansExt { get { Debug.Info(MethodBase.GetCurrentMethod());  return Path.GetFileNameWithoutExtension(SwModele.GetPathName()); } }
+        public String NomDuDossier { get { Debug.Info(MethodBase.GetCurrentMethod());  return Path.GetDirectoryName(SwModele.GetPathName()); } }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -176,13 +178,13 @@ namespace Framework_SW2013
 
         internal Boolean Init(ModelDoc2 SwModele, ExtSldWorks Sw)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
-            if ((SwModele != null) && (Sw != null))
+            if ((SwModele != null) && (Sw != null) && Sw.EstInitialise)
             {
                 _SwModele = SwModele;
                 _SW = Sw;
-                _Debug.DebugAjouterLigne("\t -> " + this.Chemin);
+                Debug.Info(this.Chemin);
 
                 // On valide l'initialisation
                 _EstInitialise = true;
@@ -190,7 +192,7 @@ namespace Framework_SW2013
                 // Si c'est un assemblage ou une pièce, on va chercher le composant associé
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
-                    _Debug.DebugAjouterLigne("\t -> Referencement du composant");
+                    Debug.Info("\t -> Referencement du composant");
                     _Composant = new ExtComposant();
                     if (_Composant.Init(_SwModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this) == false)
                         _EstInitialise = false;
@@ -198,7 +200,7 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -206,7 +208,7 @@ namespace Framework_SW2013
 
         public void Activer()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, 0, Erreur);
             ZoomEtendu();
@@ -215,49 +217,49 @@ namespace Framework_SW2013
 
         public void Sauver()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             SwModele.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Erreur, ref Warning);
         }
 
         public void Fermer()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             _SW.SwSW.CloseDoc(SwModele.GetPathName());
         }
 
         public void Redessiner()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             SwModele.ActiveView.GraphicsRedraw();
         }
 
         public void Reconstruire()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             SwModele.EditRebuild3();
         }
 
         public void ForcerAToutReconstruire()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             SwModele.ForceRebuild3(false);
         }
 
         public void ZoomEtendu()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             SwModele.ViewZoomtofit2();
         }
 
         internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtFonction> pListeFonctions = new List<ExtFonction>();
 
@@ -295,7 +297,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
             ArrayList pArrayFonctions = new ArrayList();

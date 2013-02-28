@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
+using System.Reflection;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -31,7 +32,7 @@ namespace Framework_SW2013
     public class ExtConfiguration : IExtConfiguration, IComparable<ExtConfiguration>, IComparer<ExtConfiguration>, IEquatable<ExtConfiguration>
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private Configuration _SwConfiguration;
@@ -49,11 +50,11 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public Configuration SwConfiguration { get { return _SwConfiguration; } }
+        public Configuration SwConfiguration { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwConfiguration; } }
 
-        public ExtModele Modele { get { return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
-        public String Nom { get { return SwConfiguration.Name; } set { SwConfiguration.Name = value; } }
+        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwConfiguration.Name; } set { Debug.Info(MethodBase.GetCurrentMethod());  SwConfiguration.Name = value; } }
 
         public TypeConfig_e TypeConfig
         {
@@ -122,7 +123,7 @@ namespace Framework_SW2013
             }
         }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -130,19 +131,19 @@ namespace Framework_SW2013
 
         internal Boolean Init(Configuration Config, ExtModele Modele)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((Config != null) && (Modele != null) && Modele.EstInitialise)
             {
                 _SwConfiguration = Config;
                 _Modele = Modele;
 
-                _Debug.DebugAjouterLigne("\t -> " + this.Nom);
+                Debug.Info(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -150,21 +151,25 @@ namespace Framework_SW2013
 
         public Boolean Est(TypeConfig_e T)
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
             return Convert.ToBoolean(TypeConfig & T);
         }
 
         public Boolean Activer()
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
             return Convert.ToBoolean(_Modele.SwModele.ShowConfiguration2(Nom));
         }
 
         public Boolean Supprimer()
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
             return _Modele.SwModele.DeleteConfiguration2(Nom);
         }
 
         public ExtConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee)
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
             ExtConfiguration pConfig = new ExtConfiguration();
             Configuration pSwConfig = _Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfigDerivee, NomConfigDerivee, "", 0, NomConfigDerivee, "");
 

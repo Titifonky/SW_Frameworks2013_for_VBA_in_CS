@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace Framework_SW2013
 {
@@ -25,7 +26,6 @@ namespace Framework_SW2013
     public class ExtDessin : IExtDessin
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
         private Boolean _EstInitialise = false;
 
         private ExtModele _Modele;
@@ -40,15 +40,15 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public DrawingDoc SwDessin { get { return _SwDessin; } }
+        public DrawingDoc SwDessin { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwDessin; } }
 
-        public ExtModele Modele { get { return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         public ExtFeuille FeuilleActive
         {
             get
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+                Debug.Info(MethodBase.GetCurrentMethod());
 
                 ExtFeuille pFeuille = new ExtFeuille();
                 Sheet pSwFeuille = _SwDessin.GetCurrentSheet();
@@ -59,7 +59,7 @@ namespace Framework_SW2013
             }
         }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -67,11 +67,11 @@ namespace Framework_SW2013
 
         internal Boolean Init(ExtModele Modele)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cDessin))
             {
-                _Debug.DebugAjouterLigne("\t -> " + Modele.Chemin);
+                Debug.Info(Modele.Chemin);
 
                 _Modele = Modele;
                 _SwDessin = Modele.SwModele as DrawingDoc;
@@ -79,7 +79,7 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -87,7 +87,7 @@ namespace Framework_SW2013
 
         public ExtFeuille Feuille(String Nom)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             ExtFeuille pFeuille = new ExtFeuille();
             Sheet pSwFeuille = _SwDessin.get_Sheet(Nom);
@@ -100,7 +100,7 @@ namespace Framework_SW2013
 
         public Boolean FeuilleExiste(String Nom)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if (_SwDessin.GetSheetCount() == 0)
                 return false;
@@ -116,7 +116,7 @@ namespace Framework_SW2013
 
         internal List<ExtFeuille> ListListeDesFeuilles(String NomARechercher = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtFeuille> pListeFeuilles = new List<ExtFeuille>();
 
@@ -140,7 +140,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesFeuilles(String NomARechercher = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtFeuille> pListeFeuilles = ListListeDesFeuilles(NomARechercher);
             ArrayList pArrayFeuilles = new ArrayList();

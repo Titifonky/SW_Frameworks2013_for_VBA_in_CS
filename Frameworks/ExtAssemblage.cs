@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
+using System.Reflection;
 
 namespace Framework_SW2013
 {
@@ -20,7 +21,7 @@ namespace Framework_SW2013
     public class ExtAssemblage : IExtAssemblage
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private ExtModele _Modele;
@@ -35,11 +36,11 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public AssemblyDoc SwAssemblage { get { return _SwAssemblage; } }
+        public AssemblyDoc SwAssemblage { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwAssemblage; } }
 
-        public ExtModele Modele { get { return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -47,11 +48,12 @@ namespace Framework_SW2013
 
         internal Boolean Init(ExtModele Modele)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cAssemblage))
             {
-                _Debug.DebugAjouterLigne("\t -> " + Modele.Chemin);
+                Debug.Info(Modele.Chemin);
 
                 _Modele = Modele;
                 _SwAssemblage = Modele.SwModele as AssemblyDoc;
@@ -59,7 +61,7 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;

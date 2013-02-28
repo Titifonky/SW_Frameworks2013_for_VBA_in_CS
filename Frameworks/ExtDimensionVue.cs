@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
+using System.Reflection;
 
 namespace Framework_SW2013
 {
@@ -21,7 +22,7 @@ namespace Framework_SW2013
     public class ExtDimensionVue : IExtDimensionVue
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private ExtVue _Vue;
@@ -35,13 +36,13 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public ExtVue Vue { get { return _Vue; } }
+        public ExtVue Vue { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Vue; } }
 
         public Point Centre
         {
             get
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+                Debug.Info(MethodBase.GetCurrentMethod());
                 
                 Point pCentre;
                 Double[] pArrayResult;
@@ -55,7 +56,7 @@ namespace Framework_SW2013
             }
             set
             {
-                _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+                Debug.Info(MethodBase.GetCurrentMethod());
 
                 Double[] pCentre = { value.X, value.Y };
                 _Vue.SwVue.Position = pCentre;
@@ -66,6 +67,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 Dimensions pDim;
                 pDim.Lg = Coordonnees.MaxX - Coordonnees.MinX;
                 pDim.Ht = Coordonnees.MaxY - Coordonnees.MinY;
@@ -78,6 +80,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 Coordonnees pCoord;
                 Object[] pArr = _Vue.SwVue.GetOutline();
 
@@ -90,7 +93,7 @@ namespace Framework_SW2013
             }
             }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -98,7 +101,7 @@ namespace Framework_SW2013
 
         internal Boolean Init(ExtVue Vue)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((Vue != null) && Vue.EstInitialise)
             {
@@ -108,7 +111,7 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }

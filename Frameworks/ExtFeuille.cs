@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace Framework_SW2013
 {
@@ -25,7 +26,7 @@ namespace Framework_SW2013
     public class ExtFeuille : IExtFeuille
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private ExtDessin _Dessin;
@@ -40,16 +41,17 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public Sheet SwFeuille { get { return _SwFeuille; } }
+        public Sheet SwFeuille { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwFeuille; } }
 
-        public ExtDessin Dessin { get { return _Dessin; } }
+        public ExtDessin Dessin { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Dessin; } }
 
-        public String Nom { get { return _SwFeuille.GetName(); } set { _SwFeuille.SetName(value); } }
+        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwFeuille.GetName(); } set { Debug.Info(MethodBase.GetCurrentMethod());  _SwFeuille.SetName(value); } }
 
         public ExtVue PremiereVue
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 ExtVue pVue = new ExtVue();
 
                 object[] pObjVues;
@@ -62,7 +64,7 @@ namespace Framework_SW2013
             }
         }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -70,26 +72,26 @@ namespace Framework_SW2013
 
         internal Boolean Init(Sheet SwFeuille, ExtDessin Dessin)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((SwFeuille != null) && (Dessin != null) && Dessin.EstInitialise)
             {
                 _Dessin = Dessin;
                 _SwFeuille = SwFeuille;
 
-                _Debug.DebugAjouterLigne("\t -> " + this.Nom);
+                Debug.Info(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
         internal List<ExtVue> ListListeDesVues(String NomARechercher = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtVue> pListeVues = new List<ExtVue>();
 
@@ -111,7 +113,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesVues(String NomARechercher = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtVue> pListeVues = ListListeDesVues(NomARechercher);
             ArrayList pArrayVues = new ArrayList();

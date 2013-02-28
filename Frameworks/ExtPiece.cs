@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System.Reflection;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -27,7 +28,7 @@ namespace Framework_SW2013
     public class ExtPiece : IExtPiece
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private ExtModele _Modele;
@@ -46,17 +47,17 @@ namespace Framework_SW2013
         /// <summary>
         /// Renvoi l'objet PartDoc
         /// </summary>
-        public PartDoc SwPiece { get { return _SwPiece; } }
+        public PartDoc SwPiece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwPiece; } }
 
         /// <summary>
         /// Renvoi l'objet ExtModele
         /// </summary>
-        public ExtModele Modele { get { return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Renvoi la valeur de l'initialisation
         /// </summary>
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -69,11 +70,11 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(ExtModele Modele)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cPiece))
             {
-                _Debug.DebugAjouterLigne("\t -> " + Modele.Chemin);
+                Debug.Info(Modele.Chemin);
 
                 _Modele = Modele;
                 _SwPiece = Modele.SwModele as PartDoc;
@@ -81,7 +82,7 @@ namespace Framework_SW2013
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -89,7 +90,7 @@ namespace Framework_SW2013
 
         internal Feature DossierDesCorps()
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             Feature pFonctionPiecesSoudees = _SwPiece.FirstFeature();
 
@@ -118,7 +119,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean Contient(TypeCorps_e T)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if (Convert.ToBoolean(T & TypeCorps_e.cTole))
             {
@@ -156,7 +157,7 @@ namespace Framework_SW2013
 
         internal List<ExtCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtCorps> Liste = new List<ExtCorps>();
 
@@ -186,7 +187,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtCorps> pListeCorps = ListListeDesCorps(TypeDeCorps, PrendreEnCompteCache);
             ArrayList pArrayCorps = new ArrayList();
@@ -199,7 +200,7 @@ namespace Framework_SW2013
 
         internal List<ExtDossier> ListListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtDossier> Liste = new List<ExtDossier>();
 
@@ -239,7 +240,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtDossier> pListeDossier = ListListeDesDossiersDePiecesSoudees(TypeDeCorps, PrendreEnCompteExclus);
             ArrayList pArrayDossiers = new ArrayList();

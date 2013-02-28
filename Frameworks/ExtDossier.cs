@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
+using System.Reflection;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -29,7 +30,7 @@ namespace Framework_SW2013
     public class ExtDossier : IExtDossier, IComparable<ExtDossier>, IComparer<ExtDossier>, IEquatable<ExtDossier>
     {
         #region "Variables locales"
-        private Debug _Debug = Debug.Instance;
+        
         private Boolean _EstInitialise = false;
 
         private ExtPiece _Piece;
@@ -45,22 +46,23 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public BodyFolder SwDossier { get { return _SwDossier; } }
+        public BodyFolder SwDossier { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwDossier; } }
 
-        public ExtPiece Piece { get { return _Piece; } }
+        public ExtPiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
 
-        public String Nom { get { return SwDossier.GetFeature().Name; } set { SwDossier.GetFeature().Name = value; } }
+        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return SwDossier.GetFeature().Name; } set { Debug.Info(MethodBase.GetCurrentMethod()); SwDossier.GetFeature().Name = value; } }
 
         public Boolean EstExclu
         {
-            get { return Convert.ToBoolean(SwDossier.GetFeature().ExcludeFromCutList); }
-            set { SwDossier.GetFeature().ExcludeFromCutList = value; }
+            get { Debug.Info(MethodBase.GetCurrentMethod());  return Convert.ToBoolean(SwDossier.GetFeature().ExcludeFromCutList); }
+            set { Debug.Info(MethodBase.GetCurrentMethod());  SwDossier.GetFeature().ExcludeFromCutList = value; }
         }
 
         public TypeCorps_e TypeDeCorps
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 ExtCorps pCorps = PremierCorps;
                 if (pCorps.EstInitialise)
                     return pCorps.TypeDeCorps;
@@ -73,6 +75,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 GestDeProprietes pGestProps = new GestDeProprietes();
                 if (pGestProps.Init(SwDossier.GetFeature().CustomPropertyManager, _Piece.Modele))
                     return pGestProps;
@@ -85,6 +88,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 ExtCorps pCorps = new ExtCorps();
                 if ((SwDossier.GetBodyCount() > 0) && pCorps.Init(SwDossier.GetBodies()[0], _Piece))
                     return pCorps;
@@ -93,7 +97,7 @@ namespace Framework_SW2013
             }
         }
 
-        internal Boolean EstInitialise { get { return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
@@ -101,26 +105,26 @@ namespace Framework_SW2013
 
         internal Boolean Init(BodyFolder SwDossier, ExtPiece Piece)
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             if ((SwDossier != null) && (SwDossier.GetBodyCount() > 0) && (Piece != null) && Piece.EstInitialise)
             {
                 _Piece = Piece;
                 _SwDossier = SwDossier;
 
-                _Debug.DebugAjouterLigne("\t -> " + this.Nom);
+                Debug.Info(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                _Debug.DebugAjouterLigne("\t !!!!! Erreur d'initialisation");
+                Debug.Info("\t !!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
         internal List<ExtCorps> ListListeDesCorps(String NomARechercher = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtCorps> pListeCorps = new List<ExtCorps>();
 
@@ -139,7 +143,7 @@ namespace Framework_SW2013
 
         public ArrayList ListeDesCorps(String NomARechercher = "")
         {
-            _Debug.DebugAjouterLigne(this.GetType().Name + "." + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Debug.Info(MethodBase.GetCurrentMethod());
 
             List<ExtCorps> pListeCorps = ListListeDesCorps(NomARechercher);
             ArrayList pArrayCorps = new ArrayList();
