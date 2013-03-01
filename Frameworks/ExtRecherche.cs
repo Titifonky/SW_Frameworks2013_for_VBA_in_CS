@@ -17,6 +17,7 @@ namespace Framework_SW2013
         Boolean PrendreEnCompteConfig { get; set; }
         Boolean PrendreEnCompteExclus { get; set; }
         Boolean PrendreEnCompteSupprime { get; set; }
+        Boolean SupprimerDoublons { get; set; }
         Boolean RenvoyerComposantRacine { get; set; }
         ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "");
     }
@@ -34,6 +35,7 @@ namespace Framework_SW2013
         private Boolean _PrendreEnCompteConfig = true;
         private Boolean _PrendreEnCompteExclus = false;
         private Boolean _PrendreEnCompteSupprime = false;
+        private Boolean _SupprimerDoublons = true;
         private Boolean _RenvoyerComposantRacine = false;
 
         #endregion
@@ -54,6 +56,8 @@ namespace Framework_SW2013
 
         public Boolean PrendreEnCompteSupprime { get { Debug.Info(MethodBase.GetCurrentMethod());  return _PrendreEnCompteSupprime; } set { Debug.Info(MethodBase.GetCurrentMethod());  _PrendreEnCompteSupprime = value; } }
 
+        public Boolean SupprimerDoublons { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SupprimerDoublons; } set { Debug.Info(MethodBase.GetCurrentMethod()); _SupprimerDoublons = value; } }
+
         public Boolean RenvoyerComposantRacine { get { Debug.Info(MethodBase.GetCurrentMethod());  return _RenvoyerComposantRacine; } set { Debug.Info(MethodBase.GetCurrentMethod());  _RenvoyerComposantRacine = value; } }
 
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
@@ -73,7 +77,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("\t !!!!! Erreur d'initialisation");
+                Debug.Info("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -87,8 +91,14 @@ namespace Framework_SW2013
             if ((Composant != null) && Composant.EstInitialise)
             {
                 pNomCle = Composant.Modele.Chemin;
+                // Si on prend en compte les configs, on rajoute le nom de la config dans la clé
                 if (_PrendreEnCompteConfig)
-                    pNomCle = pNomCle + " " + Composant.Configuration.Nom;
+                    pNomCle += "_" + Composant.Configuration.Nom;
+
+                // Si on garde toutes les occurences, on rajoute un nombre aléatoire à la fin de la clé
+                // Comme ça, ils sont tous différents
+                if (!_SupprimerDoublons)
+                    pNomCle += "_" + (new Random()).Next();
             }
 
             return pNomCle;
@@ -110,7 +120,7 @@ namespace Framework_SW2013
                         ExtComposant pComposant = new ExtComposant();
 
                         // S'il est déjà dans le dico, on on rajoute 1
-                        if (DicComposants.ContainsKey(NomCle(pComp)))
+                        if (_SupprimerDoublons && DicComposants.ContainsKey(NomCle(pComp)))
                         {
                             pComposant = DicComposants[NomCle(pComp)];
                             pComposant.Nb += 1;

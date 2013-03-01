@@ -96,25 +96,5 @@ namespace Framework_SW2013
 
         #endregion
 
-        internal static swBodyType_e ConvertTypeCorps_eToSwBodyType_e(TypeCorps_e TypeCorps)
-        {
-            switch (TypeCorps)
-            {
-                case TypeCorps_e.cAucun:
-                    return swBodyType_e.swEmptyBody;
-                case TypeCorps_e.cAutre:
-                    return swBodyType_e.swGeneralBody;
-                case TypeCorps_e.cProfil:
-                    return swBodyType_e.swSolidBody;
-                case TypeCorps_e.cTole:
-                    return swBodyType_e.swSheetBody;
-                case TypeCorps_e.cTousLesTypesDeCorps:
-                    return swBodyType_e.swAllBodies;
-                default:
-                    return swBodyType_e.swAllBodies;
-            }
-
-        }
-
     }
 }

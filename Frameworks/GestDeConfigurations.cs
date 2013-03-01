@@ -74,7 +74,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("\t !!!!! Erreur d'initialisation");
+                Debug.Info("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;

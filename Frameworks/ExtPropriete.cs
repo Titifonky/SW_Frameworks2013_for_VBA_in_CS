@@ -125,7 +125,7 @@ namespace Framework_SW2013
                 else
                 {
                     _Nom = null;
-                    Debug.Info("\t !!!!! Erreur d'initialisation");
+                    Debug.Info("!!!!! Erreur d'initialisation");
                 }
             }
             

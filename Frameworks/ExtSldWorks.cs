@@ -92,7 +92,7 @@ namespace Framework_SW2013
                 if (SldWks != null)
                 {
                     _SwSW = SldWks;
-                    Debug.Init(SldWks);
+                    Debug.Init();
 
                     /// A chaque initialisation de l'objet SW, on inscrit la version de SW
 
@@ -135,7 +135,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("Ouvrir " + Chemin);
+                Debug.Info("Ouvrir " + Chemin, MethodBase.GetCurrentMethod());
                 pModele.Init(Ouvrir(Chemin), this);
             }
 

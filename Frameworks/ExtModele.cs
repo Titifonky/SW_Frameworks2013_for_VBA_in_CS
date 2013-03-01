@@ -192,7 +192,7 @@ namespace Framework_SW2013
                 // Si c'est un assemblage ou une pièce, on va chercher le composant associé
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
-                    Debug.Info("\t -> Referencement du composant");
+                    Debug.Info("Referencement du composant");
                     _Composant = new ExtComposant();
                     if (_Composant.Init(_SwModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this) == false)
                         _EstInitialise = false;
@@ -200,7 +200,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("\t !!!!! Erreur d'initialisation");
+                Debug.Info("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
