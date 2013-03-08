@@ -74,20 +74,18 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
+            // Si on écrase, on spprime la propriété
             if (EcraserExistante)
-            {
                 _SwGestDeProprietes.Delete(Nom);
-            }
 
-            ExtPropriete Propriete = new ExtPropriete();
+            // On la récupère
+            ExtPropriete Propriete = RecupererPropriete(Nom);
 
-            // On initialise la propriete. Si elle n'existe pas on la créer.
-            
-            if ((Propriete.Init(this, Nom) == false) && (_SwGestDeProprietes.Add2(Nom, (int)TypePropriete, Expression) == 1))
+            // Si elle n'existe pas on la créer et on lui assigne l'expression
+            if ((Propriete == null) && (_SwGestDeProprietes.Add2(Nom, (int)TypePropriete, Expression) == 1))
             {
-                // Si la propriete a été crée, on lui passe la bonne Expression
-                if (Propriete.Init(this, Nom))
-                    Propriete.Expression = Expression;
+                Propriete = new ExtPropriete();
+                Propriete.Init(this, Nom);
             }
 
             // Si tout est ok, on la renvoi
