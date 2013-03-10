@@ -14,6 +14,7 @@ namespace Framework_SW2013
         Point Centre { get; set; }
         Dimensions Dimensions { get; }
         Coordonnees Coordonnees { get; }
+        Double Angle { get; set; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -92,6 +93,18 @@ namespace Framework_SW2013
                 return pCoord;
             }
             }
+
+        public Double Angle
+        {
+            get {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _Vue.SwVue.Angle;
+            }
+            set {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _Vue.SwVue.Angle = value;
+            }
+        }
 
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
