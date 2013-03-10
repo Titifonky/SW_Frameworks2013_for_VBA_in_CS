@@ -12,10 +12,11 @@
 
 # Build results
 [Dd]ebug/
-# [Rr]elease/
+[Rr]elease/
 *_i.c
 *_p.c
-*.dll
+#[Rr]elease/*.dll
+#*.dll
 *.ilk
 *.meta
 *.obj
