@@ -17,9 +17,6 @@ namespace Framework_SW2013
         ExtDessin Dessin { get; }
         String Nom { get; set; }
         ExtVue PremiereVue { get; }
-        void Activer();
-        void Supprimer();
-        void ZoomEtendu();
         ArrayList ListeDesVues(String NomARechercher = "");
     }
 
@@ -90,23 +87,6 @@ namespace Framework_SW2013
                 Debug.Info("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
-        }
-
-        public void Activer()
-        {
-            Dessin.SwDessin.ActivateSheet(Nom);
-        }
-
-        public void Supprimer()
-        {
-            Dessin.Modele.SwModele.Extension.SelectByID2(Nom, "SHEET", 0, 0, 0, false, 0, null, 0);
-            Dessin.Modele.SwModele.DeleteSelection(false);
-            Dessin.Modele.SwModele.ClearSelection2(true);
-        }
-
-        public void ZoomEtendu()
-        {
-            Dessin.Modele.SwModele.ViewZoomtofit2();
         }
 
         internal List<ExtVue> ListListeDesVues(String NomARechercher = "")

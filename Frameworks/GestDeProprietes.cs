@@ -16,7 +16,6 @@ namespace Framework_SW2013
         CustomPropertyManager SwGestDeProprietes { get; }
         ExtModele Modele { get; }
         ExtPropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false);
-        Boolean SupprimerPropriete(String Nom);
         ExtPropriete RecupererPropriete(String Nom);
         ArrayList ListeDesProprietes(String NomARechercher = "");
     }
@@ -75,7 +74,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            // Si on écrase, on supprime la propriété
+            // Si on écrase, on spprime la propriété
             if (EcraserExistante)
                 _SwGestDeProprietes.Delete(Nom);
 
@@ -83,9 +82,8 @@ namespace Framework_SW2013
             ExtPropriete Propriete = RecupererPropriete(Nom);
 
             // Si elle n'existe pas on la créer et on lui assigne l'expression
-            if (Propriete == null)
+            if ((Propriete == null) && (_SwGestDeProprietes.Add2(Nom, (int)TypePropriete, Expression) == 1))
             {
-                _SwGestDeProprietes.Add2(Nom, (int)TypePropriete, Expression);
                 Propriete = new ExtPropriete();
                 Propriete.Init(this, Nom);
             }
@@ -107,16 +105,6 @@ namespace Framework_SW2013
                 return Propriete;
 
             return null;
-        }
-
-        public Boolean SupprimerPropriete(String Nom)
-        {
-            Debug.Info(MethodBase.GetCurrentMethod());
-
-            if (_SwGestDeProprietes.Delete(Nom) == 1)
-                return true;
-            
-            return false;
         }
 
         internal List<ExtPropriete> ListListeDesProprietes(String NomARechercher = "")
