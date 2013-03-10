@@ -15,7 +15,7 @@
 [Rr]elease/
 *_i.c
 *_p.c
-#[Rr]elease/*.dll
+[Rr]elease/*.dll
 *.dll
 *.ilk
 *.meta
