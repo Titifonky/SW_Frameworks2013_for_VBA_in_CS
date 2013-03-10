@@ -15,7 +15,10 @@
 # [Rr]elease/
 *_i.c
 *_p.c
-[Rr]elease/*.dll
+bin/*/*.dll
+*/bin/*/*.dll
+*/*/bin/*/*.dll
+*/*/*/bin/*/*.dll
 *.ilk
 *.meta
 *.obj
