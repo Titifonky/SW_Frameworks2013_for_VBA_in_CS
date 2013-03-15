@@ -108,7 +108,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            foreach (ExtComposant pComp in ComposantRacine.ListComposantsEnfants(_PrendreEnCompteSupprime))
+            foreach (ExtComposant pComp in ComposantRacine.ListComposantsEnfants("",_PrendreEnCompteSupprime))
             {
                 // Operateur "Implique" sur la propriété EstExclu
                 if (!pComp.EstExclu | _PrendreEnCompteExclus)

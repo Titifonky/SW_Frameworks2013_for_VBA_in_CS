@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 /////////////////////////// Implementation terminée ///////////////////////////
 
@@ -20,7 +21,7 @@ namespace Framework_SW2013
         Boolean EstSupprime { get; }
         int Nb { get; set; }
         ExtRecherche NouvelleRecherche { get; }
-        ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false);
+        ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -127,7 +128,7 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        internal List<ExtComposant> ListComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
+        internal List<ExtComposant> ListComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -136,10 +137,15 @@ namespace Framework_SW2013
             if (SwComposant.IGetChildrenCount() == 0)
                 return pListe;
 
+            String TestNomComposant = NomComposant;
+
+            if (NomComposant == "")
+                TestNomComposant = "^*";
+
             foreach (Component2 pSwComposant in SwComposant.GetChildren())
             {
                 /// Si le composant est supprimé mais qu'on a decidé de le prendre en compte, c'est bon
-                if ((pSwComposant.IsSuppressed() == false) | PrendreEnCompteSupprime)
+                if (((pSwComposant.IsSuppressed() == false) | PrendreEnCompteSupprime) && Regex.IsMatch(pSwComposant.Name2, TestNomComposant))
                 {
                     // Pour intitialiser le composant correctement il faut un peu de bidouille
                     // sinon on à le droit à une belle reference circulaire
@@ -161,11 +167,11 @@ namespace Framework_SW2013
 
         }
 
-        public ArrayList ComposantsEnfants(Boolean PrendreEnCompteSupprime = false)
+        public ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtComposant> pListeComps = ListComposantsEnfants(PrendreEnCompteSupprime);
+            List<ExtComposant> pListeComps = ListComposantsEnfants(NomComposant, PrendreEnCompteSupprime);
             ArrayList pArrayComps = new ArrayList();
 
             if (pListeComps.Count > 0)
