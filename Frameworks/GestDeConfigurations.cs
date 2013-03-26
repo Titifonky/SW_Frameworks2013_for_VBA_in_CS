@@ -5,8 +5,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Reflection;
 
-/////////////////////////// Implementation terminée ///////////////////////////
-
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -18,6 +16,7 @@ namespace Framework_SW2013
         ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "");
         ExtConfiguration ConfigurationAvecLeNom(String NomConfiguration);
         ExtConfiguration AjouterUneConfigurationDeBase(String NomConfiguration);
+        void SupprimerConfiguration(String NomConfiguration);
         void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "");
     }
 
@@ -41,8 +40,14 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne le parent ExtModele.
+        /// </summary>
         public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
+        /// <summary>
+        /// Retourne la configuration active.
+        /// </summary>
         public ExtConfiguration ConfigurationActive
         {
             get
@@ -57,12 +62,22 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet GestDeConfigurations.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet GestDeConfigurations.
+        /// </summary>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
         internal Boolean Init(ExtModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -80,6 +95,13 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Méthode interne.
+        /// Renvoi la liste des configurations filtrée par les arguments.
+        /// </summary>
+        /// <param name="TypeConfig"></param>
+        /// <param name="NomConfigDeBase"></param>
+        /// <returns></returns>
         internal List<ExtConfiguration> ListListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -101,6 +123,12 @@ namespace Framework_SW2013
             return pListConfig;
         }
 
+        /// <summary>
+        /// Renvoi la liste des configurations filtrée par les arguments.
+        /// </summary>
+        /// <param name="TypeConfig"></param>
+        /// <param name="NomConfigDeBase"></param>
+        /// <returns></returns>
         public ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -114,6 +142,11 @@ namespace Framework_SW2013
             return pArrayConfigs;
         }
 
+        /// <summary>
+        /// Renvoi la configuration à partir du nom.
+        /// </summary>
+        /// <param name="NomConfiguration"></param>
+        /// <returns></returns>
         public ExtConfiguration ConfigurationAvecLeNom(String NomConfiguration)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -125,17 +158,37 @@ namespace Framework_SW2013
             return null;
         }
 
-        public ExtConfiguration AjouterUneConfigurationDeBase(String NomConfig)
+        /// <summary>
+        /// Ajouter une configuration de base.
+        /// </summary>
+        /// <param name="NomConfiguration"></param>
+        /// <returns></returns>
+        public ExtConfiguration AjouterUneConfigurationDeBase(String NomConfiguration)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
             ExtConfiguration pConfig = new ExtConfiguration();
-            if (pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfig, NomConfig, "", 0, "", ""), _Modele))
+            if (pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfiguration, NomConfiguration, "", 0, "", ""), _Modele))
                 return pConfig;
 
             return null;
         }
 
+        /// <summary>
+        /// Supprimer une configuration à partir du nom.
+        /// </summary>
+        /// <param name="NomConfiguration"></param>
+        /// <returns></returns>
+        public void SupprimerConfiguration(String NomConfiguration)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+            _Modele.SwModele.DeleteConfiguration2(NomConfiguration);
+        }
+
+        /// <summary>
+        /// Supprimer les configurations dépliées
+        /// </summary>
+        /// <param name="NomConfigurationPliee"></param>
         public void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());

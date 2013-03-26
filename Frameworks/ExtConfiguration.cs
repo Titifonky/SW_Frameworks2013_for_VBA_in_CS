@@ -5,8 +5,6 @@ using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using System.Reflection;
 
-/////////////////////////// Implementation terminée ///////////////////////////
-
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -50,12 +48,24 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne l'objet Configuration associé.
+        /// </summary>
         public Configuration SwConfiguration { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwConfiguration; } }
 
+        /// <summary>
+        /// Retourne le parent ExtModele.
+        /// </summary>
         public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
+        /// <summary>
+        /// Retourne ou défini le nom de la configuration.
+        /// </summary>
         public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwConfiguration.Name; } set { Debug.Info(MethodBase.GetCurrentMethod());  SwConfiguration.Name = value; } }
 
+        /// <summary>
+        /// Retourne le type de la configuration.
+        /// </summary>
         public TypeConfig_e TypeConfig
         {
             get
@@ -75,6 +85,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne la configuration parent.
+        /// </summary>
         public ExtConfiguration ConfigurationParent
         {
             get
@@ -87,6 +100,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne la configuration racine, c'est la configuration parent la plus haute.
+        /// </summary>
         public ExtConfiguration ConfigurationRacine
         {
             get
@@ -111,6 +127,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le getionnaire de propriétés.
+        /// </summary>
         public GestDeProprietes GestDeProprietes
         {
             get
@@ -123,12 +142,23 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtConfiguration.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtConfiguration.
+        /// </summary>
+        /// <param name="Config"></param>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
         internal Boolean Init(Configuration Config, ExtModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -149,24 +179,42 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Test si la configuration est de type T.
+        /// </summary>
+        /// <param name="T"></param>
+        /// <returns></returns>
         public Boolean Est(TypeConfig_e T)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
             return Convert.ToBoolean(TypeConfig & T);
         }
 
+        /// <summary>
+        /// Active la configurationS.
+        /// </summary>
+        /// <returns></returns>
         public Boolean Activer()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
             return Convert.ToBoolean(_Modele.SwModele.ShowConfiguration2(Nom));
         }
 
+        /// <summary>
+        /// Supprime la configuration.
+        /// </summary>
+        /// <returns></returns>
         public Boolean Supprimer()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
             return _Modele.SwModele.DeleteConfiguration2(Nom);
         }
 
+        /// <summary>
+        /// Ajoute une configuration dérivée.
+        /// </summary>
+        /// <param name="NomConfigDerivee"></param>
+        /// <returns></returns>
         public ExtConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee)
         {
             Debug.Info(MethodBase.GetCurrentMethod());

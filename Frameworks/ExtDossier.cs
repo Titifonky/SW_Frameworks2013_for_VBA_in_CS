@@ -6,8 +6,6 @@ using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using System.Reflection;
 
-/////////////////////////// Implementation terminée ///////////////////////////
-
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -46,18 +44,33 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne l'objet BodyFolder associé.
+        /// </summary>
         public BodyFolder SwDossier { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwDossier; } }
 
+        /// <summary>
+        /// Retourne le parent ExtPiece.
+        /// </summary>
         public ExtPiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
 
+        /// <summary>
+        /// Retourne ou défini le nom du dossier.
+        /// </summary>
         public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return SwDossier.GetFeature().Name; } set { Debug.Info(MethodBase.GetCurrentMethod()); SwDossier.GetFeature().Name = value; } }
 
+        /// <summary>
+        /// Retourne ou défini si le dossier est exclu de la nomenclature.
+        /// </summary>
         public Boolean EstExclu
         {
             get { Debug.Info(MethodBase.GetCurrentMethod());  return Convert.ToBoolean(SwDossier.GetFeature().ExcludeFromCutList); }
             set { Debug.Info(MethodBase.GetCurrentMethod());  SwDossier.GetFeature().ExcludeFromCutList = value; }
         }
 
+        /// <summary>
+        /// Retourne le type de corps du dossier.
+        /// </summary>
         public TypeCorps_e TypeDeCorps
         {
             get
@@ -71,6 +84,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le gestionnaire de propriétés du dossier.
+        /// </summary>
         public GestDeProprietes GestDeProprietes
         {
             get
@@ -84,6 +100,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le premier corps du dossier.
+        /// </summary>
         public ExtCorps PremierCorps
         {
             get
@@ -97,12 +116,23 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtDossier.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtDossier.
+        /// </summary>
+        /// <param name="SwDossier"></param>
+        /// <param name="Piece"></param>
+        /// <returns></returns>
         internal Boolean Init(BodyFolder SwDossier, ExtPiece Piece)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -122,6 +152,12 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Méthode interne
+        /// Renvoi la liste des corps du dossier filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <returns></returns>
         internal List<ExtCorps> ListListeDesCorps(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -141,6 +177,11 @@ namespace Framework_SW2013
             return pListeCorps;
         }
 
+        /// <summary>
+        /// Renvoi la liste des corps du dossier filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <returns></returns>
         public ArrayList ListeDesCorps(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());

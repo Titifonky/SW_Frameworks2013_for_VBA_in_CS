@@ -8,8 +8,6 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.Reflection;
 
-/////////////////////////// Implementation terminée ///////////////////////////
-
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -18,7 +16,7 @@ namespace Framework_SW2013
     {
         ModelDoc2 SwModele { get; }
         ExtSldWorks SW { get; }
-        ExtComposant Composant { get; set; }
+        ExtComposant Composant { get; }
         ExtAssemblage Assemblage { get; }
         ExtPiece Piece { get; }
         ExtDessin Dessin { get; }
@@ -64,12 +62,24 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne le modele ModleDoc2 associé.
+        /// </summary>
         public ModelDoc2 SwModele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwModele; } }
 
+        /// <summary>
+        /// Retourne le parent ExtSldWorks.
+        /// </summary>
         public ExtSldWorks SW { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SW; } }
 
-        public ExtComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } set { Debug.Info(MethodBase.GetCurrentMethod());  _Composant = value; } }
+        /// <summary>
+        /// Retourne le composant ExtComposant lié au modele.
+        /// </summary>
+        public ExtComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } internal set { Debug.Info(MethodBase.GetCurrentMethod());  _Composant = value; } }
 
+        /// <summary>
+        /// Retourne l'assemblage ExtAssemblage si celui ci est valide.
+        /// </summary>
         public ExtAssemblage Assemblage
         {
             get
@@ -85,6 +95,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne la pièce ExtPiece si celui ci est valide.
+        /// </summary>
         public ExtPiece Piece
         {
             get
@@ -100,6 +113,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le dessin ExtDessin si celui ci est valide.
+        /// </summary>
         public ExtDessin Dessin
         {
             get
@@ -115,6 +131,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le gestionnaire de configuration GestDeConfigurations.
+        /// </summary>
         public GestDeConfigurations GestDeConfigurations
         {
             get
@@ -129,6 +148,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le gestionnaire de propriétés GestDeProprietes.
+        /// </summary>
         public GestDeProprietes GestDeProprietes
         {
             get
@@ -143,6 +165,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le type du fichier.
+        /// </summary>
         public TypeFichier_e TypeDuModele
         {
             get
@@ -165,17 +190,43 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le chemin complet du fichier.
+        /// </summary>
         public String Chemin { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwModele.GetPathName(); } }
+
+        /// <summary>
+        /// Retourne le nom du fichier avec extension.
+        /// </summary>
         public String NomDuFichier { get { Debug.Info(MethodBase.GetCurrentMethod());  return Path.GetFileName(SwModele.GetPathName()); } }
+
+        /// <summary>
+        /// Retourne le nom du fichier sans extension.
+        /// </summary>
         public String NomDuFichierSansExt { get { Debug.Info(MethodBase.GetCurrentMethod());  return Path.GetFileNameWithoutExtension(SwModele.GetPathName()); } }
+
+        /// <summary>
+        /// Retourne le chemin du dossier.
+        /// </summary>
         public String NomDuDossier { get { Debug.Info(MethodBase.GetCurrentMethod());  return Path.GetDirectoryName(SwModele.GetPathName()); } }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtModele.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtModele.
+        /// </summary>
+        /// <param name="SwModele"></param>
+        /// <param name="Sw"></param>
+        /// <returns></returns>
         internal Boolean Init(ModelDoc2 SwModele, ExtSldWorks Sw)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -206,6 +257,9 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Active le modele et le met au premier plan.
+        /// </summary>
         public void Activer()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -215,6 +269,9 @@ namespace Framework_SW2013
             Redessiner();
         }
 
+        /// <summary>
+        /// Sauve le modele.
+        /// </summary>
         public void Sauver()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -222,6 +279,9 @@ namespace Framework_SW2013
             SwModele.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Erreur, ref Warning);
         }
 
+        /// <summary>
+        /// Ferme le modele.
+        /// </summary>
         public void Fermer()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -229,6 +289,9 @@ namespace Framework_SW2013
             _SW.SwSW.CloseDoc(SwModele.GetPathName());
         }
 
+        /// <summary>
+        /// Redessine le modele.
+        /// </summary>
         public void Redessiner()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -236,6 +299,9 @@ namespace Framework_SW2013
             SwModele.ActiveView.GraphicsRedraw();
         }
 
+        /// <summary>
+        /// Reconstruit le modele.
+        /// </summary>
         public void Reconstruire()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -243,6 +309,9 @@ namespace Framework_SW2013
             SwModele.EditRebuild3();
         }
 
+        /// <summary>
+        /// Force à tout reconstruire.
+        /// </summary>
         public void ForcerAToutReconstruire()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -250,6 +319,9 @@ namespace Framework_SW2013
             SwModele.ForceRebuild3(false);
         }
 
+        /// <summary>
+        /// Zoom étendu du modele.
+        /// </summary>
         public void ZoomEtendu()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -257,6 +329,13 @@ namespace Framework_SW2013
             SwModele.ViewZoomtofit2();
         }
 
+        /// <summary>
+        /// Méthode interne
+        /// Renvoi la liste des fonctions filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <param name="AvecLesSousFonctions"></param>
+        /// <returns></returns>
         internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -295,6 +374,12 @@ namespace Framework_SW2013
 
         }
 
+        /// <summary>
+        /// Renvoi la liste des fonctions filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <param name="AvecLesSousFonctions"></param>
+        /// <returns></returns>
         public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());

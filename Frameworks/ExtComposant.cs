@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-
-/////////////////////////// Implementation terminée ///////////////////////////
+using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {
@@ -18,8 +17,8 @@ namespace Framework_SW2013
         ExtModele Modele { get; }
         ExtConfiguration Configuration { get; }
         Boolean EstExclu { get; set; }
-        Boolean EstSupprime { get; }
-        int Nb { get; set; }
+        Boolean EstSupprime { get; set; }
+        int Nb { get; }
         ExtRecherche NouvelleRecherche { get; }
         ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false);
     }
@@ -30,7 +29,7 @@ namespace Framework_SW2013
     public class ExtComposant : IExtComposant, IComparable<ExtComposant>, IComparer<ExtComposant>, IEquatable<ExtComposant>
     {
         #region "Variables locales"
-        
+
         private Boolean _EstInitialise = false;
 
         private Component2 _SwComposant;
@@ -48,21 +47,51 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public Component2 SwComposant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwComposant; } }
+        /// <summary>
+        /// Retourne l'objet Component2 associé.
+        /// </summary>
+        public Component2 SwComposant { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwComposant; } }
 
-        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        /// <summary>
+        /// Retourne le modele ExtModele associé.
+        /// </summary>
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
 
-        public ExtConfiguration Configuration { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Configuration; } }
+        /// <summary>
+        /// Retourne la configuration ExtConfiguration associée.
+        /// </summary>
+        public ExtConfiguration Configuration { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Configuration; } }
 
-        public int Nb { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Nb; } set { Debug.Info(MethodBase.GetCurrentMethod());  _Nb = value; } }
+        /// <summary>
+        /// Retourne le nonbre de composant.
+        /// </summary>
+        public int Nb { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Nb; } internal set { Debug.Info(MethodBase.GetCurrentMethod()); _Nb = value; } }
 
+        /// <summary>
+        /// Retourne ou défini si le composant est exclu de la nomenclature.
+        /// </summary>
         public Boolean EstExclu
         {
-            get { Debug.Info(MethodBase.GetCurrentMethod());  return Convert.ToBoolean(SwComposant.ExcludeFromBOM); }
-            set { Debug.Info(MethodBase.GetCurrentMethod());  SwComposant.ExcludeFromBOM = value; }
+            get { Debug.Info(MethodBase.GetCurrentMethod()); return Convert.ToBoolean(SwComposant.ExcludeFromBOM); }
+            set { Debug.Info(MethodBase.GetCurrentMethod()); SwComposant.ExcludeFromBOM = value; }
         }
 
-        public Boolean EstSupprime { get { Debug.Info(MethodBase.GetCurrentMethod());  return Convert.ToBoolean(SwComposant.IsSuppressed()); } }
+        /// <summary>
+        /// Retourne ou défini si le composant est supprimé.
+        /// </summary>
+        public Boolean EstSupprime
+        {
+            get { Debug.Info(MethodBase.GetCurrentMethod()); return Convert.ToBoolean(SwComposant.IsSuppressed()); }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                
+                if (value == true)
+                    SwComposant.SetSuppression2((int)swComponentSuppressionState_e.swComponentSuppressed);
+                else
+                    SwComposant.SetSuppression2((int)swComponentSuppressionState_e.swComponentResolved);
+            }
+        }
 
         /// <summary>
         /// Renvoi un nouvel objet Recherche
@@ -80,12 +109,23 @@ namespace Framework_SW2013
             }
         }
 
-        public Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtComposant.
+        /// </summary>
+        public Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtComposant.
+        /// </summary>
+        /// <param name="SwComposant"></param>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
         internal Boolean Init(Component2 SwComposant, ExtModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -128,6 +168,13 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Méthode interne.
+        /// Renvoi la liste des composants enfants filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomComposant"></param>
+        /// <param name="PrendreEnCompteSupprime"></param>
+        /// <returns></returns>
         internal List<ExtComposant> ListComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -167,6 +214,12 @@ namespace Framework_SW2013
 
         }
 
+        /// <summary>
+        /// Renvoi la liste des composants enfants filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomComposant"></param>
+        /// <param name="PrendreEnCompteSupprime"></param>
+        /// <returns></returns>
         public ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());

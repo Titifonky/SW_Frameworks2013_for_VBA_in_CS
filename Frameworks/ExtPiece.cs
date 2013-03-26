@@ -7,8 +7,6 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.Reflection;
 
-/////////////////////////// Implementation terminée ///////////////////////////
-
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -45,17 +43,17 @@ namespace Framework_SW2013
         #region "Propriétés"
 
         /// <summary>
-        /// Renvoi l'objet PartDoc
+        /// Renvoi l'objet PartDoc.
         /// </summary>
         public PartDoc SwPiece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwPiece; } }
 
         /// <summary>
-        /// Renvoi l'objet ExtModele
+        /// Renvoi l'objet ExtModele.
         /// </summary>
         public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
-        /// Renvoi la valeur de l'initialisation
+        /// Renvoi la valeur de l'initialisation.
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
@@ -64,7 +62,8 @@ namespace Framework_SW2013
         #region "Méthodes"
 
         /// <summary>
-        /// Initialiser l'objet pièce
+        /// Méthode interne.
+        /// Initialiser l'objet pièce.
         /// </summary>
         /// <param name="Modele"></param>
         /// <returns></returns>
@@ -88,6 +87,10 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Renvoi la fonction du dossier contenant les corps.
+        /// </summary>
+        /// <returns></returns>
         internal Feature DossierDesCorps()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -155,6 +158,13 @@ namespace Framework_SW2013
             return false;
         }
 
+        /// <summary>
+        /// Méthode interne.
+        /// Renvoi la liste des corps de la pièces filtrée par les arguments.
+        /// </summary>
+        /// <param name="TypeDeCorps"></param>
+        /// <param name="PrendreEnCompteCache"></param>
+        /// <returns></returns>
         internal List<ExtCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -180,7 +190,7 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Renvoi la liste des corps de la pièces
+        /// Renvoi la liste des corps de la pièces filtrée par les arguments.
         /// </summary>
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteCache"></param>
@@ -198,6 +208,13 @@ namespace Framework_SW2013
             return pArrayCorps;
         }
 
+        /// <summary>
+        /// Méthode interne
+        /// Renvoi la liste des dossiers de pièces soudées de la pièce filtrée par les arguments.
+        /// </summary>
+        /// <param name="TypeDeCorps"></param>
+        /// <param name="PrendreEnCompteExclus"></param>
+        /// <returns></returns>
         internal List<ExtDossier> ListListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -233,7 +250,7 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Renvoi la liste des dossiers de pièces soudées de la pièce
+        /// Renvoi la liste des dossiers de pièces soudées de la pièce filtrée par les arguments.
         /// </summary>
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteExclus"></param>

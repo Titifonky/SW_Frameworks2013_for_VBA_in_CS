@@ -39,12 +39,24 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne l'objet View associé.
+        /// </summary>
         public View SwVue { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwVue; } }
 
+        /// <summary>
+        /// Retourne le parent ExtFeuille.
+        /// </summary>
         public ExtFeuille Feuille { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Feuille; } }
 
+        /// <summary>
+        /// Retourne ou défini le nom de la feuille.
+        /// </summary>
         public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwVue.GetName2(); } set { Debug.Info(MethodBase.GetCurrentMethod());  _SwVue.SetName2(value); } }
 
+        /// <summary>
+        /// Retourne le modele ExtModele référencé par la vue.
+        /// </summary>
         public ExtModele ModeleDeReference
         {
             get
@@ -58,6 +70,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne la configuration ExtConfiguration référencée par la vue.
+        /// </summary>
         public ExtConfiguration ConfigurationDeReference
         {
             get
@@ -71,6 +86,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne les dimensions de la vue.
+        /// </summary>
         public ExtDimensionVue Dimensions
         {
             get
@@ -85,12 +103,23 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtModele.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtVue.
+        /// </summary>
+        /// <param name="SwVue"></param>
+        /// <param name="Feuille"></param>
+        /// <returns></returns>
         internal Boolean Init(View SwVue, ExtFeuille Feuille)
         {
             Debug.Info(MethodBase.GetCurrentMethod());

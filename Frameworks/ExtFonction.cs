@@ -7,8 +7,6 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.Reflection;
 
-/////////////////////////// Implementation terminée ///////////////////////////
-
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -51,12 +49,24 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne l'objet Feature associé.
+        /// </summary>
         public Feature SwFonction { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwFonction; } }
 
+        /// <summary>
+        /// Retourne le parent ExtModele.
+        /// </summary>
         public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
+        /// <summary>
+        /// Retourne ou défini le nom de la fonction.
+        /// </summary>
         public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwFonction.Name; } set { Debug.Info(MethodBase.GetCurrentMethod());  SwFonction.Name = value; } }
 
+        /// <summary>
+        /// Retourne le type de la fonction.
+        /// </summary>
         public String TypeDeLaFonction { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwFonction.GetTypeName2(); } }
 
         /// <summary>
@@ -81,12 +91,23 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtModele.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtFonction.
+        /// </summary>
+        /// <param name="SwFonction"></param>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
         internal Boolean Init(Feature SwFonction, ExtModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -105,6 +126,9 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Activer la fonction.
+        /// </summary>
         public void Activer()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -118,6 +142,10 @@ namespace Framework_SW2013
             pSwModele.EditUnsuppressDependent2();
         }
 
+        /// <summary>
+        /// Desactiver la fonction.
+        /// "Supprimer" la fonction en language Solidworks.
+        /// </summary>
         public void Desactiver()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -130,6 +158,9 @@ namespace Framework_SW2013
             pSwModele.EditSuppress2();
         }
 
+        /// <summary>
+        /// Enregistre l'état de la fonction.
+        /// </summary>
         public void EnregistrerEtat()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -137,6 +168,9 @@ namespace Framework_SW2013
             _EtatEnregistre = Etat;
         }
 
+        /// <summary>
+        /// Restaure l'état enregistré de la fonction.
+        /// </summary>
         public void RestaurerEtat()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -147,6 +181,11 @@ namespace Framework_SW2013
                 Desactiver();
         }
 
+        /// <summary>
+        /// Méthode interne.
+        /// Renvoi la liste des corps associés à la fonction.
+        /// </summary>
+        /// <returns></returns>
         internal List<ExtCorps> ListListeDesCorps()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -166,29 +205,10 @@ namespace Framework_SW2013
             return pListeCorps;
         }
 
-        internal List<ExtFonction> ListListeDesSousFonctions(string NomARechercher = "")
-        {
-            Debug.Info(MethodBase.GetCurrentMethod());
-
-            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
-
-            Feature pSwSousFonction = SwFonction.GetFirstSubFeature();
-
-            while (pSwSousFonction != null)
-            {
-                ExtFonction pFonction = new ExtFonction();
-
-                if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher)) && pFonction.Init(pSwSousFonction,_Modele))
-                    pListeFonctions.Add(pFonction);
-
-                pSwSousFonction = pSwSousFonction.GetNextSubFeature();
-            }
-
-
-            return pListeFonctions;
-
-        }
-
+        /// <summary>
+        /// Renvoi la liste des corps associés à la fonction.
+        /// </summary>
+        /// <returns></returns>
         public ArrayList ListeDesCorps()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -202,6 +222,40 @@ namespace Framework_SW2013
             return pArrayCorps;
         }
 
+        /// <summary>
+        /// Méthode interne.
+        /// Renvoi la liste des sous-fonctions
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <returns></returns>
+        internal List<ExtFonction> ListListeDesSousFonctions(string NomARechercher = "")
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
+
+            Feature pSwSousFonction = SwFonction.GetFirstSubFeature();
+
+            while (pSwSousFonction != null)
+            {
+                ExtFonction pFonction = new ExtFonction();
+
+                if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher)) && pFonction.Init(pSwSousFonction, _Modele))
+                    pListeFonctions.Add(pFonction);
+
+                pSwSousFonction = pSwSousFonction.GetNextSubFeature();
+            }
+
+
+            return pListeFonctions;
+
+        }
+
+        /// <summary>
+        /// Renvoi la liste des sous-fonctions
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <returns></returns>
         public ArrayList ListeDesSousFonctions(string NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());

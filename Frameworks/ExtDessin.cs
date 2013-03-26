@@ -40,10 +40,19 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne l'objet DrawingDoc associé.
+        /// </summary>
         public DrawingDoc SwDessin { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwDessin; } }
 
+        /// <summary>
+        /// Retourne le parent ExtModele.
+        /// </summary>
         public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
+        /// <summary>
+        /// Retourne la feuille active.
+        /// </summary>
         public ExtFeuille FeuilleActive
         {
             get
@@ -59,12 +68,22 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtDessin.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtDessin.
+        /// </summary>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
         internal Boolean Init(ExtModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -85,6 +104,11 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Renvoi la feuille à partir du nom.
+        /// </summary>
+        /// <param name="Nom"></param>
+        /// <returns></returns>
         public ExtFeuille Feuille(String Nom)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -98,6 +122,11 @@ namespace Framework_SW2013
             return null;
         }
 
+        /// <summary>
+        /// Test si la feuille existe.
+        /// </summary>
+        /// <param name="Nom"></param>
+        /// <returns></returns>
         public Boolean FeuilleExiste(String Nom)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -114,6 +143,12 @@ namespace Framework_SW2013
             return false;
         }
 
+        /// <summary>
+        /// Méthode interne.
+        /// Renvoi la liste des feuilles filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <returns></returns>
         internal List<ExtFeuille> ListListeDesFeuilles(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -138,6 +173,11 @@ namespace Framework_SW2013
 
         }
 
+        /// <summary>
+        /// Renvoi la liste des feuilles filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <returns></returns>
         public ArrayList ListeDesFeuilles(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());

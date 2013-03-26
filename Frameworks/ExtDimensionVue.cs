@@ -37,8 +37,14 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne le parent ExtVue.
+        /// </summary>
         public ExtVue Vue { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Vue; } }
 
+        /// <summary>
+        /// Retourne ou défini le centre de la vue.
+        /// </summary>
         public Point Centre
         {
             get
@@ -64,6 +70,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne les dimensions de la vue, hauteur et largeur.
+        /// </summary>
         public Dimensions Dimensions
         {
             get
@@ -77,6 +86,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne les coordonnées des coins "Bas-Gouche" et "Haut-Droit" de la vue.
+        /// </summary>
         public Coordonnees Coordonnees
         {
             get
@@ -94,6 +106,9 @@ namespace Framework_SW2013
             }
             }
 
+        /// <summary>
+        /// Retourne ou défini l'angle de la vue.
+        /// </summary>
         public Double Angle
         {
             get {
@@ -106,12 +121,22 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtDimensionVue.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtDimensionVue.
+        /// </summary>
+        /// <param name="Vue"></param>
+        /// <returns></returns>
         internal Boolean Init(ExtVue Vue)
         {
             Debug.Info(MethodBase.GetCurrentMethod());

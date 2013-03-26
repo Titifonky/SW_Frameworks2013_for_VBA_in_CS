@@ -8,8 +8,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Reflection;
 
-/////////////////////////// Implementation terminée ///////////////////////////
-
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -21,7 +19,7 @@ namespace Framework_SW2013
         String Nom { get; set; }
         TypeCorps_e TypeDeCorps { get; }
         ExtDossier Dossier { get; }
-        ExtFonction PremiereFonction();
+        ExtFonction PremiereFonction { get; }
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
     }
 
@@ -47,16 +45,24 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne l'objet Body2 associé.
+        /// </summary>
         public Body2 SwCorps { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwCorps; } }
 
+        /// <summary>
+        /// Retourne le parent ExtPiece.
+        /// </summary>
         public ExtPiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
 
+        /// <summary>
+        /// Retourne ou défini le nom du corps.
+        /// </summary>
         public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwCorps.Name; } set { Debug.Info(MethodBase.GetCurrentMethod());  SwCorps.Name = value; } }
 
         /// <summary>
-        /// Retourne le type de corps <see cref="TypeCorps_e"/>
+        /// Retourne le type du corps.
         /// </summary>
-
         public TypeCorps_e TypeDeCorps
         {
             get
@@ -80,6 +86,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le parent ExtDossier.
+        /// </summary>
         public ExtDossier Dossier
         {
             get
@@ -100,12 +109,41 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Renvoi la première fonction du corps.
+        /// </summary>
+        public ExtFonction PremiereFonction
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                ExtFonction pFonction = new ExtFonction();
+
+                if (pFonction.Init(SwCorps.GetFeatures()[0], _Piece.Modele))
+                    return pFonction;
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtCorps.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtCorps.
+        /// </summary>
+        /// <param name="SwCorps"></param>
+        /// <param name="Piece"></param>
+        /// <returns></returns>
         internal Boolean Init(Body2 SwCorps, ExtPiece Piece)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -125,20 +163,9 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        public ExtFonction PremiereFonction()
-        {
-            Debug.Info(MethodBase.GetCurrentMethod());
-
-            ExtFonction pFonction = new ExtFonction();
-
-            if (pFonction.Init(SwCorps.GetFeatures()[0], _Piece.Modele))
-                return pFonction;
-
-            return null;
-        }
-
         /// <summary>
-        /// Renvoi la liste des fonctions d'un corps
+        /// Méthode interne.
+        /// Renvoi la liste des fonctions d'un corps filtrée par les arguments.
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
@@ -177,6 +204,12 @@ namespace Framework_SW2013
 
         }
 
+        /// <summary>
+        /// Renvoi la liste des fonctions d'un corps filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <param name="AvecLesSousFonctions"></param>
+        /// <returns></returns>
         public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());

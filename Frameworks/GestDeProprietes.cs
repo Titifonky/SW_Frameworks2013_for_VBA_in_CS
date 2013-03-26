@@ -16,14 +16,14 @@ namespace Framework_SW2013
         CustomPropertyManager SwGestDeProprietes { get; }
         ExtModele Modele { get; }
         ExtPropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false);
-        Boolean SupprimerPropriete(String Nom);
         ExtPropriete RecupererPropriete(String Nom);
+        Boolean SupprimerPropriete(String Nom);
         ArrayList ListeDesProprietes(String NomARechercher = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("F0F44B4A-BD1C-46E9-BB27-53A6D4342F6E")]
-    [ProgId("Frameworks.GestDeConfigurations")]
+    [ProgId("Frameworks.GestDeProprietes")]
     public class GestDeProprietes : IGestDeProprietes
     {
         #region "Variables locales"
@@ -43,16 +43,33 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne le gestionnaire CustomPropertyManager associé
+        /// </summary>
         public CustomPropertyManager SwGestDeProprietes { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwGestDeProprietes; } }
 
+        /// <summary>
+        /// Retourne le parent ExtModele 
+        /// </summary>
         public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
+        /// <summary>
+        /// Fonction interne
+        /// Test l'initialisation de l'objet ExtModele
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne
+        /// Initialise l'objet GestDeProprietes
+        /// </summary>
+        /// <param name="SwGestionnaire"></param>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
         internal Boolean Init(CustomPropertyManager SwGestionnaire, ExtModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -71,6 +88,14 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Ajouter une propriété
+        /// </summary>
+        /// <param name="Nom"></param>
+        /// <param name="TypePropriete"></param>
+        /// <param name="Expression"></param>
+        /// <param name="EcraserExistante"></param>
+        /// <returns></returns>
         public ExtPropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -97,6 +122,11 @@ namespace Framework_SW2013
             return null;
         }
 
+        /// <summary>
+        /// Récupérer une propriété
+        /// </summary>
+        /// <param name="Nom"></param>
+        /// <returns></returns>
         public ExtPropriete RecupererPropriete(String Nom)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -109,6 +139,11 @@ namespace Framework_SW2013
             return null;
         }
 
+        /// <summary>
+        /// Supprime une propriété
+        /// </summary>
+        /// <param name="Nom"></param>
+        /// <returns></returns>
         public Boolean SupprimerPropriete(String Nom)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -119,6 +154,13 @@ namespace Framework_SW2013
             return false;
         }
 
+        /// <summary>
+        /// Méthode interne
+        /// Renvoi la liste des propriétés filtrée par les arguments
+        /// Si NomARechercher est vide, toutes les propriétés sont renvoyées
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <returns></returns>
         internal List<ExtPropriete> ListListeDesProprietes(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -138,6 +180,12 @@ namespace Framework_SW2013
             return pListeProps;
         }
 
+        /// <summary>
+        /// Renvoi la liste des propriétés filtrée par les arguments
+        /// Si NomARechercher est vide, toutes les propriétés sont renvoyées
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <returns></returns>
         public ArrayList ListeDesProprietes(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());

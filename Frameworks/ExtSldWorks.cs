@@ -5,8 +5,6 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.Reflection;
 
-/////////////////////////// Implementation terminée ///////////////////////////
-
 namespace Framework_SW2013
 {
 
@@ -53,12 +51,12 @@ namespace Framework_SW2013
         #region "Propriétés"
 
         /// <summary>
-        /// Initialisation de l'objet ExtSldWorks pour commencer
+        /// Renvoi l'objet SldWorks associé.
         /// </summary>
         public SldWorks SwSW { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwSW; } }
 
         /// <summary>
-        /// Retourner le type du document actif
+        /// Retourner le type du document actif.
         /// </summary>
         public TypeFichier_e TypeDuModeleActif
         {
@@ -71,19 +69,46 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le numero de la version de base.
+        /// </summary>
         public String VersionDeBase { get { return _VersionDeBase; } }
+        
+        /// <summary>
+        /// Retourne le numero de version courant.
+        /// </summary>
         public String VersionCourante { get { return _VersionCourante; } }
+
+        /// <summary>
+        /// Retourne le numero du hotfixe.
+        /// </summary>
         public String Hotfixe { get { return _Hotfixe; } }
+
+        /// <summary>
+        /// Retourne le numero de la révision.
+        /// </summary>
         public String Revision { get { return _Revision; } }
 
+        /// <summary>
+        /// Activer ou désactiver l'ecriture dans le fichier Debug.
+        /// </summary>
         public Boolean ActiverDebug { get { return Debug.Actif; } set { Debug.Actif = value; } }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtSldWorks.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Initialiser l'objet ExtSldWorks.
+        /// </summary>
+        /// <param name="SldWks"></param>
+        /// <returns></returns>
         public Boolean Init(SldWorks SldWks)
         {
             try
@@ -146,8 +171,8 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Ouvre un fichier à partir de son chemin
-        /// Verifie s'il est déjà ouvert, auquel cas ce dernier est renvoyé
+        /// Ouvre un fichier à partir de son chemin.
+        /// Verifie s'il est déjà ouvert, auquel cas ce dernier est renvoyé.
         /// </summary>
         /// <param name="Chemin"></param>
         /// <returns></returns>

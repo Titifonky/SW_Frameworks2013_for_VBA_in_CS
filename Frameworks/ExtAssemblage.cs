@@ -36,16 +36,32 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne l'objet AssemblyDoc associé.
+        /// </summary>
         public AssemblyDoc SwAssemblage { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwAssemblage; } }
 
+        /// <summary>
+        /// Retourne le parent ExtModele.
+        /// </summary>
         public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtAssemblage.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtAssemblage.
+        /// </summary>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
         internal Boolean Init(ExtModele Modele)
         {
             

@@ -40,8 +40,14 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne le parent GestDeProprietes.
+        /// </summary>
         public GestDeProprietes GestDeProprietes { get { Debug.Info(MethodBase.GetCurrentMethod());  return _GestDeProprietes; } }
 
+        /// <summary>
+        /// Retourne le nom de la propriété.
+        /// </summary>
         public String Nom
         {
             get
@@ -59,6 +65,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne le type de la propriété.
+        /// </summary>
         public swCustomInfoType_e TypeDeLaPropriete
         {
             get
@@ -72,6 +81,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Retourne ou défini l'expression a calculer.
+        /// </summary>
         public String Expression
         {
             get
@@ -87,6 +99,9 @@ namespace Framework_SW2013
             set { Debug.Info(MethodBase.GetCurrentMethod());  _GestDeProprietes.SwGestDeProprietes.Set(_Nom, value); }
         }
 
+        /// <summary>
+        /// Retourne le résultat calculée de l'expression.
+        /// </summary>
         public String Valeur
         {
             get
@@ -101,12 +116,23 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Fonction interne.
+        /// Test l'initialisation de l'objet ExtPropriete.
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtPropriete.
+        /// </summary>
+        /// <param name="Gestionnaire"></param>
+        /// <param name="Nom"></param>
+        /// <returns></returns>
         internal Boolean Init(GestDeProprietes Gestionnaire, String Nom)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -132,6 +158,13 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Méthode privée.
+        /// Retourne Expression et Valeur.
+        /// Permet une compatiblitée descendante en testant la version SW utilisée.
+        /// </summary>
+        /// <param name="Expression"></param>
+        /// <param name="Valeur"></param>
         private void Get(out String Expression, out String Valeur)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -152,6 +185,11 @@ namespace Framework_SW2013
 
         }
 
+        /// <summary>
+        /// Renommer la propriété.
+        /// </summary>
+        /// <param name="NvNom"></param>
+        /// <returns></returns>
         public Boolean Renommer(String NvNom)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -167,6 +205,10 @@ namespace Framework_SW2013
             return false;
         }
 
+        /// <summary>
+        /// Supprimer la propriété.
+        /// </summary>
+        /// <returns></returns>
         public Boolean Supprimer()
         {
             Debug.Info(MethodBase.GetCurrentMethod());

@@ -47,8 +47,8 @@ namespace Framework_SW2013
 
     public enum Orientation_e
     {
-        cPortrait = 1,
-        cPaysage = 2
+        cPortrait = 0,
+        cPaysage = 1
     }
 
     #endregion

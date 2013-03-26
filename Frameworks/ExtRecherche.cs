@@ -5,8 +5,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Reflection;
 
-/////////////////////////// Implementation terminée ///////////////////////////
-
 namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -48,24 +46,53 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
+        /// <summary>
+        /// Retourne le parent ExtComposant.
+        /// </summary>
         public ExtComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } }
 
+        /// <summary>
+        /// Filtre sur les configurations.
+        /// </summary>
         public Boolean PrendreEnCompteConfig { get { Debug.Info(MethodBase.GetCurrentMethod());  return _PrendreEnCompteConfig; } set { Debug.Info(MethodBase.GetCurrentMethod());  _PrendreEnCompteConfig = value; } }
 
+        /// <summary>
+        /// Filtre sur les composants exclus.
+        /// </summary>
         public Boolean PrendreEnCompteExclus { get { Debug.Info(MethodBase.GetCurrentMethod());  return _PrendreEnCompteExclus; } set { Debug.Info(MethodBase.GetCurrentMethod());  _PrendreEnCompteExclus = value; } }
 
+        /// <summary>
+        /// Filtre sur les composants supprimés.
+        /// </summary>
         public Boolean PrendreEnCompteSupprime { get { Debug.Info(MethodBase.GetCurrentMethod());  return _PrendreEnCompteSupprime; } set { Debug.Info(MethodBase.GetCurrentMethod());  _PrendreEnCompteSupprime = value; } }
 
+        /// <summary>
+        /// Filtre sur les doublons.
+        /// </summary>
         public Boolean SupprimerDoublons { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SupprimerDoublons; } set { Debug.Info(MethodBase.GetCurrentMethod()); _SupprimerDoublons = value; } }
 
+        /// <summary>
+        /// Inclus le composant racine dans la liste,
+        /// si celui ci est de même type que le type de composant filtré.
+        /// </summary>
         public Boolean RenvoyerComposantRacine { get { Debug.Info(MethodBase.GetCurrentMethod());  return _RenvoyerComposantRacine; } set { Debug.Info(MethodBase.GetCurrentMethod());  _RenvoyerComposantRacine = value; } }
 
+        /// <summary>
+        /// Fonction interne
+        /// Test l'initialisation de l'objet ExtRecherche
+        /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtRecherche.
+        /// </summary>
+        /// <param name="Composant"></param>
+        /// <returns></returns>
         internal Boolean Init(ExtComposant Composant)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -83,6 +110,12 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Méthode privée.
+        /// Retourne la clé de tri suivant les filtres activé.
+        /// </summary>
+        /// <param name="Composant"></param>
+        /// <returns></returns>
         private String NomCle(ExtComposant Composant)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -104,6 +137,14 @@ namespace Framework_SW2013
             return pNomCle;
         }
 
+        /// <summary>
+        /// Méthode privée.
+        /// Méthode récursive permettant de traverser tous les composants d'une pièce ou d'un assemblage
+        /// </summary>
+        /// <param name="ComposantRacine"></param>
+        /// <param name="TypeComposant"></param>
+        /// <param name="DicComposants"></param>
+        /// <param name="NomComposant"></param>
         private void RecListListerComposants(ExtComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, ExtComposant> DicComposants, String NomComposant = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -145,6 +186,13 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Méthode interne
+        /// Renvoi la liste des composants filtrées par les arguments
+        /// </summary>
+        /// <param name="TypeComposant"></param>
+        /// <param name="NomComposant"></param>
+        /// <returns></returns>
         internal List<ExtComposant> ListListerComposants(TypeFichier_e TypeComposant, String NomComposant = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -172,6 +220,12 @@ namespace Framework_SW2013
             return pListeComposants;
         }
 
+        /// <summary>
+        /// Renvoi la liste des composants filtrées par les arguments
+        /// </summary>
+        /// <param name="TypeComposant"></param>
+        /// <param name="NomComposant"></param>
+        /// <returns></returns>
         public ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
