@@ -15,8 +15,6 @@ Title %Titre%
 @setlocal enableextensions
 @cd /d "%~dp0"
 
-rem cd %SYSTEMDRIVE%\Framework_SW
-
 echo.
 echo Dossier courant :
 echo    %cd%
@@ -33,6 +31,14 @@ set FichierTLB=%%i
 
 for /r %%i in (%NomDLL%) do (
 set FichierDLL=%%i
+)
+
+if not exist %FichierTLB% (
+echo.
+echo Pas de fichier .tlb pour la desinscription de la dll
+echo.
+pause
+exit
 )
 
 set DossierCourant=%cd%
@@ -71,5 +77,8 @@ echo --------------------------------------------------------
 RegAsm.exe "%FichierDLL%" /codebase /tlb:"%FichierTLB%" /unregister
 echo --------------------------------------------------------
 echo.
+
+del "%FichierTLB%"
+
 echo FIN
 Pause

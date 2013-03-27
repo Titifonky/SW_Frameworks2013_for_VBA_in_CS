@@ -2,7 +2,21 @@ echo off
 
 mode con cols=150 lines=60
 
+@setlocal enableextensions
+@cd /d "%~dp0"
+
+setlocal enableDelayedExpansion
+for %%i in (*.dll) do (
+set NomTLB=%%~ni.tlb
+)
+
+for /r %%i in (%NomTLB%) do (
+set FichierTLB=%%i
+)
+
+if exist %FichierTLB% (
 call "DLL_Desinstaller.bat"
+)
 
 set Titre=Inscription des DLLs
 echo.
@@ -13,9 +27,6 @@ echo =
 echo ================================================================
 
 Title %Titre%
-
-@setlocal enableextensions
-@cd /d "%~dp0"
 
 echo.
 echo Dossier courant :
