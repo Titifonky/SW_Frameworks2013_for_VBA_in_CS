@@ -8,6 +8,13 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -58,6 +65,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('dir_98f7d93d95590fcef0ce092dcacb4a50.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -72,23 +94,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_da4d387531f23a8240d6eccf672f7fa2.html">Solidworks</a></li><li class="navelem"><a class="el" href="dir_101e447324c713613b6ebb275fe0826b.html">Macros</a></li><li class="navelem"><a class="el" href="dir_add81875c2d515e1025af245567a0e36.html">SW_Frameworks2013_for_VBA_in_CS</a></li><li class="navelem"><a class="el" href="dir_98f7d93d95590fcef0ce092dcacb4a50.html">Frameworks</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle">
 <div class="title">Frameworks Directory Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Directory dependency graph for Frameworks:</div>
-<div class="dyncontent">
-<div class="center"><img src="dir_98f7d93d95590fcef0ce092dcacb4a50_dep.png" border="0" usemap="#dir__98f7d93d95590fcef0ce092dcacb4a50__dep" alt="C:/Users/billiet-pao/Solidworks/Macros/SW_Frameworks2013_for_VBA_in_CS/Frameworks"/></div>
-<map name="dir__98f7d93d95590fcef0ce092dcacb4a50__dep" id="dir__98f7d93d95590fcef0ce092dcacb4a50__dep">
-<area shape="rect" id="node2" href="dir_98f7d93d95590fcef0ce092dcacb4a50.html" title="Frameworks" alt="" coords="92,52,185,100"/><area shape="rect" id="graph2" href="dir_add81875c2d515e1025af245567a0e36.html" title="SW_Frameworks2013_for_VBA_in_CS" alt="" coords="16,16,263,111"/></map>
-</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="files"></a>
 Files</h2></td></tr>
@@ -134,11 +144,15 @@ Files</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 26 2013 10:20:23 for Framework_SW2013 by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.3.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_da4d387531f23a8240d6eccf672f7fa2.html">Solidworks</a></li><li class="navelem"><a class="el" href="dir_101e447324c713613b6ebb275fe0826b.html">Macros</a></li><li class="navelem"><a class="el" href="dir_add81875c2d515e1025af245567a0e36.html">SW_Frameworks2013_for_VBA_in_CS</a></li><li class="navelem"><a class="el" href="dir_98f7d93d95590fcef0ce092dcacb4a50.html">Frameworks</a></li>
+    <li class="footer">Generated on Tue Mar 26 2013 11:25:26 for Framework_SW2013 by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.3.1 </li>
+  </ul>
+</div>
 </body>
 </html>

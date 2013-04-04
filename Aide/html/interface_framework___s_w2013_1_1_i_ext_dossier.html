@@ -8,6 +8,13 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -62,10 +69,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('interface_framework___s_w2013_1_1_i_ext_dossier.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -80,11 +102,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_framework___s_w2013.html">Framework_SW2013</a></li><li class="navelem"><a class="el" href="interface_framework___s_w2013_1_1_i_ext_dossier.html">IExtDossier</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -97,10 +114,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for Framework_SW2013.IExtDossier:</div>
 <div class="dyncontent">
-<div class="center"><img src="interface_framework___s_w2013_1_1_i_ext_dossier__inherit__graph.png" border="0" usemap="#_framework___s_w2013_8_i_ext_dossier_inherit__map" alt="Inheritance graph"/></div>
-<map name="_framework___s_w2013_8_i_ext_dossier_inherit__map" id="_framework___s_w2013_8_i_ext_dossier_inherit__map">
-<area shape="rect" id="node3" href="class_framework___s_w2013_1_1_ext_dossier.html" title="Framework_SW2013.ExtDossier" alt="" coords="7,80,217,107"/></map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+ <div class="center">
+  <img src="interface_framework___s_w2013_1_1_i_ext_dossier.png" usemap="#Framework_SW2013.IExtDossier_map" alt=""/>
+  <map id="Framework_SW2013.IExtDossier_map" name="Framework_SW2013.IExtDossier_map">
+<area href="class_framework___s_w2013_1_1_ext_dossier.html" alt="Framework_SW2013.ExtDossier" shape="rect" coords="0,56,196,80"/>
+</map>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -305,11 +324,15 @@ Properties</h2></td></tr>
 <li>C:/Users/billiet-pao/Solidworks/Macros/SW_Frameworks2013_for_VBA_in_CS/Frameworks/<a class="el" href="_ext_dossier_8cs_source.html">ExtDossier.cs</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 26 2013 10:20:23 for Framework_SW2013 by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.3.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_framework___s_w2013.html">Framework_SW2013</a></li><li class="navelem"><a class="el" href="interface_framework___s_w2013_1_1_i_ext_dossier.html">IExtDossier</a></li>
+    <li class="footer">Generated on Tue Mar 26 2013 11:25:26 for Framework_SW2013 by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.3.1 </li>
+  </ul>
+</div>
 </body>
 </html>
