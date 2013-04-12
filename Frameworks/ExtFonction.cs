@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-using System.Reflection;
 
 namespace Framework_SW2013
 {
@@ -18,18 +19,21 @@ namespace Framework_SW2013
         String Nom { get; set; }
         String TypeDeLaFonction { get; }
         EtatFonction_e Etat { get; }
+        ExtFonction FonctionParent { get; }
         void Activer();
         void Desactiver();
         void EnregistrerEtat();
         void RestaurerEtat();
+        void Supprimer(swDeleteSelectionOptions_e Options);
         ArrayList ListeDesCorps();
+        ArrayList ListeDesFonctionsParent(String NomARechercher = "");
         ArrayList ListeDesSousFonctions(String NomARechercher = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("9009C0B9-61F1-42A1-AB7C-67DDF6AFB037")]
     [ProgId("Frameworks.ExtFonction")]
-    public class ExtFonction : IExtFonction
+    public class ExtFonction : IExtFonction, IComparable<ExtFonction>, IComparer<ExtFonction>, IEquatable<ExtFonction>
     {
         #region "Variables locales"
         
@@ -88,6 +92,21 @@ namespace Framework_SW2013
                     return EtatFonction_e.cActivee;
                 
                 return EtatFonction_e.cDesactivee;
+            }
+        }
+
+        /// <summary>
+        /// Retourne le parent directe de la fonction
+        /// </summary>
+        public ExtFonction FonctionParent
+        {
+            get
+            {
+                ExtFonction pFonctionParent = new ExtFonction();
+                if (pFonctionParent.Init(SwFonction.GetOwnerFeature(), Modele))
+                    return pFonctionParent;
+
+                return null;
             }
         }
 
@@ -181,6 +200,12 @@ namespace Framework_SW2013
                 Desactiver();
         }
 
+        public void Supprimer(swDeleteSelectionOptions_e Options)
+        {
+            _SwFonction.Select2(false, 0);
+            _Modele.SwModele.Extension.DeleteSelection2((int)Options);
+        }
+
         /// <summary>
         /// Méthode interne.
         /// Renvoi la liste des corps associés à la fonction.
@@ -224,6 +249,49 @@ namespace Framework_SW2013
 
         /// <summary>
         /// Méthode interne.
+        /// Renvoi la liste des fonctions parent
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <returns></returns>
+        internal List<ExtFonction> ListListeDesFonctionsParent(string NomARechercher = "")
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
+
+            Array pFonctionsParent = SwFonction.GetParents();
+
+            foreach(Feature pSwFonctionParent in pFonctionsParent)
+            {
+                ExtFonction pFonction = new ExtFonction();
+                if ((Regex.IsMatch(pSwFonctionParent.Name, NomARechercher)) && pFonction.Init(pSwFonctionParent, _Modele))
+                    pListeFonctions.Add(pFonction);
+            }
+
+            return pListeFonctions;
+
+        }
+
+        /// <summary>
+        /// Renvoi la liste des fonction parent
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <returns></returns>
+        public ArrayList ListeDesFonctionsParent(string NomARechercher = "")
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            List<ExtFonction> pListeFonctions = ListListeDesFonctionsParent(NomARechercher);
+            ArrayList pArrayFonctions = new ArrayList();
+
+            if (pListeFonctions.Count > 0)
+                pArrayFonctions = new ArrayList(pListeFonctions);
+
+            return pArrayFonctions;
+        }
+
+        /// <summary>
+        /// Méthode interne.
         /// Renvoi la liste des sous-fonctions
         /// </summary>
         /// <param name="NomARechercher"></param>
@@ -240,14 +308,16 @@ namespace Framework_SW2013
             {
                 ExtFonction pFonction = new ExtFonction();
 
-                if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher)) && pFonction.Init(pSwSousFonction, _Modele))
+                if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher))
+                    && pFonction.Init(pSwSousFonction, _Modele)
+                    && !(pListeFonctions.Contains(pFonction)))
                     pListeFonctions.Add(pFonction);
 
                 pSwSousFonction = pSwSousFonction.GetNextSubFeature();
             }
 
 
-            return pListeFonctions;
+            return pListeFonctions.Distinct().ToList();
 
         }
 
@@ -267,6 +337,25 @@ namespace Framework_SW2013
                 pArrayFonctions = new ArrayList(pListeFonctions);
 
             return pArrayFonctions;
+        }
+
+        #endregion
+
+        #region "Interfaces génériques"
+
+        int IComparable<ExtFonction>.CompareTo(ExtFonction Fonction)
+        {
+            return  (_Modele.SwModele.GetPathName() + _SwFonction.Name).CompareTo(Fonction.Modele.SwModele.GetPathName() +  Fonction.SwFonction.Name);
+        }
+
+        int IComparer<ExtFonction>.Compare(ExtFonction Fonction1, ExtFonction Fonction2)
+        {
+            return (Fonction1.Modele.SwModele.GetPathName() + Fonction1._SwFonction.Name).CompareTo(Fonction2.Modele.SwModele.GetPathName() + Fonction2._SwFonction.Name);
+        }
+
+        bool IEquatable<ExtFonction>.Equals(ExtFonction Fonction)
+        {
+            return (Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name).Equals(_Modele.SwModele.GetPathName() + _SwFonction.Name);
         }
 
         #endregion

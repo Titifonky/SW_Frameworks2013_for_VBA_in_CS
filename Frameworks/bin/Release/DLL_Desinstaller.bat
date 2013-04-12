@@ -33,7 +33,7 @@ for /r %%i in (%NomDLL%) do (
 set FichierDLL=%%i
 )
 
-if not exist %FichierTLB% (
+if not exist "%FichierTLB%" (
 echo.
 echo Pas de fichier .tlb pour la desinscription de la dll
 echo.
@@ -60,7 +60,7 @@ echo Nom de la DLL :
 echo    %NomDLL%
 echo Dossier courant :
 echo    %cd%
-if %DossierCourant%==%cd% (
+if "%DossierCourant%"=="%cd%" (
 echo.
 echo Le framework .NET v4.0.30319 n'est pas installe sur la machine
 echo Il est necessaire au fonctionnement de la dll

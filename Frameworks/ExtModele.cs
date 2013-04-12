@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-using System.Reflection;
 
 namespace Framework_SW2013
 {
@@ -266,7 +267,7 @@ namespace Framework_SW2013
 
             _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, 0, Erreur);
             ZoomEtendu();
-            Redessiner();
+            //Redessiner();
         }
 
         /// <summary>
@@ -348,7 +349,9 @@ namespace Framework_SW2013
             {
                 ExtFonction pFonction = new ExtFonction();
 
-                if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pFonction.Init(pSwFonction, this))
+                if ((Regex.IsMatch(pSwFonction.Name, NomARechercher))
+                    && pFonction.Init(pSwFonction, this)
+                    && !(pListeFonctions.Contains(pFonction)))
                     pListeFonctions.Add(pFonction);
 
                 if (AvecLesSousFonctions)
@@ -359,7 +362,9 @@ namespace Framework_SW2013
                     {
                         ExtFonction pSousFonction = new ExtFonction();
 
-                        if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, this))
+                        if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher))
+                            && pSousFonction.Init(pSwSousFonction, this)
+                            && !(pListeFonctions.Contains(pSousFonction)))
                             pListeFonctions.Add(pSousFonction);
 
                         pSwSousFonction = pSwSousFonction.GetNextSubFeature();
@@ -369,8 +374,7 @@ namespace Framework_SW2013
                 pSwFonction = pSwFonction.GetNextFeature();
             }
 
-
-            return pListeFonctions;
+            return pListeFonctions.Distinct().ToList();
 
         }
 

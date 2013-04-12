@@ -14,7 +14,7 @@ for /r %%i in (%NomTLB%) do (
 set FichierTLB=%%i
 )
 
-if exist %FichierTLB% (
+if exist "%FichierTLB%" (
 call "DLL_Desinstaller.bat"
 )
 
@@ -70,7 +70,7 @@ echo Nom de la DLL :
 echo    %NomDLL%
 echo Dossier courant :
 echo    %cd%
-if %DossierCourant%==%cd% (
+if "%DossierCourant%"==%cd% (
 echo.
 echo Le framework .NET v4.0.30319 n'est pas installe sur la machine
 echo Il est necessaire au fonctionnement de la dll
