@@ -69,7 +69,7 @@ namespace Framework_SW2013
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cAssemblage))
             {
-                Debug.Info(Modele.Chemin);
+                Debug.Info(Modele.FichierSw.Chemin);
 
                 _Modele = Modele;
                 _SwAssemblage = Modele.SwModele as AssemblyDoc;

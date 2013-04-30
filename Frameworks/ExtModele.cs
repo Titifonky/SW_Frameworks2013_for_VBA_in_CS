@@ -23,11 +23,13 @@ namespace Framework_SW2013
         ExtDessin Dessin { get; }
         GestDeConfigurations GestDeConfigurations { get; }
         GestDeProprietes GestDeProprietes { get; }
+        GestDeSelection GestDeSelection { get; }
         TypeFichier_e TypeDuModele { get; }
-        String Chemin { get; }
-        String NomDuFichier { get; }
-        String NomDuFichierSansExt { get; }
-        String NomDuDossier { get; }
+        ExtFichierSW FichierSw { get; }
+        //String Chemin { get; }
+        //String NomDuFichier { get; }
+        //String NomDuFichierSansExt { get; }
+        //String NomDuDossier { get; }
         void Activer();
         void Sauver();
         void Fermer();
@@ -50,6 +52,7 @@ namespace Framework_SW2013
         private ModelDoc2 _SwModele;
         private ExtSldWorks _SW;
         private ExtComposant _Composant;
+        private ExtFichierSW _FichierSw;
         private int Erreur = 0;
         private int Warning = 0;
 
@@ -167,7 +170,24 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Retourne le type du fichier.
+        /// Retourne le gestionnaire de propriétés GestDeProprietes.
+        /// </summary>
+        public GestDeSelection GestDeSelection
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                GestDeSelection pGestSelection = new GestDeSelection();
+                if (pGestSelection.Init(SwModele.SelectionManager, this))
+                    return pGestSelection;
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Retourne le type du modele.
         /// </summary>
         public TypeFichier_e TypeDuModele
         {
@@ -192,24 +212,24 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Retourne le chemin complet du fichier.
+        /// Retourne l'objet ExtFichierSw
         /// </summary>
-        public String Chemin { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwModele.GetPathName(); } }
+        public ExtFichierSW FichierSw
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
 
-        /// <summary>
-        /// Retourne le nom du fichier avec extension.
-        /// </summary>
-        public String NomDuFichier { get { Debug.Info(MethodBase.GetCurrentMethod());  return Path.GetFileName(SwModele.GetPathName()); } }
-
-        /// <summary>
-        /// Retourne le nom du fichier sans extension.
-        /// </summary>
-        public String NomDuFichierSansExt { get { Debug.Info(MethodBase.GetCurrentMethod());  return Path.GetFileNameWithoutExtension(SwModele.GetPathName()); } }
-
-        /// <summary>
-        /// Retourne le chemin du dossier.
-        /// </summary>
-        public String NomDuDossier { get { Debug.Info(MethodBase.GetCurrentMethod());  return Path.GetDirectoryName(SwModele.GetPathName()); } }
+                if (_FichierSw.EstInitialise)
+                {
+                    _FichierSw.Chemin = SwModele.GetPathName();
+                    _FichierSw.Configuration = _Composant.Configuration.Nom;
+                    _FichierSw.Nb = 1;
+                    return _FichierSw;
+                }
+                return null;
+            }
+        }
 
         /// <summary>
         /// Fonction interne.
@@ -236,10 +256,19 @@ namespace Framework_SW2013
             {
                 _SwModele = SwModele;
                 _SW = Sw;
-                Debug.Info(this.Chemin);
+                Debug.Info(_SwModele.GetPathName());
 
                 // On valide l'initialisation
                 _EstInitialise = true;
+
+                // On créer l'objet ExtFichierSw associé
+                _FichierSw = new ExtFichierSW();
+                if (_FichierSw.Init(_SW))
+                {
+                    _FichierSw.Chemin = _SwModele.GetPathName();
+                    _FichierSw.Configuration = _SwModele.ConfigurationManager.ActiveConfiguration.Name;
+                    _FichierSw.Nb = 1;
+                }
 
                 // Si c'est un assemblage ou une pièce, on va chercher le composant associé
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))

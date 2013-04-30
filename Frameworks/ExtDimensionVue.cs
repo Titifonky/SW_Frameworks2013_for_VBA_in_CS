@@ -12,8 +12,8 @@ namespace Framework_SW2013
     {
         ExtVue Vue { get; }
         Point Centre { get; set; }
-        Dimensions Dimensions { get; }
-        Coordonnees Coordonnees { get; }
+        Rectangle Dimensions { get; }
+        Zone Zone { get; }
         Double Angle { get; set; }
     }
 
@@ -51,7 +51,7 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 
-                Point pCentre;
+                Point pCentre = new Point();
                 Double[] pArrayResult;
                 pArrayResult = _Vue.SwVue.Position;
 
@@ -73,14 +73,14 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne les dimensions de la vue, hauteur et largeur.
         /// </summary>
-        public Dimensions Dimensions
+        public Rectangle Dimensions
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                Dimensions pDim;
-                pDim.Lg = Coordonnees.MaxX - Coordonnees.MinX;
-                pDim.Ht = Coordonnees.MaxY - Coordonnees.MinY;
+                Rectangle pDim = new Rectangle() ;
+                pDim.Lg = Zone.PointMax.X - Zone.PointMin.X;
+                pDim.Ht = Zone.PointMax.Y - Zone.PointMin.Y;
 
                 return pDim;
             }
@@ -89,18 +89,18 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne les coordonnées des coins "Bas-Gouche" et "Haut-Droit" de la vue.
         /// </summary>
-        public Coordonnees Coordonnees
+        public Zone Zone
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                Coordonnees pCoord;
+                Zone pCoord = new Zone();
                 Object[] pArr = _Vue.SwVue.GetOutline();
 
-                pCoord.MinX = (Double)pArr[0];
-                pCoord.MinY = (Double)pArr[1];
-                pCoord.MaxX = (Double)pArr[2];
-                pCoord.MaxY = (Double)pArr[3];
+                pCoord.PointMin.X = (Double)pArr[0];
+                pCoord.PointMin.Y = (Double)pArr[1];
+                pCoord.PointMax.X = (Double)pArr[2];
+                pCoord.PointMax.Y = (Double)pArr[3];
 
                 return pCoord;
             }

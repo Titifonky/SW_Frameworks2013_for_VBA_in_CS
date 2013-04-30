@@ -13,7 +13,7 @@ namespace Framework_SW2013
         #region "Propriétés"
 
         private static String DEBUG_FICHIER = Path.Combine(Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName, Assembly.GetExecutingAssembly().FullName.Split(',')[0] + "_Debug.txt");
-        private static Boolean DEBUG_ACTIF = true;
+        private static Boolean DEBUG_ACTIF = false;
 
         public static Boolean Actif { get { return DEBUG_ACTIF; } set { DEBUG_ACTIF = value; } }
 

@@ -200,6 +200,10 @@ namespace Framework_SW2013
                 Desactiver();
         }
 
+        /// <summary>
+        /// Supprimer la fonction
+        /// </summary>
+        /// <param name="Options"></param>
         public void Supprimer(swDeleteSelectionOptions_e Options)
         {
             _SwFonction.Select2(false, 0);

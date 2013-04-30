@@ -21,6 +21,7 @@ namespace Framework_SW2013
         Boolean ActiverDebug { get; set; }
         Boolean Init(SldWorks SldWks);
         ExtModele Modele(String Chemin = "");
+        ExtModele ModeleEnCoursEdition();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -171,6 +172,32 @@ namespace Framework_SW2013
         }
 
         /// <summary>
+        /// Renvoi le modele en cours d'edition
+        /// </summary>
+        /// <returns></returns>
+        public ExtModele ModeleEnCoursEdition()
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+            ExtModele pModeleActif = this.Modele();
+            ExtModele pModeleEdite = new ExtModele();
+            if (pModeleActif.EstInitialise && (pModeleActif.TypeDuModele == TypeFichier_e.cAssemblage))
+            {
+                if (pModeleEdite.Init(pModeleActif.Assemblage.SwAssemblage.GetEditTarget(), this))
+                {
+                    ExtComposant pComposant = new ExtComposant();
+                    if (pComposant.Init(pModeleActif.Assemblage.SwAssemblage.GetEditTargetComponent(), pModeleEdite))
+                    {
+                        pModeleEdite.Composant = pComposant;
+                        return pModeleEdite;
+                    }
+
+                }
+            }
+
+            return pModeleActif;
+        }
+
+        /// <summary>
         /// Ouvre un fichier à partir de son chemin.
         /// Verifie s'il est déjà ouvert, auquel cas ce dernier est renvoyé.
         /// </summary>
@@ -180,12 +207,15 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            foreach (ModelDoc2 pSwModele in _SwSW.GetDocuments())
+            if (_SwSW.GetDocumentCount() > 0)
             {
-                if (pSwModele.GetPathName() == Chemin)
+                foreach (ModelDoc2 pSwModele in _SwSW.GetDocuments())
                 {
-                    Debug.Info("Fichier déjà ouvert : " + Chemin);
-                    return pSwModele;
+                    if (pSwModele.GetPathName() == Chemin)
+                    {
+                        Debug.Info("Fichier déjà ouvert : " + Chemin);
+                        return pSwModele;
+                    }
                 }
             }
 

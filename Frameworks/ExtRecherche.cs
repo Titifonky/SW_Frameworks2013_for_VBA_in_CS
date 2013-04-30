@@ -17,7 +17,8 @@ namespace Framework_SW2013
         Boolean PrendreEnCompteSupprime { get; set; }
         Boolean SupprimerDoublons { get; set; }
         Boolean RenvoyerComposantRacine { get; set; }
-        ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "");
+        ArrayList ListeComposants(TypeFichier_e TypeComposant, String NomComposant = "");
+        ArrayList ListeFichiers(TypeFichier_e TypeComposant, String NomComposant = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -35,6 +36,7 @@ namespace Framework_SW2013
         private Boolean _PrendreEnCompteSupprime = false;
         private Boolean _SupprimerDoublons = true;
         private Boolean _RenvoyerComposantRacine = false;
+        private static Double _IndexComposant = 0;
 
         #endregion
 
@@ -123,15 +125,14 @@ namespace Framework_SW2013
             String pNomCle = "";
             if ((Composant != null) && Composant.EstInitialise)
             {
-                pNomCle = Composant.Modele.Chemin;
+                pNomCle = Composant.Modele.FichierSw.Chemin;
                 // Si on prend en compte les configs, on rajoute le nom de la config dans la clé
                 if (_PrendreEnCompteConfig)
                     pNomCle += "_" + Composant.Configuration.Nom;
 
-                // Si on garde toutes les occurences, on rajoute un nombre aléatoire à la fin de la clé
-                // Comme ça, ils sont tous différents
+                // Si on garde toutes les occurences, on rajoute un index pour eviter les doublons de clés
                 if (!_SupprimerDoublons)
-                    pNomCle += "_" + (new Random()).Next();
+                    pNomCle += "_" + _IndexComposant++;
             }
 
             return pNomCle;
@@ -156,14 +157,17 @@ namespace Framework_SW2013
                 {
                     // Attention, Regex.IsMatch peut renvoyer une erreur si NomComposant est égal à un caractère spécial
                     // du style "*" ou "[" et autre. Pb à corriger.
-                    if ( Convert.ToBoolean(pComp.Modele.TypeDuModele & TypeComposant) && Regex.IsMatch(pComp.Modele.Chemin, NomComposant))
+                    if (Convert.ToBoolean(pComp.Modele.TypeDuModele & TypeComposant) && Regex.IsMatch(pComp.Modele.FichierSw.Chemin, NomComposant))
                     {
                         ExtComposant pComposant = new ExtComposant();
+                        String pCle = NomCle(pComp);
+
+                        Debug.Info("Clé : " + pCle, MethodBase.GetCurrentMethod());
 
                         // S'il est déjà dans le dico, on on rajoute 1
-                        if (_SupprimerDoublons && DicComposants.ContainsKey(NomCle(pComp)))
+                        if (DicComposants.ContainsKey(pCle))
                         {
-                            pComposant = DicComposants[NomCle(pComp)];
+                            pComposant = DicComposants[pCle];
                             pComposant.Nb += 1;
                         }
                         // sinon on le rajoute
@@ -171,7 +175,7 @@ namespace Framework_SW2013
                         {
                             pComposant = pComp;
                             pComposant.Nb = 1;
-                            DicComposants.Add(NomCle(pComposant), pComposant);
+                            DicComposants.Add(pCle, pComposant);
                         }
 
                     }
@@ -198,6 +202,9 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             Dictionary<String, ExtComposant> pDicComposants = new Dictionary<string, ExtComposant>();
+
+            // On met l'index à 0
+            _IndexComposant = 0;
 
             // On renvoi le composant de base seulement s'il a le meme type que ceux recherché (TypeComposant)
             if ((_RenvoyerComposantRacine == true) && Convert.ToBoolean(_Composant.Modele.TypeDuModele & TypeComposant))
@@ -226,7 +233,7 @@ namespace Framework_SW2013
         /// <param name="TypeComposant"></param>
         /// <param name="NomComposant"></param>
         /// <returns></returns>
-        public ArrayList Lancer(TypeFichier_e TypeComposant, String NomComposant = "")
+        public ArrayList ListeComposants(TypeFichier_e TypeComposant, String NomComposant = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -235,6 +242,40 @@ namespace Framework_SW2013
 
             if (pListeComps.Count > 0)
                 pArrayComps = new ArrayList(pListeComps);
+
+            return pArrayComps;
+        }
+
+        /// <summary>
+        /// Renvoi la liste des ExtFichierSW filtrées par les arguments
+        /// Permet de lister les fichiers sans faire de liens avec les composants SW et donc de pouvoir
+        /// fermer le composant racine pour ensuite travailler sur les fichiers.
+        /// Cela permet d'accélérer le traitement des fichiers.
+        /// </summary>
+        /// <param name="TypeComposant"></param>
+        /// <param name="NomComposant"></param>
+        /// <returns></returns>
+        public ArrayList ListeFichiers(TypeFichier_e TypeComposant, String NomComposant = "")
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            List<ExtComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
+            ArrayList pArrayComps = new ArrayList();
+
+            if (pListeComps.Count > 0)
+            {
+                foreach (ExtComposant pComp in pListeComps)
+                {
+                    ExtFichierSW pFichier = new ExtFichierSW();
+                    if (pFichier.Init(_Composant.Modele.SW))
+                    {
+                        pFichier.Chemin = pComp.Modele.FichierSw.Chemin;
+                        pFichier.Configuration = pComp.Configuration.Nom;
+                        pFichier.Nb = pComp.Nb;
+                        pArrayComps.Add(pFichier);
+                    }
+                }
+            }
 
             return pArrayComps;
         }

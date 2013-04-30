@@ -53,31 +53,9 @@ namespace Framework_SW2013
 
     #endregion
 
-    #region "Structures"
-
-    public struct Point
-    {
-        public Double X;
-        public Double Y; 
-        public Double Z;
-    }
-
-    public struct Dimensions
-    {
-        public Double Lg; 
-        public Double Ht; 
-    }
-
-    public struct Coordonnees
-    {
-        public Double MinX;
-        public Double MinY;
-        public Double MaxX;
-        public Double MaxY;
-    }
-
-    #endregion
-
+    [ClassInterface(ClassInterfaceType.None)]
+    [Guid("5015C3D8-9DC1-4B38-BA40-E04AEA31A45A")]
+    [ProgId("Frameworks.Constantes")]
     public static class Constantes
     {
         #region "Variables locales"

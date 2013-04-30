@@ -20,6 +20,7 @@ namespace Framework_SW2013
         Boolean EstSupprime { get; set; }
         int Nb { get; }
         ExtRecherche NouvelleRecherche { get; }
+        Repere Repere { get; }
         ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false);
     }
 
@@ -100,12 +101,39 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
                 ExtRecherche pNouvelleRecherche = new ExtRecherche();
 
                 if (pNouvelleRecherche.Init(this))
                     return pNouvelleRecherche;
 
                 return null;
+            }
+        }
+
+        public Repere Repere
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                Double[] pMatrice = _SwComposant.Transform2.ArrayData;
+                Repere pRepere = new Repere();
+                pRepere.VecteurX.X = pMatrice[0];
+                pRepere.VecteurX.Y = pMatrice[1];
+                pRepere.VecteurX.Y = pMatrice[2];
+                pRepere.VecteurY.X = pMatrice[3];
+                pRepere.VecteurY.Y = pMatrice[4];
+                pRepere.VecteurY.Y = pMatrice[5];
+                pRepere.VecteurZ.X = pMatrice[6];
+                pRepere.VecteurZ.Y = pMatrice[7];
+                pRepere.VecteurZ.Y = pMatrice[8];
+                pRepere.Origine.X = pMatrice[9];
+                pRepere.Origine.Y = pMatrice[10];
+                pRepere.Origine.Z = pMatrice[11];
+                pRepere.Echelle = pMatrice[12];
+                return pRepere;
             }
         }
 
@@ -153,7 +181,7 @@ namespace Framework_SW2013
                     _Modele = Modele;
                     _Nb = 1;
 
-                    Debug.Info(this.Modele.Chemin);
+                    Debug.Info(this.Modele.FichierSw.Chemin);
                 }
                 else
                 {
@@ -184,15 +212,10 @@ namespace Framework_SW2013
             if (SwComposant.IGetChildrenCount() == 0)
                 return pListe;
 
-            String TestNomComposant = NomComposant;
-
-            if (NomComposant == "")
-                TestNomComposant = "^*";
-
             foreach (Component2 pSwComposant in SwComposant.GetChildren())
             {
                 /// Si le composant est supprimé mais qu'on a decidé de le prendre en compte, c'est bon
-                if (((pSwComposant.IsSuppressed() == false) | PrendreEnCompteSupprime) && Regex.IsMatch(pSwComposant.Name2, TestNomComposant))
+                if (((pSwComposant.IsSuppressed() == false) | PrendreEnCompteSupprime) && Regex.IsMatch(pSwComposant.Name2, NomComposant))
                 {
                     // Pour intitialiser le composant correctement il faut un peu de bidouille
                     // sinon on à le droit à une belle reference circulaire
@@ -200,10 +223,10 @@ namespace Framework_SW2013
                     ExtModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
                     // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
                     ExtComposant pComposant = new ExtComposant();
-                    pComposant.Init(pSwComposant, pModele);
                     // Et pour que les deux soit liés, on passe la ref du Composant que l'on vient de creer
                     // au modele. Comme ca, Modele.Composant pointe sur Composant et Composant.Modele pointe sur Modele,
                     // la boucle est bouclée
+                    pComposant.Init(pSwComposant, pModele);
                     pModele.Composant = pComposant;
                     pListe.Add(pComposant);
                 }
