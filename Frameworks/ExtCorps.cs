@@ -21,6 +21,7 @@ namespace Framework_SW2013
         ExtDossier Dossier { get; }
         ExtFonction PremiereFonction { get; }
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
+        int NbIntersection(ExtComposant Composant);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -221,6 +222,43 @@ namespace Framework_SW2013
                 pArrayFonctions = new ArrayList(pListeFonctions);
 
             return pArrayFonctions;
+        }
+
+        /// <summary>
+        /// Renvoi le nb d'intersection avec le composant
+        /// </summary>
+        /// <param name="Composant"></param>
+        /// <returns></returns>
+        public int NbIntersection(ExtComposant Composant)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            int Nb = 0;
+
+            Object InfosCorps;
+
+            MathTransform XForm1 = _Piece.Modele.Composant.SwComposant.Transform2;
+            MathTransform XForm2 = Composant.SwComposant.Transform2;
+
+            object[] ListeCorps = Composant.SwComposant.GetBodies3((int)swBodyType_e.swSolidBody, out InfosCorps);
+
+            foreach (Body2 CorpsTest in ListeCorps)
+            {
+                Body2 CopieCorpsBase = _SwCorps.Copy();
+                CopieCorpsBase.ApplyTransform(XForm1);
+
+                Body2 CopieCorpsTest = CorpsTest.Copy();
+                CopieCorpsTest.ApplyTransform(XForm2);
+
+                // SWBODYINTERSECT = 15901
+                int Err;
+
+                object[] ListeCorpsIntersection = CopieCorpsBase.Operations2(15901, CopieCorpsTest, out Err);
+
+                Nb += ListeCorpsIntersection.GetLength(0);
+            }
+
+            return Nb;
         }
 
         #endregion
