@@ -21,7 +21,7 @@ namespace Framework_SW2013
         ExtDossier Dossier { get; }
         ExtFonction PremiereFonction { get; }
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
-        int NbIntersection(ExtComposant Composant);
+        int NbIntersection(ExtCorps Corps);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -225,40 +225,31 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Renvoi le nb d'intersection avec le composant
+        /// Renvoi le nb d'intersection avec le corps
         /// </summary>
         /// <param name="Composant"></param>
         /// <returns></returns>
-        public int NbIntersection(ExtComposant Composant)
+        public int NbIntersection(ExtCorps Corps)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            int Nb = 0;
+            MathTransform XFormBase = _Piece.Modele.Composant.SwComposant.Transform2;
+            MathTransform XFormTest = Corps._Piece.Modele.Composant.SwComposant.Transform2;
 
-            Object InfosCorps;
+            Body2 CopieCorpsBase = _SwCorps.Copy();
+            CopieCorpsBase.ApplyTransform(XFormBase);
 
-            MathTransform XForm1 = _Piece.Modele.Composant.SwComposant.Transform2;
-            MathTransform XForm2 = Composant.SwComposant.Transform2;
+            Body2 CopieCorpsTest = Corps._SwCorps.Copy();
+            CopieCorpsTest.ApplyTransform(XFormTest);
 
-            object[] ListeCorps = Composant.SwComposant.GetBodies3((int)swBodyType_e.swSolidBody, out InfosCorps);
+            // SWBODYINTERSECT = 15901
+            int Err;
+            object[] ListeCorpsIntersection = CopieCorpsBase.Operations2(15901, CopieCorpsTest, out Err);
 
-            foreach (Body2 CorpsTest in ListeCorps)
-            {
-                Body2 CopieCorpsBase = _SwCorps.Copy();
-                CopieCorpsBase.ApplyTransform(XForm1);
+            if (ListeCorpsIntersection == null)
+                return 0;
 
-                Body2 CopieCorpsTest = CorpsTest.Copy();
-                CopieCorpsTest.ApplyTransform(XForm2);
-
-                // SWBODYINTERSECT = 15901
-                int Err;
-
-                object[] ListeCorpsIntersection = CopieCorpsBase.Operations2(15901, CopieCorpsTest, out Err);
-
-                Nb += ListeCorpsIntersection.GetLength(0);
-            }
-
-            return Nb;
+            return ListeCorpsIntersection.GetLength(0);
         }
 
         #endregion

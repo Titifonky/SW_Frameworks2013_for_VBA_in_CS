@@ -13,6 +13,8 @@ namespace Framework_SW2013
     {
         AssemblyDoc SwAssemblage { get; }
         ExtModele Modele { get; }
+        void EditerLeComposant(ExtComposant Composant);
+        void EditerAssemblage();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -81,6 +83,26 @@ namespace Framework_SW2013
             }
 
             return _EstInitialise;
+        }
+
+        /// <summary>
+        /// Editer le composant dans le contexte de l'assemblage
+        /// </summary>
+        public void EditerLeComposant(ExtComposant Composant)
+        {
+            Modele.EffacerLesSelections();
+            Composant.SwComposant.Select4(false, null, false);
+            int info = 0;
+            _SwAssemblage.EditPart2(true, false, ref info);
+            Modele.EffacerLesSelections();
+        }
+
+        /// <summary>
+        /// Edite l'assemblage racine
+        /// </summary>
+        public void EditerAssemblage()
+        {
+            _SwAssemblage.EditAssembly();
         }
 
         #endregion

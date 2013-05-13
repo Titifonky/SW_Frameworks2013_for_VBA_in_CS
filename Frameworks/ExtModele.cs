@@ -37,6 +37,7 @@ namespace Framework_SW2013
         void Reconstruire();
         void ForcerAToutReconstruire();
         void ZoomEtendu();
+        void EffacerLesSelections();
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
     }
 
@@ -357,6 +358,14 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             SwModele.ViewZoomtofit2();
+        }
+
+        /// <summary>
+        /// Effacer les selections
+        /// </summary>
+        public void EffacerLesSelections()
+        {
+            _SwModele.ClearSelection2(true);
         }
 
         /// <summary>

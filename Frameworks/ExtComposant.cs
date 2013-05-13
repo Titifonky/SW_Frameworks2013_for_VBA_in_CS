@@ -21,6 +21,7 @@ namespace Framework_SW2013
         int Nb { get; }
         ExtRecherche NouvelleRecherche { get; }
         Repere Repere { get; }
+        void Selectionner(Boolean Ajouter = true);
         ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false);
     }
 
@@ -112,6 +113,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Renvoi la matrice de transformation du composant
+        /// </summary>
         public Repere Repere
         {
             get
@@ -194,6 +198,15 @@ namespace Framework_SW2013
             }
 
             return _EstInitialise;
+        }
+
+        /// <summary>
+        /// Selectionne le composant
+        /// </summary>
+        /// <param name="Ajouter"></param>
+        public void Selectionner(Boolean Ajouter = true)
+        {
+            _SwComposant.Select4(Ajouter, null, false);
         }
 
         /// <summary>
