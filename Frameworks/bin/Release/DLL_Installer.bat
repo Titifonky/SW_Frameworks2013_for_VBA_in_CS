@@ -59,7 +59,6 @@ cd /d %DossierNET64%
 
 echo.
 echo Dossier du framework .NET
-echo    %DossierNET%
 echo    %cd%
 
 echo.

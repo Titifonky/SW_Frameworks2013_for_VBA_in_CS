@@ -26,10 +26,6 @@ namespace Framework_SW2013
         GestDeSelection GestDeSelection { get; }
         TypeFichier_e TypeDuModele { get; }
         ExtFichierSW FichierSw { get; }
-        //String Chemin { get; }
-        //String NomDuFichier { get; }
-        //String NomDuFichierSansExt { get; }
-        //String NomDuDossier { get; }
         void Activer();
         void Sauver();
         void Fermer();
@@ -38,7 +34,9 @@ namespace Framework_SW2013
         void ForcerAToutReconstruire();
         void ZoomEtendu();
         void EffacerLesSelections();
+        void ActiverInterfaceUtilisateur(Boolean Activer);
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
+        ExtFonction DerniereFonction();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -297,7 +295,7 @@ namespace Framework_SW2013
 
             _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, 0, Erreur);
             ZoomEtendu();
-            //Redessiner();
+            Redessiner();
         }
 
         /// <summary>
@@ -369,6 +367,20 @@ namespace Framework_SW2013
         }
 
         /// <summary>
+        /// Activer ou désactiver les éléments de l'interface pour accélérer les macros
+        /// </summary>
+        /// <param name="Activer"></param>
+        public void ActiverInterfaceUtilisateur(Boolean Activer)
+        {
+            _SwModele.FeatureManager.EnableFeatureTree = Activer;
+            _SwModele.FeatureManager.EnableFeatureTreeWindow = Activer;
+            _SwModele.ConfigurationManager.EnableConfigurationTree = Activer;
+
+            if (Activer)
+                _SwModele.FeatureManager.UpdateFeatureTree();
+        }
+
+        /// <summary>
         /// Méthode interne
         /// Renvoi la liste des fonctions filtrée par les arguments.
         /// </summary>
@@ -433,6 +445,24 @@ namespace Framework_SW2013
                 pArrayFonctions = new ArrayList(pListeFonctions);
 
             return pArrayFonctions;
+        }
+
+        /// <summary>
+        /// Renvoi la dernière fonction crée
+        /// </summary>
+        /// <returns></returns>
+        public ExtFonction DerniereFonction()
+        {
+            ExtFonction pDerniereFonction = null;
+            foreach (ExtFonction pFonction in ListListeDesFonctions())
+            {
+                if (pFonction.TypeDeLaFonction == "FlatPattern")
+                    break;
+
+                pDerniereFonction = pFonction;
+            }
+
+            return pDerniereFonction;
         }
 
         #endregion

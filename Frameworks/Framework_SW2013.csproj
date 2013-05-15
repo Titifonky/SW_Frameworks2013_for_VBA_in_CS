@@ -62,10 +62,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DlgSauverUnFichier.cs" />
+    <Compile Include="DlgRechercherUnFichier.cs" />
+    <Compile Include="UtilLog.cs" />
     <Compile Include="GestDeSelection.cs" />
     <Compile Include="ExtFichierSW.cs" />
     <Compile Include="Geometrie.cs" />
-    <Compile Include="UtilRechercherUnDossier.cs" />
+    <Compile Include="DlgRechercherUnDossier.cs" />
     <Compile Include="ExtDimensionVue.cs" />
     <Compile Include="ExtVue.cs" />
     <Compile Include="ExtFeuille.cs" />
@@ -79,7 +82,7 @@
     <Compile Include="ExtDessin.cs" />
     <Compile Include="ExtPiece.cs" />
     <Compile Include="FxChaine.cs" />
-    <Compile Include="Debug.cs" />
+    <Compile Include="UtilDebug.cs" />
     <Compile Include="Constantes.cs" />
     <Compile Include="ExtModele.cs" />
     <Compile Include="ExtSldWorks.cs" />

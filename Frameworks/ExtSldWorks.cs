@@ -118,19 +118,10 @@ namespace Framework_SW2013
                 if (SldWks != null)
                 {
                     _SwSW = SldWks;
-                    Debug.Init();
-
-                    /// A chaque initialisation de l'objet SW, on inscrit la version de SW
-
-                    _SwSW.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
-                    _Revision = _SwSW.RevisionNumber();
-                    Debug.Info("\n ");
-                    Debug.Info("================================================================================================");
-                    Debug.Info("SOLIDWORKS");
-                    Debug.Info("Version de base : " + _VersionDeBase + "    Version courante : " + _VersionCourante + "    Hotfixe : " + _Hotfixe);
-                    Debug.Info("------------------------------------------------------------------------------------------------");
-                    Debug.Info("\n ");
+                    Debug.Init(SldWks);
                     Debug.Info(MethodBase.GetCurrentMethod());
+                    SldWks.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
+                    _Revision = SldWks.RevisionNumber();
                     _EstInitialise = true;
                 }
 
@@ -161,7 +152,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("Ouvrir " + Chemin, MethodBase.GetCurrentMethod());
+                Debug.Info("Ouvrir " + Chemin);
                 pModele.Init(Ouvrir(Chemin), this);
             }
 

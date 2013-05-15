@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System.Globalization;
 
 namespace Framework_SW2013
 {
@@ -20,6 +21,8 @@ namespace Framework_SW2013
         String TypeDeLaFonction { get; }
         EtatFonction_e Etat { get; }
         ExtFonction FonctionParent { get; }
+        String DateDeCreation { get; }
+        String DateDeModification { get; }
         void Activer();
         void Desactiver();
         void EnregistrerEtat();
@@ -66,7 +69,28 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne ou défini le nom de la fonction.
         /// </summary>
-        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwFonction.Name; } set { Debug.Info(MethodBase.GetCurrentMethod());  SwFonction.Name = value; } }
+        public String Nom
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return SwFonction.Name;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                FeatureManager SwGestFonc = Modele.SwModele.FeatureManager;
+                String pNom = value;
+                int Indice = 1;
+                while (SwGestFonc.IsNameUsed((int)swNameType_e.swFeatureName, pNom))
+                {
+                    pNom += "_" + Indice;
+                    Indice++;
+                }
+
+                SwFonction.Name = pNom;
+            }
+        }
 
         /// <summary>
         /// Retourne le type de la fonction.
@@ -102,11 +126,29 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 ExtFonction pFonctionParent = new ExtFonction();
                 if (pFonctionParent.Init(SwFonction.GetOwnerFeature(), Modele))
                     return pFonctionParent;
 
                 return null;
+            }
+        }
+
+        public String DateDeCreation
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwFonction.DateCreated;
+            }
+        }
+        public String DateDeModification
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwFonction.DateModified;
             }
         }
 

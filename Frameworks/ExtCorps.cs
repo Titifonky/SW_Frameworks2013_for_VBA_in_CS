@@ -59,7 +59,28 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne ou défini le nom du corps.
         /// </summary>
-        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwCorps.Name; } set { Debug.Info(MethodBase.GetCurrentMethod());  SwCorps.Name = value; } }
+        public String Nom
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return SwCorps.Name;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                FeatureManager SwGestFonc = _Piece.Modele.SwModele.FeatureManager;
+                String pNom = value;
+                int Indice = 1;
+                while (SwGestFonc.IsNameUsed((int)swNameType_e.swBodyName, pNom))
+                {
+                    pNom += "_" + Indice;
+                    Indice++;
+                }
+
+                SwCorps.Name = pNom;
+            }
+        }
 
         /// <summary>
         /// Retourne le type du corps.

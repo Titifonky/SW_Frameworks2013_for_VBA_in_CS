@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {
@@ -14,7 +15,7 @@ namespace Framework_SW2013
     {
         SelectionMgr SwGestDeSelection { get; }
         ExtModele Modele { get; }
-        ArrayList ListeSelectionDesComposants(String NomComposant = "");
+        ArrayList ListeDesComposantsSelectionnes(String NomComposant = "", int Marque = -1);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -83,20 +84,30 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        internal List<ExtComposant> ListListeSelectionDesComposants(String NomComposant = "")
+        /// <summary>
+        /// Fonction interne, renvoi la liste des composants sélectionnés
+        /// </summary>
+        /// <param name="NomComposant"></param>
+        /// <returns></returns>
+        internal List<ExtComposant> ListListeDesComposantsSelectionnes(String NomComposant = "", int Marque = -1)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
             // Liste à renvoyer
             List<ExtComposant> pListeComposants = new List<ExtComposant>();
 
-            int NbSel = _SwGestDeSelection.GetSelectedObjectCount2(-1);
-
-            if (NbSel > 0)
+            if ((_Modele.TypeDuModele == TypeFichier_e.cAssemblage) || (_Modele.TypeDuModele == TypeFichier_e.cDessin))
             {
-                for (int i = 1; i <= NbSel; i++)
+
+                for (int i = 1; i <= _SwGestDeSelection.GetSelectedObjectCount2(-1); i++)
                 {
-                    Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(i, -1);
+                    Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(i, Marque);
+                    // Si le composant est null, on passe au suivant
+                    // C'est le cas, quand on sélectionne le composant racine. A voir pour trouver une solution 
+                    if ((pSwComposant == null) && (_SwGestDeSelection.GetSelectedObjectType3(i, Marque) == (int)swSelectType_e.swSelCOMPONENTS))
+                    {
+                        pSwComposant = _SwGestDeSelection.GetSelectedObject6(i, Marque);
+                    }
                     // Pour intitialiser le composant correctement il faut un peu de bidouille
                     // sinon on à le droit à une belle reference circulaire
                     // Donc d'abord, on recherche le modele du SwComposant
@@ -119,11 +130,16 @@ namespace Framework_SW2013
             return pListeComposants;
         }
 
-        public ArrayList ListeSelectionDesComposants(String NomComposant = "")
+        /// <summary>
+        /// Renvoi la liste des composants sélectionnés dans l'assemblage
+        /// </summary>
+        /// <param name="NomComposant"></param>
+        /// <returns></returns>
+        public ArrayList ListeDesComposantsSelectionnes(String NomComposant = "", int Marque = -1)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtComposant> pListeComps = ListListeSelectionDesComposants(NomComposant);
+            List<ExtComposant> pListeComps = ListListeDesComposantsSelectionnes(NomComposant, Marque);
             ArrayList pArrayComps = new ArrayList();
 
             if (pListeComps.Count > 0)

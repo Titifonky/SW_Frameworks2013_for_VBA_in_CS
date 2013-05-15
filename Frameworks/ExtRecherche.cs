@@ -162,7 +162,7 @@ namespace Framework_SW2013
                         ExtComposant pComposant = new ExtComposant();
                         String pCle = NomCle(pComp);
 
-                        Debug.Info("Clé : " + pCle, MethodBase.GetCurrentMethod());
+                        Debug.Info("Clé : " + pCle);
 
                         // S'il est déjà dans le dico, on on rajoute 1
                         if (DicComposants.ContainsKey(pCle))
