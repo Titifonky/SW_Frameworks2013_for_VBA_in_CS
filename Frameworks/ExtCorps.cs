@@ -21,6 +21,9 @@ namespace Framework_SW2013
         ExtDossier Dossier { get; }
         ExtFonction PremiereFonction { get; }
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
+        ExtFonction FonctionTolerie();
+        ExtFonction FonctionDeplie();
+        ExtFonction FonctionCubeDeVisualisation();
         int NbIntersection(ExtCorps Corps);
     }
 
@@ -243,6 +246,56 @@ namespace Framework_SW2013
                 pArrayFonctions = new ArrayList(pListeFonctions);
 
             return pArrayFonctions;
+        }
+
+        /// <summary>
+        /// Renvoi la fonction Tolerie du corps
+        /// </summary>
+        /// <returns></returns>
+        public ExtFonction FonctionTolerie()
+        {
+            if (TypeDeCorps == TypeCorps_e.cTole)
+            {
+                foreach(ExtFonction pFonc in ListListeDesFonctions())
+                {
+                    if (pFonc.TypeDeLaFonction == "SheetMetal")
+                        return pFonc;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Renvoi la fonction EtatDeplie du corps
+        /// </summary>
+        /// <returns></returns>
+        public ExtFonction FonctionDeplie()
+        {
+            if (TypeDeCorps == TypeCorps_e.cTole)
+            {
+                foreach (ExtFonction pFonc in ListListeDesFonctions())
+                {
+                    if (pFonc.TypeDeLaFonction == "FlatPattern")
+                        return pFonc;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Renvoi la fonction CubeDeVisualisation du corps
+        /// </summary>
+        /// <returns></returns>
+        public ExtFonction FonctionCubeDeVisualisation()
+        {
+            if (TypeDeCorps == TypeCorps_e.cTole)
+            {
+                return this.FonctionDeplie().ListListeDesSousFonctions("Cube de visualisation")[0];
+            }
+
+            return null;
         }
 
         /// <summary>
