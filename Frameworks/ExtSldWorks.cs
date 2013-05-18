@@ -20,8 +20,8 @@ namespace Framework_SW2013
         String Revision { get; }
         Boolean ActiverDebug { get; set; }
         Boolean Init(SldWorks SldWks);
-        ExtModele Modele(String Chemin = "");
-        ExtModele ModeleEnCoursEdition();
+        eModele Modele(String Chemin = "");
+        eModele ModeleEnCoursEdition();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -64,7 +64,7 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                ExtModele Modele = new ExtModele();
+                eModele Modele = new eModele();
                 Modele.Init(_SwSW.ActiveDoc(), this);
                 return Modele.TypeDuModele;
             }
@@ -140,11 +140,11 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Chemin"></param>
         /// <returns></returns>
-        public ExtModele Modele(String Chemin = "")
+        public eModele Modele(String Chemin = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            ExtModele pModele = new ExtModele();
+            eModele pModele = new eModele();
             if (String.IsNullOrEmpty(Chemin))
             {
                 Debug.Info("Document actif");
@@ -166,11 +166,11 @@ namespace Framework_SW2013
         /// Renvoi le modele en cours d'edition
         /// </summary>
         /// <returns></returns>
-        public ExtModele ModeleEnCoursEdition()
+        public eModele ModeleEnCoursEdition()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-            ExtModele pModeleActif = this.Modele();
-            ExtModele pModeleEdite = new ExtModele();
+            eModele pModeleActif = this.Modele();
+            eModele pModeleEdite = new eModele();
             if (pModeleActif.EstInitialise && (pModeleActif.TypeDuModele == TypeFichier_e.cAssemblage))
             {
                 if (pModeleEdite.Init(pModeleActif.Assemblage.SwAssemblage.GetEditTarget(), this))

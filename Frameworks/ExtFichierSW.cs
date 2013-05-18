@@ -21,7 +21,7 @@ namespace Framework_SW2013
         String NomDuFichier { get; }
         String NomDuFichierSansExt { get; }
         String NomDuDossier { get; }
-        ExtModele Ouvrir();
+        eModele Ouvrir();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -128,12 +128,12 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        public ExtModele Ouvrir()
+        public eModele Ouvrir()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            ExtModele pModele = _SW.Modele(_Chemin);
-            ExtConfiguration pConfig = pModele.GestDeConfigurations.ConfigurationAvecLeNom(_Configuration);
+            eModele pModele = _SW.Modele(_Chemin);
+            eConfiguration pConfig = pModele.GestDeConfigurations.ConfigurationAvecLeNom(_Configuration);
             pConfig.Activer();
             return pModele;
         }

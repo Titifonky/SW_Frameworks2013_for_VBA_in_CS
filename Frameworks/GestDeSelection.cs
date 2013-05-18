@@ -14,7 +14,7 @@ namespace Framework_SW2013
     public interface IGestDeSelection
     {
         SelectionMgr SwGestDeSelection { get; }
-        ExtModele Modele { get; }
+        eModele Modele { get; }
         ArrayList ListeDesComposantsSelectionnes(String NomComposant = "", int Marque = -1);
     }
 
@@ -27,7 +27,7 @@ namespace Framework_SW2013
 
         private Boolean _EstInitialise = false;
 
-        private ExtModele _Modele;
+        private eModele _Modele;
         private SelectionMgr _SwGestDeSelection;
 
         #endregion
@@ -48,7 +48,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
 
         /// <summary>
         /// Fonction interne
@@ -66,7 +66,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(SelectionMgr SwGestionnaire, ExtModele Modele)
+        internal Boolean Init(SelectionMgr SwGestionnaire, eModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -112,7 +112,7 @@ namespace Framework_SW2013
                     // sinon on à le droit à une belle reference circulaire
                     // Donc d'abord, on recherche le modele du SwComposant
                     Debug.Info(pSwComposant.GetPathName());
-                    ExtModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
+                    eModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
                     // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
                     ExtComposant pComposant = new ExtComposant();
                     // Et pour que les deux soit liés, on passe la ref du Composant que l'on vient de creer

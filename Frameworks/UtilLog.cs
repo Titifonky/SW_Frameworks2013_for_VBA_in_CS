@@ -13,7 +13,7 @@ namespace Framework_SW2013
     public interface ILog
     {
         Boolean Actif { get; set; }
-        Boolean Init(ExtModele Modele, String NomMacro = "");
+        Boolean Init(eModele Modele, String NomMacro = "");
         void Info(String Message, int Tab = 0);
     }
 
@@ -47,7 +47,7 @@ namespace Framework_SW2013
 
         #region "Méthodes"
 
-        public Boolean Init(ExtModele Modele, String NomMacro = "")
+        public Boolean Init(eModele Modele, String NomMacro = "")
         {
 
             if ((Modele != null) && (Modele.EstInitialise) && _ACTIF)

@@ -8,9 +8,9 @@ namespace Framework_SW2013
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("685D0EE5-1B10-41C6-9DCE-B8C9D4B85B84")]
-    public interface IExtDimensionVue
+    public interface IeDimensionVue
     {
-        ExtVue Vue { get; }
+        eVue Vue { get; }
         Point Centre { get; set; }
         Rectangle Dimensions { get; }
         Zone Zone { get; }
@@ -19,19 +19,19 @@ namespace Framework_SW2013
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("A6A0EE53-8B0A-4BAC-8AE6-9D9BD029391F")]
-    [ProgId("Frameworks.ExtDimensionVue")]
-    public class ExtDimensionVue : IExtDimensionVue
+    [ProgId("Frameworks.eDimensionVue")]
+    public class eDimensionVue : IeDimensionVue
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private ExtVue _Vue;
+        private eVue _Vue;
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtDimensionVue() { }
+        public eDimensionVue() { }
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtVue.
         /// </summary>
-        public ExtVue Vue { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Vue; } }
+        public eVue Vue { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Vue; } }
 
         /// <summary>
         /// Retourne ou défini le centre de la vue.
@@ -137,7 +137,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Vue"></param>
         /// <returns></returns>
-        internal Boolean Init(ExtVue Vue)
+        internal Boolean Init(eVue Vue)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 

@@ -11,12 +11,12 @@ namespace Framework_SW2013
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("17F1BCFD-2428-4DF1-8338-8FFA142E2A97")]
-    public interface IExtFeuille
+    public interface IeFeuille
     {
         Sheet SwFeuille { get; }
         ExtDessin Dessin { get; }
         String Nom { get; set; }
-        ExtVue PremiereVue { get; }
+        eVue PremiereVue { get; }
         void Activer();
         void Supprimer();
         void ZoomEtendu();
@@ -25,8 +25,8 @@ namespace Framework_SW2013
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("AB11E456-34CF-4540-A7E3-E01D7C63E324")]
-    [ProgId("Frameworks.ExtFeuille")]
-    public class ExtFeuille : IExtFeuille
+    [ProgId("Frameworks.eFeuille")]
+    public class eFeuille : IeFeuille
     {
         #region "Variables locales"
         
@@ -38,7 +38,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtFeuille() { }
+        public eFeuille() { }
 
         #endregion
 
@@ -62,12 +62,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne la première vue du dessin
         /// </summary>
-        public ExtVue PremiereVue
+        public eVue PremiereVue
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                ExtVue pVue = new ExtVue();
+                eVue pVue = new eVue();
 
                 object[] pObjVues;
                 pObjVues = _SwFeuille.GetViews();
@@ -148,11 +148,11 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<ExtVue> ListListeDesVues(String NomARechercher = "")
+        internal List<eVue> ListListeDesVues(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtVue> pListeVues = new List<ExtVue>();
+            List<eVue> pListeVues = new List<eVue>();
 
             object[] pObjVues;
             pObjVues = _SwFeuille.GetViews();
@@ -162,7 +162,7 @@ namespace Framework_SW2013
 
             foreach (View pSwVue in pObjVues)
             {
-                ExtVue pVue = new ExtVue();
+                eVue pVue = new eVue();
                 if (pVue.Init(pSwVue, this) && Regex.IsMatch(pSwVue.GetName2(), NomARechercher))
                     pListeVues.Add(pVue);
             }
@@ -180,7 +180,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtVue> pListeVues = ListListeDesVues(NomARechercher);
+            List<eVue> pListeVues = ListListeDesVues(NomARechercher);
             ArrayList pArrayVues = new ArrayList();
 
             if (pListeVues.Count > 0)

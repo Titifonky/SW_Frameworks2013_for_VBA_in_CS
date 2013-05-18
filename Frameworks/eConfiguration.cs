@@ -9,38 +9,38 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("93F8AAEE-5820-11E2-A4D1-91046188709B")]
-    public interface IExtConfiguration
+    public interface IeConfiguration
     {
         Configuration SwConfiguration { get; }
-        ExtModele Modele { get; }
+        eModele Modele { get; }
         String Nom { get; set; }
         TypeConfig_e TypeConfig { get; }
-        ExtConfiguration ConfigurationParent { get; }
-        ExtConfiguration ConfigurationRacine { get; }
-        GestDeProprietes GestDeProprietes { get; }
+        eConfiguration ConfigurationParent { get; }
+        eConfiguration ConfigurationRacine { get; }
+        eGestDeProprietes GestDeProprietes { get; }
         Boolean Est(TypeConfig_e T);
         Boolean Activer();
         Boolean Supprimer();
-        ExtConfiguration AjouterUneConfigurationDerivee(String Nom);
+        eConfiguration AjouterUneConfigurationDerivee(String Nom);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("9818CA82-5820-11E2-852A-92046188709B")]
-    [ProgId("Frameworks.ExtConfiguration")]
-    public class ExtConfiguration : IExtConfiguration, IComparable<ExtConfiguration>, IComparer<ExtConfiguration>, IEquatable<ExtConfiguration>
+    [ProgId("Frameworks.eConfiguration")]
+    public class eConfiguration : IeConfiguration, IComparable<eConfiguration>, IComparer<eConfiguration>, IEquatable<eConfiguration>
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
         private Configuration _SwConfiguration;
-        private ExtModele _Modele;
+        private eModele _Modele;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtConfiguration()
+        public eConfiguration()
         {
         }
 
@@ -56,7 +56,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Retourne ou défini le nom de la configuration.
@@ -88,11 +88,11 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne la configuration parent.
         /// </summary>
-        public ExtConfiguration ConfigurationParent
+        public eConfiguration ConfigurationParent
         {
             get
             {
-                ExtConfiguration pConfigParent = new ExtConfiguration();
+                eConfiguration pConfigParent = new eConfiguration();
                 if ((TypeConfig == TypeConfig_e.cDerivee) && pConfigParent.Init(SwConfiguration.GetParent(), _Modele))
                     return pConfigParent;
 
@@ -103,14 +103,14 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne la configuration racine, c'est la configuration parent la plus haute.
         /// </summary>
-        public ExtConfiguration ConfigurationRacine
+        public eConfiguration ConfigurationRacine
         {
             get
             {
                 // Si elle est derivée, on lance la recherche
                 if (Est(TypeConfig_e.cDerivee))
                 {
-                    ExtConfiguration pConfig = ConfigurationParent;
+                    eConfiguration pConfig = ConfigurationParent;
 
                     // Tant que pConfig est derivee, on boucle.
                     while (pConfig.Est(TypeConfig_e.cDerivee))
@@ -130,11 +130,11 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le getionnaire de propriétés.
         /// </summary>
-        public GestDeProprietes GestDeProprietes
+        public eGestDeProprietes GestDeProprietes
         {
             get
             {
-                GestDeProprietes pGestProps = new GestDeProprietes();
+                eGestDeProprietes pGestProps = new eGestDeProprietes();
                 if (pGestProps.Init(SwConfiguration.CustomPropertyManager, _Modele))
                     return pGestProps;
 
@@ -159,7 +159,7 @@ namespace Framework_SW2013
         /// <param name="Config"></param>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(Configuration Config, ExtModele Modele)
+        internal Boolean Init(Configuration Config, eModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -215,10 +215,10 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomConfigDerivee"></param>
         /// <returns></returns>
-        public ExtConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee)
+        public eConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-            ExtConfiguration pConfig = new ExtConfiguration();
+            eConfiguration pConfig = new eConfiguration();
             Configuration pSwConfig = _Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfigDerivee, NomConfigDerivee, "", 0, NomConfigDerivee, "");
 
             if (pConfig.Init(pSwConfig ,_Modele))
@@ -231,21 +231,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<ExtConfiguration>.CompareTo(ExtConfiguration Conf)
+        int IComparable<eConfiguration>.CompareTo(eConfiguration Conf)
         {
             String Nom1 = _Modele.SwModele.GetPathName() + _SwConfiguration.Name;
             String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf._SwConfiguration.Name;
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<ExtConfiguration>.Compare(ExtConfiguration Conf1, ExtConfiguration Conf2)
+        int IComparer<eConfiguration>.Compare(eConfiguration Conf1, eConfiguration Conf2)
         {
             String Nom1 = Conf1._Modele.SwModele.GetPathName() + Conf1._SwConfiguration.Name;
             String Nom2 = Conf2._Modele.SwModele.GetPathName() + Conf2._SwConfiguration.Name;
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<ExtConfiguration>.Equals(ExtConfiguration Conf)
+        bool IEquatable<eConfiguration>.Equals(eConfiguration Conf)
         {
             String Nom1 = _Modele.SwModele.GetPathName() + _SwConfiguration.Name;
             String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf._SwConfiguration.Name;
