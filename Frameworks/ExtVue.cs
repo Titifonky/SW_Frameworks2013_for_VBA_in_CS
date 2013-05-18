@@ -8,32 +8,32 @@ namespace Framework_SW2013
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("7EECBE39-3E38-49D7-A617-2E3AFEF915ED")]
-    public interface IeVue
+    public interface IExtVue
     {
         View SwVue { get; }
-        eFeuille Feuille { get; }
+        ExtFeuille Feuille { get; }
         String Nom { get; set; }
-        eModele ModeleDeReference { get; }
-        eConfiguration ConfigurationDeReference { get; }
-        eDimensionVue Dimensions { get; }
+        ExtModele ModeleDeReference { get; }
+        ExtConfiguration ConfigurationDeReference { get; }
+        ExtDimensionVue Dimensions { get; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("0A46F613-F061-4FC2-8DAD-F4EA5BBBBD8E")]
-    [ProgId("Frameworks.eVue")]
-    public class eVue : IeVue
+    [ProgId("Frameworks.ExtVue")]
+    public class ExtVue : IExtVue
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private eFeuille _Feuille;
+        private ExtFeuille _Feuille;
         private View _SwVue;
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public eVue() { }
+        public ExtVue() { }
 
         #endregion
 
@@ -47,7 +47,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtFeuille.
         /// </summary>
-        public eFeuille Feuille { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Feuille; } }
+        public ExtFeuille Feuille { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Feuille; } }
 
         /// <summary>
         /// Retourne ou défini le nom de la feuille.
@@ -57,12 +57,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le modele ExtModele référencé par la vue.
         /// </summary>
-        public eModele ModeleDeReference
+        public ExtModele ModeleDeReference
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                eModele pModele = new eModele();
+                ExtModele pModele = new ExtModele();
                 if (pModele.Init(_SwVue.ReferencedDocument, _Feuille.Dessin.Modele.SW))
                     return pModele;
 
@@ -73,12 +73,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne la configuration ExtConfiguration référencée par la vue.
         /// </summary>
-        public eConfiguration ConfigurationDeReference
+        public ExtConfiguration ConfigurationDeReference
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                eConfiguration pConfig = new eConfiguration();
+                ExtConfiguration pConfig = new ExtConfiguration();
                 if (pConfig.Init(_SwVue.ReferencedDocument.GetConfigurationByName(_SwVue.ReferencedConfiguration), ModeleDeReference))
                     return pConfig;
 
@@ -89,12 +89,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne les dimensions de la vue.
         /// </summary>
-        public eDimensionVue Dimensions
+        public ExtDimensionVue Dimensions
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                eDimensionVue pDimensions = new eDimensionVue();
+                ExtDimensionVue pDimensions = new ExtDimensionVue();
 
                 if (pDimensions.Init(this))
                     return pDimensions;
@@ -120,7 +120,7 @@ namespace Framework_SW2013
         /// <param name="SwVue"></param>
         /// <param name="Feuille"></param>
         /// <returns></returns>
-        internal Boolean Init(View SwVue, eFeuille Feuille)
+        internal Boolean Init(View SwVue, ExtFeuille Feuille)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 

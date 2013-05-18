@@ -11,33 +11,33 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("EA0CB46B-80A3-4EC7-92A4-50935002CAA9")]
-    public interface IeGestDeProprietes
+    public interface IGestDeProprietes
     {
         CustomPropertyManager SwGestDeProprietes { get; }
-        eModele Modele { get; }
-        ePropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false);
-        ePropriete RecupererPropriete(String Nom);
+        ExtModele Modele { get; }
+        ExtPropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false);
+        ExtPropriete RecupererPropriete(String Nom);
         Boolean SupprimerPropriete(String Nom);
         ArrayList ListeDesProprietes(String NomARechercher = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("F0F44B4A-BD1C-46E9-BB27-53A6D4342F6E")]
-    [ProgId("Frameworks.eGestDeProprietes")]
-    public class eGestDeProprietes : IeGestDeProprietes
+    [ProgId("Frameworks.GestDeProprietes")]
+    public class GestDeProprietes : IGestDeProprietes
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private eModele _Modele;
+        private ExtModele _Modele;
         private CustomPropertyManager _SwGestDeProprietes;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public eGestDeProprietes() { }
+        public GestDeProprietes() { }
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele 
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Fonction interne
@@ -70,7 +70,7 @@ namespace Framework_SW2013
         /// <param name="SwGestionnaire"></param>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(CustomPropertyManager SwGestionnaire, eModele Modele)
+        internal Boolean Init(CustomPropertyManager SwGestionnaire, ExtModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -96,7 +96,7 @@ namespace Framework_SW2013
         /// <param name="Expression"></param>
         /// <param name="EcraserExistante"></param>
         /// <returns></returns>
-        public ePropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false)
+        public ExtPropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -105,13 +105,13 @@ namespace Framework_SW2013
                 _SwGestDeProprietes.Delete(Nom);
 
             // On la récupère
-            ePropriete Propriete = RecupererPropriete(Nom);
+            ExtPropriete Propriete = RecupererPropriete(Nom);
 
             // Si elle n'existe pas on la créer et on lui assigne l'expression
             if (Propriete == null)
             {
                 _SwGestDeProprietes.Add2(Nom, (int)TypePropriete, Expression);
-                Propriete = new ePropriete();
+                Propriete = new ExtPropriete();
                 Propriete.Init(this, Nom);
             }
 
@@ -127,11 +127,11 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Nom"></param>
         /// <returns></returns>
-        public ePropriete RecupererPropriete(String Nom)
+        public ExtPropriete RecupererPropriete(String Nom)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            ePropriete Propriete = new ePropriete();
+            ExtPropriete Propriete = new ExtPropriete();
 
             if (Propriete.Init(this, Nom))
                 return Propriete;
@@ -161,17 +161,17 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<ePropriete> ListListeDesProprietes(String NomARechercher = "")
+        internal List<ExtPropriete> ListListeDesProprietes(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ePropriete> pListeProps = new List<ePropriete>();
+            List<ExtPropriete> pListeProps = new List<ExtPropriete>();
 
             if (_SwGestDeProprietes.Count > 0)
             {
                 foreach (String pNom in _SwGestDeProprietes.GetNames())
                 {
-                    ePropriete Prop = new ePropriete();
+                    ExtPropriete Prop = new ExtPropriete();
                     if (Prop.Init(this, pNom) && Regex.IsMatch(pNom, NomARechercher))
                         pListeProps.Add(Prop);
                 }
@@ -190,7 +190,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ePropriete> pListeProprietes = ListListeDesProprietes(NomARechercher);
+            List<ExtPropriete> pListeProprietes = ListListeDesProprietes(NomARechercher);
             ArrayList pArrayProprietes = new ArrayList();
 
             if (pListeProprietes.Count > 0)

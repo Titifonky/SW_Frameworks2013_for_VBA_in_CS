@@ -13,9 +13,9 @@ namespace Framework_SW2013
     public interface IExtDessin
     {
         DrawingDoc SwDessin { get; }
-        eModele Modele { get; }
-        eFeuille FeuilleActive { get; }
-        eFeuille Feuille(String Nom);
+        ExtModele Modele { get; }
+        ExtFeuille FeuilleActive { get; }
+        ExtFeuille Feuille(String Nom);
         Boolean FeuilleExiste(String Nom);
         ArrayList ListeDesFeuilles(String NomARechercher = "");
     }
@@ -28,7 +28,7 @@ namespace Framework_SW2013
         #region "Variables locales"
         private Boolean _EstInitialise = false;
 
-        private eModele _Modele;
+        private ExtModele _Modele;
         private DrawingDoc _SwDessin;
         #endregion
 
@@ -48,18 +48,18 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Retourne la feuille active.
         /// </summary>
-        public eFeuille FeuilleActive
+        public ExtFeuille FeuilleActive
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                eFeuille pFeuille = new eFeuille();
+                ExtFeuille pFeuille = new ExtFeuille();
                 Sheet pSwFeuille = _SwDessin.GetCurrentSheet();
                 if (pFeuille.Init(pSwFeuille, this))
                     return pFeuille;
@@ -84,7 +84,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(eModele Modele)
+        internal Boolean Init(ExtModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -109,11 +109,11 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Nom"></param>
         /// <returns></returns>
-        public eFeuille Feuille(String Nom)
+        public ExtFeuille Feuille(String Nom)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            eFeuille pFeuille = new eFeuille();
+            ExtFeuille pFeuille = new ExtFeuille();
             Sheet pSwFeuille = _SwDessin.get_Sheet(Nom);
 
             if (pFeuille.Init(pSwFeuille, this))
@@ -149,18 +149,18 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<eFeuille> ListListeDesFeuilles(String NomARechercher = "")
+        internal List<ExtFeuille> ListListeDesFeuilles(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<eFeuille> pListeFeuilles = new List<eFeuille>();
+            List<ExtFeuille> pListeFeuilles = new List<ExtFeuille>();
 
             if (_SwDessin.GetSheetCount() == 0)
                 return pListeFeuilles;
 
             foreach (String NomFeuille in _SwDessin.GetSheetNames())
             {
-                eFeuille pFeuille = new eFeuille();
+                ExtFeuille pFeuille = new ExtFeuille();
                 Sheet pSwFeuille = _SwDessin.get_Sheet(NomFeuille);
 
                 if (Regex.IsMatch(NomFeuille, NomARechercher) && pFeuille.Init(pSwFeuille, this))
@@ -182,7 +182,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<eFeuille> pListeFeuilles = ListListeDesFeuilles(NomARechercher);
+            List<ExtFeuille> pListeFeuilles = ListListeDesFeuilles(NomARechercher);
             ArrayList pArrayFeuilles = new ArrayList();
 
             if (pListeFeuilles.Count > 0)

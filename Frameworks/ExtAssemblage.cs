@@ -9,30 +9,30 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("CACBFAD0-5820-11E2-B60C-A9046188709B")]
-    public interface IeAssemblage
+    public interface IExtAssemblage
     {
         AssemblyDoc SwAssemblage { get; }
-        eModele Modele { get; }
+        ExtModele Modele { get; }
         void EditerLeComposant(ExtComposant Composant);
         void EditerAssemblage();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("CF8CC568-5820-11E2-B525-AA046188709B")]
-    [ProgId("Frameworks.eAssemblage")]
-    public class eAssemblage : IeAssemblage
+    [ProgId("Frameworks.ExtAssemblage")]
+    public class ExtAssemblage : IExtAssemblage
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private eModele _Modele;
+        private ExtModele _Modele;
         private AssemblyDoc _SwAssemblage;
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public eAssemblage() { }
+        public ExtAssemblage() { }
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Fonction interne.
@@ -64,7 +64,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(eModele Modele)
+        internal Boolean Init(ExtModele Modele)
         {
             
             Debug.Info(MethodBase.GetCurrentMethod());

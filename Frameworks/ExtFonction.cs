@@ -16,7 +16,7 @@ namespace Framework_SW2013
     public interface IExtFonction
     {
         Feature SwFonction { get; }
-        eModele Modele { get; }
+        ExtModele Modele { get; }
         String Nom { get; set; }
         String TypeDeLaFonction { get; }
         EtatFonction_e Etat { get; }
@@ -43,7 +43,7 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private EtatFonction_e _EtatEnregistre;
-        private eModele _Modele;
+        private ExtModele _Modele;
         private Feature _SwFonction;
 
         #endregion
@@ -64,7 +64,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Retourne ou défini le nom de la fonction.
@@ -169,7 +169,7 @@ namespace Framework_SW2013
         /// <param name="SwFonction"></param>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(Feature SwFonction, eModele Modele)
+        internal Boolean Init(Feature SwFonction, ExtModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -257,18 +257,18 @@ namespace Framework_SW2013
         /// Renvoi la liste des corps associés à la fonction.
         /// </summary>
         /// <returns></returns>
-        internal List<eCorps> ListListeDesCorps()
+        internal List<ExtCorps> ListListeDesCorps()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<eCorps> pListeCorps = new List<eCorps>();
+            List<ExtCorps> pListeCorps = new List<ExtCorps>();
 
             if (_SwFonction.GetFaceCount() == 0)
                 return pListeCorps;
 
             foreach (Face2 Face in _SwFonction.GetFaces())
             {
-                eCorps Corps = new eCorps();
+                ExtCorps Corps = new ExtCorps();
                 if (Corps.Init(Face.GetBody(), _Modele.Piece) && (pListeCorps.Contains(Corps) == false))
                     pListeCorps.Add(Corps);
             }
@@ -284,7 +284,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<eCorps> pListeCorps = ListListeDesCorps();
+            List<ExtCorps> pListeCorps = ListListeDesCorps();
             ArrayList pArrayCorps = new ArrayList();
 
             if (pListeCorps.Count > 0)

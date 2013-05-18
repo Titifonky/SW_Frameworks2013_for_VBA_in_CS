@@ -12,38 +12,38 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("2C02C4E9-0F4C-4A33-B9E6-0141641A5FE5")]
-    public interface IeCorps
+    public interface IExtCorps
     {
         Body2 SwCorps { get; }
-        ePiece Piece { get; }
+        ExtPiece Piece { get; }
         String Nom { get; set; }
         TypeCorps_e TypeDeCorps { get; }
-        eDossier Dossier { get; }
+        ExtDossier Dossier { get; }
         ExtFonction PremiereFonction { get; }
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
         ExtFonction FonctionTolerie();
         ExtFonction FonctionDeplie();
         ExtFonction FonctionCubeDeVisualisation();
-        int NbIntersection(eCorps Corps);
+        int NbIntersection(ExtCorps Corps);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("DF347C75-F3B1-43AE-B7C4-393811BEBCB4")]
-    [ProgId("Frameworks.eCorps")]
-    public class eCorps : IeCorps, IComparable<eCorps>, IComparer<eCorps>, IEquatable<eCorps>
+    [ProgId("Frameworks.ExtCorps")]
+    public class ExtCorps : IExtCorps, IComparable<ExtCorps>, IComparer<ExtCorps>, IEquatable<ExtCorps>
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private ePiece _Piece;
+        private ExtPiece _Piece;
         private Body2 _SwCorps;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public eCorps() { }
+        public ExtCorps() { }
 
         #endregion
 
@@ -57,7 +57,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public ePiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
+        public ExtPiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
 
         /// <summary>
         /// Retourne ou défini le nom du corps.
@@ -114,14 +114,14 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtDossier.
         /// </summary>
-        public eDossier Dossier
+        public ExtDossier Dossier
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                foreach (eDossier pDossier in _Piece.ListeDesDossiersDePiecesSoudees(TypeDeCorps, true))
+                foreach (ExtDossier pDossier in _Piece.ListeDesDossiersDePiecesSoudees(TypeDeCorps, true))
                 {
-                    foreach (eCorps pCorps in pDossier.ListListeDesCorps())
+                    foreach (ExtCorps pCorps in pDossier.ListListeDesCorps())
                     {
                         if (pCorps.Nom == Nom)
                         {
@@ -169,7 +169,7 @@ namespace Framework_SW2013
         /// <param name="SwCorps"></param>
         /// <param name="Piece"></param>
         /// <returns></returns>
-        internal Boolean Init(Body2 SwCorps, ePiece Piece)
+        internal Boolean Init(Body2 SwCorps, ExtPiece Piece)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -303,7 +303,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Composant"></param>
         /// <returns></returns>
-        public int NbIntersection(eCorps Corps)
+        public int NbIntersection(ExtCorps Corps)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -330,21 +330,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<eCorps>.CompareTo(eCorps Corps)
+        int IComparable<ExtCorps>.CompareTo(ExtCorps Corps)
         {
             String Nom1 =  _Piece.Modele.SwModele.GetPathName() + _SwCorps.Name;
             String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<eCorps>.Compare(eCorps Corps1, eCorps Corps2)
+        int IComparer<ExtCorps>.Compare(ExtCorps Corps1, ExtCorps Corps2)
         {
             String Nom1 = Corps1.Piece.Modele.SwModele.GetPathName() + Corps1.Nom;
             String Nom2 = Corps2.Piece.Modele.SwModele.GetPathName() + Corps2.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<eCorps>.Equals(eCorps Corps)
+        bool IEquatable<ExtCorps>.Equals(ExtCorps Corps)
         {
             String Nom1 = _Piece.Modele.SwModele.GetPathName() + _SwCorps.Name;
             String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;

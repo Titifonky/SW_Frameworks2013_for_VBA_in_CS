@@ -14,8 +14,8 @@ namespace Framework_SW2013
     public interface IExtComposant
     {
         Component2 SwComposant { get; }
-        eModele Modele { get; }
-        eConfiguration Configuration { get; }
+        ExtModele Modele { get; }
+        ExtConfiguration Configuration { get; }
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; set; }
         int Nb { get; }
@@ -35,8 +35,8 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private Component2 _SwComposant;
-        private eModele _Modele;
-        private eConfiguration _Configuration;
+        private ExtModele _Modele;
+        private ExtConfiguration _Configuration;
         private int _Nb = 0;
 
         #endregion
@@ -57,12 +57,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le modele ExtModele associé.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
 
         /// <summary>
         /// Retourne la configuration ExtConfiguration associée.
         /// </summary>
-        public eConfiguration Configuration { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Configuration; } }
+        public ExtConfiguration Configuration { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Configuration; } }
 
         /// <summary>
         /// Retourne le nonbre de composant.
@@ -158,7 +158,7 @@ namespace Framework_SW2013
         /// <param name="SwComposant"></param>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(Component2 SwComposant, eModele Modele)
+        internal Boolean Init(Component2 SwComposant, ExtModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -176,7 +176,7 @@ namespace Framework_SW2013
                 else
                     pSwConfig = Modele.SwModele.GetConfigurationByName(SwComposant.ReferencedConfiguration);
 
-                _Configuration = new eConfiguration();
+                _Configuration = new ExtConfiguration();
 
                 // Si la config est ok
                 if (_Configuration.Init(pSwConfig, Modele))
@@ -233,7 +233,7 @@ namespace Framework_SW2013
                     // Pour intitialiser le composant correctement il faut un peu de bidouille
                     // sinon on à le droit à une belle reference circulaire
                     // Donc d'abord, on recherche le modele du SwComposant
-                    eModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
+                    ExtModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
                     // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
                     ExtComposant pComposant = new ExtComposant();
                     // Et pour que les deux soit liés, on passe la ref du Composant que l'on vient de creer

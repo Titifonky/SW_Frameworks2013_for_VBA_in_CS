@@ -13,16 +13,16 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("66AE684E-5820-11E2-BCFB-5D046188709B")]
-    public interface IeModele
+    public interface IExtModele
     {
         ModelDoc2 SwModele { get; }
         ExtSldWorks SW { get; }
         ExtComposant Composant { get; }
-        eAssemblage Assemblage { get; }
-        ePiece Piece { get; }
+        ExtAssemblage Assemblage { get; }
+        ExtPiece Piece { get; }
         ExtDessin Dessin { get; }
         GestDeConfigurations GestDeConfigurations { get; }
-        eGestDeProprietes GestDeProprietes { get; }
+        GestDeProprietes GestDeProprietes { get; }
         GestDeSelection GestDeSelection { get; }
         TypeFichier_e TypeDuModele { get; }
         ExtFichierSW FichierSw { get; }
@@ -41,8 +41,8 @@ namespace Framework_SW2013
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("6AFCE66E-5820-11E2-B651-77046188709B")]
-    [ProgId("Frameworks.eModele")]
-    public class eModele : IeModele, IComparable<eModele>, IComparer<eModele>, IEquatable<eModele>
+    [ProgId("Frameworks.ExtModele")]
+    public class ExtModele : IExtModele, IComparable<ExtModele>, IComparer<ExtModele>, IEquatable<ExtModele>
     {
         #region "Variables locales"
         
@@ -59,7 +59,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public eModele() { }
+        public ExtModele() { }
 
         #endregion
 
@@ -83,13 +83,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'assemblage ExtAssemblage si celui ci est valide.
         /// </summary>
-        public eAssemblage Assemblage
+        public ExtAssemblage Assemblage
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                eAssemblage Assemblage = new eAssemblage();
+                ExtAssemblage Assemblage = new ExtAssemblage();
 
                 if (Assemblage.Init(this))
                     return Assemblage;
@@ -101,13 +101,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne la pièce ExtPiece si celui ci est valide.
         /// </summary>
-        public ePiece Piece
+        public ExtPiece Piece
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                ePiece Piece = new ePiece();
+                ExtPiece Piece = new ExtPiece();
 
                 if (Piece.Init(this))
                     return Piece;
@@ -154,13 +154,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le gestionnaire de propriétés GestDeProprietes.
         /// </summary>
-        public eGestDeProprietes GestDeProprietes
+        public GestDeProprietes GestDeProprietes
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                eGestDeProprietes pGestProps = new eGestDeProprietes();
+                GestDeProprietes pGestProps = new GestDeProprietes();
                 if (pGestProps.Init(SwModele.Extension.get_CustomPropertyManager(""), this))
                     return pGestProps;
 
@@ -469,17 +469,17 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<eModele>.CompareTo(eModele Modele)
+        int IComparable<ExtModele>.CompareTo(ExtModele Modele)
         {
             return _SwModele.GetPathName().CompareTo(Modele.SwModele.GetPathName());
         }
 
-        int IComparer<eModele>.Compare(eModele Modele1, eModele Modele2)
+        int IComparer<ExtModele>.Compare(ExtModele Modele1, ExtModele Modele2)
         {
             return Modele1.SwModele.GetPathName().CompareTo(Modele2.SwModele.GetPathName());
         }
 
-        bool IEquatable<eModele>.Equals(eModele Modele)
+        bool IEquatable<ExtModele>.Equals(ExtModele Modele)
         {
             return Modele.SwModele.GetPathName().Equals(_SwModele.GetPathName());
         }

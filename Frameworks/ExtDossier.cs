@@ -10,35 +10,35 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("413147BE-5B70-11E2-A5B0-4BF46188709B")]
-    public interface IeDossier
+    public interface IExtDossier
     {
         BodyFolder SwDossier { get; }
-        ePiece Piece { get; }
+        ExtPiece Piece { get; }
         String Nom { get; set; }
         Boolean EstExclu { get; set; }
         TypeCorps_e TypeDeCorps { get; }
-        eGestDeProprietes GestDeProprietes { get; }
-        eCorps PremierCorps { get; }
+        GestDeProprietes GestDeProprietes { get; }
+        ExtCorps PremierCorps { get; }
         ArrayList ListeDesCorps(String NomARechercher = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("4ABD2208-5B70-11E2-A0B2-51F46188709B")]
-    [ProgId("Frameworks.eDossier")]
-    public class eDossier : IeDossier, IComparable<eDossier>, IComparer<eDossier>, IEquatable<eDossier>
+    [ProgId("Frameworks.ExtPiece")]
+    public class ExtDossier : IExtDossier, IComparable<ExtDossier>, IComparer<ExtDossier>, IEquatable<ExtDossier>
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private ePiece _Piece;
+        private ExtPiece _Piece;
         private BodyFolder _SwDossier;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public eDossier() { }
+        public ExtDossier() { }
 
         #endregion
 
@@ -52,7 +52,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public ePiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
+        public ExtPiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
 
         /// <summary>
         /// Retourne ou défini le nom du dossier.
@@ -76,7 +76,7 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                eCorps pCorps = PremierCorps;
+                ExtCorps pCorps = PremierCorps;
                 if (pCorps.EstInitialise)
                     return pCorps.TypeDeCorps;
 
@@ -87,12 +87,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le gestionnaire de propriétés du dossier.
         /// </summary>
-        public eGestDeProprietes GestDeProprietes
+        public GestDeProprietes GestDeProprietes
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                eGestDeProprietes pGestProps = new eGestDeProprietes();
+                GestDeProprietes pGestProps = new GestDeProprietes();
                 if (pGestProps.Init(SwDossier.GetFeature().CustomPropertyManager, _Piece.Modele))
                     return pGestProps;
 
@@ -103,12 +103,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le premier corps du dossier.
         /// </summary>
-        public eCorps PremierCorps
+        public ExtCorps PremierCorps
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                eCorps pCorps = new eCorps();
+                ExtCorps pCorps = new ExtCorps();
                 if ((SwDossier.GetBodyCount() > 0) && pCorps.Init(SwDossier.GetBodies()[0], _Piece))
                     return pCorps;
 
@@ -133,7 +133,7 @@ namespace Framework_SW2013
         /// <param name="SwDossier"></param>
         /// <param name="Piece"></param>
         /// <returns></returns>
-        internal Boolean Init(BodyFolder SwDossier, ePiece Piece)
+        internal Boolean Init(BodyFolder SwDossier, ExtPiece Piece)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -158,17 +158,17 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<eCorps> ListListeDesCorps(String NomARechercher = "")
+        internal List<ExtCorps> ListListeDesCorps(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<eCorps> pListeCorps = new List<eCorps>();
+            List<ExtCorps> pListeCorps = new List<ExtCorps>();
 
             foreach (Body2 pSwCorps in SwDossier.GetBodies())
             {
                 if (Regex.IsMatch(pSwCorps.Name, NomARechercher))
                 {
-                    eCorps pCorps = new eCorps();
+                    ExtCorps pCorps = new ExtCorps();
                     if (pCorps.Init(pSwCorps, _Piece))
                         pListeCorps.Add(pCorps);
                 }
@@ -186,7 +186,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<eCorps> pListeCorps = ListListeDesCorps(NomARechercher);
+            List<ExtCorps> pListeCorps = ListListeDesCorps(NomARechercher);
             ArrayList pArrayCorps = new ArrayList();
 
             if (pListeCorps.Count > 0)
@@ -199,21 +199,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<eDossier>.CompareTo(eDossier Dossier)
+        int IComparable<ExtDossier>.CompareTo(ExtDossier Dossier)
         {
             String Nom1 = _Piece.Modele.SwModele.GetPathName() + Nom;
             String Nom2 = Dossier.Piece.Modele.SwModele.GetPathName() + Dossier.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<eDossier>.Compare(eDossier Dossier1, eDossier Dossier2)
+        int IComparer<ExtDossier>.Compare(ExtDossier Dossier1, ExtDossier Dossier2)
         {
             String Nom1 = Dossier1.Piece.Modele.SwModele.GetPathName() + Dossier1.Nom;
             String Nom2 = Dossier2.Piece.Modele.SwModele.GetPathName() + Dossier2.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<eDossier>.Equals(eDossier Dossier)
+        bool IEquatable<ExtDossier>.Equals(ExtDossier Dossier)
         {
             String Nom1 = _Piece.Modele.SwModele.GetPathName() + Nom;
             String Nom2 = Dossier.Piece.Modele.SwModele.GetPathName() + Dossier.Nom;
