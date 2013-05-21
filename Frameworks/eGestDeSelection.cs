@@ -101,7 +101,12 @@ namespace Framework_SW2013
 
                 for (int i = 1; i <= _SwGestDeSelection.GetSelectedObjectCount2(-1); i++)
                 {
-                    Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(i, Marque);
+                    Component2 pSwComposant;
+                    //if (_Modele.SW.VersionDeBase == "SW2013")
+                    //    pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(i, Marque);
+                    //else
+                        pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent3(i, Marque);
+
                     // Si le composant est null, on passe au suivant
                     // C'est le cas, quand on sélectionne le composant racine. A voir pour trouver une solution 
                     if ((pSwComposant == null) && (_SwGestDeSelection.GetSelectedObjectType3(i, Marque) == (int)swSelectType_e.swSelCOMPONENTS))

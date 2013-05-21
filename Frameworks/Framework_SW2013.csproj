@@ -52,6 +52,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SolidWorks.Interop.swpublished, Version=20.5.0.80, Culture=neutral, PublicKeyToken=89a97bdc5284e6d8, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System">
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
@@ -62,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DlgPropertyManager.cs" />
     <Compile Include="eGestDeProprietes.cs" />
     <Compile Include="DlgSauverUnFichier.cs" />
     <Compile Include="DlgRechercherUnFichier.cs" />
