@@ -11,10 +11,10 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("57E51812-5820-11E2-82D5-34046188709B")]
-    public interface IExtPiece
+    public interface IePiece
     {
         PartDoc SwPiece { get; }
-        ExtModele Modele { get; }
+        eModele Modele { get; }
         Boolean Contient(TypeCorps_e T);
         ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false);
         ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false);
@@ -22,21 +22,21 @@ namespace Framework_SW2013
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("5E46FC3E-5820-11E2-86E5-38046188709B")]
-    [ProgId("Frameworks.ExtPiece")]
-    public class ExtPiece : IExtPiece
+    [ProgId("Frameworks.ePiece")]
+    public class ePiece : IePiece
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private ExtModele _Modele;
+        private eModele _Modele;
         private PartDoc _SwPiece;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtPiece() { }
+        public ePiece() { }
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Renvoi l'objet ExtModele.
         /// </summary>
-        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Renvoi la valeur de l'initialisation.
@@ -67,7 +67,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(ExtModele Modele)
+        internal Boolean Init(eModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -126,7 +126,7 @@ namespace Framework_SW2013
 
             if (Convert.ToBoolean(T & TypeCorps_e.cTole))
             {
-                foreach (ExtFonction Fonction in _Modele.ListListeDesFonctions())
+                foreach (eFonction Fonction in _Modele.ListListeDesFonctions())
                 {
                     if ((Fonction.TypeDeLaFonction == "SMBaseFlange")
                         || (Fonction.TypeDeLaFonction == "SolidToSheetMetal")
@@ -140,7 +140,7 @@ namespace Framework_SW2013
 
             if (Convert.ToBoolean(T & TypeCorps_e.cProfil))
             {
-                foreach (ExtFonction Fonction in _Modele.ListListeDesFonctions())
+                foreach (eFonction Fonction in _Modele.ListListeDesFonctions())
                 {
                     if (Fonction.TypeDeLaFonction == "WeldMemberFeat")
                         return true;
@@ -165,11 +165,11 @@ namespace Framework_SW2013
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteCache"></param>
         /// <returns></returns>
-        internal List<ExtCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false)
+        internal List<eCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtCorps> Liste = new List<ExtCorps>();
+            List<eCorps> Liste = new List<eCorps>();
 
             Object[] TableauDesCorps = _SwPiece.GetBodies2((int)swBodyType_e.swAllBodies, PrendreEnCompteCache);
 
@@ -178,7 +178,7 @@ namespace Framework_SW2013
                 foreach (Object ObjetCorps in TableauDesCorps)
                 {
                     Body2 pSwCorps = (Body2)ObjetCorps;
-                    ExtCorps pCorps = new ExtCorps();
+                    eCorps pCorps = new eCorps();
                     if (pCorps.Init(pSwCorps, this) && Convert.ToBoolean(pCorps.TypeDeCorps & TypeDeCorps))
                         {
                             Liste.Add(pCorps);
@@ -199,7 +199,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtCorps> pListeCorps = ListListeDesCorps(TypeDeCorps, PrendreEnCompteCache);
+            List<eCorps> pListeCorps = ListListeDesCorps(TypeDeCorps, PrendreEnCompteCache);
             ArrayList pArrayCorps = new ArrayList();
 
             if (pListeCorps.Count > 0)
@@ -215,11 +215,11 @@ namespace Framework_SW2013
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteExclus"></param>
         /// <returns></returns>
-        internal List<ExtDossier> ListListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
+        internal List<eDossier> ListListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtDossier> Liste = new List<ExtDossier>();
+            List<eDossier> Liste = new List<eDossier>();
 
             Feature pFonction = DossierDesCorps();
 
@@ -234,7 +234,7 @@ namespace Framework_SW2013
                 if (pFonction.GetTypeName2() == "CutListFolder")
                 {
                     BodyFolder pSwDossier = pFonction.GetSpecificFeature2();
-                    ExtDossier Dossier = new ExtDossier();
+                    eDossier Dossier = new eDossier();
 
                     if (Dossier.Init(pSwDossier, this) && Convert.ToBoolean(Dossier.TypeDeCorps & TypeDeCorps) && (!Dossier.EstExclu | PrendreEnCompteExclus))
                         Liste.Add(Dossier);
@@ -259,7 +259,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtDossier> pListeDossier = ListListeDesDossiersDePiecesSoudees(TypeDeCorps, PrendreEnCompteExclus);
+            List<eDossier> pListeDossier = ListListeDesDossiersDePiecesSoudees(TypeDeCorps, PrendreEnCompteExclus);
             ArrayList pArrayDossiers = new ArrayList();
 
             if (pListeDossier.Count > 0)

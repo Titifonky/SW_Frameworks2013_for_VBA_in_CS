@@ -11,39 +11,40 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("BF2ED17A-5820-11E2-8160-9F046188709B")]
-    public interface IExtComposant
+    public interface IeComposant
     {
         Component2 SwComposant { get; }
-        ExtModele Modele { get; }
-        ExtConfiguration Configuration { get; }
+        eModele Modele { get; }
+        eConfiguration Configuration { get; }
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; set; }
         int Nb { get; }
-        ExtRecherche NouvelleRecherche { get; }
-        Repere Repere { get; }
+        eRecherche NouvelleRecherche { get; }
+        eRepere Repere { get; }
         void Selectionner(Boolean Ajouter = true);
+        void DeSelectionner();
         ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("C46318AE-5820-11E2-A863-A3046188709B")]
-    [ProgId("Frameworks.ExtComposant")]
-    public class ExtComposant : IExtComposant, IComparable<ExtComposant>, IComparer<ExtComposant>, IEquatable<ExtComposant>
+    [ProgId("Frameworks.eComposant")]
+    public class eComposant : IeComposant, IComparable<eComposant>, IComparer<eComposant>, IEquatable<eComposant>
     {
         #region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private Component2 _SwComposant;
-        private ExtModele _Modele;
-        private ExtConfiguration _Configuration;
+        private eModele _Modele;
+        private eConfiguration _Configuration;
         private int _Nb = 0;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtComposant() { }
+        public eComposant() { }
 
         #endregion
 
@@ -57,12 +58,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le modele ExtModele associé.
         /// </summary>
-        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
 
         /// <summary>
         /// Retourne la configuration ExtConfiguration associée.
         /// </summary>
-        public ExtConfiguration Configuration { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Configuration; } }
+        public eConfiguration Configuration { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Configuration; } }
 
         /// <summary>
         /// Retourne le nonbre de composant.
@@ -98,13 +99,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Renvoi un nouvel objet Recherche
         /// </summary>
-        public ExtRecherche NouvelleRecherche
+        public eRecherche NouvelleRecherche
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                ExtRecherche pNouvelleRecherche = new ExtRecherche();
+                eRecherche pNouvelleRecherche = new eRecherche();
 
                 if (pNouvelleRecherche.Init(this))
                     return pNouvelleRecherche;
@@ -116,14 +117,14 @@ namespace Framework_SW2013
         /// <summary>
         /// Renvoi la matrice de transformation du composant
         /// </summary>
-        public Repere Repere
+        public eRepere Repere
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
                 Double[] pMatrice = _SwComposant.Transform2.ArrayData;
-                Repere pRepere = new Repere();
+                eRepere pRepere = new eRepere();
                 pRepere.VecteurX.X = pMatrice[0];
                 pRepere.VecteurX.Y = pMatrice[1];
                 pRepere.VecteurX.Y = pMatrice[2];
@@ -158,7 +159,7 @@ namespace Framework_SW2013
         /// <param name="SwComposant"></param>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(Component2 SwComposant, ExtModele Modele)
+        internal Boolean Init(Component2 SwComposant, eModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -176,7 +177,7 @@ namespace Framework_SW2013
                 else
                     pSwConfig = Modele.SwModele.GetConfigurationByName(SwComposant.ReferencedConfiguration);
 
-                _Configuration = new ExtConfiguration();
+                _Configuration = new eConfiguration();
 
                 // Si la config est ok
                 if (_Configuration.Init(pSwConfig, Modele))
@@ -210,17 +211,25 @@ namespace Framework_SW2013
         }
 
         /// <summary>
+        /// DeSelectionne le composant
+        /// </summary>
+        public void DeSelectionner()
+        {
+            _SwComposant.DeSelect();
+        }
+
+        /// <summary>
         /// Méthode interne.
         /// Renvoi la liste des composants enfants filtrée par les arguments.
         /// </summary>
         /// <param name="NomComposant"></param>
         /// <param name="PrendreEnCompteSupprime"></param>
         /// <returns></returns>
-        internal List<ExtComposant> ListComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
+        internal List<eComposant> ListComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtComposant> pListe = new List<ExtComposant>();
+            List<eComposant> pListe = new List<eComposant>();
 
             if (SwComposant.IGetChildrenCount() == 0)
                 return pListe;
@@ -233,9 +242,9 @@ namespace Framework_SW2013
                     // Pour intitialiser le composant correctement il faut un peu de bidouille
                     // sinon on à le droit à une belle reference circulaire
                     // Donc d'abord, on recherche le modele du SwComposant
-                    ExtModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
+                    eModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
                     // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
-                    ExtComposant pComposant = new ExtComposant();
+                    eComposant pComposant = new eComposant();
                     // Et pour que les deux soit liés, on passe la ref du Composant que l'on vient de creer
                     // au modele. Comme ca, Modele.Composant pointe sur Composant et Composant.Modele pointe sur Modele,
                     // la boucle est bouclée
@@ -260,7 +269,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtComposant> pListeComps = ListComposantsEnfants(NomComposant, PrendreEnCompteSupprime);
+            List<eComposant> pListeComps = ListComposantsEnfants(NomComposant, PrendreEnCompteSupprime);
             ArrayList pArrayComps = new ArrayList();
 
             if (pListeComps.Count > 0)
@@ -273,21 +282,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<ExtComposant>.CompareTo(ExtComposant Comp)
+        int IComparable<eComposant>.CompareTo(eComposant Comp)
         {
             String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
             String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<ExtComposant>.Compare(ExtComposant Comp1, ExtComposant Comp2)
+        int IComparer<eComposant>.Compare(eComposant Comp1, eComposant Comp2)
         {
             String Nom1 = Comp1.SwComposant.GetPathName() + Comp1.Configuration.Nom;
             String Nom2 = Comp2.SwComposant.GetPathName() + Comp2.Configuration.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<ExtComposant>.Equals(ExtComposant Comp)
+        bool IEquatable<eComposant>.Equals(eComposant Comp)
         {
             String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
             String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom;

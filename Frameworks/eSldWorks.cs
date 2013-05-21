@@ -10,7 +10,7 @@ namespace Framework_SW2013
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("9ED6BE92-5820-11E2-9D5D-93046188709B")]
-    public interface IExtSldWorks
+    public interface IeSldWorks
     {
         SldWorks SwSW { get; }
         TypeFichier_e TypeDuModeleActif { get; }
@@ -19,15 +19,16 @@ namespace Framework_SW2013
         String Hotfixe { get; }
         String Revision { get; }
         Boolean ActiverDebug { get; set; }
+        eGestOptions GestOptions { get; }
         Boolean Init(SldWorks SldWks);
-        ExtModele Modele(String Chemin = "");
-        ExtModele ModeleEnCoursEdition();
+        eModele Modele(String Chemin = "");
+        eModele ModeleEnCoursEdition();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("A2E9795C-5820-11E2-9CA7-94046188709B")]
-    [ProgId("Frameworks.ExtSldWorks")]
-    public class ExtSldWorks : IExtSldWorks
+    [ProgId("Frameworks.eSldWorks")]
+    public class eSldWorks : IeSldWorks
     {
         #region "Variables locales"
         
@@ -45,7 +46,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtSldWorks() { }
+        public eSldWorks() { }
 
         #endregion
 
@@ -64,7 +65,7 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                ExtModele Modele = new ExtModele();
+                eModele Modele = new eModele();
                 Modele.Init(_SwSW.ActiveDoc(), this);
                 return Modele.TypeDuModele;
             }
@@ -94,6 +95,23 @@ namespace Framework_SW2013
         /// Activer ou désactiver l'ecriture dans le fichier Debug.
         /// </summary>
         public Boolean ActiverDebug { get { return Debug.Actif; } set { Debug.Actif = value; } }
+
+        /// <summary>
+        /// Retourne le gestionnaire d'options
+        /// </summary>
+        public eGestOptions GestOptions
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                eGestOptions pOptions = new eGestOptions();
+                if (pOptions.Init(this))
+                    return pOptions;
+
+                return null;
+            }
+        }
 
         /// <summary>
         /// Fonction interne.
@@ -140,11 +158,11 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Chemin"></param>
         /// <returns></returns>
-        public ExtModele Modele(String Chemin = "")
+        public eModele Modele(String Chemin = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            ExtModele pModele = new ExtModele();
+            eModele pModele = new eModele();
             if (String.IsNullOrEmpty(Chemin))
             {
                 Debug.Info("Document actif");
@@ -166,16 +184,16 @@ namespace Framework_SW2013
         /// Renvoi le modele en cours d'edition
         /// </summary>
         /// <returns></returns>
-        public ExtModele ModeleEnCoursEdition()
+        public eModele ModeleEnCoursEdition()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-            ExtModele pModeleActif = this.Modele();
-            ExtModele pModeleEdite = new ExtModele();
+            eModele pModeleActif = this.Modele();
+            eModele pModeleEdite = new eModele();
             if (pModeleActif.EstInitialise && (pModeleActif.TypeDuModele == TypeFichier_e.cAssemblage))
             {
                 if (pModeleEdite.Init(pModeleActif.Assemblage.SwAssemblage.GetEditTarget(), this))
                 {
-                    ExtComposant pComposant = new ExtComposant();
+                    eComposant pComposant = new eComposant();
                     if (pComposant.Init(pModeleActif.Assemblage.SwAssemblage.GetEditTargetComponent(), pModeleEdite))
                     {
                         pModeleEdite.Composant = pComposant;

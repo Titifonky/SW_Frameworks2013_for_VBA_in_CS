@@ -8,9 +8,9 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("5E7B77AC-630B-11E2-9FF2-8FF06088709B")]
-    public interface IExtPropriete
+    public interface IePropriete
     {
-        GestDeProprietes GestDeProprietes { get; }
+        eGestDeProprietes GestDeProprietes { get; }
         String Nom { get; }
         swCustomInfoType_e TypeDeLaPropriete { get; }
         String Expression { get; set; }
@@ -21,20 +21,20 @@ namespace Framework_SW2013
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("6502CAB2-630B-11E2-B156-90F06088709B")]
-    [ProgId("Frameworks.GestDeConfigurations")]
-    public class ExtPropriete : IExtPropriete, IComparable<ExtPropriete>, IComparer<ExtPropriete>, IEquatable<ExtPropriete>
+    [ProgId("Frameworks.ePropriete")]
+    public class ePropriete : IePropriete, IComparable<ePropriete>, IComparer<ePropriete>, IEquatable<ePropriete>
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private GestDeProprietes _GestDeProprietes;
+        private eGestDeProprietes _GestDeProprietes;
         private String _Nom;
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtPropriete() { }
+        public ePropriete() { }
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent GestDeProprietes.
         /// </summary>
-        public GestDeProprietes GestDeProprietes { get { Debug.Info(MethodBase.GetCurrentMethod());  return _GestDeProprietes; } }
+        public eGestDeProprietes GestDeProprietes { get { Debug.Info(MethodBase.GetCurrentMethod());  return _GestDeProprietes; } }
 
         /// <summary>
         /// Retourne le nom de la propriété.
@@ -133,7 +133,7 @@ namespace Framework_SW2013
         /// <param name="Gestionnaire"></param>
         /// <param name="Nom"></param>
         /// <returns></returns>
-        internal Boolean Init(GestDeProprietes Gestionnaire, String Nom)
+        internal Boolean Init(eGestDeProprietes Gestionnaire, String Nom)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -227,21 +227,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<ExtPropriete>.CompareTo(ExtPropriete Prop)
+        int IComparable<ePropriete>.CompareTo(ePropriete Prop)
         {
             String Nom1 = _GestDeProprietes.Modele.SwModele.GetPathName() + _Nom;
             String Nom2 = Prop.GestDeProprietes.Modele.SwModele.GetPathName() + Prop.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<ExtPropriete>.Compare(ExtPropriete Prop1, ExtPropriete Prop2)
+        int IComparer<ePropriete>.Compare(ePropriete Prop1, ePropriete Prop2)
         {
             String Nom1 = Prop1.GestDeProprietes.Modele.SwModele.GetPathName() + Prop1.Nom;
             String Nom2 = Prop2.GestDeProprietes.Modele.SwModele.GetPathName() + Prop2.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<ExtPropriete>.Equals(ExtPropriete Prop)
+        bool IEquatable<ePropriete>.Equals(ePropriete Prop)
         {
             String Nom1 = _GestDeProprietes.Modele.SwModele.GetPathName() + _Nom;
             String Nom2 = Prop.GestDeProprietes.Modele.SwModele.GetPathName() + Prop.Nom;

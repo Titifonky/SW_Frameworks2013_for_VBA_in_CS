@@ -11,30 +11,30 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("E01F2AAF-807F-4294-A428-240C26DF0269")]
-    public interface IGestDeSelection
+    public interface IeGestDeSelection
     {
         SelectionMgr SwGestDeSelection { get; }
-        ExtModele Modele { get; }
+        eModele Modele { get; }
         ArrayList ListeDesComposantsSelectionnes(String NomComposant = "", int Marque = -1);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("A3D09048-4B5D-4FCC-A1F2-F1ACAACB0E4C")]
-    [ProgId("Frameworks.GestDeSelection")]
-    public class GestDeSelection : IGestDeSelection
+    [ProgId("Frameworks.eGestDeSelection")]
+    public class eGestDeSelection : IeGestDeSelection
     {
         #region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
-        private ExtModele _Modele;
+        private eModele _Modele;
         private SelectionMgr _SwGestDeSelection;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public GestDeSelection() { }
+        public eGestDeSelection() { }
 
         #endregion
 
@@ -48,7 +48,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
 
         /// <summary>
         /// Fonction interne
@@ -66,7 +66,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(SelectionMgr SwGestionnaire, ExtModele Modele)
+        internal Boolean Init(SelectionMgr SwGestionnaire, eModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -89,12 +89,12 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomComposant"></param>
         /// <returns></returns>
-        internal List<ExtComposant> ListListeDesComposantsSelectionnes(String NomComposant = "", int Marque = -1)
+        internal List<eComposant> ListListeDesComposantsSelectionnes(String NomComposant = "", int Marque = -1)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
             // Liste à renvoyer
-            List<ExtComposant> pListeComposants = new List<ExtComposant>();
+            List<eComposant> pListeComposants = new List<eComposant>();
 
             if ((_Modele.TypeDuModele == TypeFichier_e.cAssemblage) || (_Modele.TypeDuModele == TypeFichier_e.cDessin))
             {
@@ -112,9 +112,9 @@ namespace Framework_SW2013
                     // sinon on à le droit à une belle reference circulaire
                     // Donc d'abord, on recherche le modele du SwComposant
                     Debug.Info(pSwComposant.GetPathName());
-                    ExtModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
+                    eModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
                     // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
-                    ExtComposant pComposant = new ExtComposant();
+                    eComposant pComposant = new eComposant();
                     // Et pour que les deux soit liés, on passe la ref du Composant que l'on vient de creer
                     // au modele. Comme ca, Modele.Composant pointe sur Composant et Composant.Modele pointe sur Modele,
                     // la boucle est bouclée
@@ -122,9 +122,6 @@ namespace Framework_SW2013
                     pModele.Composant = pComposant;
                     pListeComposants.Add(pComposant);
                 }
-
-                // On trie et c'est parti
-                pListeComposants.Sort();
             }
 
             return pListeComposants;
@@ -139,7 +136,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtComposant> pListeComps = ListListeDesComposantsSelectionnes(NomComposant, Marque);
+            List<eComposant> pListeComps = ListListeDesComposantsSelectionnes(NomComposant, Marque);
             ArrayList pArrayComps = new ArrayList();
 
             if (pListeComps.Count > 0)

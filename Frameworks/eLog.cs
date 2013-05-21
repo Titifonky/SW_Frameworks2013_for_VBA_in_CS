@@ -10,17 +10,17 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("8B05EE8A-688C-4FC6-8614-B29C69D52323")]
-    public interface ILog
+    public interface IeLog
     {
         Boolean Actif { get; set; }
-        Boolean Init(ExtModele Modele, String NomMacro = "");
+        Boolean Init(eModele Modele, String NomMacro = "");
         void Info(String Message, int Tab = 0);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("AF0E5AF8-0E3C-47D0-A85F-BB1BCCE26DD8")]
-    [ProgId("Frameworks.Log")]
-    public class Log : ILog
+    [ProgId("Frameworks.eLog")]
+    public class eLog : IeLog
     {
         #region "Variables locales"
 
@@ -35,7 +35,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public Log() { }
+        public eLog() { }
 
         #endregion
 
@@ -47,7 +47,7 @@ namespace Framework_SW2013
 
         #region "Méthodes"
 
-        public Boolean Init(ExtModele Modele, String NomMacro = "")
+        public Boolean Init(eModele Modele, String NomMacro = "")
         {
 
             if ((Modele != null) && (Modele.EstInitialise) && _ACTIF)

@@ -9,32 +9,32 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("040632B0-59D0-11E2-9576-4F376288709B")]
-    public interface IGestDeConfigurations
+    public interface IeGestDeConfigurations
     {
-        ExtModele Modele { get; }
-        ExtConfiguration ConfigurationActive { get; }
+        eModele Modele { get; }
+        eConfiguration ConfigurationActive { get; }
         ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "");
-        ExtConfiguration ConfigurationAvecLeNom(String NomConfiguration);
-        ExtConfiguration AjouterUneConfigurationDeBase(String NomConfiguration);
+        eConfiguration ConfigurationAvecLeNom(String NomConfiguration);
+        eConfiguration AjouterUneConfigurationDeBase(String NomConfiguration);
         void SupprimerConfiguration(String NomConfiguration);
         void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("0C78B576-59D0-11E2-BA7E-53376288709B")]
-    [ProgId("Frameworks.GestDeConfigurations")]
-    public class GestDeConfigurations : IGestDeConfigurations
+    [ProgId("Frameworks.eGestDeConfigurations")]
+    public class eGestDeConfigurations : IeGestDeConfigurations
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private ExtModele _Modele;
+        private eModele _Modele;
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public GestDeConfigurations() { }
+        public eGestDeConfigurations() { }
 
         #endregion
 
@@ -43,18 +43,18 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Retourne la configuration active.
         /// </summary>
-        public ExtConfiguration ConfigurationActive
+        public eConfiguration ConfigurationActive
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                ExtConfiguration pConfig = new ExtConfiguration();
+                eConfiguration pConfig = new eConfiguration();
                 if (pConfig.Init(_Modele.SwModele.ConfigurationManager.ActiveConfiguration, _Modele))
                     return pConfig;
                 
@@ -78,7 +78,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(ExtModele Modele)
+        internal Boolean Init(eModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -102,16 +102,16 @@ namespace Framework_SW2013
         /// <param name="TypeConfig"></param>
         /// <param name="NomConfigDeBase"></param>
         /// <returns></returns>
-        internal List<ExtConfiguration> ListListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "")
+        internal List<eConfiguration> ListListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtConfiguration> pListConfig = new List<ExtConfiguration>();
+            List<eConfiguration> pListConfig = new List<eConfiguration>();
 
             foreach (String pNomConfig in _Modele.SwModele.GetConfigurationNames())
             {
-                ExtConfiguration pConfig = ConfigurationAvecLeNom(pNomConfig);
-                ExtConfiguration pConfigParent = pConfig.ConfigurationParent;
+                eConfiguration pConfig = ConfigurationAvecLeNom(pNomConfig);
+                eConfiguration pConfigParent = pConfig.ConfigurationParent;
                 string NomConfigParent = "";
 
                 if (pConfigParent != null)
@@ -133,7 +133,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtConfiguration> pListeConfigs = ListListerLesConfigs(TypeConfig, NomConfigDeBase);
+            List<eConfiguration> pListeConfigs = ListListerLesConfigs(TypeConfig, NomConfigDeBase);
             ArrayList pArrayConfigs = new ArrayList();
 
             if (pListeConfigs.Count > 0)
@@ -147,11 +147,11 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomConfiguration"></param>
         /// <returns></returns>
-        public ExtConfiguration ConfigurationAvecLeNom(String NomConfiguration)
+        public eConfiguration ConfigurationAvecLeNom(String NomConfiguration)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            ExtConfiguration pConfig = new ExtConfiguration();
+            eConfiguration pConfig = new eConfiguration();
             if (pConfig.Init(_Modele.SwModele.GetConfigurationByName(NomConfiguration), _Modele))
                 return pConfig;
 
@@ -163,11 +163,11 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomConfiguration"></param>
         /// <returns></returns>
-        public ExtConfiguration AjouterUneConfigurationDeBase(String NomConfiguration)
+        public eConfiguration AjouterUneConfigurationDeBase(String NomConfiguration)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            ExtConfiguration pConfig = new ExtConfiguration();
+            eConfiguration pConfig = new eConfiguration();
             if (pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfiguration, NomConfiguration, "", 0, "", ""), _Modele))
                 return pConfig;
 
@@ -193,7 +193,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            foreach(ExtConfiguration Config in ListListerLesConfigs(TypeConfig_e.cDepliee,NomConfigurationPliee))
+            foreach(eConfiguration Config in ListListerLesConfigs(TypeConfig_e.cDepliee,NomConfigurationPliee))
             {
                 Config.Supprimer();
             }

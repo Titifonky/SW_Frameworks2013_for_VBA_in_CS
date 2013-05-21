@@ -11,9 +11,9 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("FAB06846-3E7C-421E-B20A-395906EDEEB0")]
-    public interface IExtFichierSW
+    public interface IeFichierSW
     {
-        ExtSldWorks SW { get; }
+        eSldWorks SW { get; }
         String Chemin { get; }
         String Configuration { get; set; }
         long Nb { get; set; }
@@ -21,18 +21,18 @@ namespace Framework_SW2013
         String NomDuFichier { get; }
         String NomDuFichierSansExt { get; }
         String NomDuDossier { get; }
-        ExtModele Ouvrir();
+        eModele Ouvrir();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("C2D869E0-06B4-4E07-BFA3-96F67307ABEB")]
-    [ProgId("Frameworks.ExtFichierSW")]
-    public class ExtFichierSW : IExtFichierSW
+    [ProgId("Frameworks.eFichierSW")]
+    public class eFichierSW : IeFichierSW
     {
         #region "Variables locales"
         private Boolean _EstInitialise = false;
 
-        private ExtSldWorks _SW;
+        private eSldWorks _SW;
         private String _Chemin;
         private String _Configuration;
         private long _Nb;
@@ -41,13 +41,13 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtFichierSW() { }
+        public eFichierSW() { }
 
         #endregion
 
         #region "Propriétés"
 
-        public ExtSldWorks SW { get { return _SW; } }
+        public eSldWorks SW { get { return _SW; } }
         public String Chemin { get { return _Chemin; } internal set { _Chemin = value; } }
         public String Configuration { get { return _Configuration; } set { _Configuration = value; } }
         public long Nb { get { return _Nb; } set { _Nb = value; } }
@@ -109,7 +109,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Sw"></param>
         /// <returns></returns>
-        internal Boolean Init(ExtSldWorks Sw)
+        internal Boolean Init(eSldWorks Sw)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -128,12 +128,12 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        public ExtModele Ouvrir()
+        public eModele Ouvrir()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            ExtModele pModele = _SW.Modele(_Chemin);
-            ExtConfiguration pConfig = pModele.GestDeConfigurations.ConfigurationAvecLeNom(_Configuration);
+            eModele pModele = _SW.Modele(_Chemin);
+            eConfiguration pConfig = pModele.GestDeConfigurations.ConfigurationAvecLeNom(_Configuration);
             pConfig.Activer();
             return pModele;
         }

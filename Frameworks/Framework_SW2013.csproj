@@ -62,33 +62,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="eGestDeProprietes.cs" />
     <Compile Include="DlgSauverUnFichier.cs" />
     <Compile Include="DlgRechercherUnFichier.cs" />
-    <Compile Include="UtilLog.cs" />
-    <Compile Include="GestDeSelection.cs" />
-    <Compile Include="ExtFichierSW.cs" />
-    <Compile Include="Geometrie.cs" />
+    <Compile Include="eLog.cs" />
+    <Compile Include="eGestDeSelection.cs" />
+    <Compile Include="eFichierSW.cs" />
+    <Compile Include="eGeometrie.cs" />
     <Compile Include="DlgRechercherUnDossier.cs" />
-    <Compile Include="ExtDimensionVue.cs" />
-    <Compile Include="ExtVue.cs" />
-    <Compile Include="ExtFeuille.cs" />
-    <Compile Include="ExtPropriete.cs" />
-    <Compile Include="ExtFonction.cs" />
-    <Compile Include="ExtCorps.cs" />
-    <Compile Include="ExtDossier.cs" />
-    <Compile Include="ExtAssemblage.cs" />
-    <Compile Include="ExtConfiguration.cs" />
-    <Compile Include="ExtComposant.cs" />
-    <Compile Include="ExtDessin.cs" />
-    <Compile Include="ExtPiece.cs" />
-    <Compile Include="FxChaine.cs" />
-    <Compile Include="UtilDebug.cs" />
+    <Compile Include="eDimensionVue.cs" />
+    <Compile Include="eVue.cs" />
+    <Compile Include="eFeuille.cs" />
+    <Compile Include="ePropriete.cs" />
+    <Compile Include="eFonction.cs" />
+    <Compile Include="eCorps.cs" />
+    <Compile Include="eDossier.cs" />
+    <Compile Include="eAssemblage.cs" />
+    <Compile Include="eConfiguration.cs" />
+    <Compile Include="eComposant.cs" />
+    <Compile Include="eDessin.cs" />
+    <Compile Include="ePiece.cs" />
+    <Compile Include="intChaine.cs" />
+    <Compile Include="intDebug.cs" />
     <Compile Include="Constantes.cs" />
-    <Compile Include="ExtModele.cs" />
-    <Compile Include="ExtSldWorks.cs" />
-    <Compile Include="ExtRecherche.cs" />
-    <Compile Include="GestDeConfigurations.cs" />
-    <Compile Include="GestDeProprietes.cs" />
+    <Compile Include="eModele.cs" />
+    <Compile Include="eSldWorks.cs" />
+    <Compile Include="eRecherche.cs" />
+    <Compile Include="eGestDeConfigurations.cs" />
+    <Compile Include="eGestOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

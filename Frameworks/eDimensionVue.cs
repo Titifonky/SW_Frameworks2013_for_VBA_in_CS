@@ -8,30 +8,30 @@ namespace Framework_SW2013
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("685D0EE5-1B10-41C6-9DCE-B8C9D4B85B84")]
-    public interface IExtDimensionVue
+    public interface IeDimensionVue
     {
-        ExtVue Vue { get; }
-        Point Centre { get; set; }
-        Rectangle Dimensions { get; }
-        Zone Zone { get; }
+        eVue Vue { get; }
+        ePoint Centre { get; set; }
+        eRectangle Dimensions { get; }
+        eZone Zone { get; }
         Double Angle { get; set; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("A6A0EE53-8B0A-4BAC-8AE6-9D9BD029391F")]
-    [ProgId("Frameworks.ExtDimensionVue")]
-    public class ExtDimensionVue : IExtDimensionVue
+    [ProgId("Frameworks.eDimensionVue")]
+    public class eDimensionVue : IeDimensionVue
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private ExtVue _Vue;
+        private eVue _Vue;
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtDimensionVue() { }
+        public eDimensionVue() { }
 
         #endregion
 
@@ -40,18 +40,18 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtVue.
         /// </summary>
-        public ExtVue Vue { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Vue; } }
+        public eVue Vue { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Vue; } }
 
         /// <summary>
         /// Retourne ou défini le centre de la vue.
         /// </summary>
-        public Point Centre
+        public ePoint Centre
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 
-                Point pCentre = new Point();
+                ePoint pCentre = new ePoint();
                 Double[] pArrayResult;
                 pArrayResult = _Vue.SwVue.Position;
 
@@ -73,12 +73,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne les dimensions de la vue, hauteur et largeur.
         /// </summary>
-        public Rectangle Dimensions
+        public eRectangle Dimensions
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                Rectangle pDim = new Rectangle() ;
+                eRectangle pDim = new eRectangle() ;
                 pDim.Lg = Zone.PointMax.X - Zone.PointMin.X;
                 pDim.Ht = Zone.PointMax.Y - Zone.PointMin.Y;
 
@@ -89,12 +89,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne les coordonnées des coins "Bas-Gouche" et "Haut-Droit" de la vue.
         /// </summary>
-        public Zone Zone
+        public eZone Zone
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                Zone pCoord = new Zone();
+                eZone pCoord = new eZone();
                 Object[] pArr = _Vue.SwVue.GetOutline();
 
                 pCoord.PointMin.X = (Double)pArr[0];
@@ -137,7 +137,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Vue"></param>
         /// <returns></returns>
-        internal Boolean Init(ExtVue Vue)
+        internal Boolean Init(eVue Vue)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 

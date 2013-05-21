@@ -13,19 +13,19 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("66AE684E-5820-11E2-BCFB-5D046188709B")]
-    public interface IExtModele
+    public interface IeModele
     {
         ModelDoc2 SwModele { get; }
-        ExtSldWorks SW { get; }
-        ExtComposant Composant { get; }
-        ExtAssemblage Assemblage { get; }
-        ExtPiece Piece { get; }
-        ExtDessin Dessin { get; }
-        GestDeConfigurations GestDeConfigurations { get; }
-        GestDeProprietes GestDeProprietes { get; }
-        GestDeSelection GestDeSelection { get; }
+        eSldWorks SW { get; }
+        eComposant Composant { get; }
+        eAssemblage Assemblage { get; }
+        ePiece Piece { get; }
+        eDessin Dessin { get; }
+        eGestDeConfigurations GestDeConfigurations { get; }
+        eGestDeProprietes GestDeProprietes { get; }
+        eGestDeSelection GestDeSelection { get; }
         TypeFichier_e TypeDuModele { get; }
-        ExtFichierSW FichierSw { get; }
+        eFichierSW FichierSw { get; }
         void Activer();
         void Sauver();
         void Fermer();
@@ -36,22 +36,22 @@ namespace Framework_SW2013
         void EffacerLesSelections();
         void ActiverInterfaceUtilisateur(Boolean Activer);
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
-        ExtFonction DerniereFonction();
+        eFonction DerniereFonction();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("6AFCE66E-5820-11E2-B651-77046188709B")]
-    [ProgId("Frameworks.ExtModele")]
-    public class ExtModele : IExtModele, IComparable<ExtModele>, IComparer<ExtModele>, IEquatable<ExtModele>
+    [ProgId("Frameworks.eModele")]
+    public class eModele : IeModele, IComparable<eModele>, IComparer<eModele>, IEquatable<eModele>
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
         private ModelDoc2 _SwModele;
-        private ExtSldWorks _SW;
-        private ExtComposant _Composant;
-        private ExtFichierSW _FichierSw;
+        private eSldWorks _SW;
+        private eComposant _Composant;
+        private eFichierSW _FichierSw;
         private int Erreur = 0;
         private int Warning = 0;
 
@@ -59,7 +59,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtModele() { }
+        public eModele() { }
 
         #endregion
 
@@ -73,23 +73,23 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtSldWorks.
         /// </summary>
-        public ExtSldWorks SW { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SW; } }
+        public eSldWorks SW { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SW; } }
 
         /// <summary>
         /// Retourne le composant ExtComposant lié au modele.
         /// </summary>
-        public ExtComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } internal set { Debug.Info(MethodBase.GetCurrentMethod());  _Composant = value; } }
+        public eComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } internal set { Debug.Info(MethodBase.GetCurrentMethod());  _Composant = value; } }
 
         /// <summary>
         /// Retourne l'assemblage ExtAssemblage si celui ci est valide.
         /// </summary>
-        public ExtAssemblage Assemblage
+        public eAssemblage Assemblage
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                ExtAssemblage Assemblage = new ExtAssemblage();
+                eAssemblage Assemblage = new eAssemblage();
 
                 if (Assemblage.Init(this))
                     return Assemblage;
@@ -101,13 +101,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne la pièce ExtPiece si celui ci est valide.
         /// </summary>
-        public ExtPiece Piece
+        public ePiece Piece
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                ExtPiece Piece = new ExtPiece();
+                ePiece Piece = new ePiece();
 
                 if (Piece.Init(this))
                     return Piece;
@@ -119,13 +119,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le dessin ExtDessin si celui ci est valide.
         /// </summary>
-        public ExtDessin Dessin
+        public eDessin Dessin
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                ExtDessin Dessin = new ExtDessin();
+                eDessin Dessin = new eDessin();
 
                 if (Dessin.Init(this))
                     return Dessin;
@@ -137,13 +137,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le gestionnaire de configuration GestDeConfigurations.
         /// </summary>
-        public GestDeConfigurations GestDeConfigurations
+        public eGestDeConfigurations GestDeConfigurations
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                GestDeConfigurations pGestConfigs = new GestDeConfigurations();
+                eGestDeConfigurations pGestConfigs = new eGestDeConfigurations();
                 if (pGestConfigs.Init(this))
                     return pGestConfigs;
 
@@ -154,13 +154,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le gestionnaire de propriétés GestDeProprietes.
         /// </summary>
-        public GestDeProprietes GestDeProprietes
+        public eGestDeProprietes GestDeProprietes
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                GestDeProprietes pGestProps = new GestDeProprietes();
+                eGestDeProprietes pGestProps = new eGestDeProprietes();
                 if (pGestProps.Init(SwModele.Extension.get_CustomPropertyManager(""), this))
                     return pGestProps;
 
@@ -171,13 +171,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le gestionnaire de propriétés GestDeProprietes.
         /// </summary>
-        public GestDeSelection GestDeSelection
+        public eGestDeSelection GestDeSelection
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                GestDeSelection pGestSelection = new GestDeSelection();
+                eGestDeSelection pGestSelection = new eGestDeSelection();
                 if (pGestSelection.Init(SwModele.SelectionManager, this))
                     return pGestSelection;
 
@@ -213,7 +213,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet ExtFichierSw
         /// </summary>
-        public ExtFichierSW FichierSw
+        public eFichierSW FichierSw
         {
             get
             {
@@ -247,7 +247,7 @@ namespace Framework_SW2013
         /// <param name="SwModele"></param>
         /// <param name="Sw"></param>
         /// <returns></returns>
-        internal Boolean Init(ModelDoc2 SwModele, ExtSldWorks Sw)
+        internal Boolean Init(ModelDoc2 SwModele, eSldWorks Sw)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -261,7 +261,7 @@ namespace Framework_SW2013
                 _EstInitialise = true;
 
                 // On créer l'objet ExtFichierSw associé
-                _FichierSw = new ExtFichierSW();
+                _FichierSw = new eFichierSW();
                 if (_FichierSw.Init(_SW))
                 {
                     _FichierSw.Chemin = _SwModele.GetPathName();
@@ -273,7 +273,7 @@ namespace Framework_SW2013
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
                     Debug.Info("Referencement du composant");
-                    _Composant = new ExtComposant();
+                    _Composant = new eComposant();
                     if (_Composant.Init(_SwModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this) == false)
                         _EstInitialise = false;
                 }
@@ -387,17 +387,17 @@ namespace Framework_SW2013
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
+            List<eFonction> pListeFonctions = new List<eFonction>();
 
             Feature pSwFonction = _SwModele.FirstFeature();
 
             while (pSwFonction != null)
             {
-                ExtFonction pFonction = new ExtFonction();
+                eFonction pFonction = new eFonction();
 
                 if ((Regex.IsMatch(pSwFonction.Name, NomARechercher))
                     && pFonction.Init(pSwFonction, this)
@@ -410,7 +410,7 @@ namespace Framework_SW2013
 
                     while (pSwSousFonction != null)
                     {
-                        ExtFonction pSousFonction = new ExtFonction();
+                        eFonction pSousFonction = new eFonction();
 
                         if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher))
                             && pSousFonction.Init(pSwSousFonction, this)
@@ -438,7 +438,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
+            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
             ArrayList pArrayFonctions = new ArrayList();
 
             if (pListeFonctions.Count > 0)
@@ -451,10 +451,10 @@ namespace Framework_SW2013
         /// Renvoi la dernière fonction crée
         /// </summary>
         /// <returns></returns>
-        public ExtFonction DerniereFonction()
+        public eFonction DerniereFonction()
         {
-            ExtFonction pDerniereFonction = null;
-            foreach (ExtFonction pFonction in ListListeDesFonctions())
+            eFonction pDerniereFonction = null;
+            foreach (eFonction pFonction in ListListeDesFonctions())
             {
                 if (pFonction.TypeDeLaFonction == "FlatPattern")
                     break;
@@ -469,17 +469,17 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<ExtModele>.CompareTo(ExtModele Modele)
+        int IComparable<eModele>.CompareTo(eModele Modele)
         {
             return _SwModele.GetPathName().CompareTo(Modele.SwModele.GetPathName());
         }
 
-        int IComparer<ExtModele>.Compare(ExtModele Modele1, ExtModele Modele2)
+        int IComparer<eModele>.Compare(eModele Modele1, eModele Modele2)
         {
             return Modele1.SwModele.GetPathName().CompareTo(Modele2.SwModele.GetPathName());
         }
 
-        bool IEquatable<ExtModele>.Equals(ExtModele Modele)
+        bool IEquatable<eModele>.Equals(eModele Modele)
         {
             return Modele.SwModele.GetPathName().Equals(_SwModele.GetPathName());
         }

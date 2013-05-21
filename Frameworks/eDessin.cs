@@ -10,31 +10,31 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("795533EC-5820-11E2-875F-83046188709B")]
-    public interface IExtDessin
+    public interface IeDessin
     {
         DrawingDoc SwDessin { get; }
-        ExtModele Modele { get; }
-        ExtFeuille FeuilleActive { get; }
-        ExtFeuille Feuille(String Nom);
+        eModele Modele { get; }
+        eFeuille FeuilleActive { get; }
+        eFeuille Feuille(String Nom);
         Boolean FeuilleExiste(String Nom);
         ArrayList ListeDesFeuilles(String NomARechercher = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("7E7EFEE8-5820-11E2-B8E9-84046188709B")]
-    [ProgId("Frameworks.ExtDessin")]
-    public class ExtDessin : IExtDessin
+    [ProgId("Frameworks.eDessin")]
+    public class eDessin : IeDessin
     {
         #region "Variables locales"
         private Boolean _EstInitialise = false;
 
-        private ExtModele _Modele;
+        private eModele _Modele;
         private DrawingDoc _SwDessin;
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtDessin() { }
+        public eDessin() { }
 
         #endregion
 
@@ -48,18 +48,18 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Retourne la feuille active.
         /// </summary>
-        public ExtFeuille FeuilleActive
+        public eFeuille FeuilleActive
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                ExtFeuille pFeuille = new ExtFeuille();
+                eFeuille pFeuille = new eFeuille();
                 Sheet pSwFeuille = _SwDessin.GetCurrentSheet();
                 if (pFeuille.Init(pSwFeuille, this))
                     return pFeuille;
@@ -84,7 +84,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(ExtModele Modele)
+        internal Boolean Init(eModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -109,11 +109,11 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Nom"></param>
         /// <returns></returns>
-        public ExtFeuille Feuille(String Nom)
+        public eFeuille Feuille(String Nom)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            ExtFeuille pFeuille = new ExtFeuille();
+            eFeuille pFeuille = new eFeuille();
             Sheet pSwFeuille = _SwDessin.get_Sheet(Nom);
 
             if (pFeuille.Init(pSwFeuille, this))
@@ -149,18 +149,18 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<ExtFeuille> ListListeDesFeuilles(String NomARechercher = "")
+        internal List<eFeuille> ListListeDesFeuilles(String NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtFeuille> pListeFeuilles = new List<ExtFeuille>();
+            List<eFeuille> pListeFeuilles = new List<eFeuille>();
 
             if (_SwDessin.GetSheetCount() == 0)
                 return pListeFeuilles;
 
             foreach (String NomFeuille in _SwDessin.GetSheetNames())
             {
-                ExtFeuille pFeuille = new ExtFeuille();
+                eFeuille pFeuille = new eFeuille();
                 Sheet pSwFeuille = _SwDessin.get_Sheet(NomFeuille);
 
                 if (Regex.IsMatch(NomFeuille, NomARechercher) && pFeuille.Init(pSwFeuille, this))
@@ -182,7 +182,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtFeuille> pListeFeuilles = ListListeDesFeuilles(NomARechercher);
+            List<eFeuille> pListeFeuilles = ListListeDesFeuilles(NomARechercher);
             ArrayList pArrayFeuilles = new ArrayList();
 
             if (pListeFeuilles.Count > 0)

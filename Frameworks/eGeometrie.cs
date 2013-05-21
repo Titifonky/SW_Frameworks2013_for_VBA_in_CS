@@ -8,21 +8,21 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("17FF6AA9-3961-49A1-A800-CBED2CE3EF50")]
-    public interface IPoint
+    public interface IePoint
     {
         Double X { get; set; }
         Double Y { get; set; }
         Double Z { get; set; }
-        void Deplacer(Vecteur V);
+        void Deplacer(eVecteur V);
         void Echelle(Double S);
-        Point Additionner(Vecteur V);
-        Point Multiplier(Double S);
+        ePoint Additionner(eVecteur V);
+        ePoint Multiplier(Double S);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("BE5AB936-269C-45E6-8F8E-3496C744D044")]
-    [ProgId("Frameworks.Point")]
-    public class Point : IPoint
+    [ProgId("Frameworks.ePoint")]
+    public class ePoint : IePoint
     {
         #region "Variables locales"
 
@@ -30,9 +30,9 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public Point() { }
+        public ePoint() { }
 
-        public Point(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
+        public ePoint(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace Framework_SW2013
 
         #region "Méthodes"
 
-        public void Deplacer(Vecteur V)
+        public void Deplacer(eVecteur V)
         {
             X += V.X; Y += V.Y; Z += V.Z;
         }
@@ -56,14 +56,14 @@ namespace Framework_SW2013
             X *= S; Y *= S; Z *= S;
         }
 
-        public Point Additionner(Vecteur V)
+        public ePoint Additionner(eVecteur V)
         {
-            return new Point(X + V.X, Y + V.Y, Z + V.Z);
+            return new ePoint(X + V.X, Y + V.Y, Z + V.Z);
         }
 
-        public Point Multiplier(Double S)
+        public ePoint Multiplier(Double S)
         {
-            return new Point(X * S, Y * S, Z * S);
+            return new ePoint(X * S, Y * S, Z * S);
         }
 
         #endregion
@@ -71,7 +71,7 @@ namespace Framework_SW2013
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("F2D37BBD-3BB2-43C2-BD47-2443671839B4")]
-    public interface IVecteur
+    public interface IeVecteur
     {
         Double X { get; set; }
         Double Y { get; set; }
@@ -80,8 +80,8 @@ namespace Framework_SW2013
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("BCFA38D4-2C36-494C-81C8-857FFF4037EE")]
-    [ProgId("Frameworks.Vecteur")]
-    public class Vecteur : IVecteur
+    [ProgId("Frameworks.eVecteur")]
+    public class eVecteur : IeVecteur
     {
         #region "Variables locales"
 
@@ -89,9 +89,9 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public Vecteur() { }
+        public eVecteur() { }
 
-        public Vecteur(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
+        public eVecteur(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
 
         #endregion
 
@@ -110,41 +110,41 @@ namespace Framework_SW2013
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("1037F0BB-EB59-4C63-A190-E36C403335FA")]
-    public interface IRepere
+    public interface IeRepere
     {
-        Point Origine { get; set; }
-        Vecteur VecteurX { get; set; }
-        Vecteur VecteurY { get; set; }
-        Vecteur VecteurZ { get; set; }
+        ePoint Origine { get; set; }
+        eVecteur VecteurX { get; set; }
+        eVecteur VecteurY { get; set; }
+        eVecteur VecteurZ { get; set; }
         Double Echelle { get; set; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("AD8CE9F7-6C34-4202-AFE5-6C023B8DF4F4")]
-    [ProgId("Frameworks.Repere")]
-    public class Repere : IRepere
+    [ProgId("Frameworks.eRepere")]
+    public class eRepere : IeRepere
     {
         #region "Variables locales"
         
-        private Point _Origine = new Point(0, 0, 0);
-        private Vecteur _VecteurX = new Vecteur(0, 0, 0);
-        private Vecteur _VecteurY = new Vecteur(0, 0, 0);
-        private Vecteur _VecteurZ = new Vecteur(0, 0, 0);
+        private ePoint _Origine = new ePoint(0, 0, 0);
+        private eVecteur _VecteurX = new eVecteur(0, 0, 0);
+        private eVecteur _VecteurY = new eVecteur(0, 0, 0);
+        private eVecteur _VecteurZ = new eVecteur(0, 0, 0);
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public Repere() { }
+        public eRepere() { }
 
         #endregion
 
         #region "Propriétés"
 
-        public Point Origine { get { return _Origine; } set { _Origine = value; } }
-        public Vecteur VecteurX { get { return _VecteurX; } set { _VecteurX = value; } }
-        public Vecteur VecteurY { get { return _VecteurY; } set { _VecteurY = value; } }
-        public Vecteur VecteurZ { get { return _VecteurZ; } set { _VecteurZ = value; } }
+        public ePoint Origine { get { return _Origine; } set { _Origine = value; } }
+        public eVecteur VecteurX { get { return _VecteurX; } set { _VecteurX = value; } }
+        public eVecteur VecteurY { get { return _VecteurY; } set { _VecteurY = value; } }
+        public eVecteur VecteurZ { get { return _VecteurZ; } set { _VecteurZ = value; } }
         public Double Echelle { get; set; }
 
         #endregion
@@ -156,7 +156,7 @@ namespace Framework_SW2013
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("BE8C3118-E918-4A72-9540-26C78B8B3498")]
-    public interface IRectangle
+    public interface IeRectangle
     {
         Double Lg { get; set; }
         Double Ht { get; set; }
@@ -164,8 +164,8 @@ namespace Framework_SW2013
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("80D861E1-18EA-4AB0-A1FF-29BD825A2B6C")]
-    [ProgId("Frameworks.Rectangle")]
-    public class Rectangle : IRectangle
+    [ProgId("Frameworks.eRectangle")]
+    public class eRectangle : IeRectangle
     {
         #region "Variables locales"
 
@@ -173,7 +173,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public Rectangle() { }
+        public eRectangle() { }
 
         #endregion
 
@@ -191,34 +191,34 @@ namespace Framework_SW2013
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("4CA9B9F7-C61E-4B38-B01D-FA8D15DBA7C5")]
-    public interface IZone
+    public interface IeZone
     {
-        Point PointMin { get; set; }
-        Point PointMax { get; set; }
+        ePoint PointMin { get; set; }
+        ePoint PointMax { get; set; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("D739C7A3-0EB2-4AA3-933B-07EA41288558")]
-    [ProgId("Frameworks.Zone")]
-    public class Zone : IZone
+    [ProgId("Frameworks.eZone")]
+    public class eZone : IeZone
     {
         #region "Variables locales"
         
-        private Point _PointMin = new Point(0, 0, 0);
-        private Point _PointMax = new Point(0, 0, 0);
+        private ePoint _PointMin = new ePoint(0, 0, 0);
+        private ePoint _PointMax = new ePoint(0, 0, 0);
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public Zone() { }
+        public eZone() { }
 
         #endregion
 
         #region "Propriétés"
 
-        public Point PointMin { get { return _PointMin; } set { _PointMin = value; } }
-        public Point PointMax { get { return _PointMax; } set { _PointMax = value; } }
+        public ePoint PointMin { get { return _PointMin; } set { _PointMin = value; } }
+        public ePoint PointMax { get { return _PointMax; } set { _PointMax = value; } }
 
         #endregion
 

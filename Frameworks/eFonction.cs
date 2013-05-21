@@ -13,14 +13,14 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("0AE3E176-4DF1-40F2-92CD-9A7C83C8373A")]
-    public interface IExtFonction
+    public interface IeFonction
     {
         Feature SwFonction { get; }
-        ExtModele Modele { get; }
+        eModele Modele { get; }
         String Nom { get; set; }
         String TypeDeLaFonction { get; }
         EtatFonction_e Etat { get; }
-        ExtFonction FonctionParent { get; }
+        eFonction FonctionParent { get; }
         String DateDeCreation { get; }
         String DateDeModification { get; }
         void Activer();
@@ -35,22 +35,22 @@ namespace Framework_SW2013
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("9009C0B9-61F1-42A1-AB7C-67DDF6AFB037")]
-    [ProgId("Frameworks.ExtFonction")]
-    public class ExtFonction : IExtFonction, IComparable<ExtFonction>, IComparer<ExtFonction>, IEquatable<ExtFonction>
+    [ProgId("Frameworks.eFonction")]
+    public class eFonction : IeFonction, IComparable<eFonction>, IComparer<eFonction>, IEquatable<eFonction>
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
         private EtatFonction_e _EtatEnregistre;
-        private ExtModele _Modele;
+        private eModele _Modele;
         private Feature _SwFonction;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtFonction() { }
+        public eFonction() { }
 
         #endregion
 
@@ -64,7 +64,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public ExtModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Retourne ou défini le nom de la fonction.
@@ -122,12 +122,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent directe de la fonction
         /// </summary>
-        public ExtFonction FonctionParent
+        public eFonction FonctionParent
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                ExtFonction pFonctionParent = new ExtFonction();
+                eFonction pFonctionParent = new eFonction();
                 if (pFonctionParent.Init(SwFonction.GetOwnerFeature(), Modele))
                     return pFonctionParent;
 
@@ -169,7 +169,7 @@ namespace Framework_SW2013
         /// <param name="SwFonction"></param>
         /// <param name="Modele"></param>
         /// <returns></returns>
-        internal Boolean Init(Feature SwFonction, ExtModele Modele)
+        internal Boolean Init(Feature SwFonction, eModele Modele)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -257,18 +257,18 @@ namespace Framework_SW2013
         /// Renvoi la liste des corps associés à la fonction.
         /// </summary>
         /// <returns></returns>
-        internal List<ExtCorps> ListListeDesCorps()
+        internal List<eCorps> ListListeDesCorps()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtCorps> pListeCorps = new List<ExtCorps>();
+            List<eCorps> pListeCorps = new List<eCorps>();
 
             if (_SwFonction.GetFaceCount() == 0)
                 return pListeCorps;
 
             foreach (Face2 Face in _SwFonction.GetFaces())
             {
-                ExtCorps Corps = new ExtCorps();
+                eCorps Corps = new eCorps();
                 if (Corps.Init(Face.GetBody(), _Modele.Piece) && (pListeCorps.Contains(Corps) == false))
                     pListeCorps.Add(Corps);
             }
@@ -284,7 +284,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtCorps> pListeCorps = ListListeDesCorps();
+            List<eCorps> pListeCorps = ListListeDesCorps();
             ArrayList pArrayCorps = new ArrayList();
 
             if (pListeCorps.Count > 0)
@@ -299,17 +299,17 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<ExtFonction> ListListeDesFonctionsParent(string NomARechercher = "")
+        internal List<eFonction> ListListeDesFonctionsParent(string NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
+            List<eFonction> pListeFonctions = new List<eFonction>();
 
             Array pFonctionsParent = SwFonction.GetParents();
 
             foreach(Feature pSwFonctionParent in pFonctionsParent)
             {
-                ExtFonction pFonction = new ExtFonction();
+                eFonction pFonction = new eFonction();
                 if ((Regex.IsMatch(pSwFonctionParent.Name, NomARechercher)) && pFonction.Init(pSwFonctionParent, _Modele))
                     pListeFonctions.Add(pFonction);
             }
@@ -327,7 +327,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtFonction> pListeFonctions = ListListeDesFonctionsParent(NomARechercher);
+            List<eFonction> pListeFonctions = ListListeDesFonctionsParent(NomARechercher);
             ArrayList pArrayFonctions = new ArrayList();
 
             if (pListeFonctions.Count > 0)
@@ -342,17 +342,17 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<ExtFonction> ListListeDesSousFonctions(string NomARechercher = "")
+        internal List<eFonction> ListListeDesSousFonctions(string NomARechercher = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
+            List<eFonction> pListeFonctions = new List<eFonction>();
 
             Feature pSwSousFonction = SwFonction.GetFirstSubFeature();
 
             while (pSwSousFonction != null)
             {
-                ExtFonction pFonction = new ExtFonction();
+                eFonction pFonction = new eFonction();
 
                 if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher))
                     && pFonction.Init(pSwSousFonction, _Modele)
@@ -376,7 +376,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtFonction> pListeFonctions = ListListeDesSousFonctions(NomARechercher);
+            List<eFonction> pListeFonctions = ListListeDesSousFonctions(NomARechercher);
             ArrayList pArrayFonctions = new ArrayList();
 
             if (pListeFonctions.Count > 0)
@@ -389,17 +389,17 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<ExtFonction>.CompareTo(ExtFonction Fonction)
+        int IComparable<eFonction>.CompareTo(eFonction Fonction)
         {
             return  (_Modele.SwModele.GetPathName() + _SwFonction.Name).CompareTo(Fonction.Modele.SwModele.GetPathName() +  Fonction.SwFonction.Name);
         }
 
-        int IComparer<ExtFonction>.Compare(ExtFonction Fonction1, ExtFonction Fonction2)
+        int IComparer<eFonction>.Compare(eFonction Fonction1, eFonction Fonction2)
         {
             return (Fonction1.Modele.SwModele.GetPathName() + Fonction1._SwFonction.Name).CompareTo(Fonction2.Modele.SwModele.GetPathName() + Fonction2._SwFonction.Name);
         }
 
-        bool IEquatable<ExtFonction>.Equals(ExtFonction Fonction)
+        bool IEquatable<eFonction>.Equals(eFonction Fonction)
         {
             return (Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name).Equals(_Modele.SwModele.GetPathName() + _SwFonction.Name);
         }

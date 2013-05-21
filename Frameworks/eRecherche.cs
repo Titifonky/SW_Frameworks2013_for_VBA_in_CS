@@ -9,9 +9,9 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("A8C91882-5820-11E2-A1E0-98046188709B")]
-    public interface IExtRecherche
+    public interface IeRecherche
     {
-        ExtComposant Composant { get; }
+        eComposant Composant { get; }
         Boolean PrendreEnCompteConfig { get; set; }
         Boolean PrendreEnCompteExclus { get; set; }
         Boolean PrendreEnCompteSupprime { get; set; }
@@ -23,14 +23,14 @@ namespace Framework_SW2013
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("AD74AE82-5820-11E2-9F7B-99046188709B")]
-    [ProgId("Frameworks.ExtRecherche")]
-    public class ExtRecherche : IExtRecherche
+    [ProgId("Frameworks.eRecherche")]
+    public class eRecherche : IeRecherche
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private ExtComposant _Composant;
+        private eComposant _Composant;
         private Boolean _PrendreEnCompteConfig = true;
         private Boolean _PrendreEnCompteExclus = false;
         private Boolean _PrendreEnCompteSupprime = false;
@@ -42,7 +42,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public ExtRecherche() { }
+        public eRecherche() { }
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtComposant.
         /// </summary>
-        public ExtComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } }
+        public eComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } }
 
         /// <summary>
         /// Filtre sur les configurations.
@@ -95,7 +95,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Composant"></param>
         /// <returns></returns>
-        internal Boolean Init(ExtComposant Composant)
+        internal Boolean Init(eComposant Composant)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -118,7 +118,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Composant"></param>
         /// <returns></returns>
-        private String NomCle(ExtComposant Composant)
+        private String NomCle(eComposant Composant)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
             
@@ -146,11 +146,11 @@ namespace Framework_SW2013
         /// <param name="TypeComposant"></param>
         /// <param name="DicComposants"></param>
         /// <param name="NomComposant"></param>
-        private void RecListListerComposants(ExtComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, ExtComposant> DicComposants, String NomComposant = "")
+        private void RecListListerComposants(eComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, eComposant> DicComposants, String NomComposant = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            foreach (ExtComposant pComp in ComposantRacine.ListComposantsEnfants("",_PrendreEnCompteSupprime))
+            foreach (eComposant pComp in ComposantRacine.ListComposantsEnfants("",_PrendreEnCompteSupprime))
             {
                 // Operateur "Implique" sur la propriété EstExclu
                 if (!pComp.EstExclu | _PrendreEnCompteExclus)
@@ -159,7 +159,7 @@ namespace Framework_SW2013
                     // du style "*" ou "[" et autre. Pb à corriger.
                     if (Convert.ToBoolean(pComp.Modele.TypeDuModele & TypeComposant) && Regex.IsMatch(pComp.Modele.FichierSw.Chemin, NomComposant))
                     {
-                        ExtComposant pComposant = new ExtComposant();
+                        eComposant pComposant = new eComposant();
                         String pCle = NomCle(pComp);
 
                         Debug.Info("Clé : " + pCle);
@@ -197,11 +197,11 @@ namespace Framework_SW2013
         /// <param name="TypeComposant"></param>
         /// <param name="NomComposant"></param>
         /// <returns></returns>
-        internal List<ExtComposant> ListListerComposants(TypeFichier_e TypeComposant, String NomComposant = "")
+        internal List<eComposant> ListListerComposants(TypeFichier_e TypeComposant, String NomComposant = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            Dictionary<String, ExtComposant> pDicComposants = new Dictionary<string, ExtComposant>();
+            Dictionary<String, eComposant> pDicComposants = new Dictionary<string, eComposant>();
 
             // On met l'index à 0
             _IndexComposant = 0;
@@ -215,11 +215,11 @@ namespace Framework_SW2013
                 RecListListerComposants(_Composant, TypeComposant, pDicComposants, NomComposant);
 
             // Nouvelle liste à renvoyer
-            List<ExtComposant> pListeComposants = new List<ExtComposant>();
+            List<eComposant> pListeComposants = new List<eComposant>();
 
             // Si le dictionnaire n'est pas vide, on rempli la liste avec les valeurs du dictionnaire
             if (pDicComposants.Count > 0)
-                pListeComposants = new List<ExtComposant>(pDicComposants.Values);
+                pListeComposants = new List<eComposant>(pDicComposants.Values);
 
             // On trie et c'est parti
             pListeComposants.Sort();
@@ -237,7 +237,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
+            List<eComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
             ArrayList pArrayComps = new ArrayList();
 
             if (pListeComps.Count > 0)
@@ -259,14 +259,14 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
+            List<eComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
             ArrayList pArrayComps = new ArrayList();
 
             if (pListeComps.Count > 0)
             {
-                foreach (ExtComposant pComp in pListeComps)
+                foreach (eComposant pComp in pListeComps)
                 {
-                    ExtFichierSW pFichier = new ExtFichierSW();
+                    eFichierSW pFichier = new eFichierSW();
                     if (pFichier.Init(_Composant.Modele.SW))
                     {
                         pFichier.Chemin = pComp.Modele.FichierSw.Chemin;

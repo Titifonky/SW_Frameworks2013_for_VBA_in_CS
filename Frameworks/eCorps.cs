@@ -12,38 +12,38 @@ namespace Framework_SW2013
 {
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("2C02C4E9-0F4C-4A33-B9E6-0141641A5FE5")]
-    public interface IExtCorps
+    public interface IeCorps
     {
         Body2 SwCorps { get; }
-        ExtPiece Piece { get; }
+        ePiece Piece { get; }
         String Nom { get; set; }
         TypeCorps_e TypeDeCorps { get; }
-        ExtDossier Dossier { get; }
-        ExtFonction PremiereFonction { get; }
+        eDossier Dossier { get; }
+        eFonction PremiereFonction { get; }
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
-        ExtFonction FonctionTolerie();
-        ExtFonction FonctionDeplie();
-        ExtFonction FonctionCubeDeVisualisation();
-        int NbIntersection(ExtCorps Corps);
+        eFonction FonctionTolerie();
+        eFonction FonctionDeplie();
+        eFonction FonctionCubeDeVisualisation();
+        int NbIntersection(eCorps Corps);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("DF347C75-F3B1-43AE-B7C4-393811BEBCB4")]
-    [ProgId("Frameworks.ExtCorps")]
-    public class ExtCorps : IExtCorps, IComparable<ExtCorps>, IComparer<ExtCorps>, IEquatable<ExtCorps>
+    [ProgId("Frameworks.eCorps")]
+    public class eCorps : IeCorps, IComparable<eCorps>, IComparer<eCorps>, IEquatable<eCorps>
     {
         #region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
-        private ExtPiece _Piece;
+        private ePiece _Piece;
         private Body2 _SwCorps;
 
         #endregion
 
         #region "Constructeur\Destructeur"
 
-        public ExtCorps() { }
+        public eCorps() { }
 
         #endregion
 
@@ -57,7 +57,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public ExtPiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
+        public ePiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
 
         /// <summary>
         /// Retourne ou défini le nom du corps.
@@ -114,14 +114,14 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtDossier.
         /// </summary>
-        public ExtDossier Dossier
+        public eDossier Dossier
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                foreach (ExtDossier pDossier in _Piece.ListeDesDossiersDePiecesSoudees(TypeDeCorps, true))
+                foreach (eDossier pDossier in _Piece.ListeDesDossiersDePiecesSoudees(TypeDeCorps, true))
                 {
-                    foreach (ExtCorps pCorps in pDossier.ListListeDesCorps())
+                    foreach (eCorps pCorps in pDossier.ListListeDesCorps())
                     {
                         if (pCorps.Nom == Nom)
                         {
@@ -137,13 +137,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Renvoi la première fonction du corps.
         /// </summary>
-        public ExtFonction PremiereFonction
+        public eFonction PremiereFonction
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                ExtFonction pFonction = new ExtFonction();
+                eFonction pFonction = new eFonction();
 
                 if (pFonction.Init(SwCorps.GetFeatures()[0], _Piece.Modele))
                     return pFonction;
@@ -169,7 +169,7 @@ namespace Framework_SW2013
         /// <param name="SwCorps"></param>
         /// <param name="Piece"></param>
         /// <returns></returns>
-        internal Boolean Init(Body2 SwCorps, ExtPiece Piece)
+        internal Boolean Init(Body2 SwCorps, ePiece Piece)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -195,15 +195,15 @@ namespace Framework_SW2013
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        internal List<ExtFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtFonction> pListeFonctions = new List<ExtFonction>();
+            List<eFonction> pListeFonctions = new List<eFonction>();
             
             foreach(Feature pSwFonction in _SwCorps.GetFeatures())
             {
-                ExtFonction pFonction = new ExtFonction();
+                eFonction pFonction = new eFonction();
 
                 if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pFonction.Init(pSwFonction, _Piece.Modele))
                     pListeFonctions.Add(pFonction);
@@ -214,7 +214,7 @@ namespace Framework_SW2013
 
                     while (pSwSousFonction != null)
                     {
-                        ExtFonction pSousFonction = new ExtFonction();
+                        eFonction pSousFonction = new eFonction();
 
                         if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, _Piece.Modele))
                             pListeFonctions.Add(pSousFonction);
@@ -239,7 +239,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<ExtFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
+            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
             ArrayList pArrayFonctions = new ArrayList();
 
             if (pListeFonctions.Count > 0)
@@ -252,11 +252,13 @@ namespace Framework_SW2013
         /// Renvoi la fonction Tolerie du corps
         /// </summary>
         /// <returns></returns>
-        public ExtFonction FonctionTolerie()
+        public eFonction FonctionTolerie()
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
             if (TypeDeCorps == TypeCorps_e.cTole)
             {
-                foreach(ExtFonction pFonc in ListListeDesFonctions())
+                foreach(eFonction pFonc in ListListeDesFonctions())
                 {
                     if (pFonc.TypeDeLaFonction == "SheetMetal")
                         return pFonc;
@@ -270,11 +272,13 @@ namespace Framework_SW2013
         /// Renvoi la fonction EtatDeplie du corps
         /// </summary>
         /// <returns></returns>
-        public ExtFonction FonctionDeplie()
+        public eFonction FonctionDeplie()
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
             if (TypeDeCorps == TypeCorps_e.cTole)
             {
-                foreach (ExtFonction pFonc in ListListeDesFonctions())
+                foreach (eFonction pFonc in ListListeDesFonctions())
                 {
                     if (pFonc.TypeDeLaFonction == "FlatPattern")
                         return pFonc;
@@ -288,11 +292,13 @@ namespace Framework_SW2013
         /// Renvoi la fonction CubeDeVisualisation du corps
         /// </summary>
         /// <returns></returns>
-        public ExtFonction FonctionCubeDeVisualisation()
+        public eFonction FonctionCubeDeVisualisation()
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
             if (TypeDeCorps == TypeCorps_e.cTole)
             {
-                return this.FonctionDeplie().ListListeDesSousFonctions("Cube de visualisation")[0];
+                return this.FonctionDeplie().ListListeDesSousFonctions(CONSTANTES.CUBE_DE_VISUALISATION)[0];
             }
 
             return null;
@@ -303,7 +309,7 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Composant"></param>
         /// <returns></returns>
-        public int NbIntersection(ExtCorps Corps)
+        public int NbIntersection(eCorps Corps)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -330,21 +336,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<ExtCorps>.CompareTo(ExtCorps Corps)
+        int IComparable<eCorps>.CompareTo(eCorps Corps)
         {
             String Nom1 =  _Piece.Modele.SwModele.GetPathName() + _SwCorps.Name;
             String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<ExtCorps>.Compare(ExtCorps Corps1, ExtCorps Corps2)
+        int IComparer<eCorps>.Compare(eCorps Corps1, eCorps Corps2)
         {
             String Nom1 = Corps1.Piece.Modele.SwModele.GetPathName() + Corps1.Nom;
             String Nom2 = Corps2.Piece.Modele.SwModele.GetPathName() + Corps2.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<ExtCorps>.Equals(ExtCorps Corps)
+        bool IEquatable<eCorps>.Equals(eCorps Corps)
         {
             String Nom1 = _Piece.Modele.SwModele.GetPathName() + _SwCorps.Name;
             String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
