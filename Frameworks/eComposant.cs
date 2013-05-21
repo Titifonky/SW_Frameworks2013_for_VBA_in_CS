@@ -18,6 +18,7 @@ namespace Framework_SW2013
         eConfiguration Configuration { get; }
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; set; }
+        Boolean EstVisible { get; set; }
         int Nb { get; }
         eRecherche NouvelleRecherche { get; }
         eRepere Repere { get; }
@@ -93,6 +94,26 @@ namespace Framework_SW2013
                     SwComposant.SetSuppression2((int)swComponentSuppressionState_e.swComponentSuppressed);
                 else
                     SwComposant.SetSuppression2((int)swComponentSuppressionState_e.swComponentResolved);
+            }
+        }
+
+        /// <summary>
+        /// Retourne ou défini si le composant est visible.
+        /// </summary>
+        public Boolean EstVisible
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return Convert.ToBoolean(_SwComposant.Visible);
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if (value)
+                    _SwComposant.Visible = (int)swComponentVisibilityState_e.swComponentVisible;
+                else
+                    _SwComposant.Visible = (int)swComponentVisibilityState_e.swComponentHidden;
             }
         }
 
