@@ -27,9 +27,9 @@ namespace Framework_SW2013
         private Boolean _ACTIF = true;
         private Boolean _INIT = false;
 
-        private String _Dossier;
-        private String _Fichier;
-        private String _Chemin_Fichier;
+        private String _Dossier = "";
+        private String _Fichier = "";
+        private String _Chemin_Fichier = "";
 
         #endregion
 

@@ -27,8 +27,8 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private eFeuille _Feuille;
-        private View _SwVue;
+        private eFeuille _Feuille = null;
+        private View _SwVue = null;
         #endregion
 
         #region "Constructeur\Destructeur"

@@ -33,8 +33,8 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private Configuration _SwConfiguration;
-        private eModele _Modele;
+        private Configuration _SwConfiguration = null;
+        private eModele _Modele = null;
 
         #endregion
 

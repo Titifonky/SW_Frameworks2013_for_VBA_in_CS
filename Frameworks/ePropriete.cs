@@ -28,8 +28,8 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private eGestDeProprietes _GestDeProprietes;
-        private String _Nom;
+        private eGestDeProprietes _GestDeProprietes = null;
+        private String _Nom = "";
         #endregion
 
         #region "Constructeur\Destructeur"

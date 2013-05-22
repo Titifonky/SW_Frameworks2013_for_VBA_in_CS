@@ -16,7 +16,7 @@ namespace Framework_SW2013
         Boolean Epingle { get; set; }
         swPropertyManagerPageCloseReasons_e ResultatAffichage { get; }
         Boolean Init(eSldWorks Sw, swPropertyManagerPageOptions_e OptionsPage = 0);
-        void Afficher();
+        swPropertyManagerPageStatus_e Afficher();
         Boolean DefinirLeMessage(String Message, swPropertyManagerPageMessageVisibility Visibilite, swPropertyManagerPageMessageExpanded Deplie, String Info);
     }
 
@@ -150,12 +150,14 @@ namespace Framework_SW2013
         /// <summary>
         /// Afficher la page.
         /// </summary>
-        public void Afficher()
+        public swPropertyManagerPageStatus_e Afficher()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
             if (_EstInitialise)
-                _SwPage.Show2(0);
+                return (swPropertyManagerPageStatus_e)_SwPage.Show2(0);
+
+            return 0;
         }
 
         /// <summary>

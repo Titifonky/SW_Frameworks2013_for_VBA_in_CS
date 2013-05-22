@@ -34,7 +34,7 @@ namespace Framework_SW2013
 
         private Boolean _EstInitialise = false;
 
-        private eSldWorks _SW;
+        private eSldWorks _SW = null;
 
         #endregion
 

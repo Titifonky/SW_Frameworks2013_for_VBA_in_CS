@@ -36,8 +36,8 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private ePiece _Piece;
-        private Body2 _SwCorps;
+        private ePiece _Piece = null;
+        private Body2 _SwCorps = null;
 
         #endregion
 

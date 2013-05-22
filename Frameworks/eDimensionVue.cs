@@ -26,7 +26,7 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private eVue _Vue;
+        private eVue _Vue = null;
         #endregion
 
         #region "Constructeur\Destructeur"

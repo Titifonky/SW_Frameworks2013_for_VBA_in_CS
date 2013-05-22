@@ -42,9 +42,9 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private EtatFonction_e _EtatEnregistre;
-        private eModele _Modele;
-        private Feature _SwFonction;
+        private EtatFonction_e _EtatEnregistre = 0;
+        private eModele _Modele = null;
+        private Feature _SwFonction = null;
 
         #endregion
 

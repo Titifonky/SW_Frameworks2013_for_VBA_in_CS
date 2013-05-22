@@ -26,8 +26,9 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private eModele _Modele;
-        private AssemblyDoc _SwAssemblage;
+        private eModele _Modele = null;
+        private AssemblyDoc _SwAssemblage = null;
+
         #endregion
 
         #region "Constructeur\Destructeur"

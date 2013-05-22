@@ -34,11 +34,11 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private SldWorks _SwSW;
-        private String _VersionDeBase;
-        private String _VersionCourante;
-        private String _Hotfixe;
-        private String _Revision;
+        private SldWorks _SwSW = null;
+        private String _VersionDeBase = "";
+        private String _VersionCourante = "";
+        private String _Hotfixe = "";
+        private String _Revision = "";
         private int Erreur = 0;
         private int Warning = 0;
 

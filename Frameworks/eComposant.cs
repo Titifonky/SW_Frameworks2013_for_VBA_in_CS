@@ -36,9 +36,9 @@ namespace Framework_SW2013
 
         private Boolean _EstInitialise = false;
 
-        private Component2 _SwComposant;
-        private eModele _Modele;
-        private eConfiguration _Configuration;
+        private Component2 _SwComposant = null;
+        private eModele _Modele = null;
+        private eConfiguration _Configuration = null;
         private int _Nb = 0;
 
         #endregion
@@ -228,6 +228,7 @@ namespace Framework_SW2013
         /// <param name="Ajouter"></param>
         public void Selectionner(Boolean Ajouter = true)
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
             _SwComposant.Select4(Ajouter, null, false);
         }
 
@@ -236,6 +237,7 @@ namespace Framework_SW2013
         /// </summary>
         public void DeSelectionner()
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
             _SwComposant.DeSelect();
         }
 

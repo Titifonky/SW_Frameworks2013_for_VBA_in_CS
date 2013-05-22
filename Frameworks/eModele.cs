@@ -48,10 +48,10 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private ModelDoc2 _SwModele;
-        private eSldWorks _SW;
-        private eComposant _Composant;
-        private eFichierSW _FichierSw;
+        private ModelDoc2 _SwModele = null;
+        private eSldWorks _SW = null;
+        private eComposant _Composant = null;
+        private eFichierSW _FichierSw = null;
         private int Erreur = 0;
         private int Warning = 0;
 

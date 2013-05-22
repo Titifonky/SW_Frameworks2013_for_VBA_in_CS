@@ -31,8 +31,8 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private ePiece _Piece;
-        private BodyFolder _SwDossier;
+        private ePiece _Piece = null;
+        private BodyFolder _SwDossier = null;
 
         #endregion
 

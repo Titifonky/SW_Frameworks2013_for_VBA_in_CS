@@ -32,10 +32,10 @@ namespace Framework_SW2013
         #region "Variables locales"
         private Boolean _EstInitialise = false;
 
-        private eSldWorks _SW;
-        private String _Chemin;
-        private String _Configuration;
-        private long _Nb;
+        private eSldWorks _SW = null;
+        private String _Chemin = "";
+        private String _Configuration = "";
+        private long _Nb = 0;
 
         #endregion
 

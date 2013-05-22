@@ -29,8 +29,8 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private eModele _Modele;
-        private PartDoc _SwPiece;
+        private eModele _Modele = null;
+        private PartDoc _SwPiece = null;
 
         #endregion
 

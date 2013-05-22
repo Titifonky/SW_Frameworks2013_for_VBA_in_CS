@@ -43,8 +43,8 @@ namespace Framework_SW2013
 
         private Boolean _EstInitialise = false;
 
-        private eModele _Modele;
-        private SelectionMgr _SwGestDeSelection;
+        private eModele _Modele = null;
+        private SelectionMgr _SwGestDeSelection = null;
 
         #endregion
 
@@ -169,13 +169,111 @@ namespace Framework_SW2013
             if (NbObjetsSelectionnes() == 0)
                 return null;
 
-            eObjet pObjet = new eObjet();
+            eComposant pComposantSelectionne = Composant(Index, Marque);
+            dynamic pSwObjet = _SwGestDeSelection.GetSelectedObject6(Index, Marque);
+            swSelectType_e pType = TypeObjet(Index, Marque);
 
-            eComposant pComposant = Composant(Index, Marque);
+            eModele pModele = null;
+            if ((pComposantSelectionne != null) && pComposantSelectionne.EstInitialise)
+                pModele = pComposantSelectionne.Modele;
 
-            if ((pComposant != null) && pComposant.EstInitialise
-                && (pObjet.Init(pComposant.Modele, _SwGestDeSelection.GetSelectedObject6(Index, Marque), TypeObjet(Index, Marque))))
-                return pObjet.Objet;
+            if ((pComposantSelectionne != null) && pComposantSelectionne.EstInitialise)
+            {
+                switch (pType)
+                {
+                    case swSelectType_e.swSelCOMPONENTS:
+                        Component2 pSwComposant = pSwObjet;
+                        eComposant pComposant = new eComposant();
+                        if (pComposant.Init(pSwComposant, pModele))
+                        {
+                            Modele.Composant = pComposant;
+                            _EstInitialise = true;
+                            return pComposant;
+                        }
+                        break;
+
+                    case swSelectType_e.swSelCONFIGURATIONS:
+                        Feature pSwFonction = pSwObjet;
+                        Configuration pSwConfiguration = pSwFonction.GetSpecificFeature2();
+                        eConfiguration pConfiguration = new eConfiguration();
+                        if (pConfiguration.Init(pSwConfiguration, pModele))
+                        {
+                            _EstInitialise = true;
+                            return pConfiguration;
+                        }
+                        break;
+
+                    case swSelectType_e.swSelDRAWINGVIEWS:
+                        View pSwVue = pSwObjet;
+                        eVue pVue = new eVue();
+                        if (pVue.Init(pSwVue, pModele))
+                        {
+                            _EstInitialise = true;
+                            return pVue;
+                        }
+                        break;
+
+                    case swSelectType_e.swSelSHEETS:
+                        Sheet pSwFeuille = pSwObjet;
+                        eFeuille pFeuille = new eFeuille();
+                        if (pFeuille.Init(pSwFeuille, pModele))
+                        {
+                            _EstInitialise = true;
+                            return pFeuille;
+                        }
+                        break;
+
+                    case swSelectType_e.swSelSOLIDBODIES:
+                        Body2 pSwCorps = pSwObjet;
+                        eCorps pCorps = new eCorps();
+                        if (pCorps.Init(pSwCorps, pModele))
+                        {
+                            _EstInitialise = true;
+                            return pCorps;
+                        }
+                        break;
+
+                    case swSelectType_e.swSelDATUMPLANES:
+                    case swSelectType_e.swSelDATUMAXES:
+                    case swSelectType_e.swSelDATUMPOINTS:
+                    case swSelectType_e.swSelATTRIBUTES:
+                    case swSelectType_e.swSelSKETCHES:
+                    case swSelectType_e.swSelSECTIONLINES:
+                    case swSelectType_e.swSelDETAILCIRCLES:
+                    case swSelectType_e.swSelMATES:
+                    case swSelectType_e.swSelBODYFEATURES:
+                    case swSelectType_e.swSelREFCURVES:
+                    case swSelectType_e.swSelREFERENCECURVES:
+                    case swSelectType_e.swSelREFSILHOUETTE:
+                    case swSelectType_e.swSelCAMERAS:
+                    case swSelectType_e.swSelSWIFTANNOTATIONS:
+                    case swSelectType_e.swSelSWIFTFEATURES:
+                        eFonction pFonction = new eFonction();
+                        if (pFonction.Init(pSwObjet, pModele))
+                        {
+                            _EstInitialise = true;
+                            return pFonction;
+                        }
+                        break;
+
+                    default :
+                        eObjet pObjet = new eObjet();
+                        
+                        eModele pInitModele;
+                        if ((pModele != null) && pModele.EstInitialise)
+                            pInitModele = pModele;
+                        else
+                            pInitModele = _Modele;
+
+                        if (pObjet.Init(pInitModele, pSwObjet, pType))
+                        {
+                            _EstInitialise = true;
+                            return pObjet;
+                        }
+                        break;
+
+                }
+            }
 
             return null;
         }
@@ -193,13 +291,13 @@ namespace Framework_SW2013
             if (NbObjetsSelectionnes() == 0)
                 return null;
 
-            Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(Index, Marque);
+            // Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(Index, Marque);
+            Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent3(Index, Marque);
 
-            // C'est le cas, quand on sélectionne le composant racine. A voir pour trouver une solution 
+            // Si le composant racine est sélectionné, rien n'est renvoyé.
+            // Donc on le récupère.
             if (pSwComposant == null)
-            {
                 pSwComposant = _SwGestDeSelection.GetSelectedObject6(Index, Marque);
-            }
 
             if (pSwComposant == null)
                 return null;
@@ -252,6 +350,8 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<dynamic> ListListeDesObjetsSelectionnes(swSelectType_e TypeObjet, int Marque = -1)
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
             List<dynamic> pListeObjets = new List<dynamic>();
 
             if (NbObjetsSelectionnes() > 0)

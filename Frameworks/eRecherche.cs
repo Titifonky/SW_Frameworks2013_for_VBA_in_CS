@@ -30,7 +30,7 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private eComposant _Composant;
+        private eComposant _Composant = null;
         private Boolean _PrendreEnCompteConfig = true;
         private Boolean _PrendreEnCompteExclus = false;
         private Boolean _PrendreEnCompteSupprime = false;

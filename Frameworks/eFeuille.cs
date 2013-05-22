@@ -36,8 +36,8 @@ namespace Framework_SW2013
 
         private Boolean _EstInitialise = false;
 
-        private eDessin _Dessin;
-        private Sheet _SwFeuille;
+        private eDessin _Dessin = null;
+        private Sheet _SwFeuille = null;
         #endregion
 
         #region "Constructeur\Destructeur"

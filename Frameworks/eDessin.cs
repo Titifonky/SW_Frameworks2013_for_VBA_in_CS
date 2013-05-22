@@ -28,8 +28,8 @@ namespace Framework_SW2013
         #region "Variables locales"
         private Boolean _EstInitialise = false;
 
-        private eModele _Modele;
-        private DrawingDoc _SwDessin;
+        private eModele _Modele = null;
+        private DrawingDoc _SwDessin = null;
         #endregion
 
         #region "Constructeur\Destructeur"

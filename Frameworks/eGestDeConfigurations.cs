@@ -29,7 +29,8 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private eModele _Modele;
+        private eModele _Modele = null;
+
         #endregion
 
         #region "Constructeur\Destructeur"
