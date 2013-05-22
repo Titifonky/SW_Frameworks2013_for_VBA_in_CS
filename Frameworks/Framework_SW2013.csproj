@@ -52,7 +52,8 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SolidWorks.Interop.swpublished, Version=20.5.0.80, Culture=neutral, PublicKeyToken=89a97bdc5284e6d8, processorArchitecture=MSIL">
+    <Reference Include="SolidWorks.Interop.swpublished">
+      <HintPath>..\..\..\..\..\..\Program Files\SolidWorks Corp\SolidWorks\api\redist\SolidWorks.Interop.swpublished.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System">
@@ -65,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="eObjet.cs" />
     <Compile Include="DlgPropertyManager.cs" />
     <Compile Include="eGestDeProprietes.cs" />
     <Compile Include="DlgSauverUnFichier.cs" />

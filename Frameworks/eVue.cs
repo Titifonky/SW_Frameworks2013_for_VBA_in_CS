@@ -139,6 +139,36 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtVue.
+        /// </summary>
+        /// <param name="SwVue"></param>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
+        internal Boolean Init(View SwVue, eModele Modele)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            if ((SwVue != null) && (Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cDessin))
+            {
+                eFeuille Feuille = new eFeuille();
+                if (Feuille.Init(SwVue.Sheet, Modele.Dessin))
+                {
+                    _Feuille = Feuille;
+                    _SwVue = SwVue;
+
+                    Debug.Info(this.Nom);
+                    _EstInitialise = true;
+                }
+                else
+                {
+                    Debug.Info("!!!!! Erreur d'initialisation");
+                }
+            }
+            return _EstInitialise;
+        }
+
         #endregion
 
     }

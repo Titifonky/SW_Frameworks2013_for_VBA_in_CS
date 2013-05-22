@@ -11,8 +11,13 @@ namespace Framework_SW2013
     [Guid("94E12A11-CED8-4629-9A96-63BD2DA46BD9")]
     public interface IDlgPropertyManager : IPropertyManagerPage2Handler9
     {
-        Boolean Init(eSldWorks Sw, String Titre, swPropertyManagerPageOptions_e OptionsPage = 0);
-        void Show();
+        PropertyManagerPage2 SwPropertyManagerPage2 { get; }
+        String Titre { get; set; }
+        Boolean Epingle { get; set; }
+        swPropertyManagerPageCloseReasons_e ResultatAffichage { get; }
+        Boolean Init(eSldWorks Sw, swPropertyManagerPageOptions_e OptionsPage = 0);
+        void Afficher();
+        Boolean DefinirLeMessage(String Message, swPropertyManagerPageMessageVisibility Visibilite, swPropertyManagerPageMessageExpanded Deplie, String Info);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -25,7 +30,8 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private eSldWorks _SW;
-        private PropertyManagerPage2 _Page;
+        private PropertyManagerPage2 _SwPage;
+        private swPropertyManagerPageCloseReasons_e _ResultatAffichage;
 
         #endregion
 
@@ -36,6 +42,65 @@ namespace Framework_SW2013
         #endregion
 
         #region "Propriétés"
+
+        /// <summary>
+        /// Retourne l'objet Component2 associé.
+        /// </summary>
+        public PropertyManagerPage2 SwPropertyManagerPage2 { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwPage; } }
+
+        /// <summary>
+        /// Retourne ou défini le titre.
+        /// </summary>
+        public String Titre
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if (_EstInitialise)
+                    return _SwPage.Title;
+
+                return "";
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if (_EstInitialise)
+                    _SwPage.Title = value;
+            }
+        }
+
+        /// <summary>
+        /// Retourne ou défini si la page est epinglée.
+        /// </summary>
+        public Boolean Epingle
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if (_EstInitialise)
+                    return _SwPage.Pinned;
+
+                return false;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if (_EstInitialise)
+                    _SwPage.Pinned = value;
+            }
+        }
+
+        /// <summary>
+        /// Retourne le resultat de l'affichage de la page.
+        /// </summary>
+        public swPropertyManagerPageCloseReasons_e ResultatAffichage
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _ResultatAffichage;
+            }
+        }
 
         /// <summary>
         /// Test l'initialisation de l'objet DlgPropertyManager.
@@ -53,7 +118,7 @@ namespace Framework_SW2013
         /// <param name="Titre"></param>
         /// <param name="OptionsPage"></param>
         /// <returns></returns>
-        public Boolean Init(eSldWorks Sw, String Titre, swPropertyManagerPageOptions_e OptionsPage = 0)
+        public Boolean Init(eSldWorks Sw, swPropertyManagerPageOptions_e OptionsPage = 0)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -65,7 +130,7 @@ namespace Framework_SW2013
                     OptionsPage = swPropertyManagerPageOptions_e.swPropertyManagerOptions_LockedPage | swPropertyManagerPageOptions_e.swPropertyManagerOptions_PushpinButton;
 
                 int longerrors = 0;
-                _Page = _SW.SwSW.CreatePropertyManagerPage(Titre, (int)OptionsPage, this, ref longerrors);
+                _SwPage = _SW.SwSW.CreatePropertyManagerPage("", (int)OptionsPage, this, ref longerrors);
 
                 if (longerrors == (int)swPropertyManagerPageStatus_e.swPropertyManagerPage_Okay)
                 {
@@ -82,12 +147,30 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        public void Show()
+        /// <summary>
+        /// Afficher la page.
+        /// </summary>
+        public void Afficher()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
             if (_EstInitialise)
-                _Page.Show2(0);
+                _SwPage.Show2(0);
+        }
+
+        /// <summary>
+        /// Definir le message en entête de page.
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <param name="Visibilite"></param>
+        /// <param name="Deplie"></param>
+        /// <param name="Info"></param>
+        /// <returns></returns>
+        public Boolean DefinirLeMessage(String Message, swPropertyManagerPageMessageVisibility Visibilite, swPropertyManagerPageMessageExpanded Deplie, String Info)
+        {
+            Boolean t;
+            t = _SwPage.SetMessage3(Message, (int)Visibilite, (int)Deplie, Info);
+            return t;
         }
 
         void IPropertyManagerPage2Handler9.AfterActivation()
@@ -112,14 +195,7 @@ namespace Framework_SW2013
         }
         void IPropertyManagerPage2Handler9.OnClose(int Reason)
         {
-            if (Reason == (int)swPropertyManagerPageCloseReasons_e.swPropertyManagerPageClose_Cancel)
-            {
-                //Do something when the cancel button is clicked
-            }
-            else if (Reason == (int)swPropertyManagerPageCloseReasons_e.swPropertyManagerPageClose_Okay)
-            {
-                //Do something else when the OK button is clicked
-            }
+            _ResultatAffichage = (swPropertyManagerPageCloseReasons_e)Reason;
         }
         void IPropertyManagerPage2Handler9.OnComboboxEditChanged(int Id, string Text)
         {

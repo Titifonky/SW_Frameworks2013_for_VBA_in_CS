@@ -190,6 +190,32 @@ namespace Framework_SW2013
 
         /// <summary>
         /// Méthode interne.
+        /// Initialiser l'objet ExtCorps.
+        /// </summary>
+        /// <param name="SwCorps"></param>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
+        internal Boolean Init(Body2 SwCorps, eModele Modele)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            if ((SwCorps != null) && (Modele != null) && (Modele.TypeDuModele == TypeFichier_e.cPiece) && Modele.EstInitialise)
+            {
+                _Piece = Modele.Piece;
+                _SwCorps = SwCorps;
+
+                Debug.Info(this.Nom);
+                _EstInitialise = true;
+            }
+            else
+            {
+                Debug.Info("!!!!! Erreur d'initialisation");
+            }
+            return _EstInitialise;
+        }
+
+        /// <summary>
+        /// Méthode interne.
         /// Renvoi la liste des fonctions d'un corps filtrée par les arguments.
         /// </summary>
         /// <param name="NomARechercher"></param>

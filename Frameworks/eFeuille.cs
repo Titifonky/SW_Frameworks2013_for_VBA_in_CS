@@ -120,6 +120,32 @@ namespace Framework_SW2013
         }
 
         /// <summary>
+        /// Méthode interne.
+        /// Initialiser l'objet ExtFeuille.
+        /// </summary>
+        /// <param name="SwFeuille"></param>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
+        internal Boolean Init(Sheet SwFeuille, eModele Modele)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            if ((SwFeuille != null) && (Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cDessin))
+            {
+                _Dessin = Modele.Dessin;
+                _SwFeuille = SwFeuille;
+
+                Debug.Info(this.Nom);
+                _EstInitialise = true;
+            }
+            else
+            {
+                Debug.Info("!!!!! Erreur d'initialisation");
+            }
+            return _EstInitialise;
+        }
+
+        /// <summary>
         /// Activer la feuille.
         /// </summary>
         public void Activer()
