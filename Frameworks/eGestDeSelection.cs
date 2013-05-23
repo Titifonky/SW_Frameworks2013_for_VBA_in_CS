@@ -291,8 +291,8 @@ namespace Framework_SW2013
             if (NbObjetsSelectionnes() == 0)
                 return null;
 
-            // Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(Index, Marque);
-            Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent3(Index, Marque);
+            Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(Index, Marque);
+            // Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent3(Index, Marque);
 
             // Si le composant racine est sélectionné, rien n'est renvoyé.
             // Donc on le récupère.
