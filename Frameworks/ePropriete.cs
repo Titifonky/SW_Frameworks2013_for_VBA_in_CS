@@ -178,10 +178,11 @@ namespace Framework_SW2013
             }
 
             // Pour la compatibilité
-            if (_GestDeProprietes.Modele.SW.VersionDeBase == "sw2013")
+#if SW2012
                 _GestDeProprietes.SwGestDeProprietes.Get4(_Nom, true, out Expression, out Valeur);
-            else
+#else
                 _GestDeProprietes.SwGestDeProprietes.Get2(_Nom, out Expression, out Valeur);
+#endif
 
         }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.swconst;
 
