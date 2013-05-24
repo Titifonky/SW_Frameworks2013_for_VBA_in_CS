@@ -35,7 +35,7 @@ namespace Framework_SW2013
         void ZoomEtendu();
         void EffacerLesSelections();
         void ActiverInterfaceUtilisateur(Boolean Activer);
-        ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
+        ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
         eFonction DerniereFonction();
     }
 
@@ -387,7 +387,7 @@ namespace Framework_SW2013
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -400,6 +400,7 @@ namespace Framework_SW2013
                 eFonction pFonction = new eFonction();
 
                 if ((Regex.IsMatch(pSwFonction.Name, NomARechercher))
+                    && (Regex.IsMatch(pSwFonction.GetTypeName2(), TypeDeLaFonction))
                     && pFonction.Init(pSwFonction, this)
                     && !(pListeFonctions.Contains(pFonction)))
                     pListeFonctions.Add(pFonction);
@@ -434,11 +435,11 @@ namespace Framework_SW2013
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        public ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
+            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
             ArrayList pArrayFonctions = new ArrayList();
 
             if (pListeFonctions.Count > 0)

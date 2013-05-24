@@ -19,6 +19,7 @@ namespace Framework_SW2013
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; set; }
         Boolean EstVisible { get; set; }
+        int NoOccurence { get; }
         int Nb { get; }
         eRecherche NouvelleRecherche { get; }
         eRepere Repere { get; }
@@ -114,6 +115,23 @@ namespace Framework_SW2013
                     _SwComposant.Visible = (int)swComponentVisibilityState_e.swComponentVisible;
                 else
                     _SwComposant.Visible = (int)swComponentVisibilityState_e.swComponentHidden;
+            }
+        }
+
+        /// <summary>
+        /// Retourne le no d'occurence du composant.
+        /// </summary>
+        public int NoOccurence
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                int pNo = 0;
+                String[] pTab = _SwComposant.Name2.Split('-');
+                Int32.TryParse(pTab[pTab.GetUpperBound(0)], out pNo);
+
+                return pNo;
             }
         }
 

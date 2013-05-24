@@ -14,7 +14,7 @@ namespace Framework_SW2013
         String Nom { get; }
         swCustomInfoType_e TypeDeLaPropriete { get; }
         String Expression { get; set; }
-        String Valeur { get;}
+        String Valeur { get; }
         Boolean Renommer(String NvNom);
         Boolean Supprimer();
     }
@@ -25,7 +25,7 @@ namespace Framework_SW2013
     public class ePropriete : IePropriete, IComparable<ePropriete>, IComparer<ePropriete>, IEquatable<ePropriete>
     {
         #region "Variables locales"
-        
+
         private Boolean _EstInitialise = false;
 
         private eGestDeProprietes _GestDeProprietes = null;
@@ -43,42 +43,19 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent GestDeProprietes.
         /// </summary>
-        public eGestDeProprietes GestDeProprietes { get { Debug.Info(MethodBase.GetCurrentMethod());  return _GestDeProprietes; } }
+        public eGestDeProprietes GestDeProprietes { get { Debug.Info(MethodBase.GetCurrentMethod()); return _GestDeProprietes; } }
 
         /// <summary>
         /// Retourne le nom de la propriété.
         /// </summary>
-        public String Nom
-        {
-            get
-            {
-                Debug.Info(MethodBase.GetCurrentMethod());
-                if (_GestDeProprietes.SwGestDeProprietes.Count > 0)
-                {
-                    foreach (String pNom in _GestDeProprietes.SwGestDeProprietes.GetNames())
-                    {
-                        if (pNom == _Nom)
-                            return _Nom;
-                    }
-                }
-                return null;
-            }
-        }
+        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Nom; } }
 
         /// <summary>
         /// Retourne le type de la propriété.
         /// </summary>
         public swCustomInfoType_e TypeDeLaPropriete
         {
-            get
-            {
-                Debug.Info(MethodBase.GetCurrentMethod());
-                if (!String.IsNullOrEmpty(this.Nom))
-                {
-                    return (swCustomInfoType_e)_GestDeProprietes.SwGestDeProprietes.GetType2(_Nom);
-                }
-                return swCustomInfoType_e.swCustomInfoUnknown;
-            }
+            get { Debug.Info(MethodBase.GetCurrentMethod()); return (swCustomInfoType_e)_GestDeProprietes.SwGestDeProprietes.GetType2(_Nom); }
         }
 
         /// <summary>
@@ -96,7 +73,7 @@ namespace Framework_SW2013
 
                 return Expression;
             }
-            set { Debug.Info(MethodBase.GetCurrentMethod());  _GestDeProprietes.SwGestDeProprietes.Set(_Nom, value); }
+            set { Debug.Info(MethodBase.GetCurrentMethod()); _GestDeProprietes.SwGestDeProprietes.Set(_Nom, value); }
         }
 
         /// <summary>
@@ -120,7 +97,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtPropriete.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
         #endregion
 
@@ -144,7 +121,7 @@ namespace Framework_SW2013
                 if (pListeNom.Contains(Nom))
                 {
                     Debug.Info(this.Nom);
-                    
+
                     _GestDeProprietes = Gestionnaire;
                     _Nom = Nom;
 
@@ -155,7 +132,7 @@ namespace Framework_SW2013
                     Debug.Info("!!!!! Erreur d'initialisation");
                 }
             }
-            
+
             return _EstInitialise;
         }
 
@@ -180,7 +157,7 @@ namespace Framework_SW2013
 
             // Pour la compatibilité
 #if SW2012
-                _GestDeProprietes.SwGestDeProprietes.Get4(_Nom, true, out Expression, out Valeur);
+            _GestDeProprietes.SwGestDeProprietes.Get4(_Nom, true, out Expression, out Valeur);
 #else
                 _GestDeProprietes.SwGestDeProprietes.Get2(_Nom, out Expression, out Valeur);
 #endif

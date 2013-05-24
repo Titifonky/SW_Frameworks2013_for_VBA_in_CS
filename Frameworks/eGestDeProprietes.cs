@@ -18,6 +18,7 @@ namespace Framework_SW2013
         ePropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false);
         ePropriete RecupererPropriete(String Nom);
         Boolean SupprimerPropriete(String Nom);
+        Boolean ProprieteExiste(String Nom);
         ArrayList ListeDesProprietes(String NomARechercher = "");
     }
 
@@ -152,6 +153,18 @@ namespace Framework_SW2013
                 return true;
             
             return false;
+        }
+
+        /// <summary>
+        /// Teste l'existence d'une propriété
+        /// </summary>
+        /// <param name="Nom"></param>
+        /// <returns></returns>
+        public Boolean ProprieteExiste(String Nom)
+        {
+            ePropriete pProp = new ePropriete();
+
+            return pProp.Init(this, Nom);
         }
 
         /// <summary>

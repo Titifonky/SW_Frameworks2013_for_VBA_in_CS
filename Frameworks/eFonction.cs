@@ -28,6 +28,8 @@ namespace Framework_SW2013
         void EnregistrerEtat();
         void RestaurerEtat();
         void Supprimer(swDeleteSelectionOptions_e Options);
+        void Selectionner(Boolean Ajouter = true);
+        void DeSelectionner();
         ArrayList ListeDesCorps();
         ArrayList ListeDesFonctionsParent(String NomARechercher = "");
         ArrayList ListeDesSousFonctions(String NomARechercher = "");
@@ -194,11 +196,13 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            String TypeFonction;
-            String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
+            //String TypeFonction;
+            //String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
             ModelDoc2 pSwModele = _Modele.SwModele;
+            _SwFonction.Select2(false, -1);
 
-            pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, false, -1, null, 0);
+            //pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, false, -1, null, 0);
+
             pSwModele.EditUnsuppress2();
             pSwModele.EditUnsuppressDependent2();
         }
@@ -210,13 +214,14 @@ namespace Framework_SW2013
         public void Desactiver()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-
-            String TypeFonction;
-            String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
+            //String TypeFonction;
+            //String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
             ModelDoc2 pSwModele = _Modele.SwModele;
 
-            pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, false, -1, null, 0);
-            pSwModele.EditSuppress2();
+            _SwFonction.Select2(false, -1);
+
+            //pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, false, -1, null, 0);
+            _Modele.SwModele.EditSuppress2();
         }
 
         /// <summary>
@@ -248,8 +253,35 @@ namespace Framework_SW2013
         /// <param name="Options"></param>
         public void Supprimer(swDeleteSelectionOptions_e Options)
         {
-            _SwFonction.Select2(false, 0);
+            //String TypeFonction;
+            //String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
+            ModelDoc2 pSwModele = _Modele.SwModele;
+            _SwFonction.Select2(false, -1);
+            //pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, false, -1, null, 0);
             _Modele.SwModele.Extension.DeleteSelection2((int)Options);
+        }
+
+        /// <summary>
+        /// Selectionner la fonction.
+        /// </summary>
+        /// <param name="Ajouter"></param>
+        public void Selectionner(Boolean Ajouter = true)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+            //String TypeFonction;
+            //String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
+            ModelDoc2 pSwModele = _Modele.SwModele;
+            _SwFonction.Select2(false, -1);
+            //pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, Ajouter, -1, null, 0);
+        }
+
+        /// <summary>
+        /// Deselectionner la fonction.
+        /// </summary>
+        public void DeSelectionner()
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+            _SwFonction.DeSelect();
         }
 
         /// <summary>
