@@ -16,6 +16,8 @@ namespace Framework_SW2013
         Component2 SwComposant { get; }
         eModele Modele { get; }
         eConfiguration Configuration { get; }
+        String Nom { get; }
+        String NomPourSelection { get; }
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; set; }
         Boolean EstVisible { get; set; }
@@ -66,7 +68,17 @@ namespace Framework_SW2013
         /// Retourne la configuration ExtConfiguration associée.
         /// </summary>
         public eConfiguration Configuration { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Configuration; } }
-
+        
+        /// <summary>
+        /// Retourne le nom du composant tel qu'il est dans l'arbre de création.
+        /// </summary>
+        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwComposant.Name2; } }
+        
+        /// <summary>
+        /// Retourne le nom unique du composant pour la sélection.
+        /// </summary>
+        public String NomPourSelection { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwComposant.GetSelectByIDString(); } }
+        
         /// <summary>
         /// Retourne le nonbre de composant.
         /// </summary>
