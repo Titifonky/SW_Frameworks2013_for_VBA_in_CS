@@ -107,7 +107,7 @@ namespace Framework_SW2013
             // On la récupère
             ePropriete Propriete = RecupererPropriete(Nom);
 
-            // Si elle n'existe pas on la créer et on lui assigne l'expression
+            // Si elle n'existe pas on la crée et on lui assigne l'expression
             if (Propriete == null)
             {
                 _SwGestDeProprietes.Add2(Nom, (int)TypePropriete, Expression);

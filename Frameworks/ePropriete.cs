@@ -139,18 +139,19 @@ namespace Framework_SW2013
 
             if ((Gestionnaire != null) && Gestionnaire.EstInitialise && !String.IsNullOrEmpty(Nom))
             {
+                List<String> pListeNom = new List<string>(Gestionnaire.SwGestDeProprietes.GetNames());
 
-                _GestDeProprietes = Gestionnaire;
-                _Nom = Nom;
-
-                if (!String.IsNullOrEmpty(this.Nom))
+                if (pListeNom.Contains(Nom))
                 {
                     Debug.Info(this.Nom);
+                    
+                    _GestDeProprietes = Gestionnaire;
+                    _Nom = Nom;
+
                     _EstInitialise = true;
                 }
                 else
                 {
-                    _Nom = null;
                     Debug.Info("!!!!! Erreur d'initialisation");
                 }
             }
