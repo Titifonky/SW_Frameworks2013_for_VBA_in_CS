@@ -392,8 +392,11 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             List<eFonction> pListeFonctions = new List<eFonction>();
-
-            Feature pSwFonction = _SwModele.FirstFeature();
+            
+            // Pour pouvoir sélectionner la fonction d'un composant dans un assemblage,
+            // on récupère la première fonction du composant
+            Feature pSwFonction = _Composant.SwComposant.FirstFeature();
+            //Feature pSwFonction = _SwModele.FirstFeature();
 
             while (pSwFonction != null)
             {
