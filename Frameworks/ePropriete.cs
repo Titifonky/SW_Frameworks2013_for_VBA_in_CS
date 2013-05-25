@@ -227,6 +227,13 @@ namespace Framework_SW2013
             return Nom1.Equals(Nom2);
         }
 
+        internal Boolean Equals(ePropriete Prop)
+        {
+            String Nom1 = _GestDeProprietes.Modele.SwModele.GetPathName() + _Nom;
+            String Nom2 = Prop.GestDeProprietes.Modele.SwModele.GetPathName() + Prop.Nom;
+            return Nom1.Equals(Nom2);
+        }
+
         #endregion
     }
 }

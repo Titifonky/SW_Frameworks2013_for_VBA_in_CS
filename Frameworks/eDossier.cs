@@ -220,6 +220,13 @@ namespace Framework_SW2013
             return Nom1.Equals(Nom2);
         }
 
+        internal Boolean Equals(eDossier Dossier)
+        {
+            String Nom1 = _Piece.Modele.SwModele.GetPathName() + Nom;
+            String Nom2 = Dossier.Piece.Modele.SwModele.GetPathName() + Dossier.Nom;
+            return Nom1.Equals(Nom2);
+        }
+
         #endregion
 
     }

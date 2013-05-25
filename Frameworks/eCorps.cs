@@ -383,6 +383,13 @@ namespace Framework_SW2013
             return Nom1.Equals(Nom2);
         }
 
+        internal Boolean Equals(eCorps Corps)
+        {
+            String Nom1 = _Piece.Modele.SwModele.GetPathName() + _SwCorps.Name;
+            String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
+            return Nom1.Equals(Nom2);
+        }
+
         #endregion
     }
 }

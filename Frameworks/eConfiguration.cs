@@ -252,6 +252,13 @@ namespace Framework_SW2013
             return Nom1.Equals(Nom2);
         }
 
+        internal Boolean Equals(eConfiguration Conf)
+        {
+            String Nom1 = _Modele.SwModele.GetPathName() + _SwConfiguration.Name;
+            String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf._SwConfiguration.Name;
+            return Nom1.Equals(Nom2);
+        }
+
         #endregion
     }
 }

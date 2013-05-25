@@ -17,7 +17,6 @@ namespace Framework_SW2013
         eModele Modele { get; }
         eConfiguration Configuration { get; }
         String Nom { get; }
-        String NomPourSelection { get; }
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; set; }
         Boolean EstVisible { get; set; }
@@ -25,6 +24,7 @@ namespace Framework_SW2013
         int Nb { get; }
         eRecherche NouvelleRecherche { get; }
         eRepere Repere { get; }
+        eComposant Parent { get; }
         void Selectionner(Boolean Ajouter = true);
         void DeSelectionner();
         ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false);
@@ -73,11 +73,6 @@ namespace Framework_SW2013
         /// Retourne le nom du composant tel qu'il est dans l'arbre de création.
         /// </summary>
         public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwComposant.Name2; } }
-        
-        /// <summary>
-        /// Retourne le nom unique du composant pour la sélection.
-        /// </summary>
-        public String NomPourSelection { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwComposant.GetSelectByIDString(); } }
         
         /// <summary>
         /// Retourne le nonbre de composant.
@@ -190,6 +185,33 @@ namespace Framework_SW2013
                 pRepere.Origine.Z = pMatrice[11];
                 pRepere.Echelle = pMatrice[12];
                 return pRepere;
+            }
+        }
+
+        /// <summary>
+        /// Retourne le composant parent
+        /// </summary>
+        public eComposant Parent
+        {
+            get
+            {
+                Component2 pSwComposant = _SwComposant.GetParent();
+
+                if (pSwComposant != null)
+                {
+                    eModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
+                    // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
+                    eComposant pComposant = new eComposant();
+                    // Et pour que les deux soit liés, on passe la ref du Composant que l'on vient de creer
+                    // au modele. Comme ca, Modele.Composant pointe sur Composant et Composant.Modele pointe sur Modele,
+                    // la boucle est bouclée
+                    pComposant.Init(pSwComposant, pModele);
+                    pModele.Composant = pComposant;
+
+                    return pComposant;
+                }
+
+                return null;
             }
         }
 
@@ -350,6 +372,13 @@ namespace Framework_SW2013
         }
 
         bool IEquatable<eComposant>.Equals(eComposant Comp)
+        {
+            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
+            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom;
+            return Nom1.Equals(Nom2);
+        }
+
+        internal Boolean Equals(eComposant Comp)
         {
             String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
             String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom;

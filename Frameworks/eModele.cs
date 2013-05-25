@@ -274,7 +274,7 @@ namespace Framework_SW2013
                 {
                     Debug.Info("Referencement du composant");
                     _Composant = new eComposant();
-                    if (_Composant.Init(_SwModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(true), this) == false)
+                    if (_Composant.Init(_SwModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(false), this) == false)
                         _EstInitialise = false;
                 }
             }
@@ -295,7 +295,7 @@ namespace Framework_SW2013
 
             _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, 0, Erreur);
             ZoomEtendu();
-            Redessiner();
+            //Redessiner();
         }
 
         /// <summary>
@@ -393,10 +393,7 @@ namespace Framework_SW2013
 
             List<eFonction> pListeFonctions = new List<eFonction>();
             
-            // Pour pouvoir sélectionner la fonction d'un composant dans un assemblage,
-            // on récupère la première fonction du composant
-            Feature pSwFonction = _Composant.SwComposant.FirstFeature();
-            //Feature pSwFonction = _SwModele.FirstFeature();
+            Feature pSwFonction = _SwModele.FirstFeature();
 
             while (pSwFonction != null)
             {
@@ -485,7 +482,12 @@ namespace Framework_SW2013
 
         bool IEquatable<eModele>.Equals(eModele Modele)
         {
-            return Modele.SwModele.GetPathName().Equals(_SwModele.GetPathName());
+            return _SwModele.GetPathName().Equals(Modele.SwModele.GetPathName());
+        }
+
+        internal Boolean Equals(eModele Modele)
+        {
+            return _SwModele.GetPathName().Equals(Modele.SwModele.GetPathName());
         }
 
         #endregion

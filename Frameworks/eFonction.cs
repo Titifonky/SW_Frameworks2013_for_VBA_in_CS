@@ -25,8 +25,6 @@ namespace Framework_SW2013
         String DateDeModification { get; }
         void Activer();
         void Desactiver();
-        void EnregistrerEtat();
-        void RestaurerEtat();
         void Supprimer(swDeleteSelectionOptions_e Options);
         void Selectionner(Boolean Ajouter = true);
         void DeSelectionner();
@@ -44,9 +42,8 @@ namespace Framework_SW2013
         
         private Boolean _EstInitialise = false;
 
-        private EtatFonction_e _EtatEnregistre = 0;
         private eModele _Modele = null;
-        private Feature _SwFonction = null;
+        private Feature _SwModeleFonction = null;
 
         #endregion
 
@@ -59,9 +56,24 @@ namespace Framework_SW2013
         #region "Propriétés"
 
         /// <summary>
-        /// Retourne l'objet Feature associé.
+        /// Retourne l'objet Feature associé suivant le contexte.
         /// </summary>
-        public Feature SwFonction { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwFonction; } }
+        public Feature SwFonction
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                if (_Modele.Equals(_Modele.SW.Modele()))
+                {
+                    Debug.Info("Fonction du modele");
+                    return _SwModeleFonction;
+                }
+
+                Debug.Info("Fonction du composant");
+                return _Modele.Composant.SwComposant.FeatureByName(_SwModeleFonction.Name);
+            }
+        }
 
         /// <summary>
         /// Retourne le parent ExtModele.
@@ -137,20 +149,27 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Date de creation de la fonction
+        /// </summary>
         public String DateDeCreation
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return _SwFonction.DateCreated;
+                return _SwModeleFonction.DateCreated;
             }
         }
+
+        /// <summary>
+        /// Date de modification de la fonction.
+        /// </summary>
         public String DateDeModification
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return _SwFonction.DateModified;
+                return _SwModeleFonction.DateModified;
             }
         }
 
@@ -178,14 +197,58 @@ namespace Framework_SW2013
             if ((SwFonction != null) && (Modele != null) && Modele.EstInitialise)
             {
                 _Modele = Modele;
-                _SwFonction = SwFonction;
-                Debug.Info(this.Nom);
-                _EstInitialise = true;
+                _SwModeleFonction = SwFonction;
+
+                // Si le NomPourLaSelection contient un @, c'est une fonction sélectionné.
+                // Donc on passe par le modele pour récupèree la fonction originale.
+                // Sinon, c'est la bonne.
+
+                String T = "";
+
+                if (Regex.IsMatch(SwFonction.GetNameForSelection(out T), "@"))
+                {
+                    _SwModeleFonction = null;
+                    String pNomFonction = SwFonction.Name;
+                    Feature pSwFonction = _Modele.SwModele.FirstFeature();
+
+                    while (pSwFonction != null)
+                    {
+
+                        if (pSwFonction.Name.Equals(pNomFonction))
+                        {
+                            _SwModeleFonction = pSwFonction;
+                            break;
+                        }
+
+                        Feature pSwSousFonction = pSwFonction.GetFirstSubFeature();
+
+                        while (pSwSousFonction != null)
+                        {
+
+                            if (pSwSousFonction.Name.Equals(pNomFonction))
+                            {
+                                _SwModeleFonction = pSwSousFonction;
+                                break;
+                            }
+
+                            pSwSousFonction = pSwSousFonction.GetNextSubFeature();
+                        }
+
+                        pSwFonction = pSwFonction.GetNextFeature();
+                    }
+                }
+
+                if (_SwModeleFonction != null)
+                {
+                    Debug.Info(this.Nom);
+                    _EstInitialise = true;
+                }
+                else
+                {
+                    Debug.Info("!!!!! Erreur d'initialisation");
+                }
             }
-            else
-            {
-                Debug.Info("!!!!! Erreur d'initialisation");
-            }
+            
             return _EstInitialise;
         }
 
@@ -196,15 +259,9 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            //String TypeFonction;
-            //String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
-            ModelDoc2 pSwModele = _Modele.SwModele;
-            _SwFonction.Select2(false, -1);
-
-            //pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, false, -1, null, 0);
-
-            pSwModele.EditUnsuppress2();
-            pSwModele.EditUnsuppressDependent2();
+            SwFonction.Select2(false, -1);
+            Modele.SwModele.EditUnsuppress2();
+            Modele.SwModele.EditUnsuppressDependent2();
         }
 
         /// <summary>
@@ -214,37 +271,9 @@ namespace Framework_SW2013
         public void Desactiver()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-            //String TypeFonction;
-            //String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
-            ModelDoc2 pSwModele = _Modele.SwModele;
-
-            _SwFonction.Select2(false, -1);
-
-            //pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, false, -1, null, 0);
-            _Modele.SwModele.EditSuppress2();
-        }
-
-        /// <summary>
-        /// Enregistre l'état de la fonction.
-        /// </summary>
-        public void EnregistrerEtat()
-        {
-            Debug.Info(MethodBase.GetCurrentMethod());
-
-            _EtatEnregistre = Etat;
-        }
-
-        /// <summary>
-        /// Restaure l'état enregistré de la fonction.
-        /// </summary>
-        public void RestaurerEtat()
-        {
-            Debug.Info(MethodBase.GetCurrentMethod());
-
-            if (_EtatEnregistre == EtatFonction_e.cActivee)
-                Activer();
-            else
-                Desactiver();
+            
+            SwFonction.Select2(false, -1);
+            Modele.SwModele.EditSuppress2();
         }
 
         /// <summary>
@@ -253,12 +282,10 @@ namespace Framework_SW2013
         /// <param name="Options"></param>
         public void Supprimer(swDeleteSelectionOptions_e Options)
         {
-            //String TypeFonction;
-            //String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
-            ModelDoc2 pSwModele = _Modele.SwModele;
-            _SwFonction.Select2(false, -1);
-            //pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, false, -1, null, 0);
-            _Modele.SwModele.Extension.DeleteSelection2((int)Options);
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            SwFonction.Select2(false, -1);
+            Modele.SwModele.Extension.DeleteSelection2((int)Options);
         }
 
         /// <summary>
@@ -268,11 +295,8 @@ namespace Framework_SW2013
         public void Selectionner(Boolean Ajouter = true)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-            //String TypeFonction;
-            //String NomFonctionPourSelection = SwFonction.GetNameForSelection(out TypeFonction);
-            ModelDoc2 pSwModele = _Modele.SwModele;
-            _SwFonction.Select2(false, -1);
-            //pSwModele.Extension.SelectByID2(NomFonctionPourSelection, TypeFonction, 0, 0, 0, Ajouter, -1, null, 0);
+
+            SwFonction.Select2(Ajouter, -1);
         }
 
         /// <summary>
@@ -281,7 +305,7 @@ namespace Framework_SW2013
         public void DeSelectionner()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-            _SwFonction.DeSelect();
+            SwFonction.DeSelect();
         }
 
         /// <summary>
@@ -295,10 +319,10 @@ namespace Framework_SW2013
 
             List<eCorps> pListeCorps = new List<eCorps>();
 
-            if (_SwFonction.GetFaceCount() == 0)
+            if (_SwModeleFonction.GetFaceCount() == 0)
                 return pListeCorps;
 
-            foreach (Face2 Face in _SwFonction.GetFaces())
+            foreach (Face2 Face in _SwModeleFonction.GetFaces())
             {
                 eCorps Corps = new eCorps();
                 if (Corps.Init(Face.GetBody(), _Modele.Piece) && (pListeCorps.Contains(Corps) == false))
@@ -423,17 +447,22 @@ namespace Framework_SW2013
 
         int IComparable<eFonction>.CompareTo(eFonction Fonction)
         {
-            return  (_Modele.SwModele.GetPathName() + _SwFonction.Name).CompareTo(Fonction.Modele.SwModele.GetPathName() +  Fonction.SwFonction.Name);
+            return  (_Modele.SwModele.GetPathName() + _SwModeleFonction.Name).CompareTo(Fonction.Modele.SwModele.GetPathName() +  Fonction.SwFonction.Name);
         }
 
         int IComparer<eFonction>.Compare(eFonction Fonction1, eFonction Fonction2)
         {
-            return (Fonction1.Modele.SwModele.GetPathName() + Fonction1._SwFonction.Name).CompareTo(Fonction2.Modele.SwModele.GetPathName() + Fonction2._SwFonction.Name);
+            return (Fonction1.Modele.SwModele.GetPathName() + Fonction1._SwModeleFonction.Name).CompareTo(Fonction2.Modele.SwModele.GetPathName() + Fonction2._SwModeleFonction.Name);
         }
 
         bool IEquatable<eFonction>.Equals(eFonction Fonction)
         {
-            return (Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name).Equals(_Modele.SwModele.GetPathName() + _SwFonction.Name);
+            return (Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name).Equals(_Modele.SwModele.GetPathName() + _SwModeleFonction.Name);
+        }
+
+        internal Boolean Equals(eFonction Fonction)
+        {
+            return (Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name).Equals(_Modele.SwModele.GetPathName() + _SwModeleFonction.Name);
         }
 
         #endregion

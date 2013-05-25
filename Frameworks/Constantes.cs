@@ -60,12 +60,6 @@ namespace Framework_SW2013
         cPDF = 4
     }
 
-    [Flags]
-    public enum TypeFonction_e
-    {
-
-    }
-
     #endregion
 
     internal static class CONSTANTES
