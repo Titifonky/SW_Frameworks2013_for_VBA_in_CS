@@ -66,6 +66,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="eBarre.cs" />
+    <Compile Include="eTole.cs" />
     <Compile Include="eObjet.cs" />
     <Compile Include="eGestDeProprietes.cs" />
     <Compile Include="DlgSauverUnFichier.cs" />

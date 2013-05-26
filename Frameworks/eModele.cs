@@ -51,6 +51,12 @@ namespace Framework_SW2013
         private ModelDoc2 _SwModele = null;
         private eSldWorks _SW = null;
         private eComposant _Composant = null;
+        private eAssemblage _Assemblage = null;
+        private ePiece _Piece = null;
+        private eDessin _Dessin = null;
+        private eGestDeConfigurations _GestDeConfigurations = null;
+        private eGestDeProprietes _GestDeProprietes = null;
+        private eGestDeSelection _GestDeSelection = null;
         private eFichierSW _FichierSw = null;
         private int Erreur = 0;
         private int Warning = 0;
@@ -89,10 +95,14 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                eAssemblage Assemblage = new eAssemblage();
+                if (_Assemblage == null)
+                {
+                    _Assemblage = new eAssemblage();
+                    _Assemblage.Init(this);
+                }
 
-                if (Assemblage.Init(this))
-                    return Assemblage;
+                if (_Assemblage.EstInitialise)
+                    return _Assemblage;
 
                 return null;
             }
@@ -107,10 +117,14 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                ePiece Piece = new ePiece();
+                if (_Piece == null)
+                {
+                    _Piece = new ePiece();
+                    _Piece.Init(this);
+                }
 
-                if (Piece.Init(this))
-                    return Piece;
+                if (_Piece.EstInitialise)
+                    return _Piece;
 
                 return null;
             }
@@ -125,10 +139,14 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                eDessin Dessin = new eDessin();
+                if (_Dessin == null)
+                {
+                    _Dessin = new eDessin();
+                    _Dessin.Init(this);
+                }
 
-                if (Dessin.Init(this))
-                    return Dessin;
+                if (_Dessin.EstInitialise)
+                    return _Dessin;
                 
                 return null;
             }
@@ -143,9 +161,14 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                eGestDeConfigurations pGestConfigs = new eGestDeConfigurations();
-                if (pGestConfigs.Init(this))
-                    return pGestConfigs;
+                if (_GestDeConfigurations == null)
+                {
+                    _GestDeConfigurations = new eGestDeConfigurations();
+                    _GestDeConfigurations.Init(this);
+                }
+
+                if (_GestDeConfigurations.EstInitialise)
+                    return _GestDeConfigurations;
 
                 return null;
             }
@@ -160,9 +183,14 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                eGestDeProprietes pGestProps = new eGestDeProprietes();
-                if (pGestProps.Init(SwModele.Extension.get_CustomPropertyManager(""), this))
-                    return pGestProps;
+                if (_GestDeProprietes == null)
+                {
+                    _GestDeProprietes = new eGestDeProprietes();
+                    _GestDeProprietes.Init(SwModele.Extension.get_CustomPropertyManager(""), this);
+                }
+
+                if (_GestDeProprietes.EstInitialise)
+                    return _GestDeProprietes;
 
                 return null;
             }
@@ -177,9 +205,14 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                eGestDeSelection pGestSelection = new eGestDeSelection();
-                if (pGestSelection.Init(SwModele.SelectionManager, this))
-                    return pGestSelection;
+                if (_GestDeSelection == null)
+                {
+                    _GestDeSelection = new eGestDeSelection();
+                    _GestDeSelection.Init(SwModele.SelectionManager, this);
+                }
+
+                if (_GestDeSelection.EstInitialise)
+                    return _GestDeSelection;
 
                 return null;
             }

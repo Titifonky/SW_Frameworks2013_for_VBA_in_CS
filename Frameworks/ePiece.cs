@@ -138,7 +138,7 @@ namespace Framework_SW2013
                 T = (TypeCorps_e)( T - TypeCorps_e.cTole);
             }
 
-            if (Convert.ToBoolean(T & TypeCorps_e.cProfil))
+            if (Convert.ToBoolean(T & TypeCorps_e.cBarre))
             {
                 foreach (eFonction Fonction in _Modele.ListListeDesFonctions())
                 {
@@ -146,7 +146,7 @@ namespace Framework_SW2013
                         return true;
                 }
 
-                T = (TypeCorps_e)(T - TypeCorps_e.cProfil);
+                T = (TypeCorps_e)(T - TypeCorps_e.cBarre);
             }
 
             if (Convert.ToBoolean(T & TypeCorps_e.cAutre))

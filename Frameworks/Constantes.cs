@@ -25,9 +25,9 @@ namespace Framework_SW2013
     {
         cAucun = 0,
         cTole = 1,
-        cProfil = 2,
+        cBarre = 2,
         cAutre = 4,
-        cTousLesTypesDeCorps = cTole + cProfil + cAutre
+        cTousLesTypesDeCorps = cTole + cBarre + cAutre
     }
 
     //Cet attribut permet de combiner les valeurs d'enumération

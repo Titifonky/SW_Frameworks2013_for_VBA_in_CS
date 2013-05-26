@@ -16,14 +16,14 @@ namespace Framework_SW2013
     {
         Body2 SwCorps { get; }
         ePiece Piece { get; }
+        eTole Tole { get; }
+        eBarre Barre { get; }
         String Nom { get; set; }
         TypeCorps_e TypeDeCorps { get; }
         eDossier Dossier { get; }
         eFonction PremiereFonction { get; }
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
-        eFonction FonctionTolerie();
-        eFonction FonctionDeplie();
-        eFonction FonctionCubeDeVisualisation();
+        
         int NbIntersection(eCorps Corps);
     }
 
@@ -38,6 +38,8 @@ namespace Framework_SW2013
 
         private ePiece _Piece = null;
         private Body2 _SwCorps = null;
+        private eTole _Tole = null;
+        private eBarre _Barre = null;
 
         #endregion
 
@@ -58,6 +60,50 @@ namespace Framework_SW2013
         /// Retourne le parent ExtPiece.
         /// </summary>
         public ePiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
+
+        /// <summary>
+        /// Retourne l'objet Tole
+        /// </summary>
+        public eTole Tole
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                if (_Tole == null)
+                {
+                    _Tole = new eTole();
+                    _Tole.Init(this);
+                }
+
+                if (_Tole.EstInitialise)
+                    return _Tole;
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Retourne l'objet Barre
+        /// </summary>
+        public eBarre Barre
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                if (_Barre == null)
+                {
+                    _Barre = new eBarre();
+                    _Barre.Init(this);
+                }
+
+                if (_Barre.EstInitialise)
+                    return _Barre;
+
+                return null;
+            }
+        }
 
         /// <summary>
         /// Retourne ou défini le nom du corps.
@@ -103,7 +149,7 @@ namespace Framework_SW2013
                         case "FlatPattern":
                             return TypeCorps_e.cTole;
                         case "WeldMemberFeat":
-                            return TypeCorps_e.cProfil;
+                            return TypeCorps_e.cBarre;
                     }
                 }
 
@@ -154,7 +200,7 @@ namespace Framework_SW2013
 
         /// <summary>
         /// Fonction interne.
-        /// Test l'initialisation de l'objet ExtCorps.
+        /// Test l'initialisation de l'objet eBarre.
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
@@ -272,62 +318,6 @@ namespace Framework_SW2013
                 pArrayFonctions = new ArrayList(pListeFonctions);
 
             return pArrayFonctions;
-        }
-
-        /// <summary>
-        /// Renvoi la fonction Tolerie du corps
-        /// </summary>
-        /// <returns></returns>
-        public eFonction FonctionTolerie()
-        {
-            Debug.Info(MethodBase.GetCurrentMethod());
-
-            if (TypeDeCorps == TypeCorps_e.cTole)
-            {
-                foreach(eFonction pFonc in ListListeDesFonctions())
-                {
-                    if (pFonc.TypeDeLaFonction == "SheetMetal")
-                        return pFonc;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Renvoi la fonction EtatDeplie du corps
-        /// </summary>
-        /// <returns></returns>
-        public eFonction FonctionDeplie()
-        {
-            Debug.Info(MethodBase.GetCurrentMethod());
-
-            if (TypeDeCorps == TypeCorps_e.cTole)
-            {
-                foreach (eFonction pFonc in ListListeDesFonctions())
-                {
-                    if (pFonc.TypeDeLaFonction == "FlatPattern")
-                        return pFonc;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Renvoi la fonction CubeDeVisualisation du corps
-        /// </summary>
-        /// <returns></returns>
-        public eFonction FonctionCubeDeVisualisation()
-        {
-            Debug.Info(MethodBase.GetCurrentMethod());
-
-            if (TypeDeCorps == TypeCorps_e.cTole)
-            {
-                return this.FonctionDeplie().ListListeDesSousFonctions(CONSTANTES.CUBE_DE_VISUALISATION)[0];
-            }
-
-            return null;
         }
 
         /// <summary>

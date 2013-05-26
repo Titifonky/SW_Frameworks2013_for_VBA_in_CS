@@ -15,7 +15,7 @@ namespace Framework_SW2013
     {
         Component2 SwComposant { get; }
         eModele Modele { get; }
-        eConfiguration Configuration { get; }
+        eConfiguration Configuration { get; set; }
         String Nom { get; }
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; set; }
@@ -67,7 +67,23 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne la configuration ExtConfiguration associée.
         /// </summary>
-        public eConfiguration Configuration { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Configuration; } }
+        public eConfiguration Configuration
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _Configuration;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if (value.Modele.Equals(_Modele))
+                {
+                    _Configuration = value;
+                    _SwComposant.ReferencedConfiguration = _Configuration.Nom;
+                }
+            }
+        }
         
         /// <summary>
         /// Retourne le nom du composant tel qu'il est dans l'arbre de création.
@@ -359,29 +375,29 @@ namespace Framework_SW2013
 
         int IComparable<eComposant>.CompareTo(eComposant Comp)
         {
-            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
-            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom;
+            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom + "_" + NoOccurence.ToString().PadLeft(10,'0');
+            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom + "_" + Comp.NoOccurence.ToString().PadLeft(10,'0');
             return Nom1.CompareTo(Nom2);
         }
 
         int IComparer<eComposant>.Compare(eComposant Comp1, eComposant Comp2)
         {
-            String Nom1 = Comp1.SwComposant.GetPathName() + Comp1.Configuration.Nom;
-            String Nom2 = Comp2.SwComposant.GetPathName() + Comp2.Configuration.Nom;
+            String Nom1 = Comp1.SwComposant.GetPathName() + Comp1.Configuration.Nom + "_" + Comp1.NoOccurence.ToString().PadLeft(10, '0');
+            String Nom2 = Comp2.SwComposant.GetPathName() + Comp2.Configuration.Nom + "_" + Comp2.NoOccurence.ToString().PadLeft(10, '0');
             return Nom1.CompareTo(Nom2);
         }
 
         bool IEquatable<eComposant>.Equals(eComposant Comp)
         {
-            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
-            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom;
+            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom + "_" + NoOccurence.ToString().PadLeft(10, '0');
+            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom + "_" + Comp.NoOccurence.ToString().PadLeft(10, '0');
             return Nom1.Equals(Nom2);
         }
 
         internal Boolean Equals(eComposant Comp)
         {
-            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom;
-            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom;
+            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom + "_" + NoOccurence.ToString().PadLeft(10, '0');
+            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom + "_" + Comp.NoOccurence.ToString().PadLeft(10, '0');
             return Nom1.Equals(Nom2);
         }
 
