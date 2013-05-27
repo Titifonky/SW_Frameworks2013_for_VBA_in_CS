@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Collections;
 
 namespace Framework_SW2013
 {
@@ -23,11 +25,17 @@ namespace Framework_SW2013
         Boolean AfficherAide { get; set; }
         Boolean AfficherLectureSeule { get; set; }
         Boolean ExtensionsMultiple { get; set; }
-
         Boolean LectureSeuleSelectionne { get; set; }
 
+        Boolean EstInitialise { get; }
+
+        Boolean Init(eSldWorks Sw);
+
+        void FiltreSW(TypeFichier_e TypeDesFichiersFiltres, Boolean FiltreDistinct = true);
         String SelectionnerUnFichier(Boolean CheminComplet = true);
-        String[] SelectionnerPlusieursFichiers(Boolean CheminComplet = true);
+        eFichierSW SelectionnerUnFichierSW();
+        ArrayList SelectionnerPlusieursFichiers(Boolean CheminComplet = true);
+        ArrayList SelectionnerPlusieursFichierSW();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -36,6 +44,10 @@ namespace Framework_SW2013
     public class DlgRechercherUnFichier : IDlgRechercherUnFichier
     {
         #region "Variables locales"
+
+        private Boolean _EstInitialise = false;
+
+        private eSldWorks _SW = null;
 
         #endregion
 
@@ -61,15 +73,88 @@ namespace Framework_SW2013
         public Boolean AfficherAide { get { return _Dialogue.ShowHelp; } set { _Dialogue.ShowHelp = value; } }
         public Boolean AfficherLectureSeule { get { return _Dialogue.ShowReadOnly; } set { _Dialogue.ShowReadOnly = value; } }
         public Boolean ExtensionsMultiple { get { return _Dialogue.SupportMultiDottedExtensions; } set { _Dialogue.SupportMultiDottedExtensions = value; } }
-
         public Boolean LectureSeuleSelectionne { get { return _Dialogue.ReadOnlyChecked; } set { _Dialogue.ReadOnlyChecked = value; } }
+
+        public Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
         #endregion
 
         #region "Méthodes"
 
+        /// <summary>
+        /// Initialiser l'objet.
+        /// </summary>
+        /// <param name="Sw"></param>
+        /// <returns></returns>
+        public Boolean Init(eSldWorks Sw)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            if ((Sw != null) && Sw.EstInitialise)
+            {
+                _SW = Sw;
+                // On valide l'initialisation
+                _EstInitialise = true;
+            }
+            else
+            {
+                Debug.Info("!!!!! Erreur d'initialisation");
+            }
+
+            return _EstInitialise;
+        }
+
+        /// <summary>
+        /// Filtrer les fichiers SW
+        /// </summary>
+        /// <param name="TypeDesFichiersFiltres"></param>
+        public void FiltreSW(TypeFichier_e TypeDesFichiersFiltres, Boolean FiltreDistinct = true)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            String TxtFiltre;
+
+            List<String> Filtre = new List<string>();
+
+            if (FiltreDistinct)
+            {
+                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cAssemblage))
+                    Filtre.Add("Assemblage (*.SLDASM)|*.SLDASM");
+
+                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cPiece))
+                    Filtre.Add("Pièce (*.SLDPRT)|*.SLDPRT");
+
+                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cDessin))
+                    Filtre.Add("Mise en plan (*.SLDDRW)|*.SLDDRW");
+
+                TxtFiltre = String.Join("|", Filtre);
+            }
+            else
+            {
+                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cAssemblage))
+                    Filtre.Add("*.SLDASM");
+
+                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cPiece))
+                    Filtre.Add("*.SLDPRT");
+
+                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cDessin))
+                    Filtre.Add("*.SLDDRW");
+
+                TxtFiltre = "Fichier SolidWorks (" + String.Join(", ", Filtre) + ")" + "|" + String.Join("; ", Filtre);
+            }
+
+            _Dialogue.Filter = TxtFiltre;
+        }
+
+        /// <summary>
+        /// Selectionner un fichier et renvoi le chemin
+        /// </summary>
+        /// <param name="CheminComplet"></param>
+        /// <returns></returns>
         public String SelectionnerUnFichier(Boolean CheminComplet = true)
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
             _Dialogue.Multiselect = false;
 
             if (_Dialogue.ShowDialog() == DialogResult.OK)
@@ -83,19 +168,72 @@ namespace Framework_SW2013
                 return "";
         }
 
-        public String[] SelectionnerPlusieursFichiers(Boolean CheminComplet = true)
+        /// <summary>
+        /// Selectionner un fichier et renvoi l'objet FichierSW
+        /// </summary>
+        /// <param name="CheminComplet"></param>
+        /// <returns></returns>
+        public eFichierSW SelectionnerUnFichierSW()
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            eFichierSW pFichierSW = new eFichierSW();
+            if (pFichierSW.Init(_SW))
+            {
+                pFichierSW.Chemin = SelectionnerUnFichier(true);
+                if ((pFichierSW.TypeDuFichier == TypeFichier_e.cAssemblage) || (pFichierSW.TypeDuFichier == TypeFichier_e.cPiece) || (pFichierSW.TypeDuFichier == TypeFichier_e.cDessin))
+                    return pFichierSW;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Selectionner des fichiers et renvoi un tableau de chemins
+        /// </summary>
+        /// <param name="CheminComplet"></param>
+        /// <returns></returns>
+        public ArrayList SelectionnerPlusieursFichiers(Boolean CheminComplet = true)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
             _Dialogue.Multiselect = true;
+            ArrayList pArrayFichiers = new ArrayList();
 
             if (_Dialogue.ShowDialog() == DialogResult.OK)
             {
                 if (CheminComplet)
-                    return _Dialogue.FileNames;
+                    pArrayFichiers = new ArrayList(_Dialogue.FileNames);
                 else
-                    return _Dialogue.SafeFileNames;
+                    pArrayFichiers = new ArrayList(_Dialogue.SafeFileNames);
             }
-            else
-                return null;
+            
+            return pArrayFichiers;
+        }
+
+        /// <summary>
+        /// Selectionner des fichiers et renvoi un tableau d'objet FichierSW
+        /// </summary>
+        /// <param name="CheminComplet"></param>
+        /// <returns></returns>
+        public ArrayList SelectionnerPlusieursFichierSW()
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            ArrayList pArrayFichiers = new ArrayList();
+
+            foreach (String CheminFichier in SelectionnerPlusieursFichiers(true))
+            {
+                eFichierSW pFichierSW = new eFichierSW();
+                if (pFichierSW.Init(_SW))
+                {
+                    pFichierSW.Chemin = CheminFichier;
+                    if ((pFichierSW.TypeDuFichier == TypeFichier_e.cAssemblage) || (pFichierSW.TypeDuFichier == TypeFichier_e.cPiece) || (pFichierSW.TypeDuFichier == TypeFichier_e.cDessin))
+                        pArrayFichiers.Add(pFichierSW);
+                }
+            }
+
+            return pArrayFichiers;
         }
 
         #endregion

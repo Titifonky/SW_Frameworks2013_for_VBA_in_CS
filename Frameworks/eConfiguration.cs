@@ -187,7 +187,7 @@ namespace Framework_SW2013
         public Boolean Est(TypeConfig_e T)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-            return Convert.ToBoolean(TypeConfig & T);
+            return TypeConfig.HasFlag(T);
         }
 
         /// <summary>

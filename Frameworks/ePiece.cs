@@ -124,7 +124,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            if (Convert.ToBoolean(T & TypeCorps_e.cTole))
+            if (T.HasFlag(TypeCorps_e.cTole))
             {
                 foreach (eFonction Fonction in _Modele.ListListeDesFonctions())
                 {
@@ -134,22 +134,18 @@ namespace Framework_SW2013
                         || (Fonction.TypeDeLaFonction == "FlatPattern"))
                         return true;
                 }
-
-                T = (TypeCorps_e)( T - TypeCorps_e.cTole);
             }
 
-            if (Convert.ToBoolean(T & TypeCorps_e.cBarre))
+            if (T.HasFlag(TypeCorps_e.cBarre))
             {
                 foreach (eFonction Fonction in _Modele.ListListeDesFonctions())
                 {
                     if (Fonction.TypeDeLaFonction == "WeldMemberFeat")
                         return true;
                 }
-
-                T = (TypeCorps_e)(T - TypeCorps_e.cBarre);
             }
 
-            if (Convert.ToBoolean(T & TypeCorps_e.cAutre))
+            if (T.HasFlag(TypeCorps_e.cAutre))
             {
                 if (ListListeDesDossiersDePiecesSoudees(TypeCorps_e.cAutre, false).Count > 0)
                     return true;
@@ -179,7 +175,7 @@ namespace Framework_SW2013
                 {
                     Body2 pSwCorps = (Body2)ObjetCorps;
                     eCorps pCorps = new eCorps();
-                    if (pCorps.Init(pSwCorps, this) && Convert.ToBoolean(pCorps.TypeDeCorps & TypeDeCorps))
+                    if (pCorps.Init(pSwCorps, this) && TypeDeCorps.HasFlag(pCorps.TypeDeCorps))
                         {
                             Liste.Add(pCorps);
                         }
@@ -236,7 +232,7 @@ namespace Framework_SW2013
                     BodyFolder pSwDossier = pFonction.GetSpecificFeature2();
                     eDossier Dossier = new eDossier();
 
-                    if (Dossier.Init(pSwDossier, this) && Convert.ToBoolean(Dossier.TypeDeCorps & TypeDeCorps) && (!Dossier.EstExclu | PrendreEnCompteExclus))
+                    if (Dossier.Init(pSwDossier, this) && TypeDeCorps.HasFlag(Dossier.TypeDeCorps) && (!Dossier.EstExclu | PrendreEnCompteExclus))
                         Liste.Add(Dossier);
 
                     Dossier = null;

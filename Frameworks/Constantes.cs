@@ -13,20 +13,20 @@ namespace Framework_SW2013
     [Flags]
     public enum TypeFichier_e
     {
-        cAucun = 0,
-        cAssemblage = 1,
-        cPiece = 2,
-        cDessin = 4
+        cAutre = 1,
+        cAssemblage = 2,
+        cPiece = 4,
+        cDessin = 8
     }
 
     //Cet attribut permet de combiner les valeurs d'enumération
     [Flags]
     public enum TypeCorps_e
     {
-        cAucun = 0,
-        cTole = 1,
-        cBarre = 2,
-        cAutre = 4,
+        cAucun = 1,
+        cTole = 2,
+        cBarre = 4,
+        cAutre = 8,
         cTousLesTypesDeCorps = cTole + cBarre + cAutre
     }
 

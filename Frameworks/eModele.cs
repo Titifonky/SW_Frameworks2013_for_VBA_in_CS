@@ -238,7 +238,7 @@ namespace Framework_SW2013
                         return TypeFichier_e.cDessin;
 
                     default:
-                        return TypeFichier_e.cAucun;
+                        return TypeFichier_e.cAutre;
                 }
             }
         }

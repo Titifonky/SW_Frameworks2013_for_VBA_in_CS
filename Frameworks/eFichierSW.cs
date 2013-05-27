@@ -72,7 +72,7 @@ namespace Framework_SW2013
                         return TypeFichier_e.cDessin;
 
                     default:
-                        return TypeFichier_e.cAucun;
+                        return TypeFichier_e.cAutre;
                 }
             }
         }
@@ -131,10 +131,15 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            eModele pModele = _SW.Modele(_Chemin);
-            eConfiguration pConfig = pModele.GestDeConfigurations.ConfigurationAvecLeNom(_Configuration);
-            pConfig.Activer();
-            return pModele;
+            if ((TypeFichier_e.cAssemblage | TypeFichier_e.cPiece | TypeFichier_e.cDessin).HasFlag(TypeDuFichier))
+            {
+                eModele pModele = _SW.Modele(_Chemin);
+                eConfiguration pConfig = pModele.GestDeConfigurations.ConfigurationAvecLeNom(_Configuration);
+                pConfig.Activer();
+                return pModele;
+            }
+
+            return null;
         }
 
         #endregion

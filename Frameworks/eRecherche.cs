@@ -157,7 +157,7 @@ namespace Framework_SW2013
                 {
                     // Attention, Regex.IsMatch peut renvoyer une erreur si NomComposant est égal à un caractère spécial
                     // du style "*" ou "[" et autre. Pb à corriger.
-                    if (Convert.ToBoolean(pComp.Modele.TypeDuModele & TypeComposant) && Regex.IsMatch(pComp.Modele.FichierSw.Chemin, NomComposant))
+                    if (TypeComposant.HasFlag(pComp.Modele.TypeDuModele) && Regex.IsMatch(pComp.Modele.FichierSw.Chemin, NomComposant))
                     {
                         eComposant pComposant = new eComposant();
                         String pCle = NomCle(pComp);
@@ -207,7 +207,7 @@ namespace Framework_SW2013
             _IndexComposant = 0;
 
             // On renvoi le composant de base seulement s'il a le meme type que ceux recherché (TypeComposant)
-            if ((_RenvoyerComposantRacine == true) && Convert.ToBoolean(_Composant.Modele.TypeDuModele & TypeComposant))
+            if ((_RenvoyerComposantRacine == true) && _Composant.Modele.TypeDuModele.HasFlag(TypeComposant))
                 pDicComposants.Add(NomCle(_Composant), _Composant);
 
             // Si le composant est un assemblage contenant plusieurs composants, on renvoi la liste des composants recherchés
