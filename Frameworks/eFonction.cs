@@ -260,8 +260,8 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             SwFonction.Select2(false, -1);
-            Modele.SwModele.EditUnsuppress2();
-            Modele.SwModele.EditUnsuppressDependent2();
+            Modele.SW.Modele().SwModele.EditUnsuppress2();
+            Modele.SW.Modele().SwModele.EditUnsuppressDependent2();
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
             
             SwFonction.Select2(false, -1);
-            Modele.SwModele.EditSuppress2();
+            Modele.SW.Modele().SwModele.EditSuppress2();
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             SwFonction.Select2(false, -1);
-            Modele.SwModele.Extension.DeleteSelection2((int)Options);
+            Modele.SW.Modele().SwModele.Extension.DeleteSelection2((int)Options);
         }
 
         /// <summary>
@@ -295,7 +295,6 @@ namespace Framework_SW2013
         public void Selectionner(Boolean Ajouter = true)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-
             SwFonction.Select2(Ajouter, -1);
         }
 

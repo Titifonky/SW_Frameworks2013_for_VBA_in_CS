@@ -226,7 +226,7 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                switch (SwModele.GetType())
+                switch (_SwModele.GetType())
                 {
                     case (int)swDocumentTypes_e.swDocASSEMBLY:
                         return TypeFichier_e.cAssemblage;
@@ -246,22 +246,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet ExtFichierSw
         /// </summary>
-        public eFichierSW FichierSw
-        {
-            get
-            {
-                Debug.Info(MethodBase.GetCurrentMethod());
-
-                if (_FichierSw.EstInitialise)
-                {
-                    _FichierSw.Chemin = SwModele.GetPathName();
-                    _FichierSw.Configuration = _Composant.Configuration.Nom;
-                    _FichierSw.Nb = 1;
-                    return _FichierSw;
-                }
-                return null;
-            }
-        }
+        public eFichierSW FichierSw { get { Debug.Info(MethodBase.GetCurrentMethod()); return _FichierSw; } }
 
         /// <summary>
         /// Fonction interne.
@@ -295,19 +280,21 @@ namespace Framework_SW2013
 
                 // On créer l'objet ExtFichierSw associé
                 _FichierSw = new eFichierSW();
-                if (_FichierSw.Init(_SW))
-                {
+                if (_FichierSw.Init(Sw))
                     _FichierSw.Chemin = _SwModele.GetPathName();
-                    _FichierSw.Configuration = _SwModele.ConfigurationManager.ActiveConfiguration.Name;
-                    _FichierSw.Nb = 1;
-                }
+                else
+                    _EstInitialise = false;
 
                 // Si c'est un assemblage ou une pièce, on va chercher le composant associé
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
+                    Debug.Info("Referencement de la configuration");
+                    Configuration pConfigActive = _SwModele.ConfigurationManager.ActiveConfiguration;
+                    _FichierSw.Configuration = pConfigActive.Name;
+
                     Debug.Info("Referencement du composant");
                     _Composant = new eComposant();
-                    if (_Composant.Init(_SwModele.ConfigurationManager.ActiveConfiguration.GetRootComponent3(false), this) == false)
+                    if (_Composant.Init(pConfigActive.GetRootComponent3(false), this) == false)
                         _EstInitialise = false;
                 }
             }

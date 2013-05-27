@@ -20,6 +20,10 @@ namespace Framework_SW2013
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; set; }
         Boolean EstVisible { get; set; }
+        Boolean EstFixe { get; set; }
+        Boolean EstUneRepetition { get; }
+        Boolean EstUneSymetrie { get; }
+        Boolean EstCharge { get; }
         int NoOccurence { get; }
         int Nb { get; }
         eRecherche NouvelleRecherche { get; }
@@ -138,6 +142,67 @@ namespace Framework_SW2013
                     _SwComposant.Visible = (int)swComponentVisibilityState_e.swComponentVisible;
                 else
                     _SwComposant.Visible = (int)swComponentVisibilityState_e.swComponentHidden;
+            }
+        }
+
+        /// <summary>
+        /// Retourne ou défini si le composant est fixé.
+        /// </summary>
+        public Boolean EstFixe
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwComposant.IsFixed();
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                if (_Modele.SW.TypeDuModeleActif == TypeFichier_e.cAssemblage)
+                {
+                    Selectionner(false);
+                    if (value)
+                        _Modele.SW.Modele().Assemblage.SwAssemblage.FixComponent();
+                    else
+                        _Modele.SW.Modele().Assemblage.SwAssemblage.UnfixComponent();
+                }
+             }
+        }
+
+        /// <summary>
+        /// Retourne si le composant est issue d'une fonction répétition.
+        /// </summary>
+        public Boolean EstUneRepetition
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwComposant.IsPatternInstance();
+            }
+        }
+
+        /// <summary>
+        /// Retourne si le composant est chargé.
+        /// </summary>
+        public Boolean EstCharge
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwComposant.IsLoaded();
+            }
+        }
+
+        /// <summary>
+        /// Retourne si le composant est issue d'une fonction symetrie.
+        /// </summary>
+        public Boolean EstUneSymetrie
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwComposant.IsMirrored();
             }
         }
 

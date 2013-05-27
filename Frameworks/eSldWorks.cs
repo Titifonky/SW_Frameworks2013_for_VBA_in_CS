@@ -65,9 +65,7 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                eModele Modele = new eModele();
-                Modele.Init(_SwSW.ActiveDoc(), this);
-                return Modele.TypeDuModele;
+                return Modele().TypeDuModele;
             }
         }
 
@@ -138,7 +136,7 @@ namespace Framework_SW2013
                     _SwSW = SldWks;
                     Debug.Init(SldWks);
                     Debug.Info(MethodBase.GetCurrentMethod());
-                    SldWks.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
+                    _SwSW.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
                     _Revision = SldWks.RevisionNumber();
                     _EstInitialise = true;
                 }
@@ -166,7 +164,8 @@ namespace Framework_SW2013
             if (String.IsNullOrEmpty(Chemin))
             {
                 Debug.Info("Document actif");
-                pModele.Init(_SwSW.ActiveDoc, this);
+                ModelDoc2 pModeleActif = _SwSW.ActiveDoc;
+                pModele.Init(pModeleActif, this);
             }
             else
             {

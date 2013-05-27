@@ -23,7 +23,7 @@ namespace Framework_SW2013
         void Supprimer();
         void ZoomEtendu();
         void Redimensionner();
-        void ExporterEnDXF(String CheminDossier, String NomDuFichierAlternatif = "");
+        void ExporterEn(Extension_e TypeExport, String CheminDossier, String NomDuFichierAlternatif = "");
         ArrayList ListeDesVues(String NomARechercher = "");
     }
 
@@ -150,6 +150,7 @@ namespace Framework_SW2013
         /// </summary>
         public void Activer()
         {
+            Debug.Info(MethodBase.GetCurrentMethod());
             Dessin.SwDessin.ActivateSheet(Nom);
         }
 
@@ -158,9 +159,14 @@ namespace Framework_SW2013
         /// </summary>
         public void Supprimer()
         {
-            Dessin.Modele.SwModele.Extension.SelectByID2(Nom, "SHEET", 0, 0, 0, false, 0, null, 0);
-            Dessin.Modele.SwModele.DeleteSelection(false);
-            Dessin.Modele.SwModele.ClearSelection2(true);
+            Debug.Info(MethodBase.GetCurrentMethod());
+            if (Dessin.Modele.SW.TypeDuModeleActif == TypeFichier_e.cDessin)
+            {
+                eModele pModeleActif = Dessin.Modele.SW.Modele();
+                pModeleActif.SwModele.Extension.SelectByID2(Nom, "SHEET", 0, 0, 0, false, 0, null, 0);
+                pModeleActif.SwModele.DeleteSelection(false);
+                pModeleActif.SwModele.ClearSelection2(true);
+            }
         }
 
         /// <summary>
@@ -168,7 +174,8 @@ namespace Framework_SW2013
         /// </summary>
         public void ZoomEtendu()
         {
-            Dessin.Modele.SwModele.ViewZoomtofit2();
+            Debug.Info(MethodBase.GetCurrentMethod());
+            Dessin.Modele.SW.Modele().SwModele.ViewZoomtofit2();
         }
 
         /// <summary>
@@ -210,12 +217,26 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="CheminDossier"></param>
         /// <param name="NomDuFichierAlternatif"></param>
-        public void ExporterEnDXF(String CheminDossier, String NomDuFichierAlternatif = "")
+        public void ExporterEn(Extension_e TypeExport, String CheminDossier, String NomDuFichierAlternatif = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
             Activer();
             ZoomEtendu();
+
+            String Ext = "";
+            switch (TypeExport)
+            {
+                case Extension_e.cDXF:
+                    Ext = ".dxf";
+                    break;
+                case Extension_e.cDWG:
+                    Ext = ".dwg";
+                    break;
+                case Extension_e.cPDF:
+                    Ext = ".pdf";
+                    break;
+            }
 
             String CheminFichier = this.Nom;
 
@@ -225,7 +246,7 @@ namespace Framework_SW2013
             if (!String.IsNullOrEmpty(NomDuFichierAlternatif))
                 CheminFichier = NomDuFichierAlternatif;
 
-            CheminFichier = Path.Combine(CheminDossier, CheminFichier + ".dxf");
+            CheminFichier = Path.Combine(CheminDossier, CheminFichier + Ext);
             Dessin.Modele.SwModele.Extension.SaveAs(CheminFichier, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, null, Erreur, Warning);
             Debug.Info(CheminFichier);
         }

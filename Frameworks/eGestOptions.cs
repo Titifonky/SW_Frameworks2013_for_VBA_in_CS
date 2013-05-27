@@ -23,6 +23,12 @@ namespace Framework_SW2013
         Boolean DxfDwg_ExporterSplineEnPolyligne { get; set; }
         swDxfMultisheet_e DxfDwg_ExporterToutesLesFeuilles { get; set; }
         Boolean DxfDwg_ExporterFeuilleDansEspacePapier { get; set; }
+
+        Boolean Pdf_ExporterEnCouleur { get; set; }
+        Boolean Pdf_IncorporerLesPolices { get; set; }
+        Boolean Pdf_ExporterEnHauteQualite { get; set; }
+        Boolean Pdf_ImprimerEnTeteEtPiedDePage { get; set; }
+        Boolean Pdf_utiliserLesEpaisseursDeLigneDeImprimante { get; set; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -59,6 +65,7 @@ namespace Framework_SW2013
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfVersion, (int)value);
             }
         }
+
         public Boolean DxfDwg_PolicesAutoCAD
         {
             get
@@ -72,6 +79,7 @@ namespace Framework_SW2013
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputFonts, Convert.ToInt32(!value));
             }
         }
+
         public Boolean DxfDwg_StylesAutoCAD
         {
             get
@@ -85,6 +93,7 @@ namespace Framework_SW2013
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputLineStyles, Convert.ToInt32(!value));
             }
         }
+
         public Boolean DxfDwg_SortieEchelle1
         {
             get
@@ -98,6 +107,7 @@ namespace Framework_SW2013
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputNoScale, Convert.ToInt32(value));
             }
         }
+
         public Boolean DxfDwg_JoindreExtremites
         {
             get
@@ -111,6 +121,7 @@ namespace Framework_SW2013
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfEndPointMerge, value);
             }
         }
+
         public Double DxfDwg_JoindreExtremitesTolerance
         {
             get
@@ -124,6 +135,7 @@ namespace Framework_SW2013
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swDxfMergingDistance, value);
             }
         }
+
         public Boolean DxfDwg_JoindreExtremitesHauteQualite
         {
             get
@@ -137,6 +149,7 @@ namespace Framework_SW2013
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDXFHighQualityExport, value);
             }
         }
+
         public Boolean DxfDwg_ExporterSplineEnPolyligne
         {
             get
@@ -150,6 +163,7 @@ namespace Framework_SW2013
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportSplinesAsSplines, !value);
             }
         }
+
         public swDxfMultisheet_e DxfDwg_ExporterToutesLesFeuilles
         {
             get
@@ -163,6 +177,7 @@ namespace Framework_SW2013
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfMultiSheetOption, (int)value);
             }
         }
+
         public Boolean DxfDwg_ExporterFeuilleDansEspacePapier
         {
             get
@@ -174,6 +189,76 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportAllSheetsToPaperSpace, value);
+            }
+        }
+
+        public Boolean Pdf_ExporterEnCouleur
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportInColor));
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportInColor, value);
+            }
+        }
+
+        public Boolean Pdf_IncorporerLesPolices
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportEmbedFonts));
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportEmbedFonts, value);
+            }
+        }
+        
+        public Boolean Pdf_ExporterEnHauteQualite
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportHighQuality));
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportHighQuality, value);
+            }
+        }
+        
+        public Boolean Pdf_ImprimerEnTeteEtPiedDePage
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportPrintHeaderFooter));
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportPrintHeaderFooter, value);
+            }
+        }
+        
+        public Boolean Pdf_utiliserLesEpaisseursDeLigneDeImprimante
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportUseCurrentPrintLineWeights));
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportUseCurrentPrintLineWeights, value);
             }
         }
 
