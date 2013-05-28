@@ -18,6 +18,10 @@ namespace Framework_SW2013
         eConfiguration ConfigurationParent { get; }
         eConfiguration ConfigurationRacine { get; }
         eGestDeProprietes GestDeProprietes { get; }
+        Boolean SupprimerLesNouvellesFonctions { get; set; }
+        Boolean SupprimerLesNouveauxComposants { get; set; }
+        Boolean CacherLesNouveauxComposant { get; set; }
+        Boolean AfficherLesNouveauxComposantDansLaNomenclature { get; set; }
         Boolean Est(TypeConfig_e T);
         Boolean Activer();
         Boolean Supprimer();
@@ -70,6 +74,8 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
                 TypeConfig_e T = 0;
                 if (Regex.IsMatch(SwConfiguration.Name, CONSTANTES.CONFIG_DEPLIEE))
                     T = TypeConfig_e.cDepliee;
@@ -92,6 +98,8 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
                 eConfiguration pConfigParent = new eConfiguration();
                 if ((TypeConfig == TypeConfig_e.cDerivee) && pConfigParent.Init(SwConfiguration.GetParent(), _Modele))
                     return pConfigParent;
@@ -107,6 +115,8 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
                 // Si elle est derivée, on lance la recherche
                 if (Est(TypeConfig_e.cDerivee))
                 {
@@ -134,11 +144,69 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
                 eGestDeProprietes pGestProps = new eGestDeProprietes();
                 if (pGestProps.Init(SwConfiguration.CustomPropertyManager, _Modele))
                     return pGestProps;
 
                 return null;
+            }
+        }
+
+        public Boolean SupprimerLesNouvellesFonctions
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwConfiguration.SuppressNewFeatures;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _SwConfiguration.SuppressNewFeatures = value;
+            }
+        }
+
+        public Boolean SupprimerLesNouveauxComposants
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwConfiguration.SuppressNewComponentModels;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _SwConfiguration.SuppressNewComponentModels = value;
+            }
+        }
+
+        public Boolean CacherLesNouveauxComposant
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwConfiguration.HideNewComponentModels;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _SwConfiguration.HideNewComponentModels = value;
+            }
+        }
+
+        public Boolean AfficherLesNouveauxComposantDansLaNomenclature
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwConfiguration.ShowChildComponentsInBOM;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _SwConfiguration.ShowChildComponentsInBOM = value;
             }
         }
 

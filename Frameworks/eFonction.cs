@@ -94,11 +94,12 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 FeatureManager SwGestFonc = Modele.SwModele.FeatureManager;
-                String pNom = value;
+                String pNomBase = value;
+                String pNom = pNomBase;
                 int Indice = 1;
                 while (SwGestFonc.IsNameUsed((int)swNameType_e.swFeatureName, pNom))
                 {
-                    pNom += "_" + Indice;
+                    pNom = pNomBase + "_" + Indice;
                     Indice++;
                 }
 
