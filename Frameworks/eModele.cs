@@ -314,6 +314,7 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, 0, Erreur);
+            _Composant.Configuration.Activer();
             ZoomEtendu();
             //Redessiner();
         }

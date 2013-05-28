@@ -329,23 +329,66 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            MathTransform XFormBase = _Piece.Modele.Composant.SwComposant.Transform2;
-            MathTransform XFormTest = Corps._Piece.Modele.Composant.SwComposant.Transform2;
+            int pNbInt = 0;
 
-            Body2 CopieCorpsBase = _SwCorps.Copy();
-            CopieCorpsBase.ApplyTransform(XFormBase);
+            //Object pInfoCorps;
 
-            Body2 CopieCorpsTest = Corps._SwCorps.Copy();
-            CopieCorpsTest.ApplyTransform(XFormTest);
+            //Debug.Info("1");
+            //Object[] pListeCorpsComp = _Piece.Modele.Composant.SwComposant.GetBodies3((int)swBodyType_e.swSolidBody, out pInfoCorps);
+
+            //Debug.Info("2");
+            //Body2 pCorpsBase = null;
+            //Debug.Info("2 NomCorpsBase : " + _SwCorps.Name);
+            //foreach (Body2 pCorps in pListeCorpsComp)
+            //{
+            //    Debug.Info("2 Rech : " + pCorps.Name);
+            //    if (pCorps.Name == _SwCorps.Name)
+            //    {
+            //        Debug.Info("2 -> pCorpsBase Ok");
+            //        pCorpsBase = pCorps;
+            //        break;
+            //    }
+            //}
+
+            //pListeCorpsComp = Corps.Piece.Modele.Composant.SwComposant.GetBodies3((int)swBodyType_e.swSolidBody, out pInfoCorps);
+
+            //Body2 pCorpsTest = null;
+            //foreach (Body2 pCorps in pListeCorpsComp)
+            //{
+            //    if (pCorps.Name == Corps.SwCorps.Name)
+            //    {
+            //        pCorpsTest = pCorps;
+            //        break;
+            //    }
+            //}
+
+            MathTransform pXFormBase = _Piece.Modele.Composant.SwComposant.Transform2;
+            MathTransform pXFormTest = Corps.Piece.Modele.Composant.SwComposant.Transform2;
+
+            //Body2 pCopieCorpsBase = pCorpsBase.Copy();
+            //Body2 pCopieCorpsTest = pCorpsTest.Copy();
+
+            Body2 pCopieCorpsBase = _SwCorps.Copy();
+            Body2 pCopieCorpsTest = Corps._SwCorps.Copy();
+
+            Debug.Info(pCopieCorpsBase.ApplyTransform(pXFormBase).ToString());
+            Debug.Info(pCopieCorpsTest.ApplyTransform(pXFormTest).ToString());
 
             // SWBODYINTERSECT = 15901
             int Err;
-            object[] ListeCorpsIntersection = CopieCorpsBase.Operations2(15901, CopieCorpsTest, out Err);
+            Object[] pListeCorpsIntersection = pCopieCorpsBase.Operations2(15901, pCopieCorpsTest, out Err);
 
-            if (ListeCorpsIntersection == null)
-                return 0;
+            if (pListeCorpsIntersection != null)
+                pNbInt = pListeCorpsIntersection.GetLength(0);
 
-            return ListeCorpsIntersection.GetLength(0);
+            pListeCorpsIntersection = null;
+
+            pCopieCorpsBase = null;
+            pCopieCorpsTest = null;
+            pXFormBase = null;
+            pXFormTest = null;
+
+            return pNbInt;
         }
 
         #endregion

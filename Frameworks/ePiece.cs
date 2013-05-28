@@ -165,6 +165,8 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
+            _Modele.Composant.Configuration.Activer();
+
             List<eCorps> Liste = new List<eCorps>();
 
             Object[] TableauDesCorps = _SwPiece.GetBodies2((int)swBodyType_e.swAllBodies, PrendreEnCompteCache);
