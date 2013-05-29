@@ -306,6 +306,22 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
+        internal void ReinitialiserComposant()
+        {
+            // Si c'est un assemblage ou une pièce, on va chercher le composant associé
+            if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
+            {
+                Debug.Info("Referencement de la configuration");
+                Configuration pConfigActive = _SwModele.ConfigurationManager.ActiveConfiguration;
+                _FichierSw.Configuration = pConfigActive.Name;
+
+                Debug.Info("Referencement du composant");
+                _Composant = new eComposant();
+                if (_Composant.Init(pConfigActive.GetRootComponent3(false), this) == false)
+                    _EstInitialise = false;
+            }
+        }
+
         /// <summary>
         /// Active le modele et le met au premier plan.
         /// </summary>
@@ -411,6 +427,8 @@ namespace Framework_SW2013
         internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
+
+            _Composant.Configuration.Activer();
 
             List<eFonction> pListeFonctions = new List<eFonction>();
             

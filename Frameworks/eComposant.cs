@@ -26,6 +26,7 @@ namespace Framework_SW2013
         Boolean EstCharge { get; }
         int NoOccurence { get; }
         int Nb { get; }
+        TypeFichier_e TypeDuModele { get; }
         eRecherche NouvelleRecherche { get; }
         eRepere Repere { get; }
         eComposant Parent { get; }
@@ -72,9 +73,34 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                if (_Modele.GestDeConfigurations.ConfigurationActive.Equals(_Configuration))
-                    _Configuration.Activer();
                 return _Modele;
+            }
+        }
+
+        /// <summary>
+        /// Retourne le type du modele.
+        /// </summary>
+        public TypeFichier_e TypeDuModele
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                ModelDoc2 pSwModele = _SwComposant.GetModelDoc2();
+
+                switch (pSwModele.GetType())
+                {
+                    case (int)swDocumentTypes_e.swDocASSEMBLY:
+                        return TypeFichier_e.cAssemblage;
+
+                    case (int)swDocumentTypes_e.swDocPART:
+                        return TypeFichier_e.cPiece;
+
+                    case (int)swDocumentTypes_e.swDocDRAWING:
+                        return TypeFichier_e.cDessin;
+
+                    default:
+                        return TypeFichier_e.cAutre;
+                }
             }
         }
 

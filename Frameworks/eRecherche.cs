@@ -173,7 +173,19 @@ namespace Framework_SW2013
                         // sinon on le rajoute
                         else
                         {
-                            pComposant = pComp;
+                            // Si on supprime les doublons, on doit associer au modèle le composant racine
+                            // et non le composant de l'assemblage
+                            if (_SupprimerDoublons)
+                            {
+                                eModele pModele = pComp.Modele;
+                                pModele.ReinitialiserComposant();
+                                pComposant = pModele.Composant;
+                            }
+                            else
+                            {
+                                pComposant = pComp;
+                            }
+
                             pComposant.Nb = 1;
                             DicComposants.Add(pCle, pComposant);
                         }

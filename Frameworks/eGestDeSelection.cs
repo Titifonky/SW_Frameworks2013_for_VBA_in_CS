@@ -23,7 +23,7 @@ namespace Framework_SW2013
         eComposant Composant(int Index, int Marque = -1);
         eVue Vue(int Index, int Marque = -1);
         ArrayList ListeDesObjetsSelectionnes(swSelectType_e TypeObjet, int Marque = -1);
-        ArrayList ListeDesComposantsSelectionnes(String NomComposant = "", int Marque = -1);
+        ArrayList ListeDesComposantsSelectionnes(TypeFichier_e TypeDeFichier, String NomComposant = "", int Marque = -1);
         ArrayList ListeDesVuesSelectionnees(int Marque = -1);
         // GetSelectedObjectsFace
         // GetSelectedObjectLoop2
@@ -397,7 +397,7 @@ namespace Framework_SW2013
         /// <param name="NomComposant"></param>
         /// <param name="Marque"></param>
         /// <returns></returns>
-        internal List<eComposant> ListListeDesComposantsSelectionnes(String NomComposant = "", int Marque = -1)
+        internal List<eComposant> ListListeDesComposantsSelectionnes(TypeFichier_e TypeDeFichier, String NomComposant = "", int Marque = -1)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -409,7 +409,7 @@ namespace Framework_SW2013
 
                 eComposant pComposant = Composant(i, Marque);
 
-                if ((pComposant != null) && pComposant.EstInitialise)
+                if ((pComposant != null) && pComposant.EstInitialise && TypeDeFichier.HasFlag(pComposant.TypeDuModele))
                     pListeComposants.Add(pComposant);
             }
 
@@ -422,11 +422,11 @@ namespace Framework_SW2013
         /// <param name="NomComposant"></param>
         /// <param name="Marque"></param>
         /// <returns></returns>
-        public ArrayList ListeDesComposantsSelectionnes(String NomComposant = "", int Marque = -1)
+        public ArrayList ListeDesComposantsSelectionnes(TypeFichier_e TypeDeFichier, String NomComposant = "", int Marque = -1)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<eComposant> pListeComps = ListListeDesComposantsSelectionnes(NomComposant, Marque);
+            List<eComposant> pListeComps = ListListeDesComposantsSelectionnes(TypeDeFichier, NomComposant, Marque);
             ArrayList pArrayComps = new ArrayList();
 
             if (pListeComps.Count > 0)
