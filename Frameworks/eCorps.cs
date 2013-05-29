@@ -331,42 +331,8 @@ namespace Framework_SW2013
 
             int pNbInt = 0;
 
-            //Object pInfoCorps;
-
-            //Debug.Info("1");
-            //Object[] pListeCorpsComp = _Piece.Modele.Composant.SwComposant.GetBodies3((int)swBodyType_e.swSolidBody, out pInfoCorps);
-
-            //Debug.Info("2");
-            //Body2 pCorpsBase = null;
-            //Debug.Info("2 NomCorpsBase : " + _SwCorps.Name);
-            //foreach (Body2 pCorps in pListeCorpsComp)
-            //{
-            //    Debug.Info("2 Rech : " + pCorps.Name);
-            //    if (pCorps.Name == _SwCorps.Name)
-            //    {
-            //        Debug.Info("2 -> pCorpsBase Ok");
-            //        pCorpsBase = pCorps;
-            //        break;
-            //    }
-            //}
-
-            //pListeCorpsComp = Corps.Piece.Modele.Composant.SwComposant.GetBodies3((int)swBodyType_e.swSolidBody, out pInfoCorps);
-
-            //Body2 pCorpsTest = null;
-            //foreach (Body2 pCorps in pListeCorpsComp)
-            //{
-            //    if (pCorps.Name == Corps.SwCorps.Name)
-            //    {
-            //        pCorpsTest = pCorps;
-            //        break;
-            //    }
-            //}
-
             MathTransform pXFormBase = _Piece.Modele.Composant.SwComposant.Transform2;
             MathTransform pXFormTest = Corps.Piece.Modele.Composant.SwComposant.Transform2;
-
-            //Body2 pCopieCorpsBase = pCorpsBase.Copy();
-            //Body2 pCopieCorpsTest = pCorpsTest.Copy();
 
             Body2 pCopieCorpsBase = _SwCorps.Copy();
             Body2 pCopieCorpsTest = Corps._SwCorps.Copy();

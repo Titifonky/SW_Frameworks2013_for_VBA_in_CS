@@ -26,7 +26,7 @@ namespace Framework_SW2013
         eGestDeSelection GestDeSelection { get; }
         TypeFichier_e TypeDuModele { get; }
         eFichierSW FichierSw { get; }
-        void Activer();
+        void Activer(swRebuildOnActivation_e Reconstruire = swRebuildOnActivation_e.swUserDecision);
         void Sauver();
         void Fermer();
         void Redessiner();
@@ -309,11 +309,11 @@ namespace Framework_SW2013
         /// <summary>
         /// Active le modele et le met au premier plan.
         /// </summary>
-        public void Activer()
+        public void Activer(swRebuildOnActivation_e Reconstruire = swRebuildOnActivation_e.swUserDecision)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, 0, Erreur);
+            _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, (int)Reconstruire, Erreur);
             _Composant.Configuration.Activer();
             ZoomEtendu();
             //Redessiner();

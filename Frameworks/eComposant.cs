@@ -32,6 +32,7 @@ namespace Framework_SW2013
         void Selectionner(Boolean Ajouter = true);
         void DeSelectionner();
         ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false);
+        ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -66,7 +67,16 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le modele ExtModele associé.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if (_Modele.GestDeConfigurations.ConfigurationActive.Equals(_Configuration))
+                    _Configuration.Activer();
+                return _Modele;
+            }
+        }
 
         /// <summary>
         /// Retourne la configuration ExtConfiguration associée.
@@ -432,6 +442,58 @@ namespace Framework_SW2013
                 pArrayComps = new ArrayList(pListeComps);
 
             return pArrayComps;
+        }
+
+        /// <summary>
+        /// Méthode interne.
+        /// Renvoi la liste des corps de la pièces filtrée par les arguments.
+        /// </summary>
+        /// <param name="TypeDeCorps"></param>
+        /// <param name="PrendreEnCompteCache"></param>
+        /// <returns></returns>
+        internal List<eCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            _Modele.Composant.Configuration.Activer();
+
+            List<eCorps> Liste = new List<eCorps>();
+            Object pInfosCorps = null;
+            Object[] TableauDesCorps = _SwComposant.GetBodies3((int)swBodyType_e.swAllBodies, out pInfosCorps);
+
+            if (TableauDesCorps.Length > 0)
+            {
+                foreach (Object ObjetCorps in TableauDesCorps)
+                {
+                    Body2 pSwCorps = (Body2)ObjetCorps;
+                    eCorps pCorps = new eCorps();
+                    if (pCorps.Init(pSwCorps, _Modele) && TypeDeCorps.HasFlag(pCorps.TypeDeCorps))
+                    {
+                        Liste.Add(pCorps);
+                    }
+                }
+            }
+
+            return Liste;
+        }
+
+        /// <summary>
+        /// Renvoi la liste des corps de la pièces filtrée par les arguments.
+        /// </summary>
+        /// <param name="TypeDeCorps"></param>
+        /// <param name="PrendreEnCompteCache"></param>
+        /// <returns></returns>
+        public ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            List<eCorps> pListeCorps = ListListeDesCorps(TypeDeCorps);
+            ArrayList pArrayCorps = new ArrayList();
+
+            if (pListeCorps.Count > 0)
+                pArrayCorps = new ArrayList(pListeCorps);
+
+            return pArrayCorps;
         }
 
         #endregion
