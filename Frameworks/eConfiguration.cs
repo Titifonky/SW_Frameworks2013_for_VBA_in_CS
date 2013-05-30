@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
-using System.Reflection;
 
 namespace Framework_SW2013
 {
@@ -25,7 +26,9 @@ namespace Framework_SW2013
         Boolean Est(TypeConfig_e T);
         Boolean Activer();
         Boolean Supprimer();
-        eConfiguration AjouterUneConfigurationDerivee(String Nom);
+        ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cToutesLesTypesDeConfig);
+        eConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee);
+        eConfiguration AjouterUneConfigurationDepliee();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -34,7 +37,7 @@ namespace Framework_SW2013
     public class eConfiguration : IeConfiguration, IComparable<eConfiguration>, IComparer<eConfiguration>, IEquatable<eConfiguration>
     {
         #region "Variables locales"
-        
+
         private Boolean _EstInitialise = false;
 
         private Configuration _SwConfiguration = null;
@@ -44,9 +47,7 @@ namespace Framework_SW2013
 
         #region "Constructeur\Destructeur"
 
-        public eConfiguration()
-        {
-        }
+        public eConfiguration() { }
 
         #endregion
 
@@ -55,17 +56,17 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet Configuration associé.
         /// </summary>
-        public Configuration SwConfiguration { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwConfiguration; } }
+        public Configuration SwConfiguration { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwConfiguration; } }
 
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
 
         /// <summary>
         /// Retourne ou défini le nom de la configuration.
         /// </summary>
-        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwConfiguration.Name; } set { Debug.Info(MethodBase.GetCurrentMethod());  SwConfiguration.Name = value; } }
+        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwConfiguration.Name; } set { Debug.Info(MethodBase.GetCurrentMethod()); _SwConfiguration.Name = value; } }
 
         /// <summary>
         /// Retourne le type de la configuration.
@@ -77,9 +78,9 @@ namespace Framework_SW2013
                 Debug.Info(MethodBase.GetCurrentMethod());
 
                 TypeConfig_e T = 0;
-                if (Regex.IsMatch(SwConfiguration.Name, CONSTANTES.CONFIG_DEPLIEE))
+                if (Regex.IsMatch(SwConfiguration.Name, CONSTANTES.CONFIG_DEPLIEE_PATTERN))
                     T = TypeConfig_e.cDepliee;
-                else if (Regex.IsMatch(SwConfiguration.Name, CONSTANTES.CONFIG_PLIEE))
+                else if (Regex.IsMatch(SwConfiguration.Name, CONSTANTES.CONFIG_PLIEE_PATTERN))
                     T = TypeConfig_e.cPliee;
 
                 if (SwConfiguration.IsDerived() != false)
@@ -101,7 +102,11 @@ namespace Framework_SW2013
                 Debug.Info(MethodBase.GetCurrentMethod());
 
                 eConfiguration pConfigParent = new eConfiguration();
-                if ((TypeConfig == TypeConfig_e.cDerivee) && pConfigParent.Init(SwConfiguration.GetParent(), _Modele))
+                Configuration pSwConfigurationParent = null;
+                if (_SwConfiguration.IsDerived() == true)
+                    pSwConfigurationParent = _SwConfiguration.GetParent();
+
+                if ((pSwConfigurationParent != null) && pConfigParent.Init(pSwConfigurationParent, _Modele))
                     return pConfigParent;
 
                 return null;
@@ -214,7 +219,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtConfiguration.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
         #endregion
 
@@ -279,6 +284,57 @@ namespace Framework_SW2013
         }
 
         /// <summary>
+        /// Méthode interne.
+        /// Renvoi la liste des configurations enfants filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomConfiguration"></param>
+        /// <param name="TypeDeLaConfig"></param>
+        /// <returns></returns>
+        internal List<eConfiguration> ListConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cToutesLesTypesDeConfig)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            List<eConfiguration> pListe = new List<eConfiguration>();
+
+            if (_SwConfiguration.GetChildrenCount() == 0)
+                return pListe;
+
+            foreach (Configuration pSwConfiguration in _SwConfiguration.GetChildren())
+            {
+                if (Regex.IsMatch(pSwConfiguration.Name, NomConfiguration))
+                {
+                    eConfiguration pConfig = new eConfiguration();
+                    pConfig.Init(pSwConfiguration, Modele);
+
+                    if (pConfig.EstInitialise && (pConfig.Est(TypeDeLaConfig) || TypeDeLaConfig.HasFlag(TypeConfig)))
+                        pListe.Add(pConfig);
+                }
+            }
+
+            return pListe;
+
+        }
+
+        /// <summary>
+        /// Renvoi la liste des configurations enfants filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomConfiguration"></param>
+        /// <param name="TypeDeLaConfig"></param>
+        /// <returns></returns>
+        public ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cToutesLesTypesDeConfig)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            List<eConfiguration> pListeConfigs = ListConfigurationsEnfants(NomConfiguration, TypeDeLaConfig);
+            ArrayList pArrayConfigs = new ArrayList();
+
+            if (pListeConfigs.Count > 0)
+                pArrayConfigs = new ArrayList(pListeConfigs);
+
+            return pArrayConfigs;
+        }
+
+        /// <summary>
         /// Ajoute une configuration dérivée.
         /// </summary>
         /// <param name="NomConfigDerivee"></param>
@@ -287,13 +343,41 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
             eConfiguration pConfig = new eConfiguration();
-            Configuration pSwConfig = _Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfigDerivee, NomConfigDerivee, "", 0, NomConfigDerivee, "");
+            Configuration pSwConfig = _Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfigDerivee, NomConfigDerivee, "", 0, Nom, "");
 
-            if (pConfig.Init(pSwConfig ,_Modele))
+            if (pConfig.Init(pSwConfig, _Modele))
                 return pConfig;
 
             return null;
         }
+
+        /// <summary>
+        /// Ajoute une configuration dépliée.
+        /// </summary>
+        /// <param name="NomConfigDerivee"></param>
+        /// <returns></returns>
+        public eConfiguration AjouterUneConfigurationDepliee()
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            if (Est(TypeConfig_e.cPliee))
+            {
+                int pNbConfigDepliee = ListConfigurationsEnfants("", TypeConfig_e.cDepliee).Count;
+                Debug.Info("-------------------------------------------" + pNbConfigDepliee.ToString());
+                pNbConfigDepliee++;
+                String NomConfigDepliee = Nom + CONSTANTES.CONFIG_DEPLIEE + pNbConfigDepliee;
+
+                eConfiguration pConfig = AjouterUneConfigurationDerivee(NomConfigDepliee);
+
+                Debug.Info(" ==========================   " + (pConfig.EstInitialise).ToString());
+
+                if (pConfig.EstInitialise)
+                    return pConfig;
+            }
+            return null;
+        }
+
+
 
         #endregion
 

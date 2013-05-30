@@ -66,8 +66,9 @@ namespace Framework_SW2013
     {
         #region "Variables locales"
 
-        internal static String CONFIG_DEPLIEE = "^*SM-FLAT-PATTERN*";
-        internal static String CONFIG_PLIEE = "^[0-9]";
+        internal static String CONFIG_DEPLIEE_PATTERN = "^*SM-FLAT-PATTERN*";
+        internal static String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
+        internal static String CONFIG_PLIEE_PATTERN = "^[0-9]*";
         internal static String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
         internal static String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
         internal static String NO_DOSSIER = "NoDossier";

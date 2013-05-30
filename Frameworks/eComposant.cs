@@ -67,12 +67,17 @@ namespace Framework_SW2013
 
         /// <summary>
         /// Retourne le modele ExtModele associé.
+        /// Active la configuration du composant si celle-ci ne l'est pas
+        /// Cela permet de récupérer les corps et les fonctions de la configuration
         /// </summary>
         public eModele Modele
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
+                if (!_Modele.GestDeConfigurations.ConfigurationActive.Equals(_Configuration))
+                    _Configuration.Activer();
+
                 return _Modele;
             }
         }

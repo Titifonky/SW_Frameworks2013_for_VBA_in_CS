@@ -116,9 +116,12 @@ namespace Framework_SW2013
 
             if ((Gestionnaire != null) && Gestionnaire.EstInitialise && !String.IsNullOrEmpty(Nom))
             {
-                List<String> pListeNom = new List<string>(Gestionnaire.SwGestDeProprietes.GetNames());
+                List<String> pListeNom = null;
 
-                if (pListeNom.Contains(Nom))
+                if (Gestionnaire.SwGestDeProprietes.Count > 0)
+                    pListeNom = new List<string>(Gestionnaire.SwGestDeProprietes.GetNames());
+
+                if ((pListeNom != null) && (pListeNom.Contains(Nom)))
                 {
                     Debug.Info(this.Nom);
 

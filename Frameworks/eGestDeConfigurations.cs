@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Reflection;
+using SolidWorks.Interop.sldworks;
 
 namespace Framework_SW2013
 {
@@ -56,7 +57,10 @@ namespace Framework_SW2013
                 Debug.Info(MethodBase.GetCurrentMethod());
 
                 eConfiguration pConfig = new eConfiguration();
-                if (pConfig.Init(_Modele.SwModele.ConfigurationManager.ActiveConfiguration, _Modele))
+
+                Configuration pSwConfiguration = _Modele.SwModele.ConfigurationManager.ActiveConfiguration;
+
+                if (pConfig.Init(pSwConfiguration, _Modele))
                     return pConfig;
                 
                 return null;
@@ -193,6 +197,8 @@ namespace Framework_SW2013
         public void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
+
+            ConfigurationActive.ConfigurationRacine.Activer();
 
             foreach(eConfiguration Config in ListListerLesConfigs(TypeConfig_e.cDepliee,NomConfigurationPliee))
             {

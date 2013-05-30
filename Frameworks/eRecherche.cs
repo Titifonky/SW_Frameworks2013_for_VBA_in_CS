@@ -218,8 +218,8 @@ namespace Framework_SW2013
             // On met l'index à 0
             _IndexComposant = 0;
 
-            // On renvoi le composant de base seulement s'il a le meme type que ceux recherché (TypeComposant)
-            if ((_RenvoyerComposantRacine == true) && _Composant.Modele.TypeDuModele.HasFlag(TypeComposant))
+            // On renvoi le composant de base
+            if ((_RenvoyerComposantRacine == true) && TypeComposant.HasFlag(_Composant.Modele.TypeDuModele))
                 pDicComposants.Add(NomCle(_Composant), _Composant);
 
             // Si le composant est un assemblage contenant plusieurs composants, on renvoi la liste des composants recherchés
