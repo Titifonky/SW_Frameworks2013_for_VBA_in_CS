@@ -296,9 +296,7 @@ namespace Framework_SW2013
                 }
             }
 
-
             return pListeFonctions;
-
         }
 
         /// <summary>

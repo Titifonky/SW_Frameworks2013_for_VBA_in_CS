@@ -64,7 +64,7 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                if (_Modele.Equals(_Modele.SW.Modele()))
+                if (_Modele.SwModele.GetPathName().Equals(_Modele.SW.Modele().SwModele.GetPathName()) || _Modele.Composant.SwComposant.IsRoot())
                 {
                     Debug.Info("Fonction du modele");
                     return _SwModeleFonction;
@@ -260,7 +260,8 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            SwFonction.Select2(false, -1);
+            Selectionner(false);
+            //SwFonction.Select2(false, -1);
             Modele.SW.Modele().SwModele.EditUnsuppress2();
             Modele.SW.Modele().SwModele.EditUnsuppressDependent2();
         }
@@ -272,8 +273,8 @@ namespace Framework_SW2013
         public void Desactiver()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-            
-            SwFonction.Select2(false, -1);
+
+            Selectionner(false);
             Modele.SW.Modele().SwModele.EditSuppress2();
         }
 
@@ -285,7 +286,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            SwFonction.Select2(false, -1);
+            Selectionner(false);
             Modele.SW.Modele().SwModele.Extension.DeleteSelection2((int)Options);
         }
 
@@ -296,7 +297,9 @@ namespace Framework_SW2013
         public void Selectionner(Boolean Ajouter = true)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-            SwFonction.Select2(Ajouter, -1);
+            String T;
+            String NomSel = SwFonction.GetNameForSelection(out T);
+            Modele.SW.Modele().SwModele.Extension.SelectByID2(NomSel, T, 0, 0, 0, Ajouter, -1, null, 0);
         }
 
         /// <summary>

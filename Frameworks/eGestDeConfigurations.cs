@@ -14,7 +14,7 @@ namespace Framework_SW2013
     {
         eModele Modele { get; }
         eConfiguration ConfigurationActive { get; }
-        ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "");
+        ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "");
         eConfiguration ConfigurationAvecLeNom(String NomConfiguration);
         eConfiguration AjouterUneConfigurationDeBase(String NomConfiguration);
         void SupprimerConfiguration(String NomConfiguration);
@@ -107,7 +107,7 @@ namespace Framework_SW2013
         /// <param name="TypeConfig"></param>
         /// <param name="NomConfigDeBase"></param>
         /// <returns></returns>
-        internal List<eConfiguration> ListListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "")
+        internal List<eConfiguration> ListListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -134,7 +134,7 @@ namespace Framework_SW2013
         /// <param name="TypeConfig"></param>
         /// <param name="NomConfigDeBase"></param>
         /// <returns></returns>
-        public ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cToutesLesTypesDeConfig, String NomConfigDeBase = "")
+        public ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "")
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 

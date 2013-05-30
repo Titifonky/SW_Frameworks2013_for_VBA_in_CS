@@ -16,8 +16,8 @@ namespace Framework_SW2013
         PartDoc SwPiece { get; }
         eModele Modele { get; }
         Boolean Contient(TypeCorps_e T);
-        ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false);
-        ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false);
+        ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false);
+        ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -161,7 +161,7 @@ namespace Framework_SW2013
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteCache"></param>
         /// <returns></returns>
-        internal List<eCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false)
+        internal List<eCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -191,7 +191,7 @@ namespace Framework_SW2013
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteCache"></param>
         /// <returns></returns>
-        public ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteCache = false)
+        public ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -211,7 +211,7 @@ namespace Framework_SW2013
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteExclus"></param>
         /// <returns></returns>
-        internal List<eDossier> ListListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
+        internal List<eDossier> ListListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -251,7 +251,7 @@ namespace Framework_SW2013
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteExclus"></param>
         /// <returns></returns>
-        public ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps, Boolean PrendreEnCompteExclus = false)
+        public ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 

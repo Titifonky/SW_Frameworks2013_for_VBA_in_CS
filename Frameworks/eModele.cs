@@ -431,7 +431,7 @@ namespace Framework_SW2013
             _Composant.Configuration.Activer();
 
             List<eFonction> pListeFonctions = new List<eFonction>();
-            
+
             Feature pSwFonction = _SwModele.FirstFeature();
 
             while (pSwFonction != null)
@@ -464,7 +464,7 @@ namespace Framework_SW2013
                 pSwFonction = pSwFonction.GetNextFeature();
             }
 
-            return pListeFonctions.Distinct().ToList();
+            return pListeFonctions;
 
         }
 

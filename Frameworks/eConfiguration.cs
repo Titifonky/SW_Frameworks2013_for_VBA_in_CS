@@ -26,7 +26,7 @@ namespace Framework_SW2013
         Boolean Est(TypeConfig_e T);
         Boolean Activer();
         Boolean Supprimer();
-        ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cToutesLesTypesDeConfig);
+        ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous);
         eConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee);
         eConfiguration AjouterUneConfigurationDepliee();
     }
@@ -260,7 +260,14 @@ namespace Framework_SW2013
         public Boolean Est(TypeConfig_e T)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
-            return TypeConfig.HasFlag(T);
+
+            foreach (TypeConfig_e Tst in Enum.GetValues(typeof(TypeConfig_e)))
+            {
+                if (T.HasFlag(Tst) && TypeConfig.HasFlag(Tst))
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -290,7 +297,7 @@ namespace Framework_SW2013
         /// <param name="NomConfiguration"></param>
         /// <param name="TypeDeLaConfig"></param>
         /// <returns></returns>
-        internal List<eConfiguration> ListConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cToutesLesTypesDeConfig)
+        internal List<eConfiguration> ListConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -306,7 +313,7 @@ namespace Framework_SW2013
                     eConfiguration pConfig = new eConfiguration();
                     pConfig.Init(pSwConfiguration, Modele);
 
-                    if (pConfig.EstInitialise && (pConfig.Est(TypeDeLaConfig) || TypeDeLaConfig.HasFlag(TypeConfig)))
+                    if (pConfig.EstInitialise && pConfig.Est(TypeDeLaConfig))
                         pListe.Add(pConfig);
                 }
             }
@@ -321,7 +328,7 @@ namespace Framework_SW2013
         /// <param name="NomConfiguration"></param>
         /// <param name="TypeDeLaConfig"></param>
         /// <returns></returns>
-        public ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cToutesLesTypesDeConfig)
+        public ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 

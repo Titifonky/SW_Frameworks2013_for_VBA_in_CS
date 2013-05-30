@@ -33,7 +33,7 @@ namespace Framework_SW2013
         void Selectionner(Boolean Ajouter = true);
         void DeSelectionner();
         ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false);
-        ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps);
+        ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -482,7 +482,7 @@ namespace Framework_SW2013
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteCache"></param>
         /// <returns></returns>
-        internal List<eCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps)
+        internal List<eCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -514,7 +514,7 @@ namespace Framework_SW2013
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteCache"></param>
         /// <returns></returns>
-        public ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTousLesTypesDeCorps)
+        public ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 

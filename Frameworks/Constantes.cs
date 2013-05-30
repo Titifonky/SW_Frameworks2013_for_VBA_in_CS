@@ -27,7 +27,7 @@ namespace Framework_SW2013
         cTole = 2,
         cBarre = 4,
         cAutre = 8,
-        cTousLesTypesDeCorps = cTole + cBarre + cAutre
+        cTous = cTole | cBarre | cAutre
     }
 
     //Cet attribut permet de combiner les valeurs d'enumération
@@ -38,7 +38,7 @@ namespace Framework_SW2013
         cDerivee = 2,
         cDepliee = 4,
         cPliee = 8,
-        cToutesLesTypesDeConfig = cDeBase + cDerivee + cDepliee + cPliee
+        cTous = cDeBase | cDerivee | cDepliee | cPliee
     }
 
     public enum EtatFonction_e
@@ -68,7 +68,7 @@ namespace Framework_SW2013
 
         internal static String CONFIG_DEPLIEE_PATTERN = "^*SM-FLAT-PATTERN*";
         internal static String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
-        internal static String CONFIG_PLIEE_PATTERN = "^[0-9]*";
+        internal static String CONFIG_PLIEE_PATTERN = "^[0-9]";
         internal static String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
         internal static String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
         internal static String NO_DOSSIER = "NoDossier";
