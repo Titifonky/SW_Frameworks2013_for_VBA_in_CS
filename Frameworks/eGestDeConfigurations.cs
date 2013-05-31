@@ -27,7 +27,7 @@ namespace Framework_SW2013
     public class eGestDeConfigurations : IeGestDeConfigurations
     {
         #region "Variables locales"
-        
+
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
@@ -45,7 +45,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
 
         /// <summary>
         /// Retourne la configuration active.
@@ -62,7 +62,7 @@ namespace Framework_SW2013
 
                 if (pConfig.Init(pSwConfiguration, _Modele))
                     return pConfig;
-                
+
                 return null;
             }
         }
@@ -71,7 +71,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet GestDeConfigurations.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
         #endregion
 
@@ -200,7 +200,7 @@ namespace Framework_SW2013
 
             ConfigurationActive.ConfigurationRacine.Activer();
 
-            foreach(eConfiguration Config in ListListerLesConfigs(TypeConfig_e.cDepliee,NomConfigurationPliee))
+            foreach (eConfiguration Config in ListListerLesConfigs(TypeConfig_e.cDepliee, NomConfigurationPliee))
             {
                 Config.Supprimer();
             }

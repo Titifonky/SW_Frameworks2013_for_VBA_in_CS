@@ -297,9 +297,14 @@ namespace Framework_SW2013
         public void Selectionner(Boolean Ajouter = true)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
+
+#if SW2013
+            SwFonction.Select2(Ajouter, -1);
+#else
             String T;
             String NomSel = SwFonction.GetNameForSelection(out T);
             Modele.SW.Modele().SwModele.Extension.SelectByID2(NomSel, T, 0, 0, 0, Ajouter, -1, null, 0);
+#endif
         }
 
         /// <summary>
