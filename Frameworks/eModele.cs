@@ -493,16 +493,11 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eFonction DerniereFonction()
         {
-            eFonction pDerniereFonction = null;
-            foreach (eFonction pFonction in ListListeDesFonctions())
-            {
-                if (pFonction.TypeDeLaFonction == "FlatPattern")
-                    break;
+            eFonction pFonc = new eFonction();
+            if (pFonc.Init(_SwModele.Extension.GetLastFeatureAdded(), this))
+                return pFonc;
 
-                pDerniereFonction = pFonction;
-            }
-
-            return pDerniereFonction;
+            return null;
         }
 
         #endregion

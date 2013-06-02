@@ -44,6 +44,7 @@ namespace Framework_SW2013
 
         private eModele _Modele = null;
         private Feature _SwModeleFonction = null;
+        private Object _PID = null;
 
         #endregion
 
@@ -63,6 +64,12 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
+
+                if ((_SwModeleFonction == null) && (_PID != null))
+                {
+                    int pErreur = 0;
+                    _SwModeleFonction = _Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
+                }
 
                 if (_Modele.SwModele.GetPathName().Equals(_Modele.SW.Modele().SwModele.GetPathName()) || _Modele.Composant.SwComposant.IsRoot())
                 {
@@ -238,6 +245,8 @@ namespace Framework_SW2013
                         pSwFonction = pSwFonction.GetNextFeature();
                     }
                 }
+
+                _PID = Modele.SwModele.Extension.GetPersistReference3(_SwModeleFonction);
 
                 if (_SwModeleFonction != null)
                 {

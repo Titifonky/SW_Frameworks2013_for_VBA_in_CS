@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Text.RegularExpressions;
 using System.Reflection;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {
@@ -95,6 +96,7 @@ namespace Framework_SW2013
                 _Modele = Modele;
                 _SwDessin = Modele.SwModele as DrawingDoc;
                 _EstInitialise = true;
+                _Modele.SwModele.Extension.UsePageSetup = (int)swPageSetupInUse_e.swPageSetupInUse_DrawingSheet;
             }
             else
             {

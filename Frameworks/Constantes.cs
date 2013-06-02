@@ -53,11 +53,31 @@ namespace Framework_SW2013
         cPaysage = 1
     }
 
+    public enum Format_e
+    {
+        cA0 = 5,
+        cA1 = 6,
+        cA2 = 7,
+        cA3 = 8,
+        cA4 = 9,
+        cA5 = 10,
+        cUtilisateur = 11
+    }
+
     public enum Extension_e
     {
         cDXF = 1,
         cDWG = 2,
         cPDF = 4
+    }
+
+    public enum Grugeage_e
+    {
+        cRectangulaire = 1,
+        cDechirureDecoupe = 2,
+        cArrondi = 3,
+        cAucun = 4,
+        cDechirureProlonge = 5
     }
 
     #endregion
@@ -73,6 +93,12 @@ namespace Framework_SW2013
         internal static String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
         internal static String NO_DOSSIER = "NoDossier";
         internal static String NOM_ELEMENT = "Element";
+        internal static String PROFIL_NOM = "Profil";
+        internal static String PROFIL_ANGLE1 = "ANGLE1";
+        internal static String PROFIL_ANGLE2 = "ANGLE2";
+        internal static String PROFIL_LONGUEUR = "LONGUEUR";
+        internal static String PROFIL_MASSE = "Masse";
+        internal static String PROFIL_MATERIAU = "MATERIAL";
         internal static String CUBE_DE_VISUALISATION = "Cube de visualisation";
         internal static String MODELE_DE_DESSIN_LASER = "MacroLaser";
         internal static String NOM_CORPS_DEPLIEE = "Etat déplié";
@@ -298,6 +324,7 @@ namespace Framework_SW2013
         String swTnSketchBend { get; }
         String swTnSM3dBend { get; }
         String swTnSMBaseFlange { get; }
+        String swTnSolidToSheetMetal { get; }
         String swTnSMMiteredFlange { get; }
         String swTnToroidalBend { get; }
         String swTnUiBend { get; }
@@ -504,6 +531,7 @@ namespace Framework_SW2013
         public String swTnPointLight { get { return "PointLight"; } }
         public String swTnSpotLight { get { return "SpotLight"; } }
         public String swTnBaseFlange { get { return "SMBaseFlange"; } }
+        public String swTnSolidToSheetMetal { get { return "SolidToSheetMetal"; } }
         public String swTnBending { get { return "Bending"; } }
         public String swTnBreakCorner { get { return "BreakCorner"; } }
         public String swTnCornerTrim { get { return "CornerTrim"; } }

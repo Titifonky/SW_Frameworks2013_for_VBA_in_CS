@@ -40,6 +40,8 @@ namespace Framework_SW2013
         private Body2 _SwCorps = null;
         private eTole _Tole = null;
         private eBarre _Barre = null;
+        private String _Nom = "";
+        private Object _PID = null;
 
         #endregion
 
@@ -54,7 +56,20 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet Body2 associé.
         /// </summary>
-        public Body2 SwCorps { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwCorps; } }
+        public Body2 SwCorps 
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if ((_SwCorps == null) && (_PID != null))
+                {
+                    int pErreur = 0;
+                    _SwCorps = Piece.Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
+                    }
+
+                return _SwCorps;
+            }
+        }
 
         /// <summary>
         /// Retourne le parent ExtPiece.
@@ -128,6 +143,7 @@ namespace Framework_SW2013
                 }
 
                 SwCorps.Name = pNom;
+                _Nom = SwCorps.Name;
             }
         }
 
@@ -223,6 +239,8 @@ namespace Framework_SW2013
             {
                 _Piece = Piece;
                 _SwCorps = SwCorps;
+                _Nom = SwCorps.Name;
+                _PID = Piece.Modele.SwModele.Extension.GetPersistReference3(_SwCorps);
 
                 Debug.Info(this.Nom);
                 _EstInitialise = true;
@@ -245,18 +263,7 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            if ((SwCorps != null) && (Modele != null) && (Modele.TypeDuModele == TypeFichier_e.cPiece) && Modele.EstInitialise)
-            {
-                _Piece = Modele.Piece;
-                _SwCorps = SwCorps;
-
-                Debug.Info(this.Nom);
-                _EstInitialise = true;
-            }
-            else
-            {
-                Debug.Info("!!!!! Erreur d'initialisation");
-            }
+            Init(SwCorps, Modele.Piece);
             return _EstInitialise;
         }
 
@@ -273,7 +280,7 @@ namespace Framework_SW2013
 
             List<eFonction> pListeFonctions = new List<eFonction>();
             
-            foreach(Feature pSwFonction in _SwCorps.GetFeatures())
+            foreach(Feature pSwFonction in SwCorps.GetFeatures())
             {
                 eFonction pFonction = new eFonction();
 
@@ -332,8 +339,8 @@ namespace Framework_SW2013
             MathTransform pXFormBase = _Piece.Modele.Composant.SwComposant.Transform2;
             MathTransform pXFormTest = Corps.Piece.Modele.Composant.SwComposant.Transform2;
 
-            Body2 pCopieCorpsBase = _SwCorps.Copy();
-            Body2 pCopieCorpsTest = Corps._SwCorps.Copy();
+            Body2 pCopieCorpsBase = SwCorps.Copy();
+            Body2 pCopieCorpsTest = Corps.SwCorps.Copy();
 
             Debug.Info(pCopieCorpsBase.ApplyTransform(pXFormBase).ToString());
             Debug.Info(pCopieCorpsTest.ApplyTransform(pXFormTest).ToString());
@@ -361,7 +368,7 @@ namespace Framework_SW2013
 
         int IComparable<eCorps>.CompareTo(eCorps Corps)
         {
-            String Nom1 =  _Piece.Modele.SwModele.GetPathName() + _SwCorps.Name;
+            String Nom1 =  _Piece.Modele.SwModele.GetPathName() + SwCorps.Name;
             String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
             return Nom1.CompareTo(Nom2);
         }
@@ -375,14 +382,14 @@ namespace Framework_SW2013
 
         bool IEquatable<eCorps>.Equals(eCorps Corps)
         {
-            String Nom1 = _Piece.Modele.SwModele.GetPathName() + _SwCorps.Name;
+            String Nom1 = _Piece.Modele.SwModele.GetPathName() + SwCorps.Name;
             String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
             return Nom1.Equals(Nom2);
         }
 
         internal Boolean Equals(eCorps Corps)
         {
-            String Nom1 = _Piece.Modele.SwModele.GetPathName() + _SwCorps.Name;
+            String Nom1 = _Piece.Modele.SwModele.GetPathName() + SwCorps.Name;
             String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
             return Nom1.Equals(Nom2);
         }

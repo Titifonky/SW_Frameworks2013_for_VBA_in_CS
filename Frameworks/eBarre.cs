@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Collections;
 using System.Reflection;
+using System.Globalization;
 
 namespace Framework_SW2013
 {
@@ -14,6 +15,12 @@ namespace Framework_SW2013
     public interface IeBarre
     {
         eCorps Corps { get; }
+        String Profil { get; }
+        Double Longueur { get; }
+        Double Angle1 { get; }
+        Double Angle2 { get; }
+        Double Masse { get; }
+        String Materiau { get; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -41,6 +48,68 @@ namespace Framework_SW2013
         /// Retourne le parent ExtPiece.
         /// </summary>
         public eCorps Corps { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Corps; } }
+
+        public String Profil
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_NOM).Valeur;
+            }
+        }
+
+        public Double Longueur
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                NumberFormatInfo pFormat = new NumberFormatInfo();
+                pFormat.NumberDecimalSeparator = ".";
+                return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_LONGUEUR).Valeur, pFormat);
+            }
+        }
+
+        public Double Angle1
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                NumberFormatInfo pFormat = new NumberFormatInfo();
+                pFormat.NumberDecimalSeparator = ".";
+                return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_ANGLE1).Valeur, pFormat);
+            }
+        }
+
+        public Double Angle2
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                NumberFormatInfo pFormat = new NumberFormatInfo();
+                pFormat.NumberDecimalSeparator = ".";
+                return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_ANGLE2).Valeur, pFormat);
+            }
+        }
+
+        public Double Masse
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                NumberFormatInfo pFormat = new NumberFormatInfo();
+                pFormat.NumberDecimalSeparator = ".";
+                return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_MASSE).Valeur, pFormat);
+            }
+        }
+
+        public String Materiau
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_MATERIAU).Valeur;
+            }
+        }
 
         /// <summary>
         /// Fonction interne.

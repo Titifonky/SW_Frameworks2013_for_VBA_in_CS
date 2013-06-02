@@ -16,7 +16,7 @@ namespace Framework_SW2013
         PartDoc SwPiece { get; }
         eModele Modele { get; }
         Boolean Contient(TypeCorps_e T);
-        ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false);
+        ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false);
         ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false);
     }
 
@@ -161,7 +161,7 @@ namespace Framework_SW2013
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteCache"></param>
         /// <returns></returns>
-        internal List<eCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
+        internal List<eCorps> ListListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -175,7 +175,7 @@ namespace Framework_SW2013
                 {
                     Body2 pSwCorps = (Body2)ObjetCorps;
                     eCorps pCorps = new eCorps();
-                    if (pCorps.Init(pSwCorps, this) && TypeDeCorps.HasFlag(pCorps.TypeDeCorps))
+                    if (pCorps.Init(pSwCorps, this) && TypeDeCorps.HasFlag(pCorps.TypeDeCorps) && Regex.IsMatch(pSwCorps.Name, NomARechercher))
                         {
                             Liste.Add(pCorps);
                         }
@@ -191,11 +191,11 @@ namespace Framework_SW2013
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteCache"></param>
         /// <returns></returns>
-        public ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
+        public ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            List<eCorps> pListeCorps = ListListeDesCorps(TypeDeCorps, PrendreEnCompteCache);
+            List<eCorps> pListeCorps = ListListeDesCorps(NomARechercher, TypeDeCorps, PrendreEnCompteCache);
             ArrayList pArrayCorps = new ArrayList();
 
             if (pListeCorps.Count > 0)

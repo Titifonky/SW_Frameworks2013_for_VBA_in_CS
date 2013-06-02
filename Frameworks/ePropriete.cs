@@ -159,7 +159,7 @@ namespace Framework_SW2013
             }
 
             // Pour la compatibilité
-#if SW2012
+#if SW2013
             _GestDeProprietes.SwGestDeProprietes.Get4(_Nom, true, out Expression, out Valeur);
 #else
                 _GestDeProprietes.SwGestDeProprietes.Get2(_Nom, out Expression, out Valeur);

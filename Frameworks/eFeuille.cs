@@ -19,12 +19,19 @@ namespace Framework_SW2013
         eDessin Dessin { get; }
         String Nom { get; set; }
         eVue PremiereVue { get; }
+        eZone EnveloppeDesVues { get; }
+        Format_e Format { get; set; }
+        Orientation_e Orientation { get; set; }
+        String GabaritDeFeuille { get; set; }
         void Activer();
         void Supprimer();
         void ZoomEtendu();
-        void Redimensionner();
+        void AjusterAutourDesVues();
+        void Redimensionner(Double Largeur, Double Hauteur);
+        eVue CreerVueToleDvp(ePiece Piece, eConfiguration Configuration);
         void ExporterEn(Extension_e TypeExport, String CheminDossier, String NomDuFichierAlternatif = "");
         ArrayList ListeDesVues(String NomARechercher = "");
+        void MettreEnPagePourImpression(swPageSetupDrawingColor_e Couleur = swPageSetupDrawingColor_e.swPageSetup_AutomaticDrawingColor, Boolean HauteQualite = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -80,6 +87,162 @@ namespace Framework_SW2013
                     return pVue;
 
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Retourne la zone enveloppant les vues
+        /// </summary>
+        public eZone EnveloppeDesVues
+        {
+            get
+            {
+                eZone pEnveloppe = new eZone();
+
+                pEnveloppe.PointMax.X = 0;
+                pEnveloppe.PointMax.Y = 0;
+                pEnveloppe.PointMin.X = 10000;
+                pEnveloppe.PointMin.Y = 10000;
+
+                List<eVue> pListeVues = ListListeDesVues();
+
+                if (pListeVues.Count == 0)
+                    return null;
+
+                foreach (eVue Vue in pListeVues)
+                {
+                    pEnveloppe.PointMax.X = Math.Max(pEnveloppe.PointMax.X, Vue.Dimensions.Zone.PointMax.X);
+                    pEnveloppe.PointMax.Y = Math.Max(pEnveloppe.PointMax.Y, Vue.Dimensions.Zone.PointMax.Y);
+                    pEnveloppe.PointMin.X = Math.Min(pEnveloppe.PointMin.X, Math.Max(0, Vue.Dimensions.Zone.PointMin.X));
+                    pEnveloppe.PointMin.Y = Math.Min(pEnveloppe.PointMin.Y, Math.Max(0, Vue.Dimensions.Zone.PointMin.Y));
+                }
+
+                return pEnveloppe;
+            }
+        }
+
+        /// <summary>
+        /// Retourne le format de la feuille
+        /// </summary>
+        public Format_e Format
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                Double pLargeur = 0;
+                Double pHauteur = 0;
+                swDwgPaperSizes_e pTaille = (swDwgPaperSizes_e)_SwFeuille.GetSize(ref pLargeur, ref pHauteur);
+
+                if (Orientation == Orientation_e.cPortrait)
+                {
+                    Double pTmp = pLargeur;
+                    pLargeur = pHauteur;
+                    pHauteur = pTmp;
+                }
+
+                if ((pLargeur == 1.189) && (pHauteur == 0.841))
+                    return Format_e.cA0;
+
+                if ((pLargeur == 0.841) && (pHauteur == 0.594))
+                    return Format_e.cA1;
+
+                if ((pLargeur == 0.594) && (pHauteur == 0.420))
+                    return Format_e.cA2;
+
+                if ((pLargeur == 0.420) && (pHauteur == 0.297))
+                    return Format_e.cA3;
+
+                if ((pLargeur == 0.297) && (pHauteur == 0.210))
+                    return Format_e.cA4;
+
+                if ((pLargeur == 0.210) && (pHauteur == 0.148))
+                    return Format_e.cA5;
+
+                return Format_e.cUtilisateur;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                Double pLargeur = 0;
+                Double pHauteur = 0;
+                swDwgPaperSizes_e pTaille = (swDwgPaperSizes_e)_SwFeuille.GetSize(ref pLargeur, ref pHauteur);
+
+
+                if (value == Format_e.cA0)
+                    pLargeur = 1.189; pHauteur = 0.841;
+
+                if (value == Format_e.cA1)
+                    pLargeur = 0.841; pHauteur = 0.594;
+
+                if (value == Format_e.cA2)
+                    pLargeur = 0.594; pHauteur = 0.420;
+
+                if (value == Format_e.cA3)
+                    pLargeur = 0.420; pHauteur = 0.297;
+
+                if (value == Format_e.cA4)
+                    pLargeur = 0.297; pHauteur = 0.210;
+
+                if (value == Format_e.cA5)
+                    pLargeur = 0.210; pHauteur = 0.148;
+
+                if (Orientation == Orientation_e.cPortrait)
+                {
+                    Double pTmp = pLargeur;
+                    pLargeur = pHauteur;
+                    pHauteur = pTmp;
+                }
+
+                _SwFeuille.SetSize(12, pLargeur, pHauteur);
+            }
+        }
+
+        /// <summary>
+        /// Retourne l'orientation de la feuille : Portrait ou Paysage
+        /// </summary>
+        public Orientation_e Orientation
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                Double pLargeur = 0;
+                Double pHauteur = 0;
+                swDwgPaperSizes_e pTaille = (swDwgPaperSizes_e)_SwFeuille.GetSize(ref pLargeur, ref pHauteur);
+                if (pLargeur > pHauteur)
+                    return Orientation_e.cPaysage;
+
+                return Orientation_e.cPortrait;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                Double pLargeur = 0;
+                Double pHauteur = 0;
+                swDwgPaperSizes_e pTaille = (swDwgPaperSizes_e)_SwFeuille.GetSize(ref pLargeur, ref pHauteur);
+
+                if (Orientation != value)
+                    _SwFeuille.SetSize(12, pHauteur, pLargeur);
+            }
+        }
+
+        /// <summary>
+        /// Retourne le gabarit de la feuille
+        /// </summary>
+        public String GabaritDeFeuille
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwFeuille.GetTemplateName();
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _SwFeuille.SetTemplateName(value);
             }
         }
 
@@ -179,36 +342,56 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Redimensionne la feuille autour des vues
+        /// Ajuster la feuille autour des vues
         /// </summary>
-        public void Redimensionner()
+        public void AjusterAutourDesVues()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            eZone pEnveloppe = new eZone();
+            eZone pEnveloppe = EnveloppeDesVues;
 
-            pEnveloppe.PointMax.X = 0;
-            pEnveloppe.PointMax.Y = 0;
-            pEnveloppe.PointMin.X = 10000;
-            pEnveloppe.PointMin.Y = 10000;
-
-            List<eVue> pListeVues = ListListeDesVues();
-
-            if (pListeVues.Count == 0)
+            if (pEnveloppe == null)
                 return;
-
-            foreach (eVue Vue in pListeVues)
-            {
-                pEnveloppe.PointMax.X = Math.Max(pEnveloppe.PointMax.X, Vue.Dimensions.Zone.PointMax.X);
-                pEnveloppe.PointMax.Y = Math.Max(pEnveloppe.PointMax.Y, Vue.Dimensions.Zone.PointMax.Y);
-                pEnveloppe.PointMin.X = Math.Min(pEnveloppe.PointMin.X, Math.Max(0, Vue.Dimensions.Zone.PointMin.X));
-                pEnveloppe.PointMin.Y = Math.Min(pEnveloppe.PointMin.Y, Math.Max(0, Vue.Dimensions.Zone.PointMin.Y));
-            }
 
             _SwFeuille.SetSize((int)swDwgPaperSizes_e.swDwgPapersUserDefined,
                 pEnveloppe.PointMax.X + pEnveloppe.PointMin.X,
                 pEnveloppe.PointMax.Y + pEnveloppe.PointMin.Y);
+        }
 
+        /// <summary>
+        /// Redimensionne la feuille autour des vues si aucunes valeurs ne sont rentrées
+        /// </summary>
+        public void Redimensionner(Double Largeur, Double Hauteur)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            if ((Largeur == 0) || (Hauteur == 0))
+                return;
+
+            _SwFeuille.SetSize((int)swDwgPaperSizes_e.swDwgPapersUserDefined, Largeur, Hauteur);
+
+        }
+
+        /// <summary>
+        /// Creer la vue développée d'une tôle
+        /// </summary>
+        /// <param name="Piece"></param>
+        /// <param name="Configuration"></param>
+        /// <returns></returns>
+        public eVue CreerVueToleDvp(ePiece Piece, eConfiguration Configuration)
+        {
+            eVue pVue = new eVue();
+            View pSwVue = null;
+            pSwVue = _Dessin.SwDessin.CreateFlatPatternViewFromModelView3(Piece.Modele.FichierSw.Chemin, Configuration.Nom, 0, 0, 0, false, false);
+
+            if (pVue.Init(pSwVue, this))
+            {
+                Debug.Info("Vue dvp crée");
+                return pVue;
+            }
+
+            Debug.Info("Vue dvp non crée");
+            return null;
         }
 
         /// <summary>
@@ -297,6 +480,39 @@ namespace Framework_SW2013
                 pArrayVues = new ArrayList(pListeVues);
 
             return pArrayVues;
+        }
+
+        /// <summary>
+        /// Definit les paramètres pour l'impression
+        /// </summary>
+        /// <param name="Couleur"></param>
+        /// <param name="HauteQualite"></param>
+        public void MettreEnPagePourImpression(swPageSetupDrawingColor_e Couleur = swPageSetupDrawingColor_e.swPageSetup_AutomaticDrawingColor, Boolean HauteQualite = false)
+        {
+            _Dessin.Modele.SwModele.Extension.UsePageSetup = (int)swPageSetupInUse_e.swPageSetupInUse_Application;
+            PageSetup pSetupApp = _Dessin.Modele.SwModele.Extension.AppPageSetup;
+            pSetupApp.HighQuality = HauteQualite;
+            pSetupApp.DrawingColor = (int)Couleur;
+            pSetupApp.ScaleToFit = false;
+
+            _Dessin.Modele.SwModele.Extension.UsePageSetup = (int)swPageSetupInUse_e.swPageSetupInUse_Document;
+            PageSetup pSetupDoc = _Dessin.Modele.SwModele.PageSetup;
+            pSetupDoc.HighQuality = HauteQualite;
+            pSetupDoc.DrawingColor = (int)Couleur;
+            pSetupDoc.ScaleToFit = false;
+
+            _Dessin.Modele.SwModele.Extension.UsePageSetup = (int)swPageSetupInUse_e.swPageSetupInUse_DrawingSheet;
+            PageSetup pSetupFeuille = _SwFeuille.PageSetup;
+            pSetupFeuille.DrawingColor = (int)Couleur;
+            pSetupFeuille.HighQuality = HauteQualite;
+            pSetupFeuille.PrinterPaperSource = 15;
+            pSetupFeuille.PrinterPaperSize = (int)Format;
+            pSetupFeuille.ScaleToFit = false;
+
+            if (Orientation == Orientation_e.cPaysage)
+                pSetupFeuille.Orientation = (int)swPageSetupOrientation_e.swPageSetupOrient_Landscape;
+            else
+                pSetupFeuille.Orientation = (int)swPageSetupOrientation_e.swPageSetupOrient_Portrait;
         }
 
         #endregion
