@@ -170,6 +170,7 @@ namespace Framework_SW2013
                 return null;
 
             eComposant pComposantSelectionne = Composant(Index, Marque);
+
             dynamic pSwObjet = _SwGestDeSelection.GetSelectedObject6(Index, Marque);
             swSelectType_e pType = TypeObjet(Index, Marque);
 
@@ -297,13 +298,13 @@ namespace Framework_SW2013
             Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent3(Index, Marque);
 #endif
 
-            // Si le composant racine est sélectionné, rien n'est renvoyé.
+            // Si le composant racine est sélectionné et que l'on est dans un assemblage, rien n'est renvoyé.
             // Donc on le récupère.
-            if (pSwComposant == null)
+            if ((pSwComposant == null) && (_Modele.TypeDuModele == TypeFichier_e.cAssemblage))
                 pSwComposant = _SwGestDeSelection.GetSelectedObject6(Index, Marque);
 
-            if (pSwComposant == null)
-                return null;
+            if (pSwComposant == null && (_Modele.TypeDuModele != TypeFichier_e.cAssemblage))
+                return _Modele.Composant;
 
             // Pour intitialiser le composant correctement il faut un peu de bidouille
             // sinon on à le droit à une belle reference circulaire

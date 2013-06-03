@@ -26,6 +26,7 @@ namespace Framework_SW2013
         eGestDeSelection GestDeSelection { get; }
         TypeFichier_e TypeDuModele { get; }
         eFichierSW FichierSw { get; }
+        Boolean EstActif { get; set; }
         void Activer(swRebuildOnActivation_e Reconstruire = swRebuildOnActivation_e.swUserDecision);
         void Sauver();
         void Fermer();
@@ -248,6 +249,26 @@ namespace Framework_SW2013
         /// </summary>
         public eFichierSW FichierSw { get { Debug.Info(MethodBase.GetCurrentMethod()); return _FichierSw; } }
 
+        public Boolean EstActif
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                if (SW.Modele().Equals(this))
+                    return true;
+
+                return false;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, (int)swRebuildOnActivation_e.swUserDecision, Erreur);
+                _Composant.Configuration.Activer();
+            }
+        }
+
         /// <summary>
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtModele.
@@ -332,7 +353,6 @@ namespace Framework_SW2013
             _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, (int)Reconstruire, Erreur);
             _Composant.Configuration.Activer();
             ZoomEtendu();
-            //Redessiner();
         }
 
         /// <summary>
@@ -441,7 +461,8 @@ namespace Framework_SW2013
                 if ((Regex.IsMatch(pSwFonction.Name, NomARechercher))
                     && (Regex.IsMatch(pSwFonction.GetTypeName2(), TypeDeLaFonction))
                     && pFonction.Init(pSwFonction, this)
-                    && !(pListeFonctions.Contains(pFonction)))
+                    && !(pListeFonctions.Contains(pFonction))
+                    )
                     pListeFonctions.Add(pFonction);
 
                 if (AvecLesSousFonctions)
@@ -453,8 +474,10 @@ namespace Framework_SW2013
                         eFonction pSousFonction = new eFonction();
 
                         if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher))
+                            && (Regex.IsMatch(pSwSousFonction.GetTypeName2(), TypeDeLaFonction))
                             && pSousFonction.Init(pSwSousFonction, this)
-                            && !(pListeFonctions.Contains(pSousFonction)))
+                            && !(pListeFonctions.Contains(pSousFonction))
+                            )
                             pListeFonctions.Add(pSousFonction);
 
                         pSwSousFonction = pSwSousFonction.GetNextSubFeature();
@@ -464,8 +487,55 @@ namespace Framework_SW2013
                 pSwFonction = pSwFonction.GetNextFeature();
             }
 
-            return pListeFonctions;
+            if (EstActif)
+            {
+                List<TreeControlItem> pListeNoeuds = new List<TreeControlItem>();
+                TreeControlItem pNoeudRacine = _SwModele.FeatureManager.GetFeatureTreeRootItem2((int)swFeatMgrPane_e.swFeatMgrPaneTopHidden);
+                ScannerFonctionsFeatureManager(pNoeudRacine, pListeNoeuds, AvecLesSousFonctions);
+                foreach(TreeControlItem pNoeud in pListeNoeuds)
+                {
+                    Feature pSwFonctionNoeud = pNoeud.Object;
+                    eFonction pFonction = new eFonction();
 
+                    if ((Regex.IsMatch(pSwFonctionNoeud.Name, NomARechercher))
+                            && (Regex.IsMatch(pSwFonctionNoeud.GetTypeName2(), TypeDeLaFonction))
+                            && pFonction.Init(pSwFonctionNoeud, this)
+                            && !(pListeFonctions.Contains(pFonction))
+                            )
+                        pListeFonctions.Add(pFonction);
+                    
+                }
+            }
+
+            return pListeFonctions;
+        }
+
+        /// <summary>
+        /// Scanne les fonctions du FeatureManager
+        /// </summary>
+        /// <param name="Noeud"></param>
+        /// <param name="ListeNoeuds"></param>
+        /// <param name="AvecLesSousFonctions"></param>
+        private void ScannerFonctionsFeatureManager(TreeControlItem Noeud, List<TreeControlItem> ListeNoeuds, Boolean AvecLesSousFonctions)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            if (Noeud.ObjectType == (int)swTreeControlItemType_e.swFeatureManagerItem_Feature)
+                ListeNoeuds.Add(Noeud);
+
+            TreeControlItem pNoeud = Noeud.GetFirstChild();
+
+            while (pNoeud != null)
+            {
+                if (pNoeud.ObjectType == (int)swTreeControlItemType_e.swFeatureManagerItem_Feature)
+                    ListeNoeuds.Add(pNoeud);
+
+                // On scanne dans tous les cas le dossier Tôlerie et le dossier Etat déplié
+                if (AvecLesSousFonctions || (pNoeud.Text == "Tôlerie") || (pNoeud.Text == "Etat déplié"))
+                    ScannerFonctionsFeatureManager(pNoeud, ListeNoeuds, AvecLesSousFonctions);
+
+                pNoeud = pNoeud.GetNext();
+            }
         }
 
         /// <summary>
@@ -504,22 +574,17 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<eModele>.CompareTo(eModele Modele)
+        public int CompareTo(eModele Modele)
         {
             return _SwModele.GetPathName().CompareTo(Modele.SwModele.GetPathName());
         }
 
-        int IComparer<eModele>.Compare(eModele Modele1, eModele Modele2)
+        public int Compare(eModele Modele1, eModele Modele2)
         {
             return Modele1.SwModele.GetPathName().CompareTo(Modele2.SwModele.GetPathName());
         }
 
-        bool IEquatable<eModele>.Equals(eModele Modele)
-        {
-            return _SwModele.GetPathName().Equals(Modele.SwModele.GetPathName());
-        }
-
-        internal Boolean Equals(eModele Modele)
+        public Boolean Equals(eModele Modele)
         {
             return _SwModele.GetPathName().Equals(Modele.SwModele.GetPathName());
         }

@@ -209,28 +209,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<ePropriete>.CompareTo(ePropriete Prop)
+        public int CompareTo(ePropriete Prop)
         {
             String Nom1 = _GestDeProprietes.Modele.SwModele.GetPathName() + _Nom;
             String Nom2 = Prop.GestDeProprietes.Modele.SwModele.GetPathName() + Prop.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<ePropriete>.Compare(ePropriete Prop1, ePropriete Prop2)
+        public int Compare(ePropriete Prop1, ePropriete Prop2)
         {
             String Nom1 = Prop1.GestDeProprietes.Modele.SwModele.GetPathName() + Prop1.Nom;
             String Nom2 = Prop2.GestDeProprietes.Modele.SwModele.GetPathName() + Prop2.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<ePropriete>.Equals(ePropriete Prop)
-        {
-            String Nom1 = _GestDeProprietes.Modele.SwModele.GetPathName() + _Nom;
-            String Nom2 = Prop.GestDeProprietes.Modele.SwModele.GetPathName() + Prop.Nom;
-            return Nom1.Equals(Nom2);
-        }
-
-        internal Boolean Equals(ePropriete Prop)
+        public Boolean Equals(ePropriete Prop)
         {
             String Nom1 = _GestDeProprietes.Modele.SwModele.GetPathName() + _Nom;
             String Nom2 = Prop.GestDeProprietes.Modele.SwModele.GetPathName() + Prop.Nom;

@@ -390,28 +390,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<eConfiguration>.CompareTo(eConfiguration Conf)
+        public int CompareTo(eConfiguration Conf)
         {
             String Nom1 = _Modele.SwModele.GetPathName() + _SwConfiguration.Name;
             String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf._SwConfiguration.Name;
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<eConfiguration>.Compare(eConfiguration Conf1, eConfiguration Conf2)
+        public int Compare(eConfiguration Conf1, eConfiguration Conf2)
         {
             String Nom1 = Conf1._Modele.SwModele.GetPathName() + Conf1._SwConfiguration.Name;
             String Nom2 = Conf2._Modele.SwModele.GetPathName() + Conf2._SwConfiguration.Name;
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<eConfiguration>.Equals(eConfiguration Conf)
-        {
-            String Nom1 = _Modele.SwModele.GetPathName() + _SwConfiguration.Name;
-            String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf._SwConfiguration.Name;
-            return Nom1.Equals(Nom2);
-        }
-
-        internal Boolean Equals(eConfiguration Conf)
+        public Boolean Equals(eConfiguration Conf)
         {
             String Nom1 = _Modele.SwModele.GetPathName() + _SwConfiguration.Name;
             String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf._SwConfiguration.Name;

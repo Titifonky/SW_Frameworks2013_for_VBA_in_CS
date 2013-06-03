@@ -199,28 +199,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<eDossier>.CompareTo(eDossier Dossier)
+        public int CompareTo(eDossier Dossier)
         {
             String Nom1 = _Piece.Modele.SwModele.GetPathName() + Nom;
             String Nom2 = Dossier.Piece.Modele.SwModele.GetPathName() + Dossier.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<eDossier>.Compare(eDossier Dossier1, eDossier Dossier2)
+        public int Compare(eDossier Dossier1, eDossier Dossier2)
         {
             String Nom1 = Dossier1.Piece.Modele.SwModele.GetPathName() + Dossier1.Nom;
             String Nom2 = Dossier2.Piece.Modele.SwModele.GetPathName() + Dossier2.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<eDossier>.Equals(eDossier Dossier)
-        {
-            String Nom1 = _Piece.Modele.SwModele.GetPathName() + Nom;
-            String Nom2 = Dossier.Piece.Modele.SwModele.GetPathName() + Dossier.Nom;
-            return Nom1.Equals(Nom2);
-        }
-
-        internal Boolean Equals(eDossier Dossier)
+        public Boolean Equals(eDossier Dossier)
         {
             String Nom1 = _Piece.Modele.SwModele.GetPathName() + Nom;
             String Nom2 = Dossier.Piece.Modele.SwModele.GetPathName() + Dossier.Nom;

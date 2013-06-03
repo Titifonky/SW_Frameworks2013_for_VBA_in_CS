@@ -531,28 +531,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<eComposant>.CompareTo(eComposant Comp)
+        public int CompareTo(eComposant Comp)
         {
             String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom + "_" + NoOccurence.ToString().PadLeft(10,'0');
             String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom + "_" + Comp.NoOccurence.ToString().PadLeft(10,'0');
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<eComposant>.Compare(eComposant Comp1, eComposant Comp2)
+        public int Compare(eComposant Comp1, eComposant Comp2)
         {
             String Nom1 = Comp1.SwComposant.GetPathName() + Comp1.Configuration.Nom + "_" + Comp1.NoOccurence.ToString().PadLeft(10, '0');
             String Nom2 = Comp2.SwComposant.GetPathName() + Comp2.Configuration.Nom + "_" + Comp2.NoOccurence.ToString().PadLeft(10, '0');
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<eComposant>.Equals(eComposant Comp)
-        {
-            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom + "_" + NoOccurence.ToString().PadLeft(10, '0');
-            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom + "_" + Comp.NoOccurence.ToString().PadLeft(10, '0');
-            return Nom1.Equals(Nom2);
-        }
-
-        internal Boolean Equals(eComposant Comp)
+        public Boolean Equals(eComposant Comp)
         {
             String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom + "_" + NoOccurence.ToString().PadLeft(10, '0');
             String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom + "_" + Comp.NoOccurence.ToString().PadLeft(10, '0');

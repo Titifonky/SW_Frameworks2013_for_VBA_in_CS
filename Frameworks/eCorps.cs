@@ -23,7 +23,7 @@ namespace Framework_SW2013
         eDossier Dossier { get; }
         eFonction PremiereFonction { get; }
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
-        
+
         int NbIntersection(eCorps Corps);
     }
 
@@ -33,7 +33,7 @@ namespace Framework_SW2013
     public class eCorps : IeCorps, IComparable<eCorps>, IComparer<eCorps>, IEquatable<eCorps>
     {
         #region "Variables locales"
-        
+
         private Boolean _EstInitialise = false;
 
         private ePiece _Piece = null;
@@ -56,16 +56,18 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet Body2 associé.
         /// </summary>
-        public Body2 SwCorps 
+        public Body2 SwCorps
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                if ((_SwCorps == null) && (_PID != null))
+                // On recupère le corps avec le PID, comme ça, ya plus de pb.
+                if ((_PID != null)) //(_SwCorps == null) && 
                 {
                     int pErreur = 0;
                     _SwCorps = Piece.Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
-                    }
+                    Debug.Info("Recurpère le corps avec le PID, Erreur : " + pErreur.ToString());
+                }
 
                 return _SwCorps;
             }
@@ -74,7 +76,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public ePiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
+        public ePiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Piece; } }
 
         /// <summary>
         /// Retourne l'objet Tole
@@ -218,7 +220,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet eBarre.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
         #endregion
 
@@ -279,8 +281,8 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             List<eFonction> pListeFonctions = new List<eFonction>();
-            
-            foreach(Feature pSwFonction in SwCorps.GetFeatures())
+
+            foreach (Feature pSwFonction in SwCorps.GetFeatures())
             {
                 eFonction pFonction = new eFonction();
 
@@ -366,28 +368,21 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<eCorps>.CompareTo(eCorps Corps)
+        public int CompareTo(eCorps Corps)
         {
-            String Nom1 =  _Piece.Modele.SwModele.GetPathName() + SwCorps.Name;
+            String Nom1 = _Piece.Modele.SwModele.GetPathName() + SwCorps.Name;
             String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        int IComparer<eCorps>.Compare(eCorps Corps1, eCorps Corps2)
+        public int Compare(eCorps Corps1, eCorps Corps2)
         {
             String Nom1 = Corps1.Piece.Modele.SwModele.GetPathName() + Corps1.Nom;
             String Nom2 = Corps2.Piece.Modele.SwModele.GetPathName() + Corps2.Nom;
             return Nom1.CompareTo(Nom2);
         }
 
-        bool IEquatable<eCorps>.Equals(eCorps Corps)
-        {
-            String Nom1 = _Piece.Modele.SwModele.GetPathName() + SwCorps.Name;
-            String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;
-            return Nom1.Equals(Nom2);
-        }
-
-        internal Boolean Equals(eCorps Corps)
+        public Boolean Equals(eCorps Corps)
         {
             String Nom1 = _Piece.Modele.SwModele.GetPathName() + SwCorps.Name;
             String Nom2 = Corps.Piece.Modele.SwModele.GetPathName() + Corps.Nom;

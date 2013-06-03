@@ -462,22 +462,17 @@ namespace Framework_SW2013
 
         #region "Interfaces génériques"
 
-        int IComparable<eFonction>.CompareTo(eFonction Fonction)
+        public int CompareTo(eFonction Fonction)
         {
             return  (_Modele.SwModele.GetPathName() + _SwModeleFonction.Name).CompareTo(Fonction.Modele.SwModele.GetPathName() +  Fonction.SwFonction.Name);
         }
 
-        int IComparer<eFonction>.Compare(eFonction Fonction1, eFonction Fonction2)
+        public int Compare(eFonction Fonction1, eFonction Fonction2)
         {
             return (Fonction1.Modele.SwModele.GetPathName() + Fonction1._SwModeleFonction.Name).CompareTo(Fonction2.Modele.SwModele.GetPathName() + Fonction2._SwModeleFonction.Name);
         }
 
-        bool IEquatable<eFonction>.Equals(eFonction Fonction)
-        {
-            return (Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name).Equals(_Modele.SwModele.GetPathName() + _SwModeleFonction.Name);
-        }
-
-        internal Boolean Equals(eFonction Fonction)
+        public  Boolean Equals(eFonction Fonction)
         {
             return (Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name).Equals(_Modele.SwModele.GetPathName() + _SwModeleFonction.Name);
         }

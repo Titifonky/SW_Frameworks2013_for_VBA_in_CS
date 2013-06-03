@@ -16,6 +16,7 @@ namespace Framework_SW2013
         PartDoc SwPiece { get; }
         eModele Modele { get; }
         Boolean Contient(TypeCorps_e T);
+        eParametreTolerie ParametresDeTolerie { get; }
         ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false);
         ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false);
     }
@@ -31,6 +32,7 @@ namespace Framework_SW2013
 
         private eModele _Modele = null;
         private PartDoc _SwPiece = null;
+        private eParametreTolerie _ParametreDeTolerie = null;
 
         #endregion
 
@@ -51,6 +53,28 @@ namespace Framework_SW2013
         /// Renvoi l'objet ExtModele.
         /// </summary>
         public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+
+        /// <summary>
+        /// Retourne l'assemblage ExtAssemblage si celui ci est valide.
+        /// </summary>
+        public eParametreTolerie ParametresDeTolerie
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                if (_ParametreDeTolerie == null)
+                {
+                    _ParametreDeTolerie = new eParametreTolerie();
+                    _ParametreDeTolerie.Init(this);
+                }
+
+                if (_ParametreDeTolerie.EstInitialise)
+                    return _ParametreDeTolerie;
+
+                return null;
+            }
+        }
 
         /// <summary>
         /// Renvoi la valeur de l'initialisation.

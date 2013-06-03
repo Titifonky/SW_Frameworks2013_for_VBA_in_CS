@@ -17,6 +17,9 @@ namespace Framework_SW2013
         Double Epaisseur { get; set; }
         Double Rayon { get; set; }
         Double FacteurK { get; set; }
+        Boolean EcraserEpaisseur { get; set; }
+        Boolean EcraserRayon { get; set; }
+        Boolean EcraserFacteurK { get; set; }
         eFonction FonctionTolerie { get; }
         eFonction FonctionToleDeBase { get; }
         eFonction FonctionDeplie { get; }
@@ -73,15 +76,6 @@ namespace Framework_SW2013
             }
         }
 
-        private SheetMetalFeatureData SwParametreTolerie
-        {
-            get
-            {
-                Debug.Info(MethodBase.GetCurrentMethod());
-                return FonctionTolerie.SwFonction.GetDefinition();
-            }
-        }
-
         /// <summary>
         /// Retourne ou défini l'épaisseur de la tole
         /// </summary>
@@ -90,21 +84,16 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return SwParametreTolerie.Thickness * 1000;
+                SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
+                return pParam.Thickness * 1000;
             }
             set
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 ModelDoc2 pSwModele = SwModele;
                 Component2 pSwComposant = SwComposant;
-
-#if SW2013
-                SheetMetalFeatureData pParam = SwParametreTolerie;
-                Feature pSwFonctionTolerie = FonctionTolerie.SwFonction;
-#else
                 Feature pSwFonction = FonctionToleDeBase.SwFonction;
                 BaseFlangeFeatureData pParam = pSwFonction.GetDefinition();
-#endif
                 pParam.AccessSelections(pSwModele, pSwComposant);
                 pParam.Thickness = value * 0.001;
                 pSwFonction.ModifyDefinition(pParam, pSwModele, pSwComposant);
@@ -120,15 +109,16 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return SwParametreTolerie.BendRadius * 1000;
+                SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
+                return pParam.BendRadius * 1000;
             }
             set
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 ModelDoc2 pSwModele = SwModele;
                 Component2 pSwComposant = SwComposant;
-                SheetMetalFeatureData pParam = SwParametreTolerie;
                 Feature pSwFonctionTolerie = FonctionTolerie.SwFonction;
+                SheetMetalFeatureData pParam = pSwFonctionTolerie.GetDefinition();
                 pParam.AccessSelections(pSwModele, pSwComposant);
                 pParam.BendRadius = value * 0.001;
                 pSwFonctionTolerie.ModifyDefinition(pParam, pSwModele, pSwComposant);
@@ -144,20 +134,86 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return SwParametreTolerie.GetCustomBendAllowance().KFactor;
+                SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
+                return pParam.GetCustomBendAllowance().KFactor;
             }
             set
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 ModelDoc2 pSwModele = SwModele;
                 Component2 pSwComposant = SwComposant;
-                SheetMetalFeatureData pParam = SwParametreTolerie;
                 Feature pSwFonctionTolerie = FonctionTolerie.SwFonction;
+                SheetMetalFeatureData pParam = pSwFonctionTolerie.GetDefinition();
                 CustomBendAllowance pParamPli = pParam.GetCustomBendAllowance();
                 pParam.AccessSelections(pSwModele, pSwComposant);
                 pParamPli.KFactor = value;
                 pParam.SetCustomBendAllowance(pParamPli);
                 pSwFonctionTolerie.ModifyDefinition(pParam, pSwModele, pSwComposant);
+                pParam.ReleaseSelectionAccess();
+            }
+        }
+
+        public Boolean EcraserEpaisseur
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                return pParam.OverrideThickness;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                ModelDoc2 pSwModele = SwModele;
+                Component2 pSwComposant = SwComposant;
+                Feature pSwFonction = FonctionToleDeBase.SwFonction;
+                BaseFlangeFeatureData pParam = pSwFonction.GetDefinition();
+                pParam.AccessSelections(pSwModele, pSwComposant);
+                pParam.OverrideThickness = value;
+                pSwFonction.ModifyDefinition(pParam, pSwModele, pSwComposant);
+                pParam.ReleaseSelectionAccess();
+            }
+        }
+        public Boolean EcraserRayon
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                return pParam.OverrideRadius;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                ModelDoc2 pSwModele = SwModele;
+                Component2 pSwComposant = SwComposant;
+                Feature pSwFonction = FonctionToleDeBase.SwFonction;
+                BaseFlangeFeatureData pParam = pSwFonction.GetDefinition();
+                pParam.AccessSelections(pSwModele, pSwComposant);
+                pParam.OverrideRadius = value;
+                pSwFonction.ModifyDefinition(pParam, pSwModele, pSwComposant);
+                pParam.ReleaseSelectionAccess();
+            }
+        }
+
+        public Boolean EcraserFacteurK
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                return pParam.OverrideKFactor;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                ModelDoc2 pSwModele = SwModele;
+                Component2 pSwComposant = SwComposant;
+                Feature pSwFonction = FonctionToleDeBase.SwFonction;
+                BaseFlangeFeatureData pParam = pSwFonction.GetDefinition();
+                pParam.AccessSelections(pSwModele, pSwComposant);
+                pParam.OverrideKFactor = value;
+                pSwFonction.ModifyDefinition(pParam, pSwModele, pSwComposant);
                 pParam.ReleaseSelectionAccess();
             }
         }
