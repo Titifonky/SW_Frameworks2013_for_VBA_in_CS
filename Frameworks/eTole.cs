@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Collections;
 using System.Reflection;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {
@@ -24,6 +25,7 @@ namespace Framework_SW2013
         eFonction FonctionToleDeBase { get; }
         eFonction FonctionDeplie { get; }
         eFonction FonctionCubeDeVisualisation { get; }
+        void Deplier(Boolean T);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -174,6 +176,7 @@ namespace Framework_SW2013
                 pParam.ReleaseSelectionAccess();
             }
         }
+
         public Boolean EcraserRayon
         {
             get
@@ -297,6 +300,18 @@ namespace Framework_SW2013
 
                 return this.FonctionDeplie.ListListeDesSousFonctions(CONSTANTES.CUBE_DE_VISUALISATION)[0];
             }
+        }
+
+        /// <summary>
+        /// Plier ou deplier la tole
+        /// </summary>
+        public void Deplier (Boolean T)
+        {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if (T)
+                    FonctionDeplie.Activer();
+
+                FonctionDeplie.Desactiver();
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using System.Reflection;
 
 namespace Framework_SW2013
 {
+#if SW2013
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("3E082AF3-8F22-4687-A8AB-5DBE544FA5D8")]
     public interface IeParametreTolerie
@@ -247,4 +248,6 @@ namespace Framework_SW2013
 
         #endregion
     }
+
+#endif
 }

@@ -65,8 +65,10 @@ namespace Framework_SW2013
                 if ((_PID != null)) //(_SwCorps == null) && 
                 {
                     int pErreur = 0;
-                    _SwCorps = Piece.Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
-                    Debug.Info("Recurpère le corps avec le PID, Erreur : " + pErreur.ToString());
+                    Body2 pSwCorps = Piece.Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
+                    Debug.Info("PID Erreur : " + pErreur);
+                    if (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
+                        _SwCorps = pSwCorps;
                 }
 
                 return _SwCorps;

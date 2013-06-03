@@ -55,8 +55,6 @@ namespace Framework_SW2013
         private eAssemblage _Assemblage = null;
         private ePiece _Piece = null;
         private eDessin _Dessin = null;
-        private eGestDeConfigurations _GestDeConfigurations = null;
-        private eGestDeProprietes _GestDeProprietes = null;
         private eGestDeSelection _GestDeSelection = null;
         private eFichierSW _FichierSw = null;
         private int Erreur = 0;
@@ -162,14 +160,10 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                if (_GestDeConfigurations == null)
-                {
-                    _GestDeConfigurations = new eGestDeConfigurations();
-                    _GestDeConfigurations.Init(this);
-                }
+                eGestDeConfigurations pGestDeConfigurations = new eGestDeConfigurations();
 
-                if (_GestDeConfigurations.EstInitialise)
-                    return _GestDeConfigurations;
+                if (pGestDeConfigurations.Init(this))
+                    return pGestDeConfigurations;
 
                 return null;
             }
@@ -184,14 +178,10 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                if (_GestDeProprietes == null)
-                {
-                    _GestDeProprietes = new eGestDeProprietes();
-                    _GestDeProprietes.Init(SwModele.Extension.get_CustomPropertyManager(""), this);
-                }
+                eGestDeProprietes pGestDeProprietes = new eGestDeProprietes();
 
-                if (_GestDeProprietes.EstInitialise)
-                    return _GestDeProprietes;
+                if (pGestDeProprietes.Init(SwModele.Extension.get_CustomPropertyManager(""), this))
+                    return pGestDeProprietes;
 
                 return null;
             }
@@ -487,6 +477,7 @@ namespace Framework_SW2013
                 pSwFonction = pSwFonction.GetNextFeature();
             }
 
+#if SW2013
             if (EstActif)
             {
                 List<TreeControlItem> pListeNoeuds = new List<TreeControlItem>();
@@ -506,6 +497,7 @@ namespace Framework_SW2013
                     
                 }
             }
+#endif
 
             return pListeFonctions;
         }

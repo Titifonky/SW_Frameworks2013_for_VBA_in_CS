@@ -65,10 +65,13 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                if ((_SwModeleFonction == null) && (_PID != null))
+                if ((_PID != null)) //(_SwModeleFonction == null) && 
                 {
                     int pErreur = 0;
-                    _SwModeleFonction = _Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
+                    Feature pSwFonction = _Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
+                    Debug.Info("PID Erreur : " + pErreur);
+                    if (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
+                        _SwModeleFonction = pSwFonction;
                 }
 
                 if (_Modele.SwModele.GetPathName().Equals(_Modele.SW.Modele().SwModele.GetPathName()) || _Modele.Composant.SwComposant.IsRoot())
@@ -165,7 +168,7 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return _SwModeleFonction.DateCreated;
+                return SwFonction.DateCreated;
             }
         }
 
@@ -177,7 +180,7 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return _SwModeleFonction.DateModified;
+                return SwFonction.DateModified;
             }
         }
 
@@ -336,7 +339,7 @@ namespace Framework_SW2013
 
             List<eCorps> pListeCorps = new List<eCorps>();
 
-            if (_SwModeleFonction.GetFaceCount() == 0)
+            if (SwFonction.GetFaceCount() == 0)
                 return pListeCorps;
 
             foreach (Face2 Face in _SwModeleFonction.GetFaces())

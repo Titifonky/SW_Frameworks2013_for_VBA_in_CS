@@ -16,7 +16,9 @@ namespace Framework_SW2013
         PartDoc SwPiece { get; }
         eModele Modele { get; }
         Boolean Contient(TypeCorps_e T);
+#if SW2013
         eParametreTolerie ParametresDeTolerie { get; }
+#endif
         ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false);
         ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false);
     }
@@ -32,7 +34,10 @@ namespace Framework_SW2013
 
         private eModele _Modele = null;
         private PartDoc _SwPiece = null;
+
+#if SW2013
         private eParametreTolerie _ParametreDeTolerie = null;
+#endif
 
         #endregion
 
@@ -54,6 +59,7 @@ namespace Framework_SW2013
         /// </summary>
         public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
 
+#if SW2013
         /// <summary>
         /// Retourne l'assemblage ExtAssemblage si celui ci est valide.
         /// </summary>
@@ -75,6 +81,7 @@ namespace Framework_SW2013
                 return null;
             }
         }
+#endif
 
         /// <summary>
         /// Renvoi la valeur de l'initialisation.
