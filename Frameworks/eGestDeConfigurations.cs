@@ -17,6 +17,7 @@ namespace Framework_SW2013
         ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "");
         eConfiguration ConfigurationAvecLeNom(String NomConfiguration);
         eConfiguration AjouterUneConfigurationDeBase(String NomConfiguration);
+        Boolean ConfigurationExiste(String Nom);
         void SupprimerConfiguration(String NomConfiguration);
         void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "");
     }
@@ -177,6 +178,14 @@ namespace Framework_SW2013
                 return pConfig;
 
             return null;
+        }
+
+        public Boolean ConfigurationExiste(String Nom)
+        {
+            if (ConfigurationAvecLeNom(Nom) != null)
+                return true;
+
+            return false;
         }
 
         /// <summary>

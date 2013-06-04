@@ -112,14 +112,15 @@ namespace Framework_SW2013
     [Guid("EE3D32C7-E632-4DCE-83F7-CF58F569F523")]
     public interface IConstantes
     {
-        String ARTICLE_LISTE_DES_PIECES_SOUDEES { get; set; }
-        String EPAISSEUR_DE_TOLE { get; set; }
-        String NO_DOSSIER { get; set; }
-        String NOM_ELEMENT { get; set; }
-        String MODELE_DE_DESSIN_LASER { get; set; }
-        String NOM_CORPS_DEPLIEE { get; set; }
-        String ETAT_D_AFFICHAGE { get; set; }
-        String BIB_MATERIAUX { get; set; }
+        String ARTICLE_LISTE_DES_PIECES_SOUDEES { get; }
+        String CONFIG_DEPLIEE { get; }
+        String EPAISSEUR_DE_TOLE { get; }
+        String NO_DOSSIER { get; }
+        String NOM_ELEMENT { get; }
+        String MODELE_DE_DESSIN_LASER { get; }
+        String NOM_CORPS_DEPLIEE { get; }
+        String ETAT_D_AFFICHAGE { get; }
+        String BIB_MATERIAUX { get; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -129,17 +130,53 @@ namespace Framework_SW2013
     {
         #region "Propriétés"
 
-        public String ARTICLE_LISTE_DES_PIECES_SOUDEES { get { return CONSTANTES.ARTICLE_LISTE_DES_PIECES_SOUDEES; } set { CONSTANTES.ARTICLE_LISTE_DES_PIECES_SOUDEES = value; } }
-        public String EPAISSEUR_DE_TOLE { get { return CONSTANTES.EPAISSEUR_DE_TOLE; } set { CONSTANTES.EPAISSEUR_DE_TOLE = value; } }
-        public String NO_DOSSIER { get { return CONSTANTES.NO_DOSSIER; } set { CONSTANTES.NO_DOSSIER = value; } }
-        public String NOM_ELEMENT { get { return CONSTANTES.NOM_ELEMENT; } set { CONSTANTES.NOM_ELEMENT = value; } }
-        public String MODELE_DE_DESSIN_LASER { get { return CONSTANTES.MODELE_DE_DESSIN_LASER; } set { CONSTANTES.MODELE_DE_DESSIN_LASER = value; } }
-        public String NOM_CORPS_DEPLIEE { get { return CONSTANTES.NOM_CORPS_DEPLIEE; } set { CONSTANTES.NOM_CORPS_DEPLIEE = value; } }
-        public String ETAT_D_AFFICHAGE { get { return CONSTANTES.ETAT_D_AFFICHAGE; } set { CONSTANTES.ETAT_D_AFFICHAGE = value; } }
-        public String BIB_MATERIAUX { get { return CONSTANTES.BIB_MATERIAUX; } set { CONSTANTES.BIB_MATERIAUX = value; } }
+        public String ARTICLE_LISTE_DES_PIECES_SOUDEES { get { return CONSTANTES.ARTICLE_LISTE_DES_PIECES_SOUDEES; } }
+        public String CONFIG_DEPLIEE { get { return CONSTANTES.CONFIG_DEPLIEE; } }
+        public String EPAISSEUR_DE_TOLE { get { return CONSTANTES.EPAISSEUR_DE_TOLE; } }
+        public String NO_DOSSIER { get { return CONSTANTES.NO_DOSSIER; } }
+        public String NOM_ELEMENT { get { return CONSTANTES.NOM_ELEMENT; } }
+        public String MODELE_DE_DESSIN_LASER { get { return CONSTANTES.MODELE_DE_DESSIN_LASER; } }
+        public String NOM_CORPS_DEPLIEE { get { return CONSTANTES.NOM_CORPS_DEPLIEE; } }
+        public String ETAT_D_AFFICHAGE { get { return CONSTANTES.ETAT_D_AFFICHAGE; } }
+        public String BIB_MATERIAUX { get { return CONSTANTES.BIB_MATERIAUX; } }
 
         #endregion
     }
+
+    //[InterfaceType(ComInterfaceType.InterfaceIsDual)]
+    //[Guid("EE3D32C7-E632-4DCE-83F7-CF58F569F523")]
+    //public interface IConstantes
+    //{
+    //    String ARTICLE_LISTE_DES_PIECES_SOUDEES { get; set; }
+    //    String CONFIG_DEPLIEE { get; }
+    //    String EPAISSEUR_DE_TOLE { get; set; }
+    //    String NO_DOSSIER { get; set; }
+    //    String NOM_ELEMENT { get; set; }
+    //    String MODELE_DE_DESSIN_LASER { get; set; }
+    //    String NOM_CORPS_DEPLIEE { get; set; }
+    //    String ETAT_D_AFFICHAGE { get; set; }
+    //    String BIB_MATERIAUX { get; set; }
+    //}
+
+    //[ClassInterface(ClassInterfaceType.None)]
+    //[Guid("5015C3D8-9DC1-4B38-BA40-E04AEA31A45A")]
+    //[ProgId("Frameworks.Constantes")]
+    //public class Constantes : IConstantes
+    //{
+    //    #region "Propriétés"
+
+    //    public String ARTICLE_LISTE_DES_PIECES_SOUDEES { get { return CONSTANTES.ARTICLE_LISTE_DES_PIECES_SOUDEES; } set { CONSTANTES.ARTICLE_LISTE_DES_PIECES_SOUDEES = value; } }
+    //    public String CONFIG_DEPLIEE { get { return CONSTANTES.CONFIG_DEPLIEE; } }
+    //    public String EPAISSEUR_DE_TOLE { get { return CONSTANTES.EPAISSEUR_DE_TOLE; } set { CONSTANTES.EPAISSEUR_DE_TOLE = value; } }
+    //    public String NO_DOSSIER { get { return CONSTANTES.NO_DOSSIER; } set { CONSTANTES.NO_DOSSIER = value; } }
+    //    public String NOM_ELEMENT { get { return CONSTANTES.NOM_ELEMENT; } set { CONSTANTES.NOM_ELEMENT = value; } }
+    //    public String MODELE_DE_DESSIN_LASER { get { return CONSTANTES.MODELE_DE_DESSIN_LASER; } set { CONSTANTES.MODELE_DE_DESSIN_LASER = value; } }
+    //    public String NOM_CORPS_DEPLIEE { get { return CONSTANTES.NOM_CORPS_DEPLIEE; } set { CONSTANTES.NOM_CORPS_DEPLIEE = value; } }
+    //    public String ETAT_D_AFFICHAGE { get { return CONSTANTES.ETAT_D_AFFICHAGE; } set { CONSTANTES.ETAT_D_AFFICHAGE = value; } }
+    //    public String BIB_MATERIAUX { get { return CONSTANTES.BIB_MATERIAUX; } set { CONSTANTES.BIB_MATERIAUX = value; } }
+
+    //    #endregion
+    //}
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("E2C9A545-2DBF-4F93-BB30-5EC7D41A5D4E")]

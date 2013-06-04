@@ -28,7 +28,7 @@ namespace Framework_SW2013
         Boolean Supprimer();
         ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous);
         eConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee);
-        eConfiguration AjouterUneConfigurationDepliee();
+        eConfiguration AjouterUneConfigurationDepliee(int No = 0);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -363,22 +363,28 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomConfigDerivee"></param>
         /// <returns></returns>
-        public eConfiguration AjouterUneConfigurationDepliee()
+        public eConfiguration AjouterUneConfigurationDepliee(int No = 0)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
             if (Est(TypeConfig_e.cPliee))
             {
-                int pNbConfigDepliee = ListConfigurationsEnfants("", TypeConfig_e.cDepliee).Count;
-                Debug.Info("-------------------------------------------" + pNbConfigDepliee.ToString());
-                pNbConfigDepliee++;
+                int pNbConfigDepliee = No;
+
+                if (No == 0)
+                {
+                    pNbConfigDepliee = ListConfigurationsEnfants("", TypeConfig_e.cDepliee).Count;
+                    Debug.Info("-------------------------------------------" + pNbConfigDepliee.ToString());
+                    pNbConfigDepliee++;
+                }
+
                 String NomConfigDepliee = Nom + CONSTANTES.CONFIG_DEPLIEE + pNbConfigDepliee;
 
                 eConfiguration pConfig = AjouterUneConfigurationDerivee(NomConfigDepliee);
 
-                Debug.Info(" ==========================   " + (pConfig.EstInitialise).ToString());
+                Debug.Info(" ==========================   " + (pConfig != null).ToString());
 
-                if (pConfig.EstInitialise)
+                if (pConfig != null)
                     return pConfig;
             }
             return null;

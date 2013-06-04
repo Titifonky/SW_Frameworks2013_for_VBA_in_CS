@@ -133,7 +133,7 @@ namespace Framework_SW2013
                 Debug.Info(MethodBase.GetCurrentMethod());
                 String NomConfig = _Modele.GestDeConfigurations.ConfigurationActive.Nom;
                 Object[] pArrayConfig = { NomConfig };
-                Object[] pArrayResult;
+                Boolean[] pArrayResult;
 
                 pArrayResult = SwFonction.IsSuppressed2((int)swInConfigurationOpts_e.swThisConfiguration, pArrayConfig);
 
