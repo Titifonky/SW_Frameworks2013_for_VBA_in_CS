@@ -291,7 +291,6 @@ namespace Framework_SW2013
 
             if (NbObjetsSelectionnes() == 0)
                 return null;
-
 #if SW2013
             Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(Index, Marque);
 #else
@@ -300,17 +299,18 @@ namespace Framework_SW2013
 
             // Si le composant racine est sélectionné et que l'on est dans un assemblage, rien n'est renvoyé.
             // Donc on le récupère.
-            if ((pSwComposant == null) && (_Modele.TypeDuModele == TypeFichier_e.cAssemblage))
+            if (pSwComposant == null)
                 pSwComposant = _SwGestDeSelection.GetSelectedObject6(Index, Marque);
 
-            if (pSwComposant == null && (_Modele.TypeDuModele != TypeFichier_e.cAssemblage))
-                return _Modele.Composant;
-
+            if (pSwComposant == null)
+                Debug.Info(" ========================= Erreur de composant");
+            
             // Pour intitialiser le composant correctement il faut un peu de bidouille
             // sinon on à le droit à une belle reference circulaire
             // Donc d'abord, on recherche le modele du SwComposant
             Debug.Info(pSwComposant.GetPathName());
             eModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
+            
             // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
             eComposant pComposant = new eComposant();
             // Et pour que les deux soit liés, on passe la ref du Composant que l'on vient de creer
@@ -360,7 +360,7 @@ namespace Framework_SW2013
 
             if (NbObjetsSelectionnes() > 0)
             {
-                for (int i = 1; i <= _SwGestDeSelection.GetSelectedObjectCount2(-1); i++)
+                for (int i = 1; i <= _SwGestDeSelection.GetSelectedObjectCount2(Marque); i++)
                 {
                     if (this.TypeObjet(i, Marque) == TypeObjet)
                     {
@@ -405,7 +405,7 @@ namespace Framework_SW2013
             // Liste à renvoyer
             List<eComposant> pListeComposants = new List<eComposant>();
 
-            for (int i = 1; i <= _SwGestDeSelection.GetSelectedObjectCount2(-1); i++)
+            for (int i = 1; i <= _SwGestDeSelection.GetSelectedObjectCount2(Marque); i++)
             {
 
                 eComposant pComposant = Composant(i, Marque);
@@ -451,7 +451,7 @@ namespace Framework_SW2013
             if (_Modele.TypeDuModele == TypeFichier_e.cDessin)
             {
 
-                for (int i = 1; i <= _SwGestDeSelection.GetSelectedObjectCount2(-1); i++)
+                for (int i = 1; i <= _SwGestDeSelection.GetSelectedObjectCount2(Marque); i++)
                 {
                     eVue pVue = Vue(i, Marque);
 
