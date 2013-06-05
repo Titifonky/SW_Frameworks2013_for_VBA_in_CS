@@ -18,6 +18,7 @@ namespace Framework_SW2013
         Boolean EstExclu { get; set; }
         TypeCorps_e TypeDeCorps { get; }
         eGestDeProprietes GestDeProprietes { get; }
+        int NbDeCorps { get; }
         eCorps PremierCorps { get; }
         ArrayList ListeDesCorps(String NomARechercher = "");
     }
@@ -97,6 +98,15 @@ namespace Framework_SW2013
                     return pGestProps;
 
                 return null;
+            }
+        }
+
+        public int NbDeCorps
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return SwDossier.GetBodyCount();
             }
         }
 

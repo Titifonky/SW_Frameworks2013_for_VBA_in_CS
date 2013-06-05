@@ -412,6 +412,7 @@ namespace Framework_SW2013
                 if (pConfigDepliee != null)
                 {
                     pConfigDepliee.GestDeProprietes.AjouterPropriete(CONSTANTES.NO_CONFIG, swCustomInfoType_e.swCustomInfoText, pConfigActive.Nom, true);
+                    pConfigDepliee.RenommerEtatAffichage();
                     return pConfigDepliee;
                 }
             }

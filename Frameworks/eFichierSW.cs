@@ -34,7 +34,7 @@ namespace Framework_SW2013
 
         private eSldWorks _SW = null;
         private String _Chemin = "";
-        private String _Configuration = "";
+        private String _NomConfiguration = "";
         private long _Nb = 1;
 
         #endregion
@@ -49,7 +49,7 @@ namespace Framework_SW2013
 
         public eSldWorks SW { get { return _SW; } }
         public String Chemin { get { return _Chemin; } internal set { _Chemin = value; } }
-        public String Configuration { get { return _Configuration; } set { _Configuration = value; } }
+        public String Configuration { get { return _NomConfiguration; } set { _NomConfiguration = value; } }
         public long Nb { get { return _Nb; } internal set { _Nb = value; } }
 
         /// <summary>
@@ -134,8 +134,11 @@ namespace Framework_SW2013
             if ((TypeFichier_e.cAssemblage | TypeFichier_e.cPiece | TypeFichier_e.cDessin).HasFlag(TypeDuFichier))
             {
                 eModele pModele = _SW.Modele(_Chemin);
-                eConfiguration pConfig = pModele.GestDeConfigurations.ConfigurationAvecLeNom(_Configuration);
-                pConfig.Activer();
+                if (!String.IsNullOrEmpty(_NomConfiguration))
+                {
+                    eConfiguration pConfig = pModele.GestDeConfigurations.ConfigurationAvecLeNom(_NomConfiguration);
+                    pConfig.Activer();
+                }
                 return pModele;
             }
 

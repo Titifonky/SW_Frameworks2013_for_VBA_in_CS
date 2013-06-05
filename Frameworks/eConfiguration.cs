@@ -28,6 +28,7 @@ namespace Framework_SW2013
         Boolean Supprimer();
         ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous);
         eConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee);
+        void RenommerEtatAffichage();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -387,6 +388,25 @@ namespace Framework_SW2013
                 return pConfig;
 
             return null;
+        }
+
+        public void RenommerEtatAffichage()
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            int Index = 1;
+
+            if (_SwConfiguration.GetDisplayStatesCount() > 0)
+            {
+                foreach (String pNomEtatAffichage in _SwConfiguration.GetDisplayStates())
+                {
+                    if (Regex.IsMatch(pNomEtatAffichage, "^" + CONSTANTES.ETAT_D_AFFICHAGE))
+                    {
+                        _SwConfiguration.RenameDisplayState(pNomEtatAffichage, Nom + "_" + Index.ToString());
+                        Index++;
+                    }
+                }
+            }
         }
 
         #endregion
