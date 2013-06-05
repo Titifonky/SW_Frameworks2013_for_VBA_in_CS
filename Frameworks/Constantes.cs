@@ -92,6 +92,7 @@ namespace Framework_SW2013
         internal static String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
         internal static String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
         internal static String NO_DOSSIER = "NoDossier";
+        internal static String NO_CONFIG = "NoConfig";
         internal static String NOM_ELEMENT = "Element";
         internal static String PROFIL_NOM = "Profil";
         internal static String PROFIL_ANGLE1 = "ANGLE1";
@@ -116,6 +117,7 @@ namespace Framework_SW2013
         String CONFIG_DEPLIEE { get; }
         String EPAISSEUR_DE_TOLE { get; }
         String NO_DOSSIER { get; }
+        String NO_CONFIG { get; }
         String NOM_ELEMENT { get; }
         String MODELE_DE_DESSIN_LASER { get; }
         String NOM_CORPS_DEPLIEE { get; }
@@ -134,6 +136,7 @@ namespace Framework_SW2013
         public String CONFIG_DEPLIEE { get { return CONSTANTES.CONFIG_DEPLIEE; } }
         public String EPAISSEUR_DE_TOLE { get { return CONSTANTES.EPAISSEUR_DE_TOLE; } }
         public String NO_DOSSIER { get { return CONSTANTES.NO_DOSSIER; } }
+        public String NO_CONFIG { get { return CONSTANTES.NO_CONFIG; } }
         public String NOM_ELEMENT { get { return CONSTANTES.NOM_ELEMENT; } }
         public String MODELE_DE_DESSIN_LASER { get { return CONSTANTES.MODELE_DE_DESSIN_LASER; } }
         public String NOM_CORPS_DEPLIEE { get { return CONSTANTES.NOM_CORPS_DEPLIEE; } }

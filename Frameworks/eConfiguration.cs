@@ -28,7 +28,6 @@ namespace Framework_SW2013
         Boolean Supprimer();
         ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous);
         eConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee);
-        eConfiguration AjouterUneConfigurationDepliee(int No = 0);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -42,6 +41,7 @@ namespace Framework_SW2013
 
         private Configuration _SwConfiguration = null;
         private eModele _Modele = null;
+        private int _ID = 0;
 
         #endregion
 
@@ -56,7 +56,28 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet Configuration associé.
         /// </summary>
-        public Configuration SwConfiguration { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwConfiguration; } }
+        public Configuration SwConfiguration
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                
+                if (_SwConfiguration == null)
+                {
+                    foreach (String pNomConfig in _Modele.SwModele.GetConfigurationNames())
+                    {
+                        Configuration pSwConfig = _Modele.SwModele.GetConfigurationByName(pNomConfig);
+                        if (pSwConfig.GetID() == _ID)
+                        {
+                            _SwConfiguration = pSwConfig;
+                            break;
+                        }
+                    }
+                }
+
+                return _SwConfiguration;
+            }
+        }
 
         /// <summary>
         /// Retourne le parent ExtModele.
@@ -66,7 +87,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne ou défini le nom de la configuration.
         /// </summary>
-        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwConfiguration.Name; } set { Debug.Info(MethodBase.GetCurrentMethod()); _SwConfiguration.Name = value; } }
+        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return SwConfiguration.Name; } set { Debug.Info(MethodBase.GetCurrentMethod()); SwConfiguration.Name = value; } }
 
         /// <summary>
         /// Retourne le type de la configuration.
@@ -103,8 +124,8 @@ namespace Framework_SW2013
 
                 eConfiguration pConfigParent = new eConfiguration();
                 Configuration pSwConfigurationParent = null;
-                if (_SwConfiguration.IsDerived() == true)
-                    pSwConfigurationParent = _SwConfiguration.GetParent();
+                if (SwConfiguration.IsDerived() == true)
+                    pSwConfigurationParent = SwConfiguration.GetParent();
 
                 if ((pSwConfigurationParent != null) && pConfigParent.Init(pSwConfigurationParent, _Modele))
                     return pConfigParent;
@@ -164,12 +185,12 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return _SwConfiguration.SuppressNewFeatures;
+                return SwConfiguration.SuppressNewFeatures;
             }
             set
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                _SwConfiguration.SuppressNewFeatures = value;
+                SwConfiguration.SuppressNewFeatures = value;
             }
         }
 
@@ -178,12 +199,12 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return _SwConfiguration.SuppressNewComponentModels;
+                return SwConfiguration.SuppressNewComponentModels;
             }
             set
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                _SwConfiguration.SuppressNewComponentModels = value;
+                SwConfiguration.SuppressNewComponentModels = value;
             }
         }
 
@@ -192,12 +213,12 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return _SwConfiguration.HideNewComponentModels;
+                return SwConfiguration.HideNewComponentModels;
             }
             set
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                _SwConfiguration.HideNewComponentModels = value;
+                SwConfiguration.HideNewComponentModels = value;
             }
         }
 
@@ -206,12 +227,12 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                return _SwConfiguration.ShowChildComponentsInBOM;
+                return SwConfiguration.ShowChildComponentsInBOM;
             }
             set
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                _SwConfiguration.ShowChildComponentsInBOM = value;
+                SwConfiguration.ShowChildComponentsInBOM = value;
             }
         }
 
@@ -240,6 +261,7 @@ namespace Framework_SW2013
             {
                 _SwConfiguration = Config;
                 _Modele = Modele;
+                _ID = _SwConfiguration.GetID();
 
                 Debug.Info(this.Nom);
                 _EstInitialise = true;
@@ -287,6 +309,15 @@ namespace Framework_SW2013
         public Boolean Supprimer()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
+
+            if (_SwConfiguration.GetDisplayStatesCount() > 0)
+            {
+                foreach (String pNomEtatAffichage in _SwConfiguration.GetDisplayStates())
+                {
+                    _SwConfiguration.DeleteDisplayState(pNomEtatAffichage);
+                }
+            }
+
             return _Modele.SwModele.DeleteConfiguration2(Nom);
         }
 
@@ -303,10 +334,10 @@ namespace Framework_SW2013
 
             List<eConfiguration> pListe = new List<eConfiguration>();
 
-            if (_SwConfiguration.GetChildrenCount() == 0)
+            if (SwConfiguration.GetChildrenCount() == 0)
                 return pListe;
 
-            foreach (Configuration pSwConfiguration in _SwConfiguration.GetChildren())
+            foreach (Configuration pSwConfiguration in SwConfiguration.GetChildren())
             {
                 if (Regex.IsMatch(pSwConfiguration.Name, NomConfiguration))
                 {
@@ -358,62 +389,28 @@ namespace Framework_SW2013
             return null;
         }
 
-        /// <summary>
-        /// Ajoute une configuration dépliée.
-        /// </summary>
-        /// <param name="NomConfigDerivee"></param>
-        /// <returns></returns>
-        public eConfiguration AjouterUneConfigurationDepliee(int No = 0)
-        {
-            Debug.Info(MethodBase.GetCurrentMethod());
-
-            if (Est(TypeConfig_e.cPliee))
-            {
-                int pNbConfigDepliee = No;
-
-                if (No == 0)
-                {
-                    pNbConfigDepliee = ListConfigurationsEnfants("", TypeConfig_e.cDepliee).Count;
-                    Debug.Info("-------------------------------------------" + pNbConfigDepliee.ToString());
-                    pNbConfigDepliee++;
-                }
-
-                String NomConfigDepliee = Nom + CONSTANTES.CONFIG_DEPLIEE + pNbConfigDepliee;
-
-                eConfiguration pConfig = AjouterUneConfigurationDerivee(NomConfigDepliee);
-
-                Debug.Info(" ==========================   " + (pConfig != null).ToString());
-
-                if (pConfig != null)
-                    return pConfig;
-            }
-            return null;
-        }
-
-
-
         #endregion
 
         #region "Interfaces génériques"
 
         public int CompareTo(eConfiguration Conf)
         {
-            String Nom1 = _Modele.SwModele.GetPathName() + _SwConfiguration.Name;
-            String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf._SwConfiguration.Name;
+            String Nom1 = _Modele.SwModele.GetPathName() + SwConfiguration.Name;
+            String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf.SwConfiguration.Name;
             return Nom1.CompareTo(Nom2);
         }
 
         public int Compare(eConfiguration Conf1, eConfiguration Conf2)
         {
-            String Nom1 = Conf1._Modele.SwModele.GetPathName() + Conf1._SwConfiguration.Name;
-            String Nom2 = Conf2._Modele.SwModele.GetPathName() + Conf2._SwConfiguration.Name;
+            String Nom1 = Conf1._Modele.SwModele.GetPathName() + Conf1.SwConfiguration.Name;
+            String Nom2 = Conf2._Modele.SwModele.GetPathName() + Conf2.SwConfiguration.Name;
             return Nom1.CompareTo(Nom2);
         }
 
         public Boolean Equals(eConfiguration Conf)
         {
-            String Nom1 = _Modele.SwModele.GetPathName() + _SwConfiguration.Name;
-            String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf._SwConfiguration.Name;
+            String Nom1 = _Modele.SwModele.GetPathName() + SwConfiguration.Name;
+            String Nom2 = Conf._Modele.SwModele.GetPathName() + Conf.SwConfiguration.Name;
             return Nom1.Equals(Nom2);
         }
 

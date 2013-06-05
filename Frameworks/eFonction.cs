@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-using System.Globalization;
 
 namespace Framework_SW2013
 {

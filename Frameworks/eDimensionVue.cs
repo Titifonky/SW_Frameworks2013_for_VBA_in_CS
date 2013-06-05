@@ -95,12 +95,12 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 eZone pCoord = new eZone();
-                Object[] pArr = _Vue.SwVue.GetOutline();
+                Double[] pArr = _Vue.SwVue.GetOutline();
 
-                pCoord.PointMin.X = (Double)pArr[0];
-                pCoord.PointMin.Y = (Double)pArr[1];
-                pCoord.PointMax.X = (Double)pArr[2];
-                pCoord.PointMax.Y = (Double)pArr[3];
+                pCoord.PointMin.X = pArr[0];
+                pCoord.PointMin.Y = pArr[1];
+                pCoord.PointMax.X = pArr[2];
+                pCoord.PointMax.Y = pArr[3];
 
                 return pCoord;
             }

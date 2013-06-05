@@ -97,6 +97,8 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
                 eZone pEnveloppe = new eZone();
 
                 pEnveloppe.PointMax.X = 0;

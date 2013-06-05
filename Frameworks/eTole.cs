@@ -25,7 +25,9 @@ namespace Framework_SW2013
         eFonction FonctionToleDeBase { get; }
         eFonction FonctionDeplie { get; }
         eFonction FonctionCubeDeVisualisation { get; }
+        eConfiguration ConfigurationDepliee { get; }
         void Deplier(Boolean T);
+        eConfiguration CreerConfigurationDepliee(Boolean Ecraser = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -314,6 +316,38 @@ namespace Framework_SW2013
                 FonctionDeplie.Desactiver();
         }
 
+        private String NomConfigDepliee
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                eGestDeConfigurations pGestConfig = _Corps.Piece.Modele.GestDeConfigurations;
+                eGestDeProprietes pGestProps = _Corps.Dossier.GestDeProprietes;
+
+                String pNoDossier = "";
+
+                if (pGestProps.ProprieteExiste(CONSTANTES.NO_DOSSIER))
+                {
+                    pNoDossier = pGestProps.RecupererPropriete(CONSTANTES.NO_DOSSIER).Valeur;
+                    return pGestConfig.ConfigurationActive.Nom + CONSTANTES.CONFIG_DEPLIEE + pNoDossier;
+                }
+
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Revoi la configuration dépliée associée au corps de tôlerie
+        /// </summary>
+        public eConfiguration ConfigurationDepliee
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _Corps.Piece.Modele.GestDeConfigurations.ConfigurationAvecLeNom(NomConfigDepliee);
+            }
+        }
+
         /// <summary>
         /// Fonction interne.
         /// Test l'initialisation de l'objet eTole.
@@ -345,6 +379,43 @@ namespace Framework_SW2013
                 Debug.Info("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
+        }
+
+        /// <summary>
+        /// Ajoute une configuration dépliée.
+        /// </summary>
+        /// <param name="NomConfigDerivee"></param>
+        /// <returns></returns>
+        public eConfiguration CreerConfigurationDepliee(Boolean Ecraser = false)
+        {
+            Debug.Info(MethodBase.GetCurrentMethod());
+
+            eGestDeConfigurations pGestConfig = _Corps.Piece.Modele.GestDeConfigurations;
+            eConfiguration pConfigActive = pGestConfig.ConfigurationActive;
+            String pNomConfigDepliee = NomConfigDepliee;
+
+            if (pConfigActive.Est(TypeConfig_e.cPliee))
+            {
+                if (Ecraser)
+                {
+                    pGestConfig.SupprimerConfiguration(pNomConfigDepliee);
+                    _Corps.Piece.Modele.Sauver();
+                }
+
+                eConfiguration pConfigDepliee = ConfigurationDepliee;
+
+                if (pConfigDepliee == null)
+                    pConfigDepliee = pConfigActive.AjouterUneConfigurationDerivee(pNomConfigDepliee);
+
+                Debug.Info(" ==========================   " + (pConfigDepliee != null).ToString());
+
+                if (pConfigDepliee != null)
+                {
+                    pConfigDepliee.GestDeProprietes.AjouterPropriete(CONSTANTES.NO_CONFIG, swCustomInfoType_e.swCustomInfoText, pConfigActive.Nom, true);
+                    return pConfigDepliee;
+                }
+            }
+            return null;
         }
 
         #endregion

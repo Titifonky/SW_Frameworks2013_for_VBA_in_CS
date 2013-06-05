@@ -196,6 +196,17 @@ namespace Framework_SW2013
         public void SupprimerConfiguration(String NomConfiguration)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
+
+            Configuration pSwConfig = _Modele.SwModele.GetConfigurationByName(NomConfiguration);
+
+            if ((pSwConfig != null) && (pSwConfig.GetDisplayStatesCount() > 0))
+            {
+                foreach (String pNomEtatAffichage in pSwConfig.GetDisplayStates())
+                {
+                    pSwConfig.DeleteDisplayState(pNomEtatAffichage);
+                }
+            }
+
             _Modele.SwModele.DeleteConfiguration2(NomConfiguration);
         }
 

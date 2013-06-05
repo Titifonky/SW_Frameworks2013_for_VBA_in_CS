@@ -19,6 +19,7 @@ namespace Framework_SW2013
 #if SW2013
         eParametreTolerie ParametresDeTolerie { get; }
 #endif
+        void NumeroterDossier();
         ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false);
         ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false);
     }
@@ -183,6 +184,33 @@ namespace Framework_SW2013
             }
 
             return false;
+        }
+
+        public void NumeroterDossier()
+        {
+            int pNoDossierMax = 0;
+
+            foreach(eDossier pDossier in ListListeDesDossiersDePiecesSoudees(TypeCorps_e.cTous, true))
+            {
+                eGestDeProprietes pGestProps = pDossier.GestDeProprietes;
+                if (pGestProps.ProprieteExiste(CONSTANTES.NO_DOSSIER))
+                {
+                    ePropriete pProp = pGestProps.RecupererPropriete(CONSTANTES.NO_DOSSIER);
+                    int pNoDossier = Convert.ToInt32(pProp.Valeur);
+                    if (pNoDossier > pNoDossierMax)
+                        pNoDossierMax = pNoDossier;
+                }
+            }
+
+            foreach (eDossier pDossier in ListListeDesDossiersDePiecesSoudees(TypeCorps_e.cTous, true))
+            {
+                eGestDeProprietes pGestProps = pDossier.GestDeProprietes;
+                if (!pGestProps.ProprieteExiste(CONSTANTES.NO_DOSSIER))
+                {
+                    pNoDossierMax++;
+                    pGestProps.AjouterPropriete(CONSTANTES.NO_DOSSIER, swCustomInfoType_e.swCustomInfoText, pNoDossierMax.ToString());
+                }
+            }
         }
 
         /// <summary>
