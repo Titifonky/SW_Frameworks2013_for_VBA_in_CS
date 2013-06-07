@@ -410,6 +410,7 @@ namespace Framework_SW2013
             ZoomEtendu();
 
             String Ext = "";
+            ExportPdfData OptionsPDF = null;
             switch (TypeExport)
             {
                 case Extension_e.cDXF:
@@ -420,6 +421,10 @@ namespace Framework_SW2013
                     break;
                 case Extension_e.cPDF:
                     Ext = ".pdf";
+                    OptionsPDF = _Dessin.Modele.SW.SwSW.GetExportFileData((int)swExportDataFileType_e.swExportPdfData);
+                    DispatchWrapper[] Wrapper = new DispatchWrapper[1];
+                    Wrapper[0] = new DispatchWrapper((Object)SwFeuille);
+                    OptionsPDF.SetSheets((int)swExportDataSheetsToExport_e.swExportData_ExportSpecifiedSheets, Wrapper);
                     break;
             }
 
@@ -432,7 +437,7 @@ namespace Framework_SW2013
                 CheminFichier = NomDuFichierAlternatif;
 
             CheminFichier = Path.Combine(CheminDossier, CheminFichier + Ext);
-            Dessin.Modele.SwModele.Extension.SaveAs(CheminFichier, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, null, Erreur, Warning);
+            Dessin.Modele.SwModele.Extension.SaveAs(CheminFichier, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, OptionsPDF, Erreur, Warning);
             Debug.Info(CheminFichier);
         }
 

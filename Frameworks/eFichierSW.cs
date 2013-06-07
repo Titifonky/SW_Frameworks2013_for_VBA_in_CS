@@ -80,17 +80,47 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le nom du fichier avec extension.
         /// </summary>
-        public String NomDuFichier { get { Debug.Info(MethodBase.GetCurrentMethod()); return Path.GetFileName(_Chemin); } }
+        public String NomDuFichier
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if(!String.IsNullOrEmpty(_Chemin))
+                    return Path.GetFileName(_Chemin);
+
+                return "";
+            }
+        }
 
         /// <summary>
         /// Retourne le nom du fichier sans extension.
         /// </summary>
-        public String NomDuFichierSansExt { get { Debug.Info(MethodBase.GetCurrentMethod()); return Path.GetFileNameWithoutExtension(_Chemin); } }
+        public String NomDuFichierSansExt
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if(!String.IsNullOrEmpty(_Chemin))
+                    return Path.GetFileNameWithoutExtension(_Chemin);
+
+                return "";
+            }
+        }
 
         /// <summary>
         /// Retourne le chemin du dossier.
         /// </summary>
-        public String NomDuDossier { get { Debug.Info(MethodBase.GetCurrentMethod()); return Path.GetDirectoryName(_Chemin); } }
+        public String NomDuDossier
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if(!String.IsNullOrEmpty(_Chemin))
+                    return Path.GetDirectoryName(_Chemin);
+
+                return "";
+            }
+        }
 
 
         /// <summary>

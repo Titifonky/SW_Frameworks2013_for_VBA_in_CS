@@ -353,6 +353,7 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             SwModele.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Erreur, ref Warning);
+            _FichierSw.Chemin = SwModele.GetPathName();
         }
 
         /// <summary>
