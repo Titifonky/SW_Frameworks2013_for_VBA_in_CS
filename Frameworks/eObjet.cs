@@ -80,6 +80,7 @@ namespace Framework_SW2013
                 _Modele = Modele;
                 _TypeObjet = TypeDeObjet;
                 _SwObjet = SwObjet;
+                _EstInitialise = true;
             }
             else
             {
