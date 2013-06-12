@@ -20,6 +20,7 @@ namespace Framework_SW2013
         Boolean ConfigurationExiste(String Nom);
         void SupprimerConfiguration(String NomConfiguration);
         void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "");
+        Boolean SupprimerTousLesEtatsAffichages();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -198,16 +199,9 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             Configuration pSwConfig = _Modele.SwModele.GetConfigurationByName(NomConfiguration);
-
-            if ((pSwConfig != null) && (pSwConfig.GetDisplayStatesCount() > 0))
-            {
-                foreach (String pNomEtatAffichage in pSwConfig.GetDisplayStates())
-                {
-                    pSwConfig.DeleteDisplayState(pNomEtatAffichage);
-                }
-            }
-
-            _Modele.SwModele.DeleteConfiguration2(NomConfiguration);
+            eConfiguration pConfig = new eConfiguration();
+            if (pConfig.Init(pSwConfig, Modele))
+                pConfig.Supprimer();
         }
 
         /// <summary>
@@ -224,6 +218,14 @@ namespace Framework_SW2013
             {
                 Config.Supprimer();
             }
+        }
+
+        public Boolean SupprimerTousLesEtatsAffichages()
+        {
+            if (Modele.TypeDuModele == TypeFichier_e.cPiece)
+                return Modele.Piece.SwPiece.RemoveAllDisplayStates();
+
+            return false;
         }
 
         #endregion

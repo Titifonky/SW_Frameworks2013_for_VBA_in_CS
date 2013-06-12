@@ -311,15 +311,26 @@ namespace Framework_SW2013
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
-            if (_SwConfiguration.GetDisplayStatesCount() > 0)
+            Boolean UneConfig = (Modele.SwModele.GetConfigurationCount() == 1);
+            String[] pTabNomAff = _SwConfiguration.GetDisplayStates();
+
+            if (pTabNomAff.Length  > 0)
             {
-                foreach (String pNomEtatAffichage in _SwConfiguration.GetDisplayStates())
+                String pAffichageCourant = pTabNomAff[0];
+                foreach (String pNomEtatAffichage in pTabNomAff)
                 {
-                    _SwConfiguration.DeleteDisplayState(pNomEtatAffichage);
+                    if (!(UneConfig && (pNomEtatAffichage == pAffichageCourant)))
+                        _SwConfiguration.DeleteDisplayState(pNomEtatAffichage);
                 }
             }
 
-            return _Modele.SwModele.DeleteConfiguration2(Nom);
+            if (!UneConfig)
+            {
+                _EstInitialise = false;
+                return _Modele.SwModele.DeleteConfiguration2(Nom);
+            }
+
+            return false;
         }
 
         /// <summary>

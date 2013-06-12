@@ -248,7 +248,10 @@ namespace Framework_SW2013
                     }
                 }
 
-                _PID = Modele.SwModele.Extension.GetPersistReference3(_SwModeleFonction);
+                // Si la fonction est de type "MaterialFolder", la méthode GetPersistReference3 plante lamentablement
+                swFeatureType_e Tpe = new swFeatureType_e();
+                if (_SwModeleFonction.GetTypeName2() != Tpe.swTnMaterialFolder)
+                    _PID = Modele.SwModele.Extension.GetPersistReference3(_SwModeleFonction);
 
                 if (_SwModeleFonction != null)
                 {
