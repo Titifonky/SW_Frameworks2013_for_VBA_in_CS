@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Framework_SW2013
 {

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
-using System.Collections;
-using System.Reflection;
 
 namespace Framework_SW2013
 {

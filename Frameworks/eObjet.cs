@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.swconst;
-using SolidWorks.Interop.sldworks;
 
 namespace Framework_SW2013
 {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
-using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Reflection;
-using SolidWorks.Interop.swconst;
 using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using SolidWorks.Interop.swconst;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {

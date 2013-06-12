@@ -1,8 +1,5 @@
-﻿
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
-using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {

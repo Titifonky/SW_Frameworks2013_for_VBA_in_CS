@@ -19,7 +19,7 @@ bin/*/*.dll
 */bin/*/*.dll
 */*/bin/*/*.dll
 */*/*/bin/*/*.dll
-*Debug.txt
+*Debug*.txt
 *.ilk
 *.meta
 *.obj
