@@ -71,7 +71,14 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le modele ModleDoc2 associé.
         /// </summary>
-        public ModelDoc2 SwModele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwModele; } }
+        public ModelDoc2 SwModele
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwModele;
+            }
+        }
 
         /// <summary>
         /// Retourne le parent ExtSldWorks.
@@ -339,7 +346,9 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, (int)Reconstruire, Erreur);
-            _Composant.Configuration.Activer();
+            if (TypeDuModele != TypeFichier_e.cDessin)
+                _Composant.Configuration.Activer();
+
             ZoomEtendu();
         }
 

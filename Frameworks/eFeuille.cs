@@ -169,26 +169,28 @@ namespace Framework_SW2013
 
                 Double pLargeur = 0;
                 Double pHauteur = 0;
-                swDwgPaperSizes_e pTaille = (swDwgPaperSizes_e)_SwFeuille.GetSize(ref pLargeur, ref pHauteur);
 
-
-                if (value == Format_e.cA0)
-                    pLargeur = 1.189; pHauteur = 0.841;
-
-                if (value == Format_e.cA1)
-                    pLargeur = 0.841; pHauteur = 0.594;
-
-                if (value == Format_e.cA2)
-                    pLargeur = 0.594; pHauteur = 0.420;
-
-                if (value == Format_e.cA3)
-                    pLargeur = 0.420; pHauteur = 0.297;
-
-                if (value == Format_e.cA4)
-                    pLargeur = 0.297; pHauteur = 0.210;
-
-                if (value == Format_e.cA5)
-                    pLargeur = 0.210; pHauteur = 0.148;
+                switch (value)
+                {
+                    case Format_e.cA0:
+                        pLargeur = 1.189; pHauteur = 0.841;
+                        break;
+                    case Format_e.cA1:
+                        pLargeur = 0.841; pHauteur = 0.594;
+                        break;
+                    case Format_e.cA2:
+                        pLargeur = 0.594; pHauteur = 0.420;
+                        break;
+                    case Format_e.cA3:
+                        pLargeur = 0.420; pHauteur = 0.297;
+                        break;
+                    case Format_e.cA4:
+                        pLargeur = 0.297; pHauteur = 0.210;
+                        break;
+                    case Format_e.cA5:
+                        pLargeur = 0.210; pHauteur = 0.148;
+                        break;
+                }
 
                 if (Orientation == Orientation_e.cPortrait)
                 {
@@ -355,13 +357,11 @@ namespace Framework_SW2013
             if (pEnveloppe == null)
                 return;
 
-            _SwFeuille.SetSize((int)swDwgPaperSizes_e.swDwgPapersUserDefined,
-                pEnveloppe.PointMax.X + pEnveloppe.PointMin.X,
-                pEnveloppe.PointMax.Y + pEnveloppe.PointMin.Y);
+            Redimensionner(pEnveloppe.PointMax.X + pEnveloppe.PointMin.X, pEnveloppe.PointMax.Y + pEnveloppe.PointMin.Y);
         }
 
         /// <summary>
-        /// Redimensionne la feuille autour des vues si aucunes valeurs ne sont rentrées
+        /// Redimensionne la feuille
         /// </summary>
         public void Redimensionner(Double Largeur, Double Hauteur)
         {
@@ -415,9 +415,11 @@ namespace Framework_SW2013
             {
                 case Extension_e.cDXF:
                     Ext = ".dxf";
+                    _Dessin.Modele.SW.GestOptions.DxfDwg_ExporterToutesLesFeuilles = swDxfMultisheet_e.swDxfActiveSheetOnly;
                     break;
                 case Extension_e.cDWG:
                     Ext = ".dwg";
+                    _Dessin.Modele.SW.GestOptions.DxfDwg_ExporterToutesLesFeuilles = swDxfMultisheet_e.swDxfActiveSheetOnly;
                     break;
                 case Extension_e.cPDF:
                     Ext = ".pdf";

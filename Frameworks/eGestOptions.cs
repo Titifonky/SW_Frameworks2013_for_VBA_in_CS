@@ -13,7 +13,7 @@ namespace Framework_SW2013
     [Guid("0BAA9214-6253-45EB-898C-253813F915D3")]
     public interface IeGestOptions
     {
-        swDxfFormat_e DxfDwg_Format { get; set; }
+        swDxfFormat_e DxfDwg_Version { get; set; }
         Boolean DxfDwg_PolicesAutoCAD { get; set; }
         Boolean DxfDwg_StylesAutoCAD { get; set; }
         Boolean DxfDwg_SortieEchelle1 { get; set; }
@@ -28,7 +28,7 @@ namespace Framework_SW2013
         Boolean Pdf_IncorporerLesPolices { get; set; }
         Boolean Pdf_ExporterEnHauteQualite { get; set; }
         Boolean Pdf_ImprimerEnTeteEtPiedDePage { get; set; }
-        Boolean Pdf_utiliserLesEpaisseursDeLigneDeImprimante { get; set; }
+        Boolean Pdf_UtiliserLesEpaisseursDeLigneDeImprimante { get; set; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -52,7 +52,7 @@ namespace Framework_SW2013
 
         #region "Propriétés"
 
-        public swDxfFormat_e DxfDwg_Format
+        public swDxfFormat_e DxfDwg_Version
         {
             get
             {
@@ -160,6 +160,7 @@ namespace Framework_SW2013
             set
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Info("--------------------> " + !value);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportSplinesAsSplines, !value);
             }
         }
@@ -248,7 +249,7 @@ namespace Framework_SW2013
             }
         }
         
-        public Boolean Pdf_utiliserLesEpaisseursDeLigneDeImprimante
+        public Boolean Pdf_UtiliserLesEpaisseursDeLigneDeImprimante
         {
             get
             {
