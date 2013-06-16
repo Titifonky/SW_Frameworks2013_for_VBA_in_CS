@@ -18,7 +18,7 @@ namespace Framework_SW2013
         ePoint PointDeSelectionObjet(int Index, int Marque = -1);
         swSelectType_e TypeObjet(int Index, int Marque = -1);
         int MarqueObjet(int Index);
-        dynamic Objet(int Index, int Marque = -1);
+        dynamic Objet(int Index, int Marque = -1, Boolean RenvoyerObjet = false);
         eComposant Composant(int Index, int Marque = -1);
         eVue Vue(int Index, int Marque = -1);
         ArrayList ListeDesObjetsSelectionnes(swSelectType_e TypeObjet, int Marque = -1);
@@ -161,7 +161,7 @@ namespace Framework_SW2013
         /// <param name="Index"></param>
         /// <param name="Marque"></param>
         /// <returns></returns>
-        public dynamic Objet(int Index, int Marque = -1)
+        public dynamic Objet(int Index, int Marque = -1, Boolean RenvoyerObjet = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -170,11 +170,12 @@ namespace Framework_SW2013
 
             eComposant pComposantSelectionne = Composant(Index, Marque);
 
-            if ((pComposantSelectionne != null) && pComposantSelectionne.EstInitialise)
+            dynamic pSwObjet = _SwGestDeSelection.GetSelectedObject6(Index, Marque);
+            swSelectType_e pType = TypeObjet(Index, Marque);
+            eModele pModele = pComposantSelectionne.Modele;
+
+            if ((pComposantSelectionne != null) && pComposantSelectionne.EstInitialise && !RenvoyerObjet)
             {
-                dynamic pSwObjet = _SwGestDeSelection.GetSelectedObject6(Index, Marque);
-                swSelectType_e pType = TypeObjet(Index, Marque);
-                eModele pModele = pComposantSelectionne.Modele;
 
                 switch (pType)
                 {
@@ -251,6 +252,24 @@ namespace Framework_SW2013
                         break;
 
                 }
+            }
+            else if (RenvoyerObjet)
+            {
+                eObjet pObjet = new eObjet();
+
+                eModele pInitModele = _Modele;
+                if ((pModele != null) && pModele.EstInitialise)
+                    pInitModele = pModele;
+
+                Debug.Info("================= 1 : " + pInitModele.EstInitialise);
+                Debug.Info("================= 2 : " + (pSwObjet != null));
+
+                pObjet.Init(pInitModele, pSwObjet, pType);
+
+                Debug.Info("================= 3 : " + pObjet.EstInitialise);
+
+                if (pObjet.EstInitialise)
+                    return pObjet;
             }
 
             return null;

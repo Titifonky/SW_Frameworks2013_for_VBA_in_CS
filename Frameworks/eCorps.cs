@@ -19,6 +19,7 @@ namespace Framework_SW2013
         eBarre Barre { get; }
         String Nom { get; set; }
         TypeCorps_e TypeDeCorps { get; }
+        String Materiau { get; set; }
         eDossier Dossier { get; }
         eFonction PremiereFonction { get; }
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
@@ -173,6 +174,32 @@ namespace Framework_SW2013
                 }
 
                 return TypeCorps_e.cAutre;
+            }
+        }
+
+        public String Materiau
+        {
+            get
+            {
+                String Db = "";
+                String Materiau = _SwCorps.GetMaterialPropertyName(Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom, out Db);
+                if (String.IsNullOrEmpty(Materiau))
+                    Materiau = Piece.Materiau;
+
+                return Materiau;
+            }
+            set
+            {
+                String[] pBaseDeDonnees = Piece.Modele.SW.SwSW.GetMaterialDatabases();
+
+                // On test si pour chaque Base de donnée si le matériau à bien été appliqué.
+                // Si oui, on sort de la boucle
+                foreach (String Bdd in pBaseDeDonnees)
+                {
+                    if(_SwCorps.SetMaterialProperty(Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom, Bdd, value) ==
+                        (int)swBodyMaterialApplicationError_e.swBodyMaterialApplicationError_NoError)
+                        break;
+                }
             }
         }
 

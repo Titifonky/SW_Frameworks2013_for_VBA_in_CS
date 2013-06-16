@@ -15,6 +15,7 @@ namespace Framework_SW2013
     {
         PartDoc SwPiece { get; }
         eModele Modele { get; }
+        String Materiau { get; set; }
         Boolean Contient(TypeCorps_e T);
 #if SW2013
         eParametreTolerie ParametresDeTolerie { get; }
@@ -59,6 +60,28 @@ namespace Framework_SW2013
         /// Renvoi l'objet ExtModele.
         /// </summary>
         public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+
+        public String Materiau
+        {
+            get
+            {
+                String Db = "";
+                return _SwPiece.GetMaterialPropertyName2(_Modele.GestDeConfigurations.ConfigurationActive.Nom, out Db);
+            }
+            set
+            {
+                String[] pBaseDeDonnees = _Modele.SW.SwSW.GetMaterialDatabases();
+                
+                // On test si pour chaque Base de donnée si le matériau à bien été appliqué.
+                // Si oui, on sort de la boucle
+                foreach (String Bdd in pBaseDeDonnees)
+                {
+                    _SwPiece.SetMaterialPropertyName2(_Modele.GestDeConfigurations.ConfigurationActive.Nom, Bdd, value);
+                    if (Materiau == value)
+                        break;
+                }
+            }
+        }
 
 #if SW2013
         /// <summary>
