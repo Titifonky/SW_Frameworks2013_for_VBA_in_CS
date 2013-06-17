@@ -30,21 +30,21 @@ namespace Framework_SW2013
     [ProgId("Frameworks.DlgRechercherUnDossier")]
     public class DlgRechercherUnDossier : IDlgRechercherUnDossier
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private eSldWorks _SW = null;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public DlgRechercherUnDossier() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         private FolderBrowserDialog _Dialogue = new FolderBrowserDialog();
 
@@ -54,9 +54,9 @@ namespace Framework_SW2013
 
         public Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Initialiser l'objet.
@@ -127,6 +127,6 @@ namespace Framework_SW2013
             return pArrayFichiers;
         }
 
-        #endregion
+#endregion
     }
 }

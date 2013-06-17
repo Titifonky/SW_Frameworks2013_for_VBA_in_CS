@@ -20,6 +20,7 @@ namespace Framework_SW2013
         String Nom { get; set; }
         TypeCorps_e TypeDeCorps { get; }
         String Materiau { get; set; }
+        Boolean Visible { get; set; }
         eDossier Dossier { get; }
         eFonction PremiereFonction { get; }
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
@@ -32,7 +33,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eCorps")]
     public class eCorps : IeCorps, IComparable<eCorps>, IComparer<eCorps>, IEquatable<eCorps>
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
@@ -43,15 +44,15 @@ namespace Framework_SW2013
         private String _Nom = "";
         private Object _PID = null;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eCorps() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet Body2 associé.
@@ -62,7 +63,7 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 // On recupère le corps avec le PID, comme ça, ya plus de pb.
-                if ((_PID != null)) //(_SwCorps == null) && 
+                if (_PID != null) // && (_SwCorps == null))
                 {
                     int pErreur = 0;
                     Body2 pSwCorps = Piece.Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
@@ -181,6 +182,7 @@ namespace Framework_SW2013
         {
             get
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 String Db = "";
                 String Materiau = _SwCorps.GetMaterialPropertyName(Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom, out Db);
                 if (String.IsNullOrEmpty(Materiau))
@@ -190,6 +192,7 @@ namespace Framework_SW2013
             }
             set
             {
+                Debug.Info(MethodBase.GetCurrentMethod());
                 String[] pBaseDeDonnees = Piece.Modele.SW.SwSW.GetMaterialDatabases();
 
                 // On test si pour chaque Base de donnée si le matériau à bien été appliqué.
@@ -200,6 +203,20 @@ namespace Framework_SW2013
                         (int)swBodyMaterialApplicationError_e.swBodyMaterialApplicationError_NoError)
                         break;
                 }
+            }
+        }
+
+        public Boolean Visible
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return !SwCorps.DisableDisplay;
+            }
+            set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                SwCorps.DisableDisplay = !value;
             }
         }
 
@@ -250,9 +267,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -392,9 +409,9 @@ namespace Framework_SW2013
             return pNbInt;
         }
 
-        #endregion
+#endregion
 
-        #region "Interfaces génériques"
+#region "Interfaces génériques"
 
         public int CompareTo(eCorps Corps)
         {
@@ -417,6 +434,6 @@ namespace Framework_SW2013
             return Nom1.Equals(Nom2);
         }
 
-        #endregion
+#endregion
     }
 }

@@ -22,7 +22,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eLog")]
     public class eLog : IeLog
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _ACTIF = true;
         private Boolean _INIT = false;
@@ -31,21 +31,21 @@ namespace Framework_SW2013
         private String _Fichier = "";
         private String _Chemin_Fichier = "";
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eLog() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         public Boolean Actif { get { return _ACTIF; } set { _ACTIF = value; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         public Boolean Init(eModele Modele, String NomMacro = "")
         {
@@ -100,7 +100,7 @@ namespace Framework_SW2013
                 System.DateTime.Now.Hour, System.DateTime.Now.Minute, System.DateTime.Now.Second, System.DateTime.Now.Millisecond);
         }
 
-        #endregion
+#endregion
     }
 }
 

@@ -22,22 +22,22 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eAssemblage")]
     public class eAssemblage : IeAssemblage
     {
-        #region "Variables locales"
+#region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
         private AssemblyDoc _SwAssemblage = null;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eAssemblage() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet AssemblyDoc associé.
@@ -55,9 +55,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -106,6 +106,6 @@ namespace Framework_SW2013
             _SwAssemblage.EditAssembly();
         }
 
-        #endregion
+#endregion
     }
 }

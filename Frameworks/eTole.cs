@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System.Collections.Generic;
 
 namespace Framework_SW2013
 {
@@ -31,21 +32,21 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eTole")]
     public class eTole : IeTole
     {
-        #region "Variables locales"
+#region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
         private eCorps _Corps = null;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eTole() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne le parent ExtPiece.
@@ -312,6 +313,9 @@ namespace Framework_SW2013
                 FonctionDeplie.Desactiver();
         }
 
+        /// <summary>
+        /// Retourne le nom de la configuration dépliée associée au corps.
+        /// </summary>
         private String NomConfigDepliee
         {
             get
@@ -333,7 +337,7 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Revoi la configuration dépliée associée au corps de tôlerie
+        /// Renvoi la configuration dépliée associée au corps de tôlerie
         /// </summary>
         public eConfiguration ConfigurationDepliee
         {
@@ -350,9 +354,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -415,6 +419,6 @@ namespace Framework_SW2013
             return null;
         }
 
-        #endregion
+#endregion
     }
 }

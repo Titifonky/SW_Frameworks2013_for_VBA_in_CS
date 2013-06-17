@@ -28,21 +28,21 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eGestDeConfigurations")]
     public class eGestDeConfigurations : IeGestDeConfigurations
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eGestDeConfigurations() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne le parent ExtModele.
@@ -75,9 +75,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -228,6 +228,6 @@ namespace Framework_SW2013
             return false;
         }
 
-        #endregion
+#endregion
     }
 }

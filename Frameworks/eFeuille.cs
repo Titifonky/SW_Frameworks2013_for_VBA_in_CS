@@ -39,21 +39,21 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eFeuille")]
     public class eFeuille : IeFeuille
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private eDessin _Dessin = null;
         private Sheet _SwFeuille = null;
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eFeuille() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet Sheet associé.
@@ -256,9 +256,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -384,6 +384,17 @@ namespace Framework_SW2013
         {
             eVue pVue = new eVue();
             View pSwVue = null;
+            Configuration.Activer();
+
+            // Si des corps autre que la tole dépliée sont encore visible dans la config, on les cache et on recontruit tout
+            List<eCorps> pListeCorps = Piece.ListListeDesCorps("^((?!" + CONSTANTES.NOM_CORPS_DEPLIEE + ").)*$");
+            foreach (eCorps pCorps in pListeCorps)
+                pCorps.Visible = false;
+
+            if (pListeCorps.Count > 0)
+                Piece.Modele.ForcerAToutReconstruire();
+
+            _Dessin.Modele.Activer();
             pSwVue = _Dessin.SwDessin.CreateFlatPatternViewFromModelView3(Piece.Modele.FichierSw.Chemin, Configuration.Nom, 0, 0, 0, false, false);
 
             if (pVue.Init(pSwVue, this))
@@ -524,7 +535,7 @@ namespace Framework_SW2013
                 pSetupFeuille.Orientation = (int)swPageSetupOrientation_e.swPageSetupOrient_Portrait;
         }
 
-        #endregion
+#endregion
 
     }
 }

@@ -37,7 +37,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eFonction")]
     public class eFonction : IeFonction, IComparable<eFonction>, IComparer<eFonction>, IEquatable<eFonction>
     {
-        #region "Variables locales"
+#region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
@@ -45,15 +45,15 @@ namespace Framework_SW2013
         private Feature _SwModeleFonction = null;
         private Object _PID = null;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eFonction() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet Feature associé suivant le contexte.
@@ -189,9 +189,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -463,9 +463,9 @@ namespace Framework_SW2013
             return pArrayFonctions;
         }
 
-        #endregion
+#endregion
 
-        #region "Interfaces génériques"
+#region "Interfaces génériques"
 
         public int CompareTo(eFonction Fonction)
         {
@@ -482,6 +482,6 @@ namespace Framework_SW2013
             return (Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name).Equals(_Modele.SwModele.GetPathName() + _SwModeleFonction.Name);
         }
 
-        #endregion
+#endregion
     }
 }

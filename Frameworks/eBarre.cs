@@ -28,21 +28,21 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eBarre")]
     public class eBarre : IeBarre
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private eCorps _Corps = null;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eBarre() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne le parent ExtPiece.
@@ -117,9 +117,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -144,6 +144,6 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        #endregion
+#endregion
     }
 }

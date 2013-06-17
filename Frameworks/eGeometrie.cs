@@ -24,27 +24,27 @@ namespace Framework_SW2013
     [ProgId("Frameworks.ePoint")]
     public class ePoint : IePoint
     {
-        #region "Variables locales"
+#region "Variables locales"
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public ePoint() { }
 
         public ePoint(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         public Double X { get; set; }
         public Double Y { get; set; }
         public Double Z { get; set; }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         public void Deplacer(eVecteur V)
         {
@@ -66,7 +66,7 @@ namespace Framework_SW2013
             return new ePoint(X * S, Y * S, Z * S);
         }
 
-        #endregion
+#endregion
     }
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -83,29 +83,29 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eVecteur")]
     public class eVecteur : IeVecteur
     {
-        #region "Variables locales"
+#region "Variables locales"
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eVecteur() { }
 
         public eVecteur(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         public Double X { get; set; }
         public Double Y { get; set; }
         public Double Z { get; set; }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
-        #endregion
+#endregion
     }
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -124,22 +124,22 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eRepere")]
     public class eRepere : IeRepere
     {
-        #region "Variables locales"
+#region "Variables locales"
         
         private ePoint _Origine = new ePoint(0, 0, 0);
         private eVecteur _VecteurX = new eVecteur(0, 0, 0);
         private eVecteur _VecteurY = new eVecteur(0, 0, 0);
         private eVecteur _VecteurZ = new eVecteur(0, 0, 0);
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eRepere() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         public ePoint Origine { get { return _Origine; } set { _Origine = value; } }
         public eVecteur VecteurX { get { return _VecteurX; } set { _VecteurX = value; } }
@@ -147,11 +147,11 @@ namespace Framework_SW2013
         public eVecteur VecteurZ { get { return _VecteurZ; } set { _VecteurZ = value; } }
         public Double Echelle { get; set; }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
-        #endregion
+#endregion
     }
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -167,26 +167,26 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eRectangle")]
     public class eRectangle : IeRectangle
     {
-        #region "Variables locales"
+#region "Variables locales"
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eRectangle() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         public Double Lg { get; set; }
         public Double Ht { get; set; }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
-        #endregion
+#endregion
     }
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -202,29 +202,29 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eZone")]
     public class eZone : IeZone
     {
-        #region "Variables locales"
+#region "Variables locales"
         
         private ePoint _PointMin = new ePoint(0, 0, 0);
         private ePoint _PointMax = new ePoint(0, 0, 0);
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eZone() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         public ePoint PointMin { get { return _PointMin; } set { _PointMin = value; } }
         public ePoint PointMax { get { return _PointMax; } set { _PointMax = value; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
-        #endregion
+#endregion
     }
 
 }

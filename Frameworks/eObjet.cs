@@ -19,7 +19,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eObjet")]
     public class eObjet : IeObjet
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
@@ -27,15 +27,15 @@ namespace Framework_SW2013
         private dynamic _SwObjet = null;
         private swSelectType_e _TypeObjet = swSelectType_e.swSelNOTHING;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eObjet() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne le modele associé.
@@ -58,9 +58,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -88,6 +88,6 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        #endregion
+#endregion
     }
 }

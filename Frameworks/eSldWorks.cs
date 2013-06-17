@@ -30,7 +30,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eSldWorks")]
     public class eSldWorks : IeSldWorks
     {
-        #region "Variables locales"
+#region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
@@ -42,15 +42,15 @@ namespace Framework_SW2013
         private int Erreur = 0;
         private int Warning = 0;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eSldWorks() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Renvoi l'objet SldWorks associé.
@@ -117,9 +117,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Initialiser l'objet ExtSldWorks.
@@ -249,6 +249,6 @@ namespace Framework_SW2013
             return _SwSW.OpenDoc6(Chemin, (int)Type, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref Erreur, ref Warning);
         }
 
-        #endregion
+#endregion
     }
 }

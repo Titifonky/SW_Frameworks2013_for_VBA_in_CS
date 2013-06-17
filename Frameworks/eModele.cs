@@ -43,7 +43,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eModele")]
     public class eModele : IeModele, IComparable<eModele>, IComparer<eModele>, IEquatable<eModele>
     {
-        #region "Variables locales"
+#region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
@@ -58,15 +58,15 @@ namespace Framework_SW2013
         private int Erreur = 0;
         private int Warning = 0;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eModele() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne le modele ModleDoc2 associé.
@@ -270,9 +270,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -570,9 +570,9 @@ namespace Framework_SW2013
             return null;
         }
 
-        #endregion
+#endregion
 
-        #region "Interfaces génériques"
+#region "Interfaces génériques"
 
         public int CompareTo(eModele Modele)
         {
@@ -589,6 +589,6 @@ namespace Framework_SW2013
             return _SwModele.GetPathName().Equals(Modele.SwModele.GetPathName());
         }
 
-        #endregion
+#endregion
     }
 }

@@ -10,7 +10,7 @@ namespace Framework_SW2013
 {
     internal static class Debug
     {
-        #region "Propriétés"
+#region "Propriétés"
 
         private static String _DOSSIER = Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName;
         private static String _FICHIER_BASE = Assembly.GetExecutingAssembly().FullName.Split(',')[0] + "_Debug";
@@ -24,9 +24,9 @@ namespace Framework_SW2013
 
         public static Boolean Actif { get { return _ACTIF; } set { _ACTIF = value; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         public static void Init(SldWorks SldWks)
         {
@@ -117,6 +117,6 @@ namespace Framework_SW2013
 
         }
 
-        #endregion
+#endregion
     }
 }

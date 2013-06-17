@@ -36,21 +36,21 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eGestOptions")]
     public class eGestOptions : IeGestOptions
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private eSldWorks _SW = null;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eGestOptions() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         public swDxfFormat_e DxfDwg_Version
         {
@@ -269,9 +269,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne
@@ -297,6 +297,6 @@ namespace Framework_SW2013
             return _EstInitialise;
         }
 
-        #endregion
+#endregion
     }
 }

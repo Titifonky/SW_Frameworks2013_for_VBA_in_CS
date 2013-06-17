@@ -28,22 +28,22 @@ namespace Framework_SW2013
     [ProgId("Frameworks.ePiece")]
     public class eDossier : IeDossier, IComparable<eDossier>, IComparer<eDossier>, IEquatable<eDossier>
     {
-        #region "Variables locales"
+#region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
         private ePiece _Piece = null;
         private BodyFolder _SwDossier = null;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eDossier() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet BodyFolder associé.
@@ -132,9 +132,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -205,9 +205,9 @@ namespace Framework_SW2013
             return pArrayCorps;
         }
 
-        #endregion
+#endregion
 
-        #region "Interfaces génériques"
+#region "Interfaces génériques"
 
         public int CompareTo(eDossier Dossier)
         {
@@ -230,7 +230,7 @@ namespace Framework_SW2013
             return Nom1.Equals(Nom2);
         }
 
-        #endregion
+#endregion
 
     }
 }

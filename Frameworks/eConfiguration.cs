@@ -29,6 +29,7 @@ namespace Framework_SW2013
         ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous);
         eConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee);
         void RenommerEtatAffichage();
+        eCorps CorpsDeplie();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -36,7 +37,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eConfiguration")]
     public class eConfiguration : IeConfiguration, IComparable<eConfiguration>, IComparer<eConfiguration>, IEquatable<eConfiguration>
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
@@ -44,15 +45,15 @@ namespace Framework_SW2013
         private eModele _Modele = null;
         private int _ID = 0;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eConfiguration() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet Configuration associé.
@@ -181,6 +182,10 @@ namespace Framework_SW2013
             }
         }
 
+
+        /// <summary>
+        /// Supprimer les nouvelles fonctions.
+        /// </summary>
         public Boolean SupprimerLesNouvellesFonctions
         {
             get
@@ -195,6 +200,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Supprimer les nouveaux composants
+        /// </summary>
         public Boolean SupprimerLesNouveauxComposants
         {
             get
@@ -209,6 +217,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Cacher les nouveaux composants.
+        /// </summary>
         public Boolean CacherLesNouveauxComposant
         {
             get
@@ -223,6 +234,9 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Afficher les nouveaux composants dans la nomenclature
+        /// </summary>
         public Boolean AfficherLesNouveauxComposantDansLaNomenclature
         {
             get
@@ -243,9 +257,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -294,7 +308,7 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Active la configurationS.
+        /// Active la configuration.
         /// </summary>
         /// <returns></returns>
         public Boolean Activer()
@@ -401,6 +415,9 @@ namespace Framework_SW2013
             return null;
         }
 
+        /// <summary>
+        /// Renomme les états d'affichages associés à la configuration
+        /// </summary>
         public void RenommerEtatAffichage()
         {
             Debug.Info(MethodBase.GetCurrentMethod());
@@ -420,9 +437,27 @@ namespace Framework_SW2013
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Renvoi le corps déplié d'une configuration dépliée
+        /// </summary>
+        /// <returns></returns>
+        public eCorps CorpsDeplie()
+        {
+            // Si c'est une configuration dépliée
+            if (Est(TypeConfig_e.cDepliee))
+            {
+                Activer();
+                // On recherche le corps déplié
+                List<eCorps> pListeCorps = Modele.Piece.ListListeDesCorps(CONSTANTES.NOM_CORPS_DEPLIEE);
+                return pListeCorps[0];
+            }
 
-        #region "Interfaces génériques"
+            return null;
+        }
+
+#endregion
+
+#region "Interfaces génériques"
 
         public int CompareTo(eConfiguration Conf)
         {
@@ -445,6 +480,6 @@ namespace Framework_SW2013
             return Nom1.Equals(Nom2);
         }
 
-        #endregion
+#endregion
     }
 }

@@ -41,7 +41,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eComposant")]
     public class eComposant : IeComposant, IComparable<eComposant>, IComparer<eComposant>, IEquatable<eComposant>
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
@@ -50,15 +50,15 @@ namespace Framework_SW2013
         private eConfiguration _Configuration = null;
         private int _Nb = 0;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eComposant() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet Component2 associé.
@@ -343,9 +343,9 @@ namespace Framework_SW2013
         /// </summary>
         public Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -527,9 +527,9 @@ namespace Framework_SW2013
             return pArrayCorps;
         }
 
-        #endregion
+#endregion
 
-        #region "Interfaces génériques"
+#region "Interfaces génériques"
 
         public int CompareTo(eComposant Comp)
         {
@@ -552,6 +552,6 @@ namespace Framework_SW2013
             return Nom1.Equals(Nom2);
         }
 
-        #endregion
+#endregion
     }
 }

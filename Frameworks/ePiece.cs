@@ -30,7 +30,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.ePiece")]
     public class ePiece : IePiece
     {
-        #region "Variables locales"
+#region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
@@ -41,15 +41,15 @@ namespace Framework_SW2013
         private eParametreTolerie _ParametreDeTolerie = null;
 #endif
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public ePiece() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Renvoi l'objet PartDoc.
@@ -112,9 +112,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -209,6 +209,9 @@ namespace Framework_SW2013
             return false;
         }
 
+        /// <summary>
+        /// Ajoute un No à chaque dossier
+        /// </summary>
         public void NumeroterDossier()
         {
             int pNoDossierMax = 0;
@@ -249,7 +252,7 @@ namespace Framework_SW2013
 
             List<eCorps> Liste = new List<eCorps>();
 
-            Object[] TableauDesCorps = _SwPiece.GetBodies2((int)swBodyType_e.swAllBodies, PrendreEnCompteCache);
+            Object[] TableauDesCorps = _SwPiece.GetBodies2((int)swBodyType_e.swAllBodies, !PrendreEnCompteCache);
 
             if (TableauDesCorps.Length > 0)
             {
@@ -346,7 +349,7 @@ namespace Framework_SW2013
             return pArrayDossiers;
         }
 
-        #endregion
+#endregion
 
     }
 }

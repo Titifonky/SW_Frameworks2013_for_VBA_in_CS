@@ -24,21 +24,21 @@ namespace Framework_SW2013
     [ProgId("Frameworks.ePropriete")]
     public class ePropriete : IePropriete, IComparable<ePropriete>, IComparer<ePropriete>, IEquatable<ePropriete>
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private eGestDeProprietes _GestDeProprietes = null;
         private String _Nom = "";
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public ePropriete() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne le parent GestDeProprietes.
@@ -99,9 +99,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -205,9 +205,9 @@ namespace Framework_SW2013
                 return false;
         }
 
-        #endregion
+#endregion
 
-        #region "Interfaces génériques"
+#region "Interfaces génériques"
 
         public int CompareTo(ePropriete Prop)
         {
@@ -230,7 +230,7 @@ namespace Framework_SW2013
             return Nom1.Equals(Nom2);
         }
 
-        #endregion
+#endregion
     }
 }
 

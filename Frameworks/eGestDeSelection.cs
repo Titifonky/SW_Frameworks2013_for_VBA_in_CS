@@ -38,22 +38,22 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eGestDeSelection")]
     public class eGestDeSelection : IeGestDeSelection
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
         private SelectionMgr _SwGestDeSelection = null;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eGestDeSelection() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Renvoi l'objet SelectionMgr.
@@ -71,9 +71,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -480,6 +480,6 @@ namespace Framework_SW2013
             return pArrayVues;
         }
 
-        #endregion
+#endregion
     }
 }

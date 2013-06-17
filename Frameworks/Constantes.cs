@@ -81,7 +81,7 @@ namespace Framework_SW2013
 
     internal static class CONSTANTES
     {
-        #region "Variables locales"
+#region "Variables locales"
 
         internal static String CONFIG_DEPLIEE_PATTERN = "^*SM-FLAT-PATTERN*";
         internal static String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
@@ -101,7 +101,7 @@ namespace Framework_SW2013
         internal static String MODELE_DE_DESSIN_LASER = "MacroLaser";
         internal static String NOM_CORPS_DEPLIEE = "Etat déplié";
         internal static String ETAT_D_AFFICHAGE = "Etat d'affichage-";
-        #endregion
+#endregion
     }
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -124,7 +124,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.Constantes")]
     public class Constantes : IConstantes
     {
-        #region "Propriétés"
+#region "Propriétés"
 
         public String ARTICLE_LISTE_DES_PIECES_SOUDEES { get { return CONSTANTES.ARTICLE_LISTE_DES_PIECES_SOUDEES; } }
         public String CONFIG_DEPLIEE { get { return CONSTANTES.CONFIG_DEPLIEE; } }
@@ -136,7 +136,7 @@ namespace Framework_SW2013
         public String NOM_CORPS_DEPLIEE { get { return CONSTANTES.NOM_CORPS_DEPLIEE; } }
         public String ETAT_D_AFFICHAGE { get { return CONSTANTES.ETAT_D_AFFICHAGE; } }
 
-        #endregion
+#endregion
     }
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -365,7 +365,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.swFeatureType_e")]
     public class swFeatureType_e : IswFeatureType_e
     {
-        #region "Propriétés"
+#region "Propriétés"
 
         public String swTnExplodeLineProfileFeature { get { return "ExplodeLineProfileFeature"; } }
         public String swTnInContextFeatHolder { get { return "InContextFeatHolder"; } }
@@ -583,6 +583,6 @@ namespace Framework_SW2013
         public String swTnWeldmentTableAnchor { get { return "WeldmentTableAnchor"; } }
         public String swTnWeldmentTableFeature { get { return "WeldmentTableFeat"; } }
 
-        #endregion
+#endregion
     }
 }

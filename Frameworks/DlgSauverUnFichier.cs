@@ -33,17 +33,17 @@ namespace Framework_SW2013
     [ProgId("Frameworks.DlgSauverUnFichier")]
     public class DlgSauverUnFichier : IDlgSauverUnFichier
     {
-        #region "Variables locales"
+#region "Variables locales"
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public DlgSauverUnFichier() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         private SaveFileDialog _Dialogue = new SaveFileDialog();
 
@@ -61,9 +61,9 @@ namespace Framework_SW2013
         public Boolean ExtensionsMultiple { get { return _Dialogue.SupportMultiDottedExtensions; } set { _Dialogue.SupportMultiDottedExtensions = value; } }
 
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         public String SauverUnFichier()
         {
@@ -82,6 +82,6 @@ namespace Framework_SW2013
                 return null;
         }
 
-        #endregion
+#endregion
     }
 }

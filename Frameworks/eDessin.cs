@@ -26,20 +26,20 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eDessin")]
     public class eDessin : IeDessin
     {
-        #region "Variables locales"
+#region "Variables locales"
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
         private DrawingDoc _SwDessin = null;
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eDessin() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet DrawingDoc associé.
@@ -75,9 +75,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -193,7 +193,7 @@ namespace Framework_SW2013
             return pArrayFeuilles;
         }
 
-        #endregion
+#endregion
 
     }
 }

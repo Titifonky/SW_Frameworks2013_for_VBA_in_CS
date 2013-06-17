@@ -26,7 +26,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eRecherche")]
     public class eRecherche : IeRecherche
     {
-        #region "Variables locales"
+#region "Variables locales"
         
         private Boolean _EstInitialise = false;
 
@@ -38,15 +38,15 @@ namespace Framework_SW2013
         private Boolean _RenvoyerComposantRacine = false;
         private static Double _IndexComposant = 0;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eRecherche() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         /// <summary>
         /// Retourne le parent ExtComposant.
@@ -85,9 +85,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -292,6 +292,6 @@ namespace Framework_SW2013
             return pArrayComps;
         }
 
-        #endregion
+#endregion
     }
 }

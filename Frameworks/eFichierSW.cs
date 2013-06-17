@@ -25,7 +25,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eFichierSW")]
     public class eFichierSW : IeFichierSW
     {
-        #region "Variables locales"
+#region "Variables locales"
         private Boolean _EstInitialise = false;
 
         private eSldWorks _SW = null;
@@ -33,15 +33,15 @@ namespace Framework_SW2013
         private String _NomConfiguration = "";
         private long _Nb = 1;
 
-        #endregion
+#endregion
 
-        #region "Constructeur\Destructeur"
+#region "Constructeur\Destructeur"
 
         public eFichierSW() { }
 
-        #endregion
+#endregion
 
-        #region "Propriétés"
+#region "Propriétés"
 
         public eSldWorks SW { get { return _SW; } }
         public String Chemin { get { return _Chemin; } internal set { _Chemin = value; } }
@@ -125,9 +125,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-        #endregion
+#endregion
 
-        #region "Méthodes"
+#region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -171,6 +171,6 @@ namespace Framework_SW2013
             return null;
         }
 
-        #endregion
+#endregion
     }
 }
