@@ -16,7 +16,11 @@ namespace Framework_SW2013
         Component2 SwComposant { get; }
         eModele Modele { get; }
 <<<<<<< HEAD
+<<<<<<< HEAD
         eConfiguration Configuration { get;}
+=======
+        eConfiguration Configuration { get; }
+>>>>>>> 305ac273011a596c941cdda96677e845e4d8fd03
 =======
         eConfiguration Configuration { get; }
 >>>>>>> 305ac273011a596c941cdda96677e845e4d8fd03
