@@ -104,11 +104,16 @@ namespace Framework_SW2013
                 if (Regex.IsMatch(SwConfiguration.Name, CONSTANTES.CONFIG_DEPLIEE_PATTERN))
                     T = TypeConfig_e.cDepliee;
                 else if (Regex.IsMatch(SwConfiguration.Name, CONSTANTES.CONFIG_PLIEE_PATTERN))
+                {
                     T = TypeConfig_e.cPliee;
+                }
 
                 if (SwConfiguration.IsDerived() != false)
                     T |= TypeConfig_e.cDerivee;
                 else
+                    T |= TypeConfig_e.cRacine;
+
+                if (!T.HasFlag(TypeConfig_e.cDepliee))
                     T |= TypeConfig_e.cDeBase;
 
                 return T;

@@ -533,6 +533,8 @@ namespace Framework_SW2013
                 pSetupFeuille.Orientation = (int)swPageSetupOrientation_e.swPageSetupOrient_Landscape;
             else
                 pSetupFeuille.Orientation = (int)swPageSetupOrientation_e.swPageSetupOrient_Portrait;
+
+
         }
 
 #endregion

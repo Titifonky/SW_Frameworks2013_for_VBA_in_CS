@@ -88,7 +88,19 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le composant ExtComposant lié au modele.
         /// </summary>
-        public eComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } internal set { Debug.Info(MethodBase.GetCurrentMethod());  _Composant = value; } }
+        public eComposant Composant
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod()); 
+                return _Composant;
+            }
+            internal set
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                _Composant = value;
+            }
+        }
 
         /// <summary>
         /// Retourne l'assemblage ExtAssemblage si celui ci est valide.
@@ -234,7 +246,7 @@ namespace Framework_SW2013
                         return TypeFichier_e.cDessin;
 
                     default:
-                        return TypeFichier_e.cAutre;
+                        return 0;
                 }
             }
         }

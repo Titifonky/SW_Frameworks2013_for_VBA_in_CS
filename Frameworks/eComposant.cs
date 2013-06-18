@@ -15,7 +15,11 @@ namespace Framework_SW2013
     {
         Component2 SwComposant { get; }
         eModele Modele { get; }
+<<<<<<< HEAD
         eConfiguration Configuration { get;}
+=======
+        eConfiguration Configuration { get; }
+>>>>>>> 305ac273011a596c941cdda96677e845e4d8fd03
         String Nom { get; }
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; set; }
@@ -104,7 +108,7 @@ namespace Framework_SW2013
                         return TypeFichier_e.cDessin;
 
                     default:
-                        return TypeFichier_e.cAutre;
+                        return 0;
                 }
             }
         }

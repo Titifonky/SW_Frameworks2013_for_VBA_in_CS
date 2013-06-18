@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using SolidWorks.Interop.sldworks;
 
 namespace Framework_SW2013
 {
@@ -220,7 +221,25 @@ namespace Framework_SW2013
 
             // On renvoi le composant de base
             if ((_RenvoyerComposantRacine == true) && TypeComposant.HasFlag(_Composant.Modele.TypeDuModele))
-                pDicComposants.Add(NomCle(_Composant), _Composant);
+            {
+                // On renvoi un composant par config
+                if (_PrendreEnCompteConfig)
+                {
+                    foreach (eConfiguration pConfig in _Composant.Modele.GestDeConfigurations.ListListerLesConfigs(TypeConfig_e.cDeBase))
+                    {
+                        Component2 pSwComp = pConfig.SwConfiguration.GetRootComponent3(false);
+                        Debug.Info("================= 1 : " + pSwComp.ReferencedConfiguration);
+                        eModele pModele = _Composant.Modele.SW.Modele(pSwComp.GetPathName());
+                        eComposant pComp = new eComposant();
+                        pComp.Init(pSwComp, pModele);
+                        pModele.Composant = pComp;
+                        pComp.Configuration = pConfig;
+                        pDicComposants.Add(NomCle(pComp), pComp);
+                    }
+                }
+                else
+                    pDicComposants.Add(NomCle(_Composant), _Composant);
+            }
 
             // Si le composant est un assemblage contenant plusieurs composants, on renvoi la liste des composants recherchés
             if ((_Composant.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (_Composant.SwComposant.IGetChildrenCount() > 0))

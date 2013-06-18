@@ -16,6 +16,7 @@ namespace Framework_SW2013
         eModele ModeleDeReference { get; }
         eConfiguration ConfigurationDeReference { get; }
         eDimensionVue Dimensions { get; }
+        void Selectionner(Boolean Ajouter = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -167,6 +168,16 @@ namespace Framework_SW2013
                 }
             }
             return _EstInitialise;
+        }
+
+        /// <summary>
+        /// Selectionner la vue
+        /// </summary>
+        /// <param name="Ajouter"></param>
+        public void Selectionner(Boolean Ajouter = false)
+        {
+            ePoint pCentre = Dimensions.Centre;
+            _Feuille.Dessin.Modele.SW.Modele().SwModele.Extension.SelectByID2(Nom, "DRAWINGVIEW", pCentre.X, pCentre.Y, pCentre.Z, Ajouter, -1, null, 0);
         }
 
 #endregion

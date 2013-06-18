@@ -23,6 +23,7 @@ namespace Framework_SW2013
         Boolean Init(SldWorks SldWks);
         eModele Modele(String Chemin = "");
         eModele ModeleEnCoursEdition();
+        eModele CreerDocument(String Dossier, String NomDuDocument, TypeFichier_e TypeDeDocument, String Gabarit = "");
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -247,6 +248,78 @@ namespace Framework_SW2013
             Debug.Info("Ouvre le fichier : " + Chemin);
 
             return _SwSW.OpenDoc6(Chemin, (int)Type, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref Erreur, ref Warning);
+        }
+
+        /// <summary>
+        /// Creer un document
+        /// </summary>
+        /// <param name="Dossier"></param>
+        /// <param name="NomDuDocument"></param>
+        /// <param name="TypeDeDocument"></param>
+        /// <param name="Gabarit"></param>
+        /// <returns></returns>
+        public eModele CreerDocument(String Dossier, String NomDuDocument, TypeFichier_e TypeDeDocument ,String Gabarit = "")
+        {
+            eModele pModele = new eModele();
+            ModelDoc2 pSwModele;
+
+            String pCheminGabarit = "";
+
+            if (String.IsNullOrEmpty(Gabarit))
+            {
+                switch (TypeDeDocument)
+                {
+                    case TypeFichier_e.cAssemblage:
+                        pCheminGabarit = _SwSW.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplateAssembly);
+                        break;
+                    case TypeFichier_e.cPiece:
+                        pCheminGabarit = _SwSW.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplatePart);
+                        break;
+                    case TypeFichier_e.cDessin:
+                        pCheminGabarit = _SwSW.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplateDrawing);
+                        break;
+                }
+            }
+            else
+            {
+                String[] pTabCheminsGabarit = _SwSW.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swFileLocationsDocumentTemplates).Split(';');
+
+                foreach (String Chemin in pTabCheminsGabarit)
+                {
+                    pCheminGabarit = Chemin + @"\" + Gabarit + CONSTANTES.Extension(TypeDeDocument, true);
+                    if (File.Exists(pCheminGabarit))
+                        break;
+                }
+            }
+
+            int Format = 0;
+            Double Lg = 0;
+            Double Ht = 0;
+
+            if (TypeDeDocument == TypeFichier_e.cDessin)
+            {
+                Double[] pTab = _SwSW.GetTemplateSizes(pCheminGabarit);
+                Format = (int)pTab[0];
+                Lg = pTab[1];
+                Ht = pTab[2];
+            }
+
+            Debug.Info(Format.ToString());
+            Debug.Info(Lg.ToString());
+            Debug.Info(Ht.ToString());
+
+            pSwModele = _SwSW.NewDocument(pCheminGabarit, Format, Lg, Ht);
+            pSwModele.Extension.SaveAs(Dossier + @"\" + NomDuDocument + CONSTANTES.Extension(TypeDeDocument),
+                                        (int)swSaveAsVersion_e.swSaveAsCurrentVersion,
+                                        (int)swSaveAsOptions_e.swSaveAsOptions_Silent,
+                                        null,
+                                        ref Erreur,
+                                        ref Warning);
+
+            if (pModele.Init(pSwModele,this))
+                return pModele;
+
+            return null;
         }
 
 #endregion
