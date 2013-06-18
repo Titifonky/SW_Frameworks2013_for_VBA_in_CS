@@ -10,10 +10,9 @@ namespace Framework_SW2013
     [Flags]
     public enum TypeFichier_e
     {
-        cAutre = 1,
-        cAssemblage = 2,
-        cPiece = 4,
-        cDessin = 8
+        cAssemblage = 1,
+        cPiece = 2,
+        cDessin = 4
     }
 
     //Cet attribut permet de combiner les valeurs d'enumération
@@ -31,11 +30,12 @@ namespace Framework_SW2013
     [Flags]
     public enum TypeConfig_e
     {
-        cDeBase = 1,
-        cDerivee = 2,
-        cDepliee = 4,
-        cPliee = 8,
-        cTous = cDeBase | cDerivee | cDepliee | cPliee
+        cRacine = 1,
+        cDeBase = 2,
+        cDerivee = 4,
+        cDepliee = 8,
+        cPliee = 16,
+        cTous = cRacine | cDeBase | cDerivee | cDepliee | cPliee
     }
 
     public enum EtatFonction_e
@@ -101,6 +101,34 @@ namespace Framework_SW2013
         internal static String MODELE_DE_DESSIN_LASER = "MacroLaser";
         internal static String NOM_CORPS_DEPLIEE = "Etat déplié";
         internal static String ETAT_D_AFFICHAGE = "Etat d'affichage-";
+
+#endregion
+#region "Méthodes"
+        internal static String Extension(TypeFichier_e TypeFichier, Boolean Gabarit = false)
+        {
+            String pDocExt = "";
+            String pGabaritExt = "";
+            switch (TypeFichier)
+            {
+                case TypeFichier_e.cAssemblage:
+                    pDocExt = ".SLDASM";
+                    pGabaritExt = ".ASMDOT";
+                    break;
+                case TypeFichier_e.cPiece:
+                    pDocExt = ".SLDPRT";
+                    pGabaritExt = ".PRTDOT";
+                    break;
+                case TypeFichier_e.cDessin:
+                    pDocExt = ".SLDDRW";
+                    pGabaritExt = ".DRWDOT";
+                    break;
+            }
+
+            if (Gabarit)
+                return pGabaritExt;
+            else
+                return pDocExt;
+        }
 #endregion
     }
 

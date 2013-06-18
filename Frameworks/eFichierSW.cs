@@ -12,7 +12,7 @@ namespace Framework_SW2013
         eSldWorks SW { get; }
         String Chemin { get; }
         String Configuration { get; set; }
-        long Nb { get; }
+        int Nb { get; }
         TypeFichier_e TypeDuFichier { get; }
         String NomDuFichier { get; }
         String NomDuFichierSansExt { get; }
@@ -31,7 +31,7 @@ namespace Framework_SW2013
         private eSldWorks _SW = null;
         private String _Chemin = "";
         private String _NomConfiguration = "";
-        private long _Nb = 1;
+        private int _Nb = 1;
 
 #endregion
 
@@ -46,7 +46,7 @@ namespace Framework_SW2013
         public eSldWorks SW { get { return _SW; } }
         public String Chemin { get { return _Chemin; } internal set { _Chemin = value; } }
         public String Configuration { get { return _NomConfiguration; } set { _NomConfiguration = value; } }
-        public long Nb { get { return _Nb; } internal set { _Nb = value; } }
+        public int Nb { get { return _Nb; } internal set { _Nb = value; } }
 
         /// <summary>
         /// Retourne le type du fichier.
@@ -68,7 +68,7 @@ namespace Framework_SW2013
                         return TypeFichier_e.cDessin;
 
                     default:
-                        return TypeFichier_e.cAutre;
+                        return 0;
                 }
             }
         }
