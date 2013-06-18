@@ -242,7 +242,19 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet ExtFichierSw
         /// </summary>
-        public eFichierSW FichierSw { get { Debug.Info(MethodBase.GetCurrentMethod()); return _FichierSw; } }
+        public eFichierSW FichierSw
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                if (Composant != null)
+                {
+                    _FichierSw.Nb = Composant.Nb;
+                    _FichierSw.Configuration = Composant.Configuration.Nom;
+                }
+                return _FichierSw;
+            }
+        }
 
         public Boolean EstActif
         {
