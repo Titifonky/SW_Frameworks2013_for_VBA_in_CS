@@ -283,8 +283,11 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
 
-                _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, (int)swRebuildOnActivation_e.swUserDecision, Erreur);
-                _Composant.Configuration.Activer();
+                if (value)
+                {
+                    _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, (int)swRebuildOnActivation_e.swUserDecision, Erreur);
+                    _Composant.Configuration.Activer();
+                }
             }
         }
 
@@ -359,6 +362,8 @@ namespace Framework_SW2013
                 _Composant = new eComposant();
                 if (_Composant.Init(pConfigActive.GetRootComponent3(false), this) == false)
                     _EstInitialise = false;
+                else
+                    _Composant.Configuration = GestDeConfigurations.ConfigurationActive;
             }
         }
 

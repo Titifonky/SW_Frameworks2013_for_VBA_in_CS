@@ -228,7 +228,6 @@ namespace Framework_SW2013
                     foreach (eConfiguration pConfig in _Composant.Modele.GestDeConfigurations.ListListerLesConfigs(TypeConfig_e.cDeBase))
                     {
                         Component2 pSwComp = pConfig.SwConfiguration.GetRootComponent3(false);
-                        Debug.Info("================= 1 : " + pSwComp.ReferencedConfiguration);
                         eModele pModele = _Composant.Modele.SW.Modele(pSwComp.GetPathName());
                         eComposant pComp = new eComposant();
                         pComp.Init(pSwComp, pModele);
