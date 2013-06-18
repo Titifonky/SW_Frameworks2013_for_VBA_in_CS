@@ -17,7 +17,11 @@ namespace Framework_SW2013
         eModele Modele { get; }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         eConfiguration Configuration { get;}
+=======
+        eConfiguration Configuration { get; }
+>>>>>>> 305ac273011a596c941cdda96677e845e4d8fd03
 =======
         eConfiguration Configuration { get; }
 >>>>>>> 305ac273011a596c941cdda96677e845e4d8fd03
