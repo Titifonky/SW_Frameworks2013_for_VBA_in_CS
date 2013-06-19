@@ -459,9 +459,13 @@ namespace Framework_SW2013
             _SwModele.FeatureManager.EnableFeatureTree = Activer;
             _SwModele.FeatureManager.EnableFeatureTreeWindow = Activer;
             _SwModele.ConfigurationManager.EnableConfigurationTree = Activer;
+            _SwModele.Lock();
 
             if (Activer)
+            {
                 _SwModele.FeatureManager.UpdateFeatureTree();
+                _SwModele.UnLock();
+            }
         }
 
         /// <summary>

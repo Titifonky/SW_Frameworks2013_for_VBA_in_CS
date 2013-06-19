@@ -108,8 +108,14 @@ namespace Framework_SW2013
 
                 List<eVue> pListeVues = ListListeDesVues();
 
+                Debug.Info("============================= " + pListeVues.Count.ToString());
+
                 if (pListeVues.Count == 0)
-                    return null;
+                {
+                    pEnveloppe.PointMin.X = 0;
+                    pEnveloppe.PointMin.Y = 0;
+                    return pEnveloppe;
+                }
 
                 foreach (eVue Vue in pListeVues)
                 {
@@ -467,13 +473,12 @@ namespace Framework_SW2013
 
             List<eVue> pListeVues = new List<eVue>();
 
-            object[] pObjVues;
-            pObjVues = _SwFeuille.GetViews();
+            Object[] pTabVues = _SwFeuille.GetViews();
 
-            if (pObjVues.Length == 0)
+            if (pTabVues == null)
                 return pListeVues;
 
-            foreach (View pSwVue in pObjVues)
+            foreach (View pSwVue in pTabVues)
             {
                 eVue pVue = new eVue();
                 if (pVue.Init(pSwVue, this) && Regex.IsMatch(pSwVue.GetName2(), NomARechercher))

@@ -63,7 +63,14 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet Component2 associé.
         /// </summary>
-        public Component2 SwComposant { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwComposant; } }
+        public Component2 SwComposant
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                return _SwComposant;
+            }
+        }
 
         /// <summary>
         /// Retourne le modele ExtModele associé.
@@ -75,7 +82,8 @@ namespace Framework_SW2013
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                if (!_Modele.GestDeConfigurations.ConfigurationActive.Equals(_Configuration))
+                // Augmente énormément le temps de traitement
+                if (!_Modele.GestDeConfigurations.ConfigurationActive.Equals(_Configuration) && _Modele.SW.ActiverLesConfigurations)
                     _Configuration.Activer();
 
                 return _Modele;
@@ -364,18 +372,16 @@ namespace Framework_SW2013
                 // On valide l'initialisation avant de recupérer la configuration
                 _EstInitialise = true;
 
-                Configuration pSwConfig;
+                _Configuration = new eConfiguration();
 
                 // Si la configuration referencé est vide, on recupère la configuration active.
                 if (String.IsNullOrEmpty(SwComposant.ReferencedConfiguration))
-                    pSwConfig = Modele.SwModele.GetActiveConfiguration();
+                    _Configuration = Modele.GestDeConfigurations.ConfigurationActive;
                 else
-                    pSwConfig = Modele.SwModele.GetConfigurationByName(SwComposant.ReferencedConfiguration);
-
-                _Configuration = new eConfiguration();
+                    _Configuration = Modele.GestDeConfigurations.ConfigurationAvecLeNom(SwComposant.ReferencedConfiguration);
 
                 // Si la config est ok
-                if (_Configuration.Init(pSwConfig, Modele))
+                if (_Configuration.EstInitialise)
                 {
                     _SwComposant = SwComposant;
                     _Modele = Modele;

@@ -19,6 +19,7 @@ namespace Framework_SW2013
         String Hotfixe { get; }
         String Revision { get; }
         Boolean ActiverDebug { get; set; }
+        Boolean ActiverLesConfigurations { get; set; }
         eGestOptions GestOptions { get; }
         Boolean Init(SldWorks SldWks);
         eModele Modele(String Chemin = "");
@@ -42,6 +43,8 @@ namespace Framework_SW2013
         private String _Revision = "";
         private int Erreur = 0;
         private int Warning = 0;
+
+        private Boolean _ActiverLesConfigurations = false;
 
 #endregion
 
@@ -94,6 +97,8 @@ namespace Framework_SW2013
         /// Activer ou désactiver l'ecriture dans le fichier Debug.
         /// </summary>
         public Boolean ActiverDebug { get { return Debug.Actif; } set { Debug.Actif = value; } }
+
+        public Boolean ActiverLesConfigurations { get { return _ActiverLesConfigurations; } set { _ActiverLesConfigurations = value; } }
 
         /// <summary>
         /// Retourne le gestionnaire d'options

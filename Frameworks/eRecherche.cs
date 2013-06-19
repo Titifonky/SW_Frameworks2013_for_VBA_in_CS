@@ -18,6 +18,7 @@ namespace Framework_SW2013
         Boolean PrendreEnCompteSupprime { get; set; }
         Boolean SupprimerDoublons { get; set; }
         Boolean RenvoyerComposantRacine { get; set; }
+        Boolean RenvoyerConfigComposantRacine { get; set; }
         ArrayList ListeComposants(TypeFichier_e TypeComposant, String NomComposant = "");
         ArrayList ListeFichiers(TypeFichier_e TypeComposant, String NomComposant = "");
     }
@@ -37,6 +38,7 @@ namespace Framework_SW2013
         private Boolean _PrendreEnCompteSupprime = false;
         private Boolean _SupprimerDoublons = true;
         private Boolean _RenvoyerComposantRacine = false;
+        private Boolean _RenvoyerConfigComposantRacine = false;
         private static Double _IndexComposant = 0;
 
 #endregion
@@ -79,6 +81,8 @@ namespace Framework_SW2013
         /// si celui ci est de même type que le type de composant filtré.
         /// </summary>
         public Boolean RenvoyerComposantRacine { get { Debug.Info(MethodBase.GetCurrentMethod());  return _RenvoyerComposantRacine; } set { Debug.Info(MethodBase.GetCurrentMethod());  _RenvoyerComposantRacine = value; } }
+
+        public Boolean RenvoyerConfigComposantRacine { get { Debug.Info(MethodBase.GetCurrentMethod());  return _RenvoyerConfigComposantRacine; } set { Debug.Info(MethodBase.GetCurrentMethod());  _RenvoyerConfigComposantRacine = value; } }
 
         /// <summary>
         /// Fonction interne
@@ -174,9 +178,9 @@ namespace Framework_SW2013
                         // sinon on le rajoute
                         else
                         {
-                            // Si on supprime les doublons, on doit associer au modèle le composant racine
+                            // Si on supprime les doublons et que l'on ne prend pas e compte les configs, on associe au modèle le composant racine
                             // et non le composant de l'assemblage
-                            if (_SupprimerDoublons)
+                            if (_SupprimerDoublons && !_PrendreEnCompteConfig)
                             {
                                 eModele pModele = pComp.Modele;
                                 pModele.ReinitialiserComposant();
@@ -223,7 +227,7 @@ namespace Framework_SW2013
             if ((_RenvoyerComposantRacine == true) && TypeComposant.HasFlag(_Composant.Modele.TypeDuModele))
             {
                 // On renvoi un composant par config
-                if (_PrendreEnCompteConfig)
+                if (_PrendreEnCompteConfig && _RenvoyerConfigComposantRacine)
                 {
                     foreach (eConfiguration pConfig in _Composant.Modele.GestDeConfigurations.ListListerLesConfigs(TypeConfig_e.cDeBase))
                     {
