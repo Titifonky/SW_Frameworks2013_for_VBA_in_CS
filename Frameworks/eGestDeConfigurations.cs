@@ -175,10 +175,14 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             eConfiguration pConfig = new eConfiguration();
-            if (pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfiguration, NomConfiguration, "", 0, "", ""), _Modele))
-                return pConfig;
 
-            return null;
+            if (ConfigurationExiste(NomConfiguration))
+                pConfig = ConfigurationAvecLeNom(NomConfiguration);
+
+            if (!pConfig.EstInitialise)
+                pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfiguration, NomConfiguration, "", 0, "", ""), _Modele);
+
+            return pConfig;
         }
 
         public Boolean ConfigurationExiste(String Nom)

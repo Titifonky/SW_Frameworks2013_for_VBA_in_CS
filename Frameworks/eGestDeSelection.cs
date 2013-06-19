@@ -168,13 +168,15 @@ namespace Framework_SW2013
             if (NbObjetsSelectionnes() == 0)
                 return null;
 
-            eComposant pComposantSelectionne = Composant(Index, Marque);
+            eModele pModele = _Modele;
+
+            if (_Modele.TypeDuModele != TypeFichier_e.cDessin)
+                pModele = Composant(Index, Marque).Modele;
 
             dynamic pSwObjet = _SwGestDeSelection.GetSelectedObject6(Index, Marque);
             swSelectType_e pType = TypeObjet(Index, Marque);
-            eModele pModele = pComposantSelectionne.Modele;
 
-            if ((pComposantSelectionne != null) && pComposantSelectionne.EstInitialise && !RenvoyerObjet)
+            if ((pModele != null) && pModele.EstInitialise && !RenvoyerObjet)
             {
 
                 switch (pType)
@@ -261,12 +263,7 @@ namespace Framework_SW2013
                 if ((pModele != null) && pModele.EstInitialise)
                     pInitModele = pModele;
 
-                Debug.Info("================= 1 : " + pInitModele.EstInitialise);
-                Debug.Info("================= 2 : " + (pSwObjet != null));
-
                 pObjet.Init(pInitModele, pSwObjet, pType);
-
-                Debug.Info("================= 3 : " + pObjet.EstInitialise);
 
                 if (pObjet.EstInitialise)
                     return pObjet;
@@ -300,6 +297,10 @@ namespace Framework_SW2013
 
             if ((pSwComposant == null) && (Modele.TypeDuModele == TypeFichier_e.cPiece))
                 pSwComposant = Modele.Composant.SwComposant;
+
+            // Si c'est un dessin, pas de composant
+            if ((pSwComposant == null) && (Modele.TypeDuModele == TypeFichier_e.cDessin))
+                return null;
 
             if (pSwComposant == null)
                 Debug.Info(" ========================= Erreur de composant");
