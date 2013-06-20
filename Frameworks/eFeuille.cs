@@ -19,6 +19,8 @@ namespace Framework_SW2013
         eDessin Dessin { get; }
         String Nom { get; set; }
         eVue PremiereVue { get; }
+        eVue DerniereVue { get; }
+        int NbDeVues { get; }
         eZone EnveloppeDesVues { get; }
         Format_e Format { get; set; }
         Orientation_e Orientation { get; set; }
@@ -80,13 +82,49 @@ namespace Framework_SW2013
                 Debug.Info(MethodBase.GetCurrentMethod());
                 eVue pVue = new eVue();
 
-                object[] pObjVues;
-                pObjVues = _SwFeuille.GetViews();
+                object[] pObjVues = _SwFeuille.GetViews();
 
-                if ((pObjVues.Length > 0) && pVue.Init((View)pObjVues[0], this))
+                if ((pObjVues != null) && pVue.Init((View)pObjVues[0], this))
                     return pVue;
 
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Retourne la dernière vue crée
+        /// </summary>
+        public eVue DerniereVue
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+                eVue pVue = new eVue();
+
+                object[] pObjVues = _SwFeuille.GetViews();
+
+                if ((pObjVues != null) && pVue.Init((View)pObjVues[pObjVues.GetUpperBound(0)], this))
+                    return pVue;
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Retourne le nb de vues de la feuille
+        /// </summary>
+        public int NbDeVues
+        {
+            get
+            {
+                Debug.Info(MethodBase.GetCurrentMethod());
+
+                object[] pObjVues = _SwFeuille.GetViews();
+
+                if (pObjVues == null)
+                    return 0;
+
+                return pObjVues.Length;
             }
         }
 

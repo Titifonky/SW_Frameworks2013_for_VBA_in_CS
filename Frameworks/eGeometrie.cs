@@ -30,7 +30,7 @@ namespace Framework_SW2013
 
 #region "Constructeur\Destructeur"
 
-        public ePoint() { }
+        public ePoint() { X = 0; Y = 0; Z = 0; }
 
         public ePoint(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
 
@@ -89,7 +89,7 @@ namespace Framework_SW2013
 
 #region "Constructeur\Destructeur"
 
-        public eVecteur() { }
+        public eVecteur() { X = 0; Y = 0; Z = 0; }
 
         public eVecteur(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
 
@@ -173,7 +173,7 @@ namespace Framework_SW2013
 
 #region "Constructeur\Destructeur"
 
-        public eRectangle() { }
+        public eRectangle() { Lg = 0; Ht = 0; }
 
 #endregion
 

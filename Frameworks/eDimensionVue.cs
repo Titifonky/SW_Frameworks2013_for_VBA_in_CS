@@ -11,7 +11,7 @@ namespace Framework_SW2013
     {
         eVue Vue { get; }
         ePoint Centre { get; set; }
-        eRectangle Dimensions { get; }
+        eRectangle Rectangle { get; }
         eZone Zone { get; }
         Double Angle { get; set; }
     }
@@ -72,7 +72,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne les dimensions de la vue, hauteur et largeur.
         /// </summary>
-        public eRectangle Dimensions
+        public eRectangle Rectangle
         {
             get
             {
