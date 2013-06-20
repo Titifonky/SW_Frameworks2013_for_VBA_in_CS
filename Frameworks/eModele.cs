@@ -596,9 +596,20 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eFonction DerniereFonction()
         {
-            eFonction pFonc = new eFonction();
-            if (pFonc.Init(_SwModele.Extension.GetLastFeatureAdded(), this))
-                return pFonc;
+            swFeatureType_e TypeF = new swFeatureType_e();
+            int i = 0;
+            Feature pSwFonc = _SwModele.FeatureByPositionReverse(i);
+
+
+            while (pSwFonc != null)
+            {
+                eFonction pFonc = new eFonction();
+                if ((pSwFonc.GetTypeName2() != TypeF.swTnFlatPattern) && pFonc.Init(pSwFonc, this))
+                    return pFonc;
+
+                i++;
+                pSwFonc = _SwModele.FeatureByPositionReverse(i);
+            }
 
             return null;
         }

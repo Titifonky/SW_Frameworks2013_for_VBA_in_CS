@@ -333,12 +333,12 @@ namespace Framework_SW2013
             Boolean UneConfig = (Modele.SwModele.GetConfigurationCount() == 1);
             String[] pTabNomAff = _SwConfiguration.GetDisplayStates();
 
-            if (pTabNomAff.Length  > 0)
+            if (pTabNomAff != null)
             {
                 String pAffichageCourant = pTabNomAff[0];
                 foreach (String pNomEtatAffichage in pTabNomAff)
                 {
-                    if (!(UneConfig && (pNomEtatAffichage == pAffichageCourant)))
+                    if (pNomEtatAffichage != pAffichageCourant)
                         _SwConfiguration.DeleteDisplayState(pNomEtatAffichage);
                 }
             }

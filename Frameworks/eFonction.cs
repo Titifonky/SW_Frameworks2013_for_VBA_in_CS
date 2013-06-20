@@ -69,7 +69,8 @@ namespace Framework_SW2013
                     int pErreur = 0;
                     Feature pSwFonction = _Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
                     Debug.Info("PID Erreur : " + pErreur);
-                    if (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
+                    if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
+                        || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
                         _SwModeleFonction = pSwFonction;
                 }
 
@@ -275,7 +276,6 @@ namespace Framework_SW2013
             Debug.Info(MethodBase.GetCurrentMethod());
 
             Selectionner(false);
-            //SwFonction.Select2(false, -1);
             Modele.SW.Modele().SwModele.EditUnsuppress2();
             Modele.SW.Modele().SwModele.EditUnsuppressDependent2();
         }

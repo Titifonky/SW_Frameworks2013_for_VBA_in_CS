@@ -23,8 +23,8 @@ namespace Framework_SW2013
         Boolean Visible { get; set; }
         eDossier Dossier { get; }
         eFonction PremiereFonction { get; }
+        void Selectionner(Boolean Ajouter = true);
         ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
-
         int NbIntersection(eCorps Corps);
     }
 
@@ -184,7 +184,8 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 String Db = "";
-                String Materiau = _SwCorps.GetMaterialPropertyName(Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom, out Db);
+                String pNomConfigActive = Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom;
+                String Materiau = SwCorps.GetMaterialPropertyName(pNomConfigActive, out Db);
                 if (String.IsNullOrEmpty(Materiau))
                     Materiau = Piece.Materiau;
 
@@ -195,13 +196,17 @@ namespace Framework_SW2013
                 Debug.Info(MethodBase.GetCurrentMethod());
                 String[] pBaseDeDonnees = Piece.Modele.SW.SwSW.GetMaterialDatabases();
 
+                String pNomConfigActive = Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom;
+                Selectionner(false);
                 // On test si pour chaque Base de donnée si le matériau à bien été appliqué.
                 // Si oui, on sort de la boucle
                 foreach (String Bdd in pBaseDeDonnees)
                 {
-                    if(_SwCorps.SetMaterialProperty(Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom, Bdd, value) ==
-                        (int)swBodyMaterialApplicationError_e.swBodyMaterialApplicationError_NoError)
+                    if (SwCorps.SetMaterialProperty(pNomConfigActive, Bdd, value) == (int)swBodyMaterialApplicationError_e.swBodyMaterialApplicationError_NoError)
                         break;
+                    //Piece.SwPiece.SetMaterialPropertyName2(pNomConfigActive, Bdd, value);
+                    //if (Materiau == value)
+                    //    break;
                 }
             }
         }
@@ -312,6 +317,19 @@ namespace Framework_SW2013
 
             Init(SwCorps, Modele.Piece);
             return _EstInitialise;
+        }
+
+        /// <summary>
+        /// Selectionner le corps
+        /// </summary>
+        /// <param name="Ajouter"></param>
+        public void Selectionner(Boolean Ajouter = true)
+        {
+            SelectionMgr pSwSelMgr = Piece.Modele.SwModele.SelectionManager;
+            SelectData pSelData = default(SelectData);
+            pSelData = pSwSelMgr.CreateSelectData();
+            pSelData.Mark = -1;
+            SwCorps.Select2(Ajouter, null);
         }
 
         /// <summary>
