@@ -28,7 +28,7 @@ namespace Framework_SW2013
         Boolean Supprimer();
         ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous);
         eConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee);
-        void RenommerEtatAffichage();
+        void RenommerEtatAffichage(Boolean Ecraser = false);
         eCorps CorpsDeplie();
     }
 
@@ -423,7 +423,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Renomme les états d'affichages associés à la configuration
         /// </summary>
-        public void RenommerEtatAffichage()
+        public void RenommerEtatAffichage(Boolean Ecraser = false)
         {
             Debug.Info(MethodBase.GetCurrentMethod());
 
@@ -433,10 +433,14 @@ namespace Framework_SW2013
             {
                 foreach (String pNomEtatAffichage in _SwConfiguration.GetDisplayStates())
                 {
-                    if (Regex.IsMatch(pNomEtatAffichage, "^" + CONSTANTES.ETAT_D_AFFICHAGE))
+                    if (Regex.IsMatch(pNomEtatAffichage, "^" + CONSTANTES.ETAT_D_AFFICHAGE) || Ecraser)
                     {
-                        _SwConfiguration.RenameDisplayState(pNomEtatAffichage, Nom + "_" + Index.ToString());
-                        Index++;
+                        String NomTmp = Nom;
+                        if (!_SwConfiguration.RenameDisplayState(pNomEtatAffichage, NomTmp))
+                        {
+                            NomTmp = Nom + "_" + Index.ToString();
+                            Index++;
+                        }
                     }
                 }
             }
