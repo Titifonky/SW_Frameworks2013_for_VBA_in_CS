@@ -32,33 +32,33 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eTole")]
     public class eTole : IeTole
     {
-#region "Variables locales"
-        
+        #region "Variables locales"
+
         private Boolean _EstInitialise = false;
 
         private eCorps _Corps = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eTole() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public eCorps Corps { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Corps; } }
+        public eCorps Corps { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Corps; } }
 
         private ModelDoc2 SwModele
         {
             get
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
-                if(_Corps.Piece.Modele.Equals(_Corps.Piece.Modele.SW.Modele()))
+                if (_Corps.Piece.Modele.Equals(_Corps.Piece.Modele.SW.Modele()))
                     return _Corps.Piece.Modele.SwModele;
 
                 return null;
@@ -86,7 +86,7 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
-                return pParam.Thickness * 1000;
+                return Math.Round(pParam.Thickness * 1000, 5);
             }
             set
             {
@@ -304,13 +304,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Plier ou deplier la tole
         /// </summary>
-        public void Deplier (Boolean T)
+        public void Deplier(Boolean T)
         {
-                Debug.Info(MethodBase.GetCurrentMethod());
-                if (T)
-                    FonctionDeplie.Activer();
+            Debug.Info(MethodBase.GetCurrentMethod());
+            if (T)
+                FonctionDeplie.Activer();
 
-                FonctionDeplie.Desactiver();
+            FonctionDeplie.Desactiver();
         }
 
         /// <summary>
@@ -352,11 +352,11 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet eTole.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -419,6 +419,6 @@ namespace Framework_SW2013
             return null;
         }
 
-#endregion
+        #endregion
     }
 }

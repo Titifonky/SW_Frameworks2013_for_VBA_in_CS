@@ -68,7 +68,7 @@ namespace Framework_SW2013
                     int pErreur = 0;
                     Body2 pSwCorps = Piece.Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
                     Debug.Info("PID Erreur : " + pErreur);
-                    if (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
+                    if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok) || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
                         _SwCorps = pSwCorps;
                 }
 
@@ -222,6 +222,13 @@ namespace Framework_SW2013
             {
                 Debug.Info(MethodBase.GetCurrentMethod());
                 SwCorps.DisableDisplay = !value;
+                SwCorps.HideBody(!value);
+                Selectionner(false);
+                if (value)
+                    Piece.Modele.SwModele.FeatureManager.ShowBodies();
+                else
+                    Piece.Modele.SwModele.FeatureManager.HideBodies();
+                Piece.Modele.EffacerLesSelections();
             }
         }
 
