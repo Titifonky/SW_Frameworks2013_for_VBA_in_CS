@@ -40,23 +40,23 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le modele associé.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Modele; } }
 
         /// <summary>
         /// Retourne l'objet associé.
         /// </summary>
-        public dynamic Objet { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwObjet; } }
+        public dynamic Objet { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwObjet; } }
 
         /// <summary>
         /// Retourne le type de l'objet.
         /// </summary>
-        public swSelectType_e TypeDeObjet { get { Debug.Info(MethodBase.GetCurrentMethod()); return _TypeObjet; } }
+        public swSelectType_e TypeDeObjet { get { Debug.Print(MethodBase.GetCurrentMethod()); return _TypeObjet; } }
 
         /// <summary>
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtCorps.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -72,7 +72,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eModele Modele, dynamic SwObjet, swSelectType_e TypeDeObjet)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((SwObjet != null) && (Modele != null) && Modele.EstInitialise)
             {
@@ -83,7 +83,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }

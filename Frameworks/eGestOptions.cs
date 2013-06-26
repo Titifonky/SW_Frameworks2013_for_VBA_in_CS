@@ -56,12 +56,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return (swDxfFormat_e)_SW.SwSW.GetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfVersion);
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfVersion, (int)value);
             }
         }
@@ -70,12 +70,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return !Convert.ToBoolean(_SW.SwSW.GetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputFonts));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputFonts, Convert.ToInt32(!value));
             }
         }
@@ -84,12 +84,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return !Convert.ToBoolean(_SW.SwSW.GetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputLineStyles));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputLineStyles, Convert.ToInt32(!value));
             }
         }
@@ -98,12 +98,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputNoScale));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputNoScale, Convert.ToInt32(value));
             }
         }
@@ -112,12 +112,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfEndPointMerge));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfEndPointMerge, value);
             }
         }
@@ -126,12 +126,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swDxfMergingDistance);
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swDxfMergingDistance, value);
             }
         }
@@ -140,12 +140,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDXFHighQualityExport));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDXFHighQualityExport, value);
             }
         }
@@ -154,13 +154,13 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return !Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportSplinesAsSplines));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
-                Debug.Info("--------------------> " + !value);
+                Debug.Print(MethodBase.GetCurrentMethod());
+                Debug.Print("--------------------> " + !value);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportSplinesAsSplines, !value);
             }
         }
@@ -169,12 +169,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return (swDxfMultisheet_e)_SW.SwSW.GetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfMultiSheetOption);
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfMultiSheetOption, (int)value);
             }
         }
@@ -183,12 +183,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportAllSheetsToPaperSpace));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportAllSheetsToPaperSpace, value);
             }
         }
@@ -197,12 +197,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportInColor));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportInColor, value);
             }
         }
@@ -211,12 +211,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportEmbedFonts));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportEmbedFonts, value);
             }
         }
@@ -225,12 +225,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportHighQuality));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportHighQuality, value);
             }
         }
@@ -239,12 +239,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportPrintHeaderFooter));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportPrintHeaderFooter, value);
             }
         }
@@ -253,12 +253,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportUseCurrentPrintLineWeights));
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportUseCurrentPrintLineWeights, value);
             }
         }
@@ -267,7 +267,7 @@ namespace Framework_SW2013
         /// Fonction interne
         /// Test l'initialisation de l'objet GestOptions
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -282,7 +282,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eSldWorks SW)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((SW != null) && SW.EstInitialise)
             {
@@ -291,7 +291,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;

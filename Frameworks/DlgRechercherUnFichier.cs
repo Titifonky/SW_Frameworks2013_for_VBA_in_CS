@@ -73,7 +73,7 @@ namespace Framework_SW2013
         public Boolean ExtensionsMultiple { get { return _Dialogue.SupportMultiDottedExtensions; } set { _Dialogue.SupportMultiDottedExtensions = value; } }
         public Boolean LectureSeuleSelectionne { get { return _Dialogue.ReadOnlyChecked; } set { _Dialogue.ReadOnlyChecked = value; } }
 
-        public Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        public Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -86,7 +86,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean Init(eSldWorks Sw)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Sw != null) && Sw.EstInitialise)
             {
@@ -96,7 +96,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -108,7 +108,7 @@ namespace Framework_SW2013
         /// <param name="TypeDesFichiersFiltres"></param>
         public void FiltreSW(TypeFichier_e TypeDesFichiersFiltres, Boolean FiltreDistinct = true)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             String TxtFiltre;
 
@@ -151,7 +151,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public String SelectionnerUnFichier(Boolean CheminComplet = true)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             _Dialogue.Multiselect = false;
 
@@ -173,7 +173,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eFichierSW SelectionnerUnFichierSW()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             eFichierSW pFichierSW = new eFichierSW();
             if (pFichierSW.Init(_SW))
@@ -193,7 +193,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList SelectionnerPlusieursFichiers(Boolean CheminComplet = true)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             _Dialogue.Multiselect = true;
             ArrayList pArrayFichiers = new ArrayList();
@@ -216,7 +216,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList SelectionnerPlusieursFichierSW()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             ArrayList pArrayFichiers = new ArrayList();
 

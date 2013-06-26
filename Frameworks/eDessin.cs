@@ -44,12 +44,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet DrawingDoc associé.
         /// </summary>
-        public DrawingDoc SwDessin { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwDessin; } }
+        public DrawingDoc SwDessin { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwDessin; } }
 
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Retourne la feuille active.
@@ -58,7 +58,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 eFeuille pFeuille = new eFeuille();
                 Sheet pSwFeuille = _SwDessin.GetCurrentSheet();
@@ -73,7 +73,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtDessin.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
 #endregion
 
@@ -87,11 +87,11 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eModele Modele)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cDessin))
             {
-                Debug.Info(Modele.FichierSw.Chemin);
+                Debug.Print(Modele.FichierSw.Chemin);
 
                 _Modele = Modele;
                 _SwDessin = Modele.SwModele as DrawingDoc;
@@ -100,7 +100,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("\t !!!!! Erreur d'initialisation");
+                Debug.Print("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -113,7 +113,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eFeuille Feuille(String Nom)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             eFeuille pFeuille = new eFeuille();
             Sheet pSwFeuille = _SwDessin.get_Sheet(Nom);
@@ -131,7 +131,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean FeuilleExiste(String Nom)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (_SwDessin.GetSheetCount() == 0)
                 return false;
@@ -153,7 +153,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eFeuille> ListListeDesFeuilles(String NomARechercher = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eFeuille> pListeFeuilles = new List<eFeuille>();
 
@@ -182,7 +182,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesFeuilles(String NomARechercher = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eFeuille> pListeFeuilles = ListListeDesFeuilles(NomARechercher);
             ArrayList pArrayFeuilles = new ArrayList();

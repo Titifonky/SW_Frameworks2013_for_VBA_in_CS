@@ -58,18 +58,18 @@ namespace Framework_SW2013
         /// <summary>
         /// Renvoi l'objet SelectionMgr.
         /// </summary>
-        public SelectionMgr SwGestDeSelection { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwGestDeSelection; } }
+        public SelectionMgr SwGestDeSelection { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwGestDeSelection; } }
 
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Modele; } }
 
         /// <summary>
         /// Fonction interne
         /// Test l'initialisation de l'objet GestDeSelection
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -83,7 +83,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(SelectionMgr SwGestionnaire, eModele Modele)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((SwGestionnaire != null) && (Modele != null) && Modele.EstInitialise)
             {
@@ -93,7 +93,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -106,7 +106,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public int NbObjetsSelectionnes(int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
             return _SwGestDeSelection.GetSelectedObjectCount2(Marque);
         }
 
@@ -118,7 +118,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ePoint PointDeSelectionObjet(int Index, int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             Double[] pSwPoint = _SwGestDeSelection.GetSelectionPoint2(Index, Marque);
             return new ePoint(pSwPoint[0], pSwPoint[1], pSwPoint[2]);
@@ -132,7 +132,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public swSelectType_e TypeObjet(int Index, int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (NbObjetsSelectionnes(Marque) > 0)
                 return (swSelectType_e)_SwGestDeSelection.GetSelectedObjectType3(Index, Marque);
@@ -147,7 +147,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public int MarqueObjet(int Index)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (NbObjetsSelectionnes() > 0)
                 return _SwGestDeSelection.GetSelectedObjectMark(Index);
@@ -163,7 +163,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public dynamic Objet(int Index, int Marque = -1, Boolean RenvoyerObjet = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (NbObjetsSelectionnes() == 0)
                 return null;
@@ -280,7 +280,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eComposant Composant(int Index, int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (NbObjetsSelectionnes() == 0)
                 return null;
@@ -303,12 +303,12 @@ namespace Framework_SW2013
                 return null;
 
             if (pSwComposant == null)
-                Debug.Info(" ========================= Erreur de composant");
+                Debug.Print(" ========================= Erreur de composant");
 
             // Pour intitialiser le composant correctement il faut un peu de bidouille
             // sinon on à le droit à une belle reference circulaire
             // Donc d'abord, on recherche le modele du SwComposant
-            Debug.Info(pSwComposant.GetPathName());
+            Debug.Print(pSwComposant.GetPathName());
             eModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
             
             // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
@@ -333,7 +333,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eVue Vue(int Index, int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (NbObjetsSelectionnes() == 0)
                 return null;
@@ -354,7 +354,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<dynamic> ListListeDesObjetsSelectionnes(swSelectType_e TypeObjet, int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<dynamic> pListeObjets = new List<dynamic>();
 
@@ -381,7 +381,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesObjetsSelectionnes(swSelectType_e TypeObjet, int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<dynamic> pListeObjets = ListListeDesObjetsSelectionnes(TypeObjet,Marque);
             ArrayList pArrayObjets = new ArrayList();
@@ -400,7 +400,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eComposant> ListListeDesComposantsSelectionnes(TypeFichier_e TypeDeFichier, String NomComposant = "", int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             // Liste à renvoyer
             List<eComposant> pListeComposants = new List<eComposant>();
@@ -425,7 +425,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesComposantsSelectionnes(TypeFichier_e TypeDeFichier, String NomComposant = "", int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eComposant> pListeComps = ListListeDesComposantsSelectionnes(TypeDeFichier, NomComposant, Marque);
             ArrayList pArrayComps = new ArrayList();
@@ -443,7 +443,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eVue> ListListeDesVuesSelectionnes(int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             // Liste à renvoyer
             List<eVue> pListeVues = new List<eVue>();
@@ -470,7 +470,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesVuesSelectionnees(int Marque = -1)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eVue> pListeVues = ListListeDesVuesSelectionnes(Marque);
             ArrayList pArrayVues = new ArrayList();

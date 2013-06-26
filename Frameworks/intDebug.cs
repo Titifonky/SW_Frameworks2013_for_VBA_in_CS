@@ -69,13 +69,13 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="Message"></param>
         /// 
-        public static void Info(String Message = "")
+        public static void Print(String Message = "")
         {
-            Info(null, Message);
+            Print(null, Message);
 
         }
 
-        public static void Info(_MethodBase Methode, String Message = "")
+        public static void Print(_MethodBase Methode, String Message = "")
         {
             try
             {
@@ -101,10 +101,16 @@ namespace Framework_SW2013
                 }
 
                 if (!String.IsNullOrEmpty(Message))
-                    Message = " -> " + Message;
+                    Message = "-> " + Message;
+
+
+                if (Methode != null)
+                    Message = "  " + LISTE_METHODE[Pos] + " " + Message;
+
+                Message = "  |" + Message;
 
                 StreamWriter pFichierDebug = new StreamWriter(_CHEMIN_FICHIER, AjouterAuFichier, System.Text.Encoding.Unicode);
-                pFichierDebug.WriteLine("\t".Repeter(Pos) + LISTE_METHODE[Pos] + Message);
+                pFichierDebug.WriteLine("    ".Repeter(Pos) + Message);
                 pFichierDebug.Close();
                 _NB_LIGNE++;
             }

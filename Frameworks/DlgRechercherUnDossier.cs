@@ -52,7 +52,7 @@ namespace Framework_SW2013
         public Environment.SpecialFolder DossierRacine { get { return _Dialogue.RootFolder; } set { _Dialogue.RootFolder = value; } }
         public Boolean BoutonNouveauDossier { get { return _Dialogue.ShowNewFolderButton; } set { _Dialogue.ShowNewFolderButton = value; } }
 
-        public Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        public Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -65,7 +65,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean Init(eSldWorks Sw)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Sw != null) && Sw.EstInitialise)
             {
@@ -75,7 +75,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;

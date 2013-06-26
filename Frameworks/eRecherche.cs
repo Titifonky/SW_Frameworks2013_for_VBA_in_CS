@@ -54,41 +54,41 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtComposant.
         /// </summary>
-        public eComposant Composant { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Composant; } }
+        public eComposant Composant { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Composant; } }
 
         /// <summary>
         /// Filtre sur les configurations.
         /// </summary>
-        public Boolean PrendreEnCompteConfig { get { Debug.Info(MethodBase.GetCurrentMethod());  return _PrendreEnCompteConfig; } set { Debug.Info(MethodBase.GetCurrentMethod());  _PrendreEnCompteConfig = value; } }
+        public Boolean PrendreEnCompteConfig { get { Debug.Print(MethodBase.GetCurrentMethod());  return _PrendreEnCompteConfig; } set { Debug.Print(MethodBase.GetCurrentMethod());  _PrendreEnCompteConfig = value; } }
 
         /// <summary>
         /// Filtre sur les composants exclus.
         /// </summary>
-        public Boolean PrendreEnCompteExclus { get { Debug.Info(MethodBase.GetCurrentMethod());  return _PrendreEnCompteExclus; } set { Debug.Info(MethodBase.GetCurrentMethod());  _PrendreEnCompteExclus = value; } }
+        public Boolean PrendreEnCompteExclus { get { Debug.Print(MethodBase.GetCurrentMethod());  return _PrendreEnCompteExclus; } set { Debug.Print(MethodBase.GetCurrentMethod());  _PrendreEnCompteExclus = value; } }
 
         /// <summary>
         /// Filtre sur les composants supprimés.
         /// </summary>
-        public Boolean PrendreEnCompteSupprime { get { Debug.Info(MethodBase.GetCurrentMethod());  return _PrendreEnCompteSupprime; } set { Debug.Info(MethodBase.GetCurrentMethod());  _PrendreEnCompteSupprime = value; } }
+        public Boolean PrendreEnCompteSupprime { get { Debug.Print(MethodBase.GetCurrentMethod());  return _PrendreEnCompteSupprime; } set { Debug.Print(MethodBase.GetCurrentMethod());  _PrendreEnCompteSupprime = value; } }
 
         /// <summary>
         /// Filtre sur les doublons.
         /// </summary>
-        public Boolean SupprimerDoublons { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SupprimerDoublons; } set { Debug.Info(MethodBase.GetCurrentMethod()); _SupprimerDoublons = value; } }
+        public Boolean SupprimerDoublons { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SupprimerDoublons; } set { Debug.Print(MethodBase.GetCurrentMethod()); _SupprimerDoublons = value; } }
 
         /// <summary>
         /// Inclus le composant racine dans la liste,
         /// si celui ci est de même type que le type de composant filtré.
         /// </summary>
-        public Boolean RenvoyerComposantRacine { get { Debug.Info(MethodBase.GetCurrentMethod());  return _RenvoyerComposantRacine; } set { Debug.Info(MethodBase.GetCurrentMethod());  _RenvoyerComposantRacine = value; } }
+        public Boolean RenvoyerComposantRacine { get { Debug.Print(MethodBase.GetCurrentMethod());  return _RenvoyerComposantRacine; } set { Debug.Print(MethodBase.GetCurrentMethod());  _RenvoyerComposantRacine = value; } }
 
-        public Boolean RenvoyerConfigComposantRacine { get { Debug.Info(MethodBase.GetCurrentMethod());  return _RenvoyerConfigComposantRacine; } set { Debug.Info(MethodBase.GetCurrentMethod());  _RenvoyerConfigComposantRacine = value; } }
+        public Boolean RenvoyerConfigComposantRacine { get { Debug.Print(MethodBase.GetCurrentMethod());  return _RenvoyerConfigComposantRacine; } set { Debug.Print(MethodBase.GetCurrentMethod());  _RenvoyerConfigComposantRacine = value; } }
 
         /// <summary>
         /// Fonction interne
         /// Test l'initialisation de l'objet ExtRecherche
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
 #endregion
 
@@ -102,7 +102,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eComposant Composant)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Composant != null) && Composant.EstInitialise)
             {
@@ -111,7 +111,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -125,7 +125,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         private String NomCle(eComposant Composant)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
             
             String pNomCle = "";
             if ((Composant != null) && Composant.EstInitialise)
@@ -153,7 +153,7 @@ namespace Framework_SW2013
         /// <param name="NomComposant"></param>
         private void RecListListerComposants(eComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, eComposant> DicComposants, String NomComposant = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             foreach (eComposant pComp in ComposantRacine.ListComposantsEnfants("",_PrendreEnCompteSupprime))
             {
@@ -167,7 +167,7 @@ namespace Framework_SW2013
                         eComposant pComposant = new eComposant();
                         String pCle = NomCle(pComp);
 
-                        Debug.Info("Clé : " + pCle);
+                        Debug.Print("Clé : " + pCle);
 
                         // S'il est déjà dans le dico, on on rajoute 1
                         if (DicComposants.ContainsKey(pCle))
@@ -216,7 +216,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eComposant> ListListerComposants(TypeFichier_e TypeComposant, String NomComposant = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             Dictionary<String, eComposant> pDicComposants = new Dictionary<string, eComposant>();
 
@@ -269,7 +269,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeComposants(TypeFichier_e TypeComposant, String NomComposant = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
             ArrayList pArrayComps = new ArrayList();
@@ -291,7 +291,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeFichiers(TypeFichier_e TypeComposant, String NomComposant = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
             ArrayList pArrayComps = new ArrayList();

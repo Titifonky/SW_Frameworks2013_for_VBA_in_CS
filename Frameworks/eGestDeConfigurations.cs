@@ -47,7 +47,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Modele; } }
 
         /// <summary>
         /// Retourne la configuration active.
@@ -56,7 +56,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 eConfiguration pConfig = new eConfiguration();
 
@@ -73,7 +73,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet GestDeConfigurations.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -87,7 +87,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eModele Modele)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Modele != null) && Modele.EstInitialise)
             {
@@ -96,7 +96,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -111,7 +111,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eConfiguration> ListListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eConfiguration> pListConfig = new List<eConfiguration>();
 
@@ -138,7 +138,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eConfiguration> pListeConfigs = ListListerLesConfigs(TypeConfig, NomConfigDeBase);
             ArrayList pArrayConfigs = new ArrayList();
@@ -156,7 +156,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eConfiguration ConfigurationAvecLeNom(String NomConfiguration)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             eConfiguration pConfig = new eConfiguration();
             if (pConfig.Init(_Modele.SwModele.GetConfigurationByName(NomConfiguration), _Modele))
@@ -172,7 +172,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eConfiguration AjouterUneConfigurationDeBase(String NomConfiguration)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             eConfiguration pConfig = new eConfiguration();
 
@@ -200,7 +200,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public void SupprimerConfiguration(String NomConfiguration)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             Configuration pSwConfig = _Modele.SwModele.GetConfigurationByName(NomConfiguration);
             eConfiguration pConfig = new eConfiguration();
@@ -214,7 +214,7 @@ namespace Framework_SW2013
         /// <param name="NomConfigurationPliee"></param>
         public void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             ConfigurationActive.ConfigurationRacine.Activer();
 

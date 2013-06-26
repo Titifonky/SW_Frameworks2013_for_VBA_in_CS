@@ -39,7 +39,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtVue.
         /// </summary>
-        public eVue Vue { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Vue; } }
+        public eVue Vue { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Vue; } }
 
         /// <summary>
         /// Retourne ou défini le centre de la vue.
@@ -48,7 +48,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 
                 ePoint pCentre = new ePoint();
                 Double[] pArrayResult;
@@ -62,7 +62,7 @@ namespace Framework_SW2013
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 Double[] pCentre = { value.X, value.Y };
                 _Vue.SwVue.Position = pCentre;
@@ -76,7 +76,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 eRectangle pDim = new eRectangle() ;
                 pDim.Lg = Zone.PointMax.X - Zone.PointMin.X;
                 pDim.Ht = Zone.PointMax.Y - Zone.PointMin.Y;
@@ -92,7 +92,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 eZone pCoord = new eZone();
                 Double[] pArr = _Vue.SwVue.GetOutline();
 
@@ -111,11 +111,11 @@ namespace Framework_SW2013
         public Double Angle
         {
             get {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _Vue.SwVue.Angle;
             }
             set {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _Vue.SwVue.Angle = value;
             }
         }
@@ -124,7 +124,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtDimensionVue.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
 #endregion
 
@@ -138,7 +138,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eVue Vue)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Vue != null) && Vue.EstInitialise)
             {
@@ -148,7 +148,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }

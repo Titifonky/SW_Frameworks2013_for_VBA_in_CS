@@ -47,18 +47,18 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le gestionnaire CustomPropertyManager associé
         /// </summary>
-        public CustomPropertyManager SwGestDeProprietes { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwGestDeProprietes; } }
+        public CustomPropertyManager SwGestDeProprietes { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwGestDeProprietes; } }
 
         /// <summary>
         /// Retourne le parent ExtModele 
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Fonction interne
         /// Test l'initialisation de l'objet ExtModele
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
 #endregion
 
@@ -73,7 +73,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(CustomPropertyManager SwGestionnaire, eModele Modele)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((SwGestionnaire != null) && (Modele != null) && Modele.EstInitialise)
             {
@@ -83,7 +83,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -99,7 +99,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ePropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             // Si on écrase, on supprime la propriété
             if (EcraserExistante)
@@ -130,7 +130,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ePropriete RecupererPropriete(String Nom)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             ePropriete Propriete = new ePropriete();
 
@@ -147,7 +147,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean SupprimerPropriete(String Nom)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (_SwGestDeProprietes.Delete(Nom) == 1)
                 return true;
@@ -176,7 +176,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<ePropriete> ListListeDesProprietes(String NomARechercher = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<ePropriete> pListeProps = new List<ePropriete>();
 
@@ -201,7 +201,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesProprietes(String NomARechercher = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<ePropriete> pListeProprietes = ListListeDesProprietes(NomARechercher);
             ArrayList pArrayProprietes = new ArrayList();

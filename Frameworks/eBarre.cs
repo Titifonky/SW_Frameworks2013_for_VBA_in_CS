@@ -47,13 +47,13 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public eCorps Corps { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Corps; } }
+        public eCorps Corps { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Corps; } }
 
         public String Profil
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_NOM).Valeur;
             }
         }
@@ -62,7 +62,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 NumberFormatInfo pFormat = new NumberFormatInfo();
                 pFormat.NumberDecimalSeparator = ".";
                 return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_LONGUEUR).Valeur, pFormat);
@@ -73,7 +73,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 NumberFormatInfo pFormat = new NumberFormatInfo();
                 pFormat.NumberDecimalSeparator = ".";
                 return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_ANGLE1).Valeur, pFormat);
@@ -84,7 +84,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 NumberFormatInfo pFormat = new NumberFormatInfo();
                 pFormat.NumberDecimalSeparator = ".";
                 return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_ANGLE2).Valeur, pFormat);
@@ -95,7 +95,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 NumberFormatInfo pFormat = new NumberFormatInfo();
                 pFormat.NumberDecimalSeparator = ".";
                 return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_MASSE).Valeur, pFormat);
@@ -106,7 +106,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_MATERIAU).Valeur;
             }
         }
@@ -115,7 +115,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtCorps.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -130,7 +130,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eCorps Corps)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Corps != null) && Corps.EstInitialise && (Corps.TypeDeCorps == TypeCorps_e.cBarre))
             {
@@ -139,7 +139,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }

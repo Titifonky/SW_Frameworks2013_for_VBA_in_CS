@@ -59,7 +59,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Renvoi l'objet SldWorks associé.
         /// </summary>
-        public SldWorks SwSW { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwSW; } }
+        public SldWorks SwSW { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwSW; } }
 
         /// <summary>
         /// Retourner le type du document actif.
@@ -68,7 +68,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Modele().TypeDuModele;
             }
         }
@@ -107,7 +107,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 eGestOptions pOptions = new eGestOptions();
                 if (pOptions.Init(this))
@@ -121,7 +121,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtSldWorks.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -141,7 +141,7 @@ namespace Framework_SW2013
                 {
                     _SwSW = SldWks;
                     Debug.Init(SldWks);
-                    Debug.Info(MethodBase.GetCurrentMethod());
+                    Debug.Print(MethodBase.GetCurrentMethod());
                     _SwSW.GetBuildNumbers2(out _VersionDeBase, out _VersionCourante, out _Hotfixe);
                     _Revision = SldWks.RevisionNumber();
                     _EstInitialise = true;
@@ -151,7 +151,7 @@ namespace Framework_SW2013
             }
             catch (Exception ex)
             {
-                Debug.Info(ex.Source.ToString());
+                Debug.Print(ex.Source.ToString());
                 return false;
             }
         }
@@ -164,18 +164,18 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eModele Modele(String Chemin = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             eModele pModele = new eModele();
             if (String.IsNullOrEmpty(Chemin))
             {
-                Debug.Info("Document actif");
+                Debug.Print("Document actif");
                 ModelDoc2 pModeleActif = _SwSW.ActiveDoc;
                 pModele.Init(pModeleActif, this);
             }
             else
             {
-                Debug.Info("Ouvrir " + Chemin);
+                Debug.Print("Ouvrir " + Chemin);
                 pModele.Init(Ouvrir(Chemin), this);
             }
 
@@ -191,7 +191,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eModele ModeleEnCoursEdition()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
             eModele pModeleActif = this.Modele();
             eModele pModeleEdite = new eModele();
             if (pModeleActif.EstInitialise && (pModeleActif.TypeDuModele == TypeFichier_e.cAssemblage))
@@ -219,7 +219,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         private ModelDoc2 Ouvrir(String Chemin)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (_SwSW.GetDocumentCount() > 0)
             {
@@ -227,7 +227,7 @@ namespace Framework_SW2013
                 {
                     if (pSwModele.GetPathName() == Chemin)
                     {
-                        Debug.Info("Fichier déjà ouvert : " + Chemin);
+                        Debug.Print("Fichier déjà ouvert : " + Chemin);
                         return pSwModele;
                     }
                 }
@@ -250,7 +250,7 @@ namespace Framework_SW2013
                     return null;
             }
 
-            Debug.Info("Ouvre le fichier : " + Chemin);
+            Debug.Print("Ouvre le fichier : " + Chemin);
 
             return _SwSW.OpenDoc6(Chemin, (int)Type, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, "", ref Erreur, ref Warning);
         }
@@ -309,9 +309,9 @@ namespace Framework_SW2013
                 Ht = pTab[2];
             }
 
-            Debug.Info(Format.ToString());
-            Debug.Info(Lg.ToString());
-            Debug.Info(Ht.ToString());
+            Debug.Print(Format.ToString());
+            Debug.Print(Lg.ToString());
+            Debug.Print(Ht.ToString());
 
             pSwModele = _SwSW.NewDocument(pCheminGabarit, Format, Lg, Ht);
             pSwModele.Extension.SaveAs(Dossier + @"\" + NomDuDocument + CONSTANTES.Extension(TypeDeDocument),

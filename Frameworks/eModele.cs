@@ -34,7 +34,7 @@ namespace Framework_SW2013
         void ZoomEtendu();
         void EffacerLesSelections();
         void ActiverInterfaceUtilisateur(Boolean Activer);
-        ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
+        ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false, Boolean AvecLesFonctionsDeArbre = false);
         eFonction DerniereFonction();
     }
 
@@ -75,7 +75,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _SwModele;
             }
         }
@@ -83,7 +83,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtSldWorks.
         /// </summary>
-        public eSldWorks SW { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SW; } }
+        public eSldWorks SW { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SW; } }
 
         /// <summary>
         /// Retourne le composant ExtComposant lié au modele.
@@ -92,12 +92,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod()); 
+                Debug.Print(MethodBase.GetCurrentMethod()); 
                 return _Composant;
             }
             internal set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 _Composant = value;
             }
         }
@@ -109,7 +109,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 if (_Assemblage == null)
                 {
@@ -131,7 +131,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 if (_Piece == null)
                 {
@@ -153,7 +153,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 if (_Dessin == null)
                 {
@@ -175,7 +175,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 eGestDeConfigurations pGestDeConfigurations = new eGestDeConfigurations();
 
@@ -193,7 +193,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 eGestDeProprietes pGestDeProprietes = new eGestDeProprietes();
 
@@ -211,7 +211,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 if (_GestDeSelection == null)
                 {
@@ -233,7 +233,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 switch (_SwModele.GetType())
                 {
                     case (int)swDocumentTypes_e.swDocASSEMBLY:
@@ -258,7 +258,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 if (Composant != null)
                 {
                     _FichierSw.Nb = Composant.Nb;
@@ -272,7 +272,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 if (SW.Modele().Equals(this))
                     return true;
@@ -281,7 +281,7 @@ namespace Framework_SW2013
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 if (value)
                 {
@@ -295,7 +295,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtModele.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
 #endregion
 
@@ -310,13 +310,13 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(ModelDoc2 SwModele, eSldWorks Sw)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((SwModele != null) && (Sw != null) && Sw.EstInitialise)
             {
                 _SwModele = SwModele;
                 _SW = Sw;
-                Debug.Info(_SwModele.GetPathName());
+                Debug.Print(_SwModele.GetPathName());
 
                 // On valide l'initialisation
                 _EstInitialise = true;
@@ -331,11 +331,11 @@ namespace Framework_SW2013
                 // Si c'est un assemblage ou une pièce, on va chercher le composant associé
                 if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
                 {
-                    Debug.Info("Referencement de la configuration");
+                    Debug.Print("Referencement de la configuration");
                     Configuration pConfigActive = _SwModele.ConfigurationManager.ActiveConfiguration;
                     _FichierSw.Configuration = pConfigActive.Name;
 
-                    Debug.Info("Referencement du composant");
+                    Debug.Print("Referencement du composant");
                     _Composant = new eComposant();
                     if (_Composant.Init(pConfigActive.GetRootComponent3(false), this) == false)
                         _EstInitialise = false;
@@ -343,7 +343,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -354,11 +354,11 @@ namespace Framework_SW2013
             // Si c'est un assemblage ou une pièce, on va chercher le composant associé
             if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
             {
-                Debug.Info("Referencement de la configuration");
+                Debug.Print("Referencement de la configuration");
                 Configuration pConfigActive = _SwModele.ConfigurationManager.ActiveConfiguration;
                 _FichierSw.Configuration = pConfigActive.Name;
 
-                Debug.Info("Referencement du composant");
+                Debug.Print("Referencement du composant");
                 _Composant = new eComposant();
                 if (_Composant.Init(pConfigActive.GetRootComponent3(false), this) == false)
                     _EstInitialise = false;
@@ -372,7 +372,7 @@ namespace Framework_SW2013
         /// </summary>
         public void Activer(swRebuildOnActivation_e Reconstruire = swRebuildOnActivation_e.swUserDecision)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, (int)Reconstruire, Erreur);
             if (TypeDuModele != TypeFichier_e.cDessin)
@@ -386,7 +386,7 @@ namespace Framework_SW2013
         /// </summary>
         public void Sauver()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             SwModele.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Erreur, ref Warning);
             _FichierSw.Chemin = SwModele.GetPathName();
@@ -397,7 +397,7 @@ namespace Framework_SW2013
         /// </summary>
         public void Fermer()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             _SW.SwSW.CloseDoc(SwModele.GetPathName());
         }
@@ -407,7 +407,7 @@ namespace Framework_SW2013
         /// </summary>
         public void Redessiner()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             SwModele.ActiveView.GraphicsRedraw();
         }
@@ -417,7 +417,7 @@ namespace Framework_SW2013
         /// </summary>
         public void Reconstruire()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             SwModele.EditRebuild3();
         }
@@ -427,7 +427,7 @@ namespace Framework_SW2013
         /// </summary>
         public void ForcerAToutReconstruire()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             SwModele.ForceRebuild3(false);
         }
@@ -437,7 +437,7 @@ namespace Framework_SW2013
         /// </summary>
         public void ZoomEtendu()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             SwModele.ViewZoomtofit2();
         }
@@ -475,9 +475,9 @@ namespace Framework_SW2013
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
+        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false, Boolean AvecLesFonctionsDeArbre = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             _Composant.Configuration.Activer();
 
@@ -519,7 +519,7 @@ namespace Framework_SW2013
             }
 
 #if SW2013
-            if (EstActif)
+            if (EstActif && AvecLesFonctionsDeArbre)
             {
                 List<TreeControlItem> pListeNoeuds = new List<TreeControlItem>();
                 TreeControlItem pNoeudRacine = _SwModele.FeatureManager.GetFeatureTreeRootItem2((int)swFeatMgrPane_e.swFeatMgrPaneTopHidden);
@@ -551,7 +551,7 @@ namespace Framework_SW2013
         /// <param name="AvecLesSousFonctions"></param>
         private void ScannerFonctionsFeatureManager(TreeControlItem Noeud, List<TreeControlItem> ListeNoeuds, Boolean AvecLesSousFonctions)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (Noeud.ObjectType == (int)swTreeControlItemType_e.swFeatureManagerItem_Feature)
                 ListeNoeuds.Add(Noeud);
@@ -577,11 +577,11 @@ namespace Framework_SW2013
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        public ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
+        public ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false, Boolean AvecLesFonctionsDeArbre = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
-            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
+            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions, AvecLesFonctionsDeArbre);
             ArrayList pArrayFonctions = new ArrayList();
 
             if (pListeFonctions.Count > 0)

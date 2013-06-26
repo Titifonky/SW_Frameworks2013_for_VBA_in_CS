@@ -42,18 +42,18 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet AssemblyDoc associé.
         /// </summary>
-        public AssemblyDoc SwAssemblage { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwAssemblage; } }
+        public AssemblyDoc SwAssemblage { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwAssemblage; } }
 
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtAssemblage.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
 #endregion
 
@@ -68,11 +68,11 @@ namespace Framework_SW2013
         internal Boolean Init(eModele Modele)
         {
             
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cAssemblage))
             {
-                Debug.Info(Modele.FichierSw.Chemin);
+                Debug.Print(Modele.FichierSw.Chemin);
 
                 _Modele = Modele;
                 _SwAssemblage = Modele.SwModele as AssemblyDoc;
@@ -80,7 +80,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;

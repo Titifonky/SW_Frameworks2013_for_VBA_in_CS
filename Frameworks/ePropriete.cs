@@ -43,19 +43,19 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent GestDeProprietes.
         /// </summary>
-        public eGestDeProprietes GestDeProprietes { get { Debug.Info(MethodBase.GetCurrentMethod()); return _GestDeProprietes; } }
+        public eGestDeProprietes GestDeProprietes { get { Debug.Print(MethodBase.GetCurrentMethod()); return _GestDeProprietes; } }
 
         /// <summary>
         /// Retourne le nom de la propriété.
         /// </summary>
-        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Nom; } }
+        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Nom; } }
 
         /// <summary>
         /// Retourne le type de la propriété.
         /// </summary>
         public swCustomInfoType_e TypeDeLaPropriete
         {
-            get { Debug.Info(MethodBase.GetCurrentMethod()); return (swCustomInfoType_e)_GestDeProprietes.SwGestDeProprietes.GetType2(_Nom); }
+            get { Debug.Print(MethodBase.GetCurrentMethod()); return (swCustomInfoType_e)_GestDeProprietes.SwGestDeProprietes.GetType2(_Nom); }
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 String Expression;
                 String Valeur;
 
@@ -73,7 +73,7 @@ namespace Framework_SW2013
 
                 return Expression;
             }
-            set { Debug.Info(MethodBase.GetCurrentMethod()); _GestDeProprietes.SwGestDeProprietes.Set(_Nom, value); }
+            set { Debug.Print(MethodBase.GetCurrentMethod()); _GestDeProprietes.SwGestDeProprietes.Set(_Nom, value); }
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 String Expression;
                 String Valeur;
 
@@ -97,7 +97,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtPropriete.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -112,7 +112,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eGestDeProprietes Gestionnaire, String Nom)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Gestionnaire != null) && Gestionnaire.EstInitialise && !String.IsNullOrEmpty(Nom))
             {
@@ -123,7 +123,7 @@ namespace Framework_SW2013
 
                 if ((pListeNom != null) && (pListeNom.Contains(Nom)))
                 {
-                    Debug.Info(this.Nom);
+                    Debug.Print(this.Nom);
 
                     _GestDeProprietes = Gestionnaire;
                     _Nom = Nom;
@@ -132,7 +132,7 @@ namespace Framework_SW2013
                 }
                 else
                 {
-                    Debug.Info("!!!!! Erreur d'initialisation");
+                    Debug.Print("!!!!! Erreur d'initialisation");
                 }
             }
 
@@ -148,7 +148,7 @@ namespace Framework_SW2013
         /// <param name="Valeur"></param>
         private void Get(out String Expression, out String Valeur)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (String.IsNullOrEmpty(this.Nom))
             {
@@ -174,7 +174,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean Renommer(String NvNom)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             swCustomInfoType_e pTypeDeLaPropriete = TypeDeLaPropriete;
             String pExpression = Expression;
@@ -193,7 +193,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean Supprimer()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (_GestDeProprietes.SwGestDeProprietes.Delete(Nom) == 1)
             {

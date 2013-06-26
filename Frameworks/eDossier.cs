@@ -48,25 +48,25 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet BodyFolder associé.
         /// </summary>
-        public BodyFolder SwDossier { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwDossier; } }
+        public BodyFolder SwDossier { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwDossier; } }
 
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public ePiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Piece; } }
+        public ePiece Piece { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Piece; } }
 
         /// <summary>
         /// Retourne ou défini le nom du dossier.
         /// </summary>
-        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return SwDossier.GetFeature().Name; } set { Debug.Info(MethodBase.GetCurrentMethod()); SwDossier.GetFeature().Name = value; } }
+        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod()); return SwDossier.GetFeature().Name; } set { Debug.Print(MethodBase.GetCurrentMethod()); SwDossier.GetFeature().Name = value; } }
 
         /// <summary>
         /// Retourne ou défini si le dossier est exclu de la nomenclature.
         /// </summary>
         public Boolean EstExclu
         {
-            get { Debug.Info(MethodBase.GetCurrentMethod());  return Convert.ToBoolean(SwDossier.GetFeature().ExcludeFromCutList); }
-            set { Debug.Info(MethodBase.GetCurrentMethod());  SwDossier.GetFeature().ExcludeFromCutList = value; }
+            get { Debug.Print(MethodBase.GetCurrentMethod());  return Convert.ToBoolean(SwDossier.GetFeature().ExcludeFromCutList); }
+            set { Debug.Print(MethodBase.GetCurrentMethod());  SwDossier.GetFeature().ExcludeFromCutList = value; }
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 eCorps pCorps = PremierCorps;
                 if (pCorps.EstInitialise)
                     return pCorps.TypeDeCorps;
@@ -92,7 +92,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 eGestDeProprietes pGestProps = new eGestDeProprietes();
                 if (pGestProps.Init(SwDossier.GetFeature().CustomPropertyManager, _Piece.Modele))
                     return pGestProps;
@@ -105,7 +105,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return SwDossier.GetBodyCount();
             }
         }
@@ -117,7 +117,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 eCorps pCorps = new eCorps();
                 if ((SwDossier.GetBodyCount() > 0) && pCorps.Init(SwDossier.GetBodies()[0], _Piece))
                     return pCorps;
@@ -130,7 +130,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtDossier.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
 #endregion
 
@@ -145,19 +145,19 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(BodyFolder SwDossier, ePiece Piece)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((SwDossier != null) && (SwDossier.GetBodyCount() > 0) && (Piece != null) && Piece.EstInitialise)
             {
                 _Piece = Piece;
                 _SwDossier = SwDossier;
 
-                Debug.Info(this.Nom);
+                Debug.Print(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
@@ -170,7 +170,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eCorps> ListListeDesCorps(String NomARechercher = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eCorps> pListeCorps = new List<eCorps>();
 
@@ -194,7 +194,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesCorps(String NomARechercher = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eCorps> pListeCorps = ListListeDesCorps(NomARechercher);
             ArrayList pArrayCorps = new ArrayList();

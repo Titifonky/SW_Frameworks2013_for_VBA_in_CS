@@ -62,33 +62,33 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 if ((_PID != null)) //(_SwModeleFonction == null) && 
                 {
                     int pErreur = 0;
-                    Feature pSwFonction = _Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
-                    Debug.Info("PID Erreur : " + pErreur);
+                    Feature pSwFonction = Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
+                    Debug.Print("PID Erreur : " + pErreur);
                     if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
                         || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
                         _SwModeleFonction = pSwFonction;
                 }
 
-                if (_Modele.SwModele.GetPathName().Equals(_Modele.SW.Modele().SwModele.GetPathName()) || _Modele.Composant.SwComposant.IsRoot())
+                if (Modele.SwModele.GetPathName().Equals(Modele.SW.Modele().SwModele.GetPathName()) || Modele.Composant.SwComposant.IsRoot())
                 {
-                    Debug.Info("Fonction du modele");
+                    Debug.Print("Fonction du modele");
                     return _SwModeleFonction;
                 }
 
-                Debug.Info("Fonction du composant");
-                return _Modele.Composant.SwComposant.FeatureByName(_SwModeleFonction.Name);
+                Debug.Print("Fonction du composant");
+                return Modele.Composant.SwComposant.FeatureByName(_SwModeleFonction.Name);
             }
         }
 
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Retourne ou défini le nom de la fonction.
@@ -97,12 +97,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return SwFonction.Name;
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 FeatureManager SwGestFonc = Modele.SwModele.FeatureManager;
                 String pNomBase = value;
                 String pNom = pNomBase;
@@ -120,7 +120,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le type de la fonction.
         /// </summary>
-        public String TypeDeLaFonction { get { Debug.Info(MethodBase.GetCurrentMethod());  return SwFonction.GetTypeName2(); } }
+        public String TypeDeLaFonction { get { Debug.Print(MethodBase.GetCurrentMethod());  return SwFonction.GetTypeName2(); } }
 
         /// <summary>
         /// Renvoi l'etat "Supprimer" ou "Actif" de la fonction
@@ -130,7 +130,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 String NomConfig = _Modele.GestDeConfigurations.ConfigurationActive.Nom;
                 Object[] pArrayConfig = { NomConfig };
                 Boolean[] pArrayResult;
@@ -151,7 +151,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 eFonction pFonctionParent = new eFonction();
                 if (pFonctionParent.Init(SwFonction.GetOwnerFeature(), Modele))
                     return pFonctionParent;
@@ -167,7 +167,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return SwFonction.DateCreated;
             }
         }
@@ -179,7 +179,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return SwFonction.DateModified;
             }
         }
@@ -188,7 +188,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtModele.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
 #endregion
 
@@ -203,7 +203,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(Feature SwFonction, eModele Modele)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((SwFonction != null) && (Modele != null) && Modele.EstInitialise)
             {
@@ -256,12 +256,12 @@ namespace Framework_SW2013
 
                 if (_SwModeleFonction != null)
                 {
-                    Debug.Info(this.Nom);
+                    Debug.Print(this.Nom);
                     _EstInitialise = true;
                 }
                 else
                 {
-                    Debug.Info("!!!!! Erreur d'initialisation");
+                    Debug.Print("!!!!! Erreur d'initialisation");
                 }
             }
             
@@ -273,7 +273,7 @@ namespace Framework_SW2013
         /// </summary>
         public void Activer()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             Selectionner(false);
             Modele.SW.Modele().SwModele.EditUnsuppress2();
@@ -286,7 +286,7 @@ namespace Framework_SW2013
         /// </summary>
         public void Desactiver()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             Selectionner(false);
             Modele.SW.Modele().SwModele.EditSuppress2();
@@ -298,7 +298,7 @@ namespace Framework_SW2013
         /// <param name="Options"></param>
         public void Supprimer(swDeleteSelectionOptions_e Options)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             Selectionner(false);
             Modele.SW.Modele().SwModele.Extension.DeleteSelection2((int)Options);
@@ -310,7 +310,7 @@ namespace Framework_SW2013
         /// <param name="Ajouter"></param>
         public void Selectionner(Boolean Ajouter = true)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
 #if SW2013
             SwFonction.Select2(Ajouter, -1);
@@ -326,7 +326,7 @@ namespace Framework_SW2013
         /// </summary>
         public void DeSelectionner()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
             SwFonction.DeSelect();
         }
 
@@ -337,7 +337,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eCorps> ListListeDesCorps()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eCorps> pListeCorps = new List<eCorps>();
 
@@ -360,7 +360,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesCorps()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eCorps> pListeCorps = ListListeDesCorps();
             ArrayList pArrayCorps = new ArrayList();
@@ -379,7 +379,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eFonction> ListListeDesFonctionsParent(string NomARechercher = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eFonction> pListeFonctions = new List<eFonction>();
 
@@ -403,7 +403,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesFonctionsParent(string NomARechercher = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eFonction> pListeFonctions = ListListeDesFonctionsParent(NomARechercher);
             ArrayList pArrayFonctions = new ArrayList();
@@ -422,7 +422,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eFonction> ListListeDesSousFonctions(string NomARechercher = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eFonction> pListeFonctions = new List<eFonction>();
 
@@ -452,7 +452,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesSousFonctions(string NomARechercher = "")
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eFonction> pListeFonctions = ListListeDesSousFonctions(NomARechercher);
             ArrayList pArrayFonctions = new ArrayList();

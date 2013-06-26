@@ -62,7 +62,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 
                 if (_SwConfiguration == null)
                 {
@@ -84,12 +84,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Modele; } }
 
         /// <summary>
         /// Retourne ou défini le nom de la configuration.
         /// </summary>
-        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return SwConfiguration.Name; } set { Debug.Info(MethodBase.GetCurrentMethod()); SwConfiguration.Name = value; } }
+        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod()); return SwConfiguration.Name; } set { Debug.Print(MethodBase.GetCurrentMethod()); SwConfiguration.Name = value; } }
 
         /// <summary>
         /// Retourne le type de la configuration.
@@ -98,7 +98,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 TypeConfig_e T = 0;
                 if (Regex.IsMatch(SwConfiguration.Name, CONSTANTES.CONFIG_DEPLIEE_PATTERN))
@@ -127,7 +127,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 eConfiguration pConfigParent = new eConfiguration();
                 Configuration pSwConfigurationParent = null;
@@ -148,7 +148,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 // Si elle est derivée, on lance la recherche
                 if (Est(TypeConfig_e.cDerivee))
@@ -177,7 +177,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 eGestDeProprietes pGestProps = new eGestDeProprietes();
                 if (pGestProps.Init(SwConfiguration.CustomPropertyManager, _Modele))
@@ -195,12 +195,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return SwConfiguration.SuppressNewFeatures;
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 SwConfiguration.SuppressNewFeatures = value;
             }
         }
@@ -212,12 +212,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return SwConfiguration.SuppressNewComponentModels;
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 SwConfiguration.SuppressNewComponentModels = value;
             }
         }
@@ -229,12 +229,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return SwConfiguration.HideNewComponentModels;
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 SwConfiguration.HideNewComponentModels = value;
             }
         }
@@ -246,12 +246,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return SwConfiguration.ShowChildComponentsInBOM;
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 SwConfiguration.ShowChildComponentsInBOM = value;
             }
         }
@@ -260,7 +260,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtConfiguration.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -275,7 +275,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(Configuration Config, eModele Modele)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Config != null) && (Modele != null) && Modele.EstInitialise)
             {
@@ -283,12 +283,12 @@ namespace Framework_SW2013
                 _Modele = Modele;
                 _ID = _SwConfiguration.GetID();
 
-                Debug.Info(this.Nom);
+                Debug.Print(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -301,7 +301,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean Est(TypeConfig_e T)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             foreach (TypeConfig_e Tst in Enum.GetValues(typeof(TypeConfig_e)))
             {
@@ -318,7 +318,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean Activer()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
             return Convert.ToBoolean(_Modele.SwModele.ShowConfiguration2(Nom));
         }
 
@@ -328,7 +328,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean Supprimer()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             Boolean UneConfig = (Modele.SwModele.GetConfigurationCount() == 1);
             String[] pTabNomAff = _SwConfiguration.GetDisplayStates();
@@ -361,7 +361,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eConfiguration> ListConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eConfiguration> pListe = new List<eConfiguration>();
 
@@ -392,7 +392,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eConfiguration> pListeConfigs = ListConfigurationsEnfants(NomConfiguration, TypeDeLaConfig);
             ArrayList pArrayConfigs = new ArrayList();
@@ -410,7 +410,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
             eConfiguration pConfig = new eConfiguration();
             Configuration pSwConfig = _Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfigDerivee, NomConfigDerivee, "", 0, Nom, "");
 
@@ -425,7 +425,7 @@ namespace Framework_SW2013
         /// </summary>
         public void RenommerEtatAffichage(Boolean Ecraser = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             int Index = 1;
 

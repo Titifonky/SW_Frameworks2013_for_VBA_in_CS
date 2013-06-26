@@ -55,7 +55,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 switch (Path.GetExtension(_Chemin).ToUpper())
                 {
                     case ".SLDASM":
@@ -80,7 +80,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 if(!String.IsNullOrEmpty(_Chemin))
                     return Path.GetFileName(_Chemin);
 
@@ -95,7 +95,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 if(!String.IsNullOrEmpty(_Chemin))
                     return Path.GetFileNameWithoutExtension(_Chemin);
 
@@ -110,7 +110,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 if(!String.IsNullOrEmpty(_Chemin))
                     return Path.GetDirectoryName(_Chemin);
 
@@ -123,7 +123,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtFichierSW.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -137,7 +137,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eSldWorks Sw)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Sw != null) && Sw.EstInitialise)
             {
@@ -147,7 +147,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -155,7 +155,7 @@ namespace Framework_SW2013
 
         public eModele Ouvrir()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((TypeFichier_e.cAssemblage | TypeFichier_e.cPiece | TypeFichier_e.cDessin).HasFlag(TypeDuFichier))
             {

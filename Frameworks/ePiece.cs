@@ -38,7 +38,7 @@ namespace Framework_SW2013
         private PartDoc _SwPiece = null;
 
 #if SW2013
-        private eParametreTolerie _ParametreDeTolerie = null;
+        private eParametreTolerie _ParamTolerie = null;
 #endif
 
 #endregion
@@ -54,12 +54,12 @@ namespace Framework_SW2013
         /// <summary>
         /// Renvoi l'objet PartDoc.
         /// </summary>
-        public PartDoc SwPiece { get { Debug.Info(MethodBase.GetCurrentMethod());  return _SwPiece; } }
+        public PartDoc SwPiece { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwPiece; } }
 
         /// <summary>
         /// Renvoi l'objet ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Info(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         public String Materiau
         {
@@ -85,22 +85,22 @@ namespace Framework_SW2013
 
 #if SW2013
         /// <summary>
-        /// Retourne l'assemblage ExtAssemblage si celui ci est valide.
+        /// Retourne les parametres de tôlerie
         /// </summary>
         public eParametreTolerie ParametresDeTolerie
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
-                if (_ParametreDeTolerie == null)
+                if (_ParamTolerie == null)
                 {
-                    _ParametreDeTolerie = new eParametreTolerie();
-                    _ParametreDeTolerie.Init(this);
+                    _ParamTolerie = new eParametreTolerie();
+                    _ParamTolerie.Init(this);
                 }
 
-                if (_ParametreDeTolerie.EstInitialise)
-                    return _ParametreDeTolerie;
+                if (_ParamTolerie.EstInitialise)
+                    return _ParamTolerie;
 
                 return null;
             }
@@ -110,7 +110,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Renvoi la valeur de l'initialisation.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
 #endregion
 
@@ -124,11 +124,11 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eModele Modele)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cPiece))
             {
-                Debug.Info(Modele.FichierSw.Chemin);
+                Debug.Print(Modele.FichierSw.Chemin);
 
                 _Modele = Modele;
                 _SwPiece = Modele.SwModele as PartDoc;
@@ -136,7 +136,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -148,7 +148,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Feature DossierDesCorps()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             Feature pFonctionPiecesSoudees = _SwPiece.FirstFeature();
 
@@ -177,7 +177,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public Boolean Contient(TypeCorps_e T)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if (T.HasFlag(TypeCorps_e.cTole))
             {
@@ -248,7 +248,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eCorps> ListListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eCorps> Liste = new List<eCorps>();
 
@@ -278,7 +278,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eCorps> pListeCorps = ListListeDesCorps(NomARechercher, TypeDeCorps, PrendreEnCompteCache);
             ArrayList pArrayCorps = new ArrayList();
@@ -298,7 +298,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eDossier> ListListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eDossier> Liste = new List<eDossier>();
 
@@ -338,7 +338,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eDossier> pListeDossier = ListListeDesDossiersDePiecesSoudees(TypeDeCorps, PrendreEnCompteExclus);
             ArrayList pArrayDossiers = new ArrayList();

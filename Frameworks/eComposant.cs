@@ -67,7 +67,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _SwComposant;
             }
         }
@@ -81,7 +81,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 // Augmente énormément le temps de traitement
                 if (!_Modele.GestDeConfigurations.ConfigurationActive.Equals(_Configuration) && _Modele.SW.ActiverLesConfigurations)
                     _Configuration.Activer();
@@ -97,7 +97,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 ModelDoc2 pSwModele = _SwComposant.GetModelDoc2();
 
                 switch (pSwModele.GetType())
@@ -124,12 +124,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _Configuration;
             }
             internal set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 if (value.Modele.Equals(_Modele))
                 {
                     _Configuration = value;
@@ -141,20 +141,20 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le nom du composant tel qu'il est dans l'arbre de création.
         /// </summary>
-        public String Nom { get { Debug.Info(MethodBase.GetCurrentMethod()); return _SwComposant.Name2; } }
+        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwComposant.Name2; } }
         
         /// <summary>
         /// Retourne le nonbre de composant.
         /// </summary>
-        public int Nb { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Nb; } internal set { Debug.Info(MethodBase.GetCurrentMethod()); _Nb = value; } }
+        public int Nb { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Nb; } internal set { Debug.Print(MethodBase.GetCurrentMethod()); _Nb = value; } }
 
         /// <summary>
         /// Retourne ou défini si le composant est exclu de la nomenclature.
         /// </summary>
         public Boolean EstExclu
         {
-            get { Debug.Info(MethodBase.GetCurrentMethod()); return Convert.ToBoolean(SwComposant.ExcludeFromBOM); }
-            set { Debug.Info(MethodBase.GetCurrentMethod()); SwComposant.ExcludeFromBOM = value; }
+            get { Debug.Print(MethodBase.GetCurrentMethod()); return Convert.ToBoolean(SwComposant.ExcludeFromBOM); }
+            set { Debug.Print(MethodBase.GetCurrentMethod()); SwComposant.ExcludeFromBOM = value; }
         }
 
         /// <summary>
@@ -162,10 +162,10 @@ namespace Framework_SW2013
         /// </summary>
         public Boolean EstSupprime
         {
-            get { Debug.Info(MethodBase.GetCurrentMethod()); return Convert.ToBoolean(SwComposant.IsSuppressed()); }
+            get { Debug.Print(MethodBase.GetCurrentMethod()); return Convert.ToBoolean(SwComposant.IsSuppressed()); }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 
                 if (value == true)
                     SwComposant.SetSuppression2((int)swComponentSuppressionState_e.swComponentSuppressed);
@@ -181,12 +181,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return Convert.ToBoolean(_SwComposant.Visible);
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 if (value)
                     _SwComposant.Visible = (int)swComponentVisibilityState_e.swComponentVisible;
                 else
@@ -201,12 +201,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _SwComposant.IsFixed();
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 if (_Modele.SW.TypeDuModeleActif == TypeFichier_e.cAssemblage)
                 {
@@ -226,7 +226,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _SwComposant.IsPatternInstance();
             }
         }
@@ -238,7 +238,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _SwComposant.IsLoaded();
             }
         }
@@ -250,7 +250,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return _SwComposant.IsMirrored();
             }
         }
@@ -262,7 +262,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 int pNo = 0;
                 String[] pTab = _SwComposant.Name2.Split('-');
@@ -279,7 +279,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 eRecherche pNouvelleRecherche = new eRecherche();
 
@@ -297,7 +297,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 Double[] pMatrice = _SwComposant.Transform2.ArrayData;
                 eRepere pRepere = new eRepere();
@@ -349,7 +349,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtComposant.
         /// </summary>
-        public Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        public Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -364,7 +364,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(Component2 SwComposant, eModele Modele)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             // On teste si le Modele est valide
             if ((SwComposant != null) && (Modele != null) && Modele.EstInitialise)
@@ -387,7 +387,7 @@ namespace Framework_SW2013
                     _Modele = Modele;
                     _Nb = 1;
 
-                    Debug.Info(this.Modele.FichierSw.Chemin);
+                    Debug.Print(this.Modele.FichierSw.Chemin);
                 }
                 else
                 {
@@ -396,7 +396,7 @@ namespace Framework_SW2013
             }
             else // Sinon, on envoi pour le debug
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -408,7 +408,7 @@ namespace Framework_SW2013
         /// <param name="Ajouter"></param>
         public void Selectionner(Boolean Ajouter = true)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
             _SwComposant.Select4(Ajouter, null, false);
         }
 
@@ -417,7 +417,7 @@ namespace Framework_SW2013
         /// </summary>
         public void DeSelectionner()
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
             _SwComposant.DeSelect();
         }
 
@@ -430,7 +430,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eComposant> ListComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eComposant> pListe = new List<eComposant>();
 
@@ -470,7 +470,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eComposant> pListeComps = ListComposantsEnfants(NomComposant, PrendreEnCompteSupprime);
             ArrayList pArrayComps = new ArrayList();
@@ -490,7 +490,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eCorps> ListListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             _Modele.Composant.Configuration.Activer();
 
@@ -522,7 +522,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesCorps(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eCorps> pListeCorps = ListListeDesCorps(TypeDeCorps);
             ArrayList pArrayCorps = new ArrayList();

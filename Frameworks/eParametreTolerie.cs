@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {
@@ -15,6 +16,9 @@ namespace Framework_SW2013
         Double Epaisseur { get; set; }
         Double Rayon { get; set; }
         Double FacteurK { get; set; }
+        Boolean EcraserEpaisseur { get; set; }
+        Boolean EcraserRayon { get; set; }
+        Boolean EcraserFacteurK { get; set; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -22,94 +26,50 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eParametreTolerie")]
     public class eParametreTolerie : IeParametreTolerie
     {
-#region "Variables locales"
+        #region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private ePiece _Piece = null;
         private eCorps _Corps = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eParametreTolerie() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
-
-        /// <summary>
-        /// Retourne le parent ExtPiece.
-        /// </summary>
-        public ePiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Piece; } }
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public eCorps Corps { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Corps; } }
+        public ePiece Piece { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Piece; } }
 
-        private ModelDoc2 SwModele
-        {
-            get
-            {
-                Debug.Info(MethodBase.GetCurrentMethod());
-
-                eModele pModele;
-                if (_Corps == null)
-                    pModele = _Piece.Modele;
-                else
-                    pModele = _Corps.Piece.Modele;
-
-                if (pModele.EstActif)
-                    return pModele.SwModele;
-
-                return null;
-            }
-        }
-
-        private Component2 SwComposant
-        {
-            get
-            {
-                Debug.Info(MethodBase.GetCurrentMethod());
-
-                eComposant pComposant;
-                if (_Corps == null)
-                    pComposant = _Piece.Modele.Composant;
-                else
-                    pComposant = _Corps.Piece.Modele.Composant;
-
-                if (SwModele == null)
-                    return pComposant.SwComposant;
-
-                return null;
-            }
-        }
+        /// <summary>
+        /// Retourne le parent ExtPiece.
+        /// </summary>
+        public eCorps Corps { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Corps; } }
 
         /// <summary>
         /// Retourne ou défini l'épaisseur de la tole
-        /// Ne fonctionne pas !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         /// </summary>
         public Double Epaisseur
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
-                SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
-                return pParam.Thickness * 1000;
+                Debug.Print(MethodBase.GetCurrentMethod());
+                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D7");
+                return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0] * 1000, 5);
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
-                ModelDoc2 pSwModele = SwModele;
-                Component2 pSwComposant = SwComposant;
-                Feature pSwFonction = FonctionTolerie.SwFonction;
-                SheetMetalFeatureData pParam = pSwFonction.GetDefinition();
-                pParam.AccessSelections(pSwModele, pSwComposant);
-                pParam.Thickness = value * 0.001;
-                pSwFonction.ModifyDefinition(pParam, pSwModele, pSwComposant);
-                pParam.ReleaseSelectionAccess();
+                Debug.Print(MethodBase.GetCurrentMethod());
+                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D7");
+                if (pSwDim == null) return;
+                pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null);
             }
         }
 
@@ -120,21 +80,16 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
-                SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
-                return pParam.BendRadius * 1000;
+                Debug.Print(MethodBase.GetCurrentMethod());
+                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D1");
+                return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0] * 1000, 5);
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
-                ModelDoc2 pSwModele = SwModele;
-                Component2 pSwComposant = SwComposant;
-                Feature pSwFonction = FonctionTolerie.SwFonction;
-                SheetMetalFeatureData pParam = pSwFonction.GetDefinition();
-                pParam.AccessSelections(pSwModele, pSwComposant);
-                pParam.BendRadius = value * 0.001;
-                pSwFonction.ModifyDefinition(pParam, pSwModele, pSwComposant);
-                pParam.ReleaseSelectionAccess();
+                Debug.Print(MethodBase.GetCurrentMethod());
+                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D1");
+                if (pSwDim == null) return;
+                Debug.Print("Modification du rayon : " + pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null).ToString());
             }
         }
 
@@ -145,21 +100,92 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
-                SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
-                return pParam.GetCustomBendAllowance().KFactor;
+                Debug.Print(MethodBase.GetCurrentMethod());
+                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D2");
+                return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0], 5);
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
+                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D2");
+                if (pSwDim == null) return;
+                pSwDim.SetSystemValue3(value, (int)swInConfigurationOpts_e.swThisConfiguration, null);
+            }
+        }
+
+        public Boolean EcraserEpaisseur
+        {
+            get
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+                if (_Corps == null)
+                    return false;
+                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                return pParam.OverrideThickness;
+            }
+            set
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+                if (_Corps == null)
+                    return;
                 ModelDoc2 pSwModele = SwModele;
                 Component2 pSwComposant = SwComposant;
-                Feature pSwFonction = FonctionTolerie.SwFonction;
-                SheetMetalFeatureData pParam = pSwFonction.GetDefinition();
-                CustomBendAllowance pParamPli = pParam.GetCustomBendAllowance();
+                Feature pSwFonction = FonctionToleDeBase.SwFonction;
+                BaseFlangeFeatureData pParam = pSwFonction.GetDefinition();
                 pParam.AccessSelections(pSwModele, pSwComposant);
-                pParamPli.KFactor = value;
-                pParam.SetCustomBendAllowance(pParamPli);
+                pParam.OverrideThickness = value;
+                pSwFonction.ModifyDefinition(pParam, pSwModele, pSwComposant);
+                pParam.ReleaseSelectionAccess();
+            }
+        }
+
+        public Boolean EcraserRayon
+        {
+            get
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+                if (_Corps == null)
+                    return false;
+                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                return pParam.OverrideRadius;
+            }
+            set
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+                if (_Corps == null)
+                    return;
+                ModelDoc2 pSwModele = SwModele;
+                Component2 pSwComposant = SwComposant;
+                Feature pSwFonction = FonctionToleDeBase.SwFonction;
+                BaseFlangeFeatureData pParam = pSwFonction.GetDefinition();
+                pParam.AccessSelections(pSwModele, pSwComposant);
+                pParam.OverrideRadius = value;
+                pSwFonction.ModifyDefinition(pParam, pSwModele, pSwComposant);
+                pParam.ReleaseSelectionAccess();
+            }
+        }
+
+        public Boolean EcraserFacteurK
+        {
+            get
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+                if (_Corps == null)
+                    return false;
+                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                return pParam.OverrideKFactor;
+            }
+            set
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+                if (_Corps == null)
+                    return;
+                ModelDoc2 pSwModele = SwModele;
+                Component2 pSwComposant = SwComposant;
+                Feature pSwFonction = FonctionToleDeBase.SwFonction;
+                BaseFlangeFeatureData pParam = pSwFonction.GetDefinition();
+                pParam.AccessSelections(pSwModele, pSwComposant);
+                pParam.OverrideKFactor = value;
                 pSwFonction.ModifyDefinition(pParam, pSwModele, pSwComposant);
                 pParam.ReleaseSelectionAccess();
             }
@@ -173,14 +199,51 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
-                swFeatureType_e TypeFonc = new swFeatureType_e();
+                if (_Piece != null)
+                    return _Piece.Modele.ListListeDesFonctions("^Tôlerie$", "", false, true)[0];
+                else
+                    return _Corps.Tole.FonctionTolerie;
+            }
+        }
 
-                foreach (eFonction pFonc in _Piece.Modele.ListListeDesFonctions("^Tôlerie$"))
-                {
-                    return pFonc;
-                }
+        /// <summary>
+        /// Renvoi la fonction Tolerie
+        /// </summary>
+        /// <returns></returns>
+        private eFonction FonctionToleDeBase
+        {
+            get
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+
+                if (_Corps != null)
+                    return _Corps.Tole.FonctionToleDeBase;
+
+                return null;
+            }
+        }
+
+        private ModelDoc2 SwModele
+        {
+            get
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+                if (_Corps.Piece.Modele.Equals(_Corps.Piece.Modele.SW.Modele()))
+                    return _Corps.Piece.Modele.SwModele;
+
+                return null;
+            }
+        }
+
+        private Component2 SwComposant
+        {
+            get
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+                if (SwModele == null)
+                    return _Corps.Piece.Modele.Composant.SwComposant;
 
                 return null;
             }
@@ -190,11 +253,11 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet eTole.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -205,7 +268,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(eCorps Corps)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Corps != null) && Corps.EstInitialise && (Corps.TypeDeCorps == TypeCorps_e.cTole))
             {
@@ -214,7 +277,7 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
@@ -228,7 +291,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(ePiece Piece)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((Piece != null) && Piece.EstInitialise && (Piece.Contient(TypeCorps_e.cTole)))
             {
@@ -237,12 +300,12 @@ namespace Framework_SW2013
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
-#endregion
+        #endregion
     }
 
 #endif

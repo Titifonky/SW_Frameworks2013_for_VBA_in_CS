@@ -61,13 +61,13 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 // On recupère le corps avec le PID, comme ça, ya plus de pb.
                 if (_PID != null) // && (_SwCorps == null))
                 {
                     int pErreur = 0;
                     Body2 pSwCorps = Piece.Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
-                    Debug.Info("PID Erreur : " + pErreur);
+                    Debug.Print("PID Erreur : " + pErreur);
                     if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok) || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
                         _SwCorps = pSwCorps;
                 }
@@ -79,7 +79,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public ePiece Piece { get { Debug.Info(MethodBase.GetCurrentMethod()); return _Piece; } }
+        public ePiece Piece { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Piece; } }
 
         /// <summary>
         /// Retourne l'objet Tole
@@ -88,7 +88,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 if (_Tole == null)
                 {
@@ -110,7 +110,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 if (_Barre == null)
                 {
@@ -132,12 +132,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return SwCorps.Name;
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 FeatureManager SwGestFonc = _Piece.Modele.SwModele.FeatureManager;
                 String pNom = value;
                 int Indice = 1;
@@ -159,7 +159,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 foreach (Feature Fonction in SwCorps.GetFeatures())
                 {
                     switch (Fonction.GetTypeName2())
@@ -182,7 +182,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 String Db = "";
                 String pNomConfigActive = Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom;
                 String Materiau = SwCorps.GetMaterialPropertyName(pNomConfigActive, out Db);
@@ -193,7 +193,7 @@ namespace Framework_SW2013
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 String[] pBaseDeDonnees = Piece.Modele.SW.SwSW.GetMaterialDatabases();
 
                 String pNomConfigActive = Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom;
@@ -215,12 +215,12 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 return !SwCorps.DisableDisplay;
             }
             set
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 SwCorps.DisableDisplay = !value;
                 SwCorps.HideBody(!value);
                 Selectionner(false);
@@ -239,7 +239,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
                 foreach (eDossier pDossier in _Piece.ListeDesDossiersDePiecesSoudees(TypeDeCorps, true))
                 {
                     foreach (eCorps pCorps in pDossier.ListListeDesCorps())
@@ -262,7 +262,7 @@ namespace Framework_SW2013
         {
             get
             {
-                Debug.Info(MethodBase.GetCurrentMethod());
+                Debug.Print(MethodBase.GetCurrentMethod());
 
                 eFonction pFonction = new eFonction();
 
@@ -277,7 +277,7 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet eBarre.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Info(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
 #endregion
 
@@ -292,7 +292,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(Body2 SwCorps, ePiece Piece)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             if ((SwCorps != null) && (Piece != null) && Piece.EstInitialise)
             {
@@ -301,12 +301,12 @@ namespace Framework_SW2013
                 _Nom = SwCorps.Name;
                 _PID = Piece.Modele.SwModele.Extension.GetPersistReference3(_SwCorps);
 
-                Debug.Info(this.Nom);
+                Debug.Print(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                Debug.Info("!!!!! Erreur d'initialisation");
+                Debug.Print("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
@@ -320,7 +320,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal Boolean Init(Body2 SwCorps, eModele Modele)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             Init(SwCorps, Modele.Piece);
             return _EstInitialise;
@@ -348,7 +348,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eFonction> pListeFonctions = new List<eFonction>();
 
@@ -386,7 +386,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
             ArrayList pArrayFonctions = new ArrayList();
@@ -404,7 +404,7 @@ namespace Framework_SW2013
         /// <returns></returns>
         public int NbIntersection(eCorps Corps)
         {
-            Debug.Info(MethodBase.GetCurrentMethod());
+            Debug.Print(MethodBase.GetCurrentMethod());
 
             int pNbInt = 0;
 
@@ -414,8 +414,8 @@ namespace Framework_SW2013
             Body2 pCopieCorpsBase = SwCorps.Copy();
             Body2 pCopieCorpsTest = Corps.SwCorps.Copy();
 
-            Debug.Info(pCopieCorpsBase.ApplyTransform(pXFormBase).ToString());
-            Debug.Info(pCopieCorpsTest.ApplyTransform(pXFormTest).ToString());
+            Debug.Print(pCopieCorpsBase.ApplyTransform(pXFormBase).ToString());
+            Debug.Print(pCopieCorpsTest.ApplyTransform(pXFormTest).ToString());
 
             // SWBODYINTERSECT = 15901
             int Err;
