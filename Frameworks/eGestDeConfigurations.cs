@@ -16,7 +16,7 @@ namespace Framework_SW2013
         eConfiguration ConfigurationActive { get; }
         ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "");
         eConfiguration ConfigurationAvecLeNom(String NomConfiguration);
-        eConfiguration AjouterUneConfigurationDeBase(String NomConfiguration);
+        eConfiguration AjouterUneConfigurationRacine(String NomConfiguration, Boolean Ecraser = false);
         Boolean ConfigurationExiste(String Nom);
         void SupprimerConfiguration(String NomConfiguration);
         void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "");
@@ -170,14 +170,23 @@ namespace Framework_SW2013
         /// </summary>
         /// <param name="NomConfiguration"></param>
         /// <returns></returns>
-        public eConfiguration AjouterUneConfigurationDeBase(String NomConfiguration)
+        public eConfiguration AjouterUneConfigurationRacine(String NomConfiguration, Boolean Ecraser = false)
         {
             Debug.Print(MethodBase.GetCurrentMethod());
 
-            eConfiguration pConfig = new eConfiguration();
+            eConfiguration pConfig = ConfigurationAvecLeNom(NomConfiguration);
 
-            if (ConfigurationExiste(NomConfiguration))
-                pConfig = ConfigurationAvecLeNom(NomConfiguration);
+            if (pConfig != null)
+            {
+                if (Ecraser == true)
+                    pConfig.Supprimer();
+            }
+            else
+            {
+                pConfig = new eConfiguration();
+            }
+
+
 
             if (!pConfig.EstInitialise)
                 pConfig.Init(_Modele.SwModele.ConfigurationManager.AddConfiguration(NomConfiguration, NomConfiguration, "", 0, "", ""), _Modele);

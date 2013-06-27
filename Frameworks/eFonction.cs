@@ -64,7 +64,7 @@ namespace Framework_SW2013
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
 
-                if ((_PID != null)) //(_SwModeleFonction == null) && 
+                if (_PID != null) //(_SwModeleFonction == null) && 
                 {
                     int pErreur = 0;
                     Feature pSwFonction = Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
@@ -73,15 +73,24 @@ namespace Framework_SW2013
                         || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
                         _SwModeleFonction = pSwFonction;
                 }
-
-                if (Modele.SwModele.GetPathName().Equals(Modele.SW.Modele().SwModele.GetPathName()) || Modele.Composant.SwComposant.IsRoot())
+                else
                 {
-                    Debug.Print("Fonction du modele");
-                    return _SwModeleFonction;
+                    Debug.Print("Pas de PID");
+                    _PID = Modele.SwModele.Extension.GetPersistReference3(_SwModeleFonction);
                 }
 
-                Debug.Print("Fonction du composant");
-                return Modele.Composant.SwComposant.FeatureByName(_SwModeleFonction.Name);
+                if (Modele.SwModele.GetPathName().Equals(Modele.SW.Modele().SwModele.GetPathName()) || Modele.Composant.SwComposant.IsRoot())
+                    Debug.Print("Fonction du modele");
+                else
+                {
+                    Debug.Print("Fonction du composant");
+                    if (_SwModeleFonction != null)
+                        _SwModeleFonction = Modele.Composant.SwComposant.FeatureByName(_SwModeleFonction.Name);
+                }
+
+                Debug.Print(" =============> Valide : " + (_SwModeleFonction != null).ToString());
+                Debug.Print(" =================> Nom : " + _SwModeleFonction.Name);
+                return _SwModeleFonction;
             }
         }
 
@@ -250,8 +259,8 @@ namespace Framework_SW2013
                 }
 
                 // Si la fonction est de type "MaterialFolder", la méthode GetPersistReference3 plante lamentablement
-                swFeatureType_e Tpe = new swFeatureType_e();
-                if (_SwModeleFonction.GetTypeName2() != Tpe.swTnMaterialFolder)
+                swFeatureType_e TypeFonction = new swFeatureType_e();
+                if (_SwModeleFonction.GetTypeName2() != TypeFonction.swTnMaterialFolder)
                     _PID = Modele.SwModele.Extension.GetPersistReference3(_SwModeleFonction);
 
                 if (_SwModeleFonction != null)
@@ -276,6 +285,8 @@ namespace Framework_SW2013
             Debug.Print(MethodBase.GetCurrentMethod());
 
             Selectionner(false);
+            //Modele.SwModele.EditUnsuppress2();
+            //Modele.SwModele.EditUnsuppressDependent2();
             Modele.SW.Modele().SwModele.EditUnsuppress2();
             Modele.SW.Modele().SwModele.EditUnsuppressDependent2();
         }
@@ -287,8 +298,15 @@ namespace Framework_SW2013
         public void Desactiver()
         {
             Debug.Print(MethodBase.GetCurrentMethod());
+            swFeatureType_e pTypeFonction = new swFeatureType_e();
 
-            Selectionner(false);
+            // Si la fonction est une instance de bloc, on selectionne la fonction Esquisse parent pour la desactiver
+            if (TypeDeLaFonction == "SketchBlockInst")
+                FonctionParent.Selectionner(false);
+            else
+                Selectionner(false);
+
+            //Modele.SwModele.EditSuppress2();
             Modele.SW.Modele().SwModele.EditSuppress2();
         }
 
@@ -311,14 +329,17 @@ namespace Framework_SW2013
         public void Selectionner(Boolean Ajouter = true)
         {
             Debug.Print(MethodBase.GetCurrentMethod());
-
-#if SW2013
-            SwFonction.Select2(Ajouter, -1);
-#else
-            String T;
-            String NomSel = SwFonction.GetNameForSelection(out T);
-            Modele.SW.Modele().SwModele.Extension.SelectByID2(NomSel, T, 0, 0, 0, Ajouter, -1, null, 0);
-#endif
+            Feature pSwFonction = SwFonction;
+            if (pSwFonction != null)
+            { 
+                //Debug.Print("========> Select2 : " + pSwFonction.Select2(Ajouter, -1).ToString());
+                
+                String T;
+                String NomSel = pSwFonction.GetNameForSelection(out T);
+                Modele.SW.Modele().SwModele.Extension.SelectByID2(NomSel, T, 0, 0, 0, Ajouter, -1, null, 0);
+            }
+            else
+                Debug.Print("===========================> Selectionner : Erreur");
         }
 
         /// <summary>
