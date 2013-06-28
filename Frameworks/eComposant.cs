@@ -83,8 +83,8 @@ namespace Framework_SW2013
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
                 // Augmente énormément le temps de traitement
-                if (!_Modele.GestDeConfigurations.ConfigurationActive.Equals(_Configuration) && _Modele.SW.ActiverLesConfigurations)
-                    _Configuration.Activer();
+                //if (!_Modele.GestDeConfigurations.ConfigurationActive.Equals(_Configuration) && _Modele.SW.ActiverLesConfigurations)
+                //    _Configuration.Activer();
 
                 return _Modele;
             }
@@ -492,7 +492,7 @@ namespace Framework_SW2013
         {
             Debug.Print(MethodBase.GetCurrentMethod());
 
-            _Modele.Composant.Configuration.Activer();
+            //_Modele.Composant.Configuration.Activer();
 
             List<eCorps> Liste = new List<eCorps>();
             Object pInfosCorps = null;

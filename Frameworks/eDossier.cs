@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {
@@ -34,6 +35,7 @@ namespace Framework_SW2013
 
         private ePiece _Piece = null;
         private BodyFolder _SwDossier = null;
+        private Object _PID = null;
 
 #endregion
 
@@ -48,7 +50,30 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne l'objet BodyFolder associé.
         /// </summary>
-        public BodyFolder SwDossier { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwDossier; } }
+        public BodyFolder SwDossier
+        {
+            get
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+
+                if (_PID != null)
+                {
+                    int pErreur = 0;
+                    Feature pSwFonction = _Piece.Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
+                    Debug.Print("PID Erreur : " + pErreur);
+                    if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
+                        || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
+                        _SwDossier = pSwFonction.GetSpecificFeature2();
+                }
+                else
+                {
+                    Debug.Print("Pas de PID");
+                    MajPID();
+                }
+
+                return _SwDossier;
+            }
+        }
 
         /// <summary>
         /// Retourne le parent ExtPiece.
@@ -151,7 +176,7 @@ namespace Framework_SW2013
             {
                 _Piece = Piece;
                 _SwDossier = SwDossier;
-
+                MajPID();
                 Debug.Print(this.Nom);
                 _EstInitialise = true;
             }
@@ -160,6 +185,13 @@ namespace Framework_SW2013
                 Debug.Print("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
+        }
+
+        private void MajPID()
+        {
+            if (_SwDossier == null)
+                return;
+            _PID = _Piece.Modele.SwModele.Extension.GetPersistReference3(_SwDossier.GetFeature());
         }
 
         /// <summary>

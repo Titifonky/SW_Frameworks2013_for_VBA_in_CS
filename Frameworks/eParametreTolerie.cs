@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System.Collections.Generic;
 
 namespace Framework_SW2013
 {
@@ -12,7 +13,7 @@ namespace Framework_SW2013
     public interface IeParametreTolerie
     {
         ePiece Piece { get; }
-        eCorps Corps { get; }
+        eTole Tole { get; }
         Double Epaisseur { get; set; }
         Double Rayon { get; set; }
         Double FacteurK { get; set; }
@@ -31,7 +32,9 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private ePiece _Piece = null;
-        private eCorps _Corps = null;
+        private eTole _Tole = null;
+        private String _DimRayon = "D1";
+        private String _DimK = "D2";
 
         #endregion
 
@@ -51,7 +54,7 @@ namespace Framework_SW2013
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public eCorps Corps { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Corps; } }
+        public eTole Tole { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Tole; } }
 
         /// <summary>
         /// Retourne ou défini l'épaisseur de la tole
@@ -61,15 +64,48 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D7");
-                return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0] * 1000, 5);
+                eFonction pFonctionTolerie = FonctionTolerie;
+
+                //if (pFonctionTolerie == null)
+                //    return 0;
+
+                //Dimension pSwDim = pFonctionTolerie.SwFonction.Parameter("D7");
+                //if (pSwDim != null)
+                //{
+                //    return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0] * 1000, 5);
+                //}
+
+                //pSwDim = pFonctionTolerie.SwFonction.Parameter("Epaisseur");
+                //if (pSwDim != null)
+                //{
+                //    return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0] * 1000, 5);
+                //}
+
+                //return _Tole.Corps.Piece.ParametresDeTolerie.Epaisseur;
+                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                return Math.Round(pParam.Thickness * 1000, 5);
             }
             set
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D7");
-                if (pSwDim == null) return;
-                pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null);
+                eFonction pFonctionTolerie = FonctionTolerie;
+
+                if (pFonctionTolerie == null)
+                    return;
+
+                Dimension pSwDim = pFonctionTolerie.SwFonction.Parameter("D7");
+                if (pSwDim != null)
+                {
+                    pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null);
+                    return;
+                }
+
+                pSwDim = pFonctionTolerie.SwFonction.Parameter("Epaisseur");
+                if (pSwDim != null)
+                {
+                    pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null);
+                    return;
+                }
             }
         }
 
@@ -81,13 +117,24 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D1");
-                return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0] * 1000, 5);
+
+                //eFonction pFonctionTolerie = FonctionTolerie;
+
+                //if (pFonctionTolerie == null)
+                //    return 0;
+
+                //Dimension pSwDim = pFonctionTolerie.SwFonction.Parameter(_DimRayon);
+                //if (pSwDim != null)
+                //    return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0] * 1000, 5);
+                //else
+                //    return _Tole.Corps.Piece.ParametresDeTolerie.Epaisseur;
+                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                return Math.Round(pParam.BendRadius * 1000, 5);
             }
             set
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D1");
+                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter(_DimRayon);
                 if (pSwDim == null) return;
                 Debug.Print("Modification du rayon : " + pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null).ToString());
             }
@@ -101,13 +148,24 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D2");
-                return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0], 5);
+                //eFonction pFonctionTolerie = FonctionTolerie;
+
+                //if (pFonctionTolerie == null)
+                //    return 0;
+
+                //Dimension pSwDim = pFonctionTolerie.SwFonction.Parameter(_DimK);
+                //if (pSwDim != null)
+                //    return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0], 5);
+                //else
+                //    return _Tole.Corps.Piece.ParametresDeTolerie.Epaisseur;
+
+                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                return Math.Round(pParam.KFactor, 5);
             }
             set
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter("D2");
+                Dimension pSwDim = FonctionTolerie.SwFonction.Parameter(_DimK);
                 if (pSwDim == null) return;
                 pSwDim.SetSystemValue3(value, (int)swInConfigurationOpts_e.swThisConfiguration, null);
             }
@@ -118,7 +176,7 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                if (_Corps == null)
+                if (_Tole == null)
                     return false;
                 BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
                 return pParam.OverrideThickness;
@@ -126,7 +184,7 @@ namespace Framework_SW2013
             set
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                if (_Corps == null)
+                if (_Tole == null)
                     return;
                 ModelDoc2 pSwModele = SwModele;
                 Component2 pSwComposant = SwComposant;
@@ -144,7 +202,7 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                if (_Corps == null)
+                if (_Tole == null)
                     return false;
                 BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
                 return pParam.OverrideRadius;
@@ -152,7 +210,7 @@ namespace Framework_SW2013
             set
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                if (_Corps == null)
+                if (_Tole == null)
                     return;
                 ModelDoc2 pSwModele = SwModele;
                 Component2 pSwComposant = SwComposant;
@@ -170,7 +228,7 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                if (_Corps == null)
+                if (_Tole == null)
                     return false;
                 BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
                 return pParam.OverrideKFactor;
@@ -178,7 +236,7 @@ namespace Framework_SW2013
             set
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                if (_Corps == null)
+                if (_Tole == null)
                     return;
                 ModelDoc2 pSwModele = SwModele;
                 Component2 pSwComposant = SwComposant;
@@ -202,9 +260,20 @@ namespace Framework_SW2013
                 Debug.Print(MethodBase.GetCurrentMethod());
 
                 if (_Piece != null)
-                    return _Piece.Modele.ListListeDesFonctions("^Tôlerie$", "", false, true)[0];
+                {
+                    List<eFonction> pListeFoncs = _Piece.Modele.ListListeDesFonctions("", "TemplateSheetMetal", false, true);
+                    if (pListeFoncs.Count == 0)
+                    {
+                        Debug.Print("=======> Pas de dossier de tolerie dans cette piece");
+                        return null;
+                    }
+
+                    return pListeFoncs[0];
+                }
                 else
-                    return _Corps.Tole.FonctionTolerie;
+                {
+                    return _Tole.FonctionTolerie;
+                }
             }
         }
 
@@ -218,8 +287,8 @@ namespace Framework_SW2013
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
 
-                if (_Corps != null)
-                    return _Corps.Tole.FonctionToleDeBase;
+                if (_Tole != null)
+                    return _Tole.FonctionToleDeBase;
 
                 return null;
             }
@@ -230,8 +299,8 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                if (_Corps.Piece.Modele.Equals(_Corps.Piece.Modele.SW.Modele()))
-                    return _Corps.Piece.Modele.SwModele;
+                if (_Tole.Corps.Piece.Modele.Equals(_Tole.Corps.Piece.Modele.SW.Modele()))
+                    return _Tole.Corps.Piece.Modele.SwModele;
 
                 return null;
             }
@@ -243,7 +312,7 @@ namespace Framework_SW2013
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
                 if (SwModele == null)
-                    return _Corps.Piece.Modele.Composant.SwComposant;
+                    return _Tole.Corps.Piece.Modele.Composant.SwComposant;
 
                 return null;
             }
@@ -264,15 +333,15 @@ namespace Framework_SW2013
         /// Initialiser
         /// </summary>
         /// <param name="SwCorps"></param>
-        /// <param name="Corps"></param>
+        /// <param name="Tole"></param>
         /// <returns></returns>
-        internal Boolean Init(eCorps Corps)
+        internal Boolean Init(eTole Tole)
         {
             Debug.Print(MethodBase.GetCurrentMethod());
 
-            if ((Corps != null) && Corps.EstInitialise && (Corps.TypeDeCorps == TypeCorps_e.cTole))
+            if ((Tole != null) && Tole.EstInitialise)
             {
-                _Corps = Corps;
+                _Tole = Tole;
                 _EstInitialise = true;
             }
             else

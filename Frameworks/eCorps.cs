@@ -240,15 +240,14 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
+                
+                String pNom = Nom;
+                
                 foreach (eDossier pDossier in _Piece.ListeDesDossiersDePiecesSoudees(TypeDeCorps, true))
                 {
-                    foreach (eCorps pCorps in pDossier.ListListeDesCorps())
-                    {
-                        if (pCorps.Nom == Nom)
-                        {
-                            return pDossier;
-                        }
-                    }
+                    List<eCorps> pListeCorps = pDossier.ListListeDesCorps("^" + Regex.Escape(pNom) + "$");
+                    if (pListeCorps.Count > 0)
+                        return pDossier;
                 }
 
                 return null;
@@ -332,10 +331,10 @@ namespace Framework_SW2013
         /// <param name="Ajouter"></param>
         public void Selectionner(Boolean Ajouter = true)
         {
-            SelectionMgr pSwSelMgr = Piece.Modele.SwModele.SelectionManager;
-            SelectData pSelData = default(SelectData);
-            pSelData = pSwSelMgr.CreateSelectData();
-            pSelData.Mark = -1;
+            //SelectionMgr pSwSelMgr = Piece.Modele.SwModele.SelectionManager;
+            //SelectData pSelData = default(SelectData);
+            //pSelData = pSwSelMgr.CreateSelectData();
+            //pSelData.Mark = -1;
             SwCorps.Select2(Ajouter, null);
         }
 

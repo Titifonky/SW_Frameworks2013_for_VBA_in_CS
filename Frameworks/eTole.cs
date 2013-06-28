@@ -58,7 +58,7 @@ namespace Framework_SW2013
                 if (_ParamTolerie == null)
                 {
                     _ParamTolerie = new eParametreTolerie();
-                    _ParamTolerie.Init(Corps);
+                    _ParamTolerie.Init(this);
                 }
                     
                 if(_ParamTolerie.EstInitialise)

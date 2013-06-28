@@ -286,7 +286,7 @@ namespace Framework_SW2013
                 if (value)
                 {
                     _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, (int)swRebuildOnActivation_e.swUserDecision, Erreur);
-                    _Composant.Configuration.Activer();
+                    //_Composant.Configuration.Activer();
                 }
             }
         }
@@ -375,8 +375,8 @@ namespace Framework_SW2013
             Debug.Print(MethodBase.GetCurrentMethod());
 
             _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, (int)Reconstruire, Erreur);
-            if (TypeDuModele != TypeFichier_e.cDessin)
-                _Composant.Configuration.Activer();
+            //if (TypeDuModele != TypeFichier_e.cDessin)
+            //    _Composant.Configuration.Activer();
 
             ZoomEtendu();
         }
@@ -479,7 +479,7 @@ namespace Framework_SW2013
         {
             Debug.Print(MethodBase.GetCurrentMethod());
 
-            _Composant.Configuration.Activer();
+            //_Composant.Configuration.Activer();
 
             List<eFonction> pListeFonctions = new List<eFonction>();
 
