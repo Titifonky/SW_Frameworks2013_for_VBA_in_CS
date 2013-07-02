@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Reflection;
+using System.Collections.Generic;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {
@@ -16,6 +18,8 @@ namespace Framework_SW2013
         eModele ModeleDeReference { get; }
         eConfiguration ConfigurationDeReference { get; }
         eDimensionVue Dimensions { get; }
+        Boolean AfficherLignesDePliage { get; set; }
+        Boolean AfficherNotesDePliage { get; set; }
         void Selectionner(Boolean Ajouter = false);
     }
 
@@ -65,7 +69,19 @@ namespace Framework_SW2013
                 Debug.Print(MethodBase.GetCurrentMethod());
                 eModele pModele = new eModele();
                 if (pModele.Init(_SwVue.ReferencedDocument, _Feuille.Dessin.Modele.SW))
+                {
+                    DrawingComponent pSwDwgComp = SwVue.RootDrawingComponent;
+                    Component2 pSwComp = pSwDwgComp.Component;
+                    if (pSwDwgComp.IsRoot())
+                    {
+                        Configuration pSwConfig = _SwVue.ReferencedDocument.GetConfigurationByName(_SwVue.ReferencedConfiguration);
+                        pSwComp = pSwConfig.GetRootComponent3(false);
+                    }
+                    eComposant pComp = new eComposant();
+                    pComp.Init(pSwComp, pModele);
+                    pModele.Composant = pComp;
                     return pModele;
+                }
 
                 return null;
             }
@@ -101,6 +117,74 @@ namespace Framework_SW2013
                     return pDimensions;
 
                 return null;
+            }
+        }
+
+        public Boolean AfficherLignesDePliage
+        {
+            get
+            {
+                if (ConfigurationDeReference.Est(TypeConfig_e.cDepliee))
+                {
+                    ConfigurationDeReference.Activer();
+                    List<eCorps> pListeCorps = ModeleDeReference.Composant.ListListeDesCorps();
+                    
+                    if (pListeCorps.Count > 0)
+                    {
+                        eCorps pCorps = pListeCorps[0];
+                        eFonction pFonction = pCorps.Tole.FonctionDeplie;
+                        pFonction = pFonction.ListListeDesSousFonctions()[0];
+                        if (pFonction.EstInitialise && (pFonction.SwFonction.Visible == (int)swVisibilityState_e.swVisibilityStateShown))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+            set
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+
+                if (ConfigurationDeReference.Est(TypeConfig_e.cDepliee))
+                {
+                    ConfigurationDeReference.Activer();
+                    List<eCorps> pListeCorps = ModeleDeReference.Composant.ListListeDesCorps();
+
+                    if (pListeCorps.Count > 0)
+                    {
+                        eCorps pCorps = pListeCorps[0];
+                        eFonction pFonction = pCorps.Tole.FonctionDeplie;
+                        pFonction = pFonction.ListListeDesSousFonctions()[0];
+                        if (pFonction.EstInitialise)
+                        {
+                            ModelDoc2 pSwModele = Feuille.Dessin.Modele.SwModele;
+                            String pNomPourSelection = pFonction.Nom + "@" + SwVue.RootDrawingComponent.Name + "@" + Nom;
+                            Debug.Print("=====================================================> " + pNomPourSelection);
+                            pSwModele.Extension.SelectByID2(pNomPourSelection, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                            if (value)
+                                pSwModele.UnblankSketch();
+                            else
+                                pSwModele.BlankSketch();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        public Boolean AfficherNotesDePliage
+        {
+            get
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+                return _SwVue.ShowSheetMetalBendNotes;
+            }
+            set
+            {
+                Debug.Print(MethodBase.GetCurrentMethod());
+                _SwVue.ShowSheetMetalBendNotes = value;
             }
         }
 

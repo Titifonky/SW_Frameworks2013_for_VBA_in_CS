@@ -30,7 +30,7 @@ namespace Framework_SW2013
         void ZoomEtendu();
         void AjusterAutourDesVues();
         void Redimensionner(Double Largeur, Double Hauteur);
-        eVue CreerVueToleDvp(ePiece Piece, eConfiguration Configuration);
+        eVue CreerVueToleDvp(ePiece Piece, eConfiguration Configuration, Boolean AfficherLesLignesDePliage);
         void ExporterEn(Extension_e TypeExport, String CheminDossier, String NomDuFichierAlternatif = "");
         ArrayList ListeDesVues(String NomARechercher = "");
         void MettreEnPagePourImpression(swPageSetupDrawingColor_e Couleur = swPageSetupDrawingColor_e.swPageSetup_AutomaticDrawingColor, Boolean HauteQualite = false);
@@ -41,21 +41,21 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eFeuille")]
     public class eFeuille : IeFeuille
     {
-#region "Variables locales"
+        #region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private eDessin _Dessin = null;
         private Sheet _SwFeuille = null;
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eFeuille() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet Sheet associé.
@@ -300,9 +300,9 @@ namespace Framework_SW2013
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -424,7 +424,7 @@ namespace Framework_SW2013
         /// <param name="Piece"></param>
         /// <param name="Configuration"></param>
         /// <returns></returns>
-        public eVue CreerVueToleDvp(ePiece Piece, eConfiguration Configuration)
+        public eVue CreerVueToleDvp(ePiece Piece, eConfiguration Configuration, Boolean AfficherLesLignesDePliage)
         {
             eVue pVue = new eVue();
             View pSwVue = null;
@@ -439,7 +439,7 @@ namespace Framework_SW2013
                 Piece.Modele.ForcerAToutReconstruire();
 
             _Dessin.Modele.Activer();
-            pSwVue = _Dessin.SwDessin.CreateFlatPatternViewFromModelView3(Piece.Modele.FichierSw.Chemin, Configuration.Nom, 0, 0, 0, false, false);
+            pSwVue = _Dessin.SwDessin.CreateFlatPatternViewFromModelView3(Piece.Modele.FichierSw.Chemin, Configuration.Nom, 0, 0, 0, AfficherLesLignesDePliage, false);
 
             if (pVue.Init(pSwVue, this))
             {
@@ -580,7 +580,7 @@ namespace Framework_SW2013
 
         }
 
-#endregion
+        #endregion
 
     }
 }

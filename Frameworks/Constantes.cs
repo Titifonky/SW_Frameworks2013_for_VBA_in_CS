@@ -97,6 +97,7 @@ namespace Framework_SW2013
         internal static String PROFIL_LONGUEUR = "LONGUEUR";
         internal static String PROFIL_MASSE = "Masse";
         internal static String PROFIL_MATERIAU = "MATERIAL";
+        internal static String LIGNE_DE_PLIAGE = "Lignes de pliage";
         internal static String CUBE_DE_VISUALISATION = "Cube de visualisation";
         internal static String MODELE_DE_DESSIN_LASER = "MacroLaser";
         internal static String NOM_CORPS_DEPLIEE = "Etat déplié";

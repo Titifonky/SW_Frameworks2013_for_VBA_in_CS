@@ -366,7 +366,7 @@ namespace Framework_SW2013
                     {
                         eFonction pSousFonction = new eFonction();
 
-                        if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, _Piece.Modele))
+                        if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, _Piece.Modele))
                             pListeFonctions.Add(pSousFonction);
 
                         pSwSousFonction = pSwSousFonction.GetNextSubFeature();

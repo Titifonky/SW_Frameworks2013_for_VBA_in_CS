@@ -193,11 +193,8 @@ namespace Framework_SW2013
 
             if (T.HasFlag(TypeCorps_e.cBarre))
             {
-                foreach (eFonction Fonction in _Modele.ListListeDesFonctions())
-                {
-                    if (Fonction.TypeDeLaFonction == "WeldMemberFeat")
-                        return true;
-                }
+                if (_Modele.ListListeDesFonctions("", "WeldMemberFeat", false).Count > 0)
+                    return true;
             }
 
             if (T.HasFlag(TypeCorps_e.cAutre))
