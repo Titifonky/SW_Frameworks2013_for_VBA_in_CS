@@ -34,7 +34,7 @@ namespace Framework_SW2013
         void ForcerAToutReconstruire();
         void ZoomEtendu();
         void EffacerLesSelections();
-        ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false, Boolean AvecLesFonctionsDeArbre = false);
+        ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
         eFonction DerniereFonction();
     }
 
@@ -480,11 +480,9 @@ namespace Framework_SW2013
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false, Boolean AvecLesFonctionsDeArbre = false)
+        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Print(MethodBase.GetCurrentMethod());
-
-            //_Composant.Configuration.Activer();
 
             List<eFonction> pListeFonctions = new List<eFonction>();
 
@@ -523,57 +521,7 @@ namespace Framework_SW2013
                 pSwFonction = pSwFonction.GetNextFeature();
             }
 
-#if SW2013
-            if (EstActif && AvecLesFonctionsDeArbre)
-            {
-                List<TreeControlItem> pListeNoeuds = new List<TreeControlItem>();
-                TreeControlItem pNoeudRacine = _SwModele.FeatureManager.GetFeatureTreeRootItem2((int)swFeatMgrPane_e.swFeatMgrPaneTopHidden);
-                ScannerFonctionsFeatureManager(pNoeudRacine, pListeNoeuds, AvecLesSousFonctions);
-                foreach(TreeControlItem pNoeud in pListeNoeuds)
-                {
-                    Feature pSwFonctionNoeud = pNoeud.Object;
-                    eFonction pFonction = new eFonction();
-
-                    if ((Regex.IsMatch(pSwFonctionNoeud.Name, NomARechercher))
-                            && (Regex.IsMatch(pSwFonctionNoeud.GetTypeName2(), TypeDeLaFonction))
-                            && pFonction.Init(pSwFonctionNoeud, this)
-                            && !(pListeFonctions.Contains(pFonction))
-                            )
-                        pListeFonctions.Add(pFonction);
-                    
-                }
-            }
-#endif
-
             return pListeFonctions;
-        }
-
-        /// <summary>
-        /// Scanne les fonctions du FeatureManager
-        /// </summary>
-        /// <param name="Noeud"></param>
-        /// <param name="ListeNoeuds"></param>
-        /// <param name="AvecLesSousFonctions"></param>
-        private void ScannerFonctionsFeatureManager(TreeControlItem Noeud, List<TreeControlItem> ListeNoeuds, Boolean AvecLesSousFonctions)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            if (Noeud.ObjectType == (int)swTreeControlItemType_e.swFeatureManagerItem_Feature)
-                ListeNoeuds.Add(Noeud);
-
-            TreeControlItem pNoeud = Noeud.GetFirstChild();
-
-            while (pNoeud != null)
-            {
-                if (pNoeud.ObjectType == (int)swTreeControlItemType_e.swFeatureManagerItem_Feature)
-                    ListeNoeuds.Add(pNoeud);
-
-                // On scanne dans tous les cas le dossier Tôlerie et le dossier Etat déplié
-                if (AvecLesSousFonctions || (pNoeud.Text == "Tôlerie") || (pNoeud.Text == "Etat déplié"))
-                    ScannerFonctionsFeatureManager(pNoeud, ListeNoeuds, AvecLesSousFonctions);
-
-                pNoeud = pNoeud.GetNext();
-            }
         }
 
         /// <summary>
@@ -582,11 +530,11 @@ namespace Framework_SW2013
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        public ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false, Boolean AvecLesFonctionsDeArbre = false)
+        public ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Print(MethodBase.GetCurrentMethod());
 
-            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions, AvecLesFonctionsDeArbre);
+            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
             ArrayList pArrayFonctions = new ArrayList();
 
             if (pListeFonctions.Count > 0)

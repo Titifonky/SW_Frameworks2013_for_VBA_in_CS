@@ -17,12 +17,11 @@ namespace Framework_SW2013
         eModele Modele { get; }
         String Materiau { get; set; }
         Boolean Contient(TypeCorps_e T);
-#if SW2013
         eParametreTolerie ParametresDeTolerie { get; }
-#endif
         void NumeroterDossier();
         ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false);
         ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false);
+        ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -36,10 +35,7 @@ namespace Framework_SW2013
 
         private eModele _Modele = null;
         private PartDoc _SwPiece = null;
-
-#if SW2013
         private eParametreTolerie _ParamTolerie = null;
-#endif
 
 #endregion
 
@@ -83,7 +79,6 @@ namespace Framework_SW2013
             }
         }
 
-#if SW2013
         /// <summary>
         /// Retourne les parametres de tôlerie
         /// </summary>
@@ -105,7 +100,6 @@ namespace Framework_SW2013
                 return null;
             }
         }
-#endif
 
         /// <summary>
         /// Renvoi la valeur de l'initialisation.
@@ -344,6 +338,65 @@ namespace Framework_SW2013
                 pArrayDossiers = new ArrayList(pListeDossier);
 
             return pArrayDossiers;
+        }
+
+        /// <summary>
+        /// Scanne les fonctions du FeatureManager
+        /// </summary>
+        /// <param name="Noeud"></param>
+        /// <param name="ListeFonctions"></param>
+        /// <param name="AvecLesSousFonctions"></param>
+        private void ScannerFonctionsFeatureManager(TreeControlItem Noeud, List<eFonction> ListeFonctions, String NomARechercher, String TypeDeLaFonction, Boolean AvecLesSousFonctions)
+        {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
+            TreeControlItem pNoeud = Noeud.GetFirstChild();
+
+            while (pNoeud != null)
+            {
+                eFonction pFonction = new eFonction();
+                if (pNoeud.ObjectType == (int)swTreeControlItemType_e.swFeatureManagerItem_Feature)
+                {
+                    if (pFonction.Init(pNoeud.Object, Modele)
+                        && Regex.IsMatch(pFonction.Nom, NomARechercher)
+                        && Regex.IsMatch(pFonction.SwFonction.GetTypeName2(), TypeDeLaFonction))
+                        ListeFonctions.Add(pFonction);
+                }
+
+                // On scanne dans tous les cas le dossier Tôlerie et le dossier Etat déplié 
+                if (AvecLesSousFonctions || (pFonction.TypeDeLaFonction == "TemplateSheetMetal") || (pNoeud.Text == "Etat déplié"))
+                    ScannerFonctionsFeatureManager(pNoeud, ListeFonctions, NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
+
+                pNoeud = pNoeud.GetNext();
+            }
+        }
+
+        internal List<eFonction> ListListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
+        {
+            List<eFonction> pListeFonction = new List<eFonction>();
+
+            ScannerFonctionsFeatureManager(Modele.SwModele.FeatureManager.GetFeatureTreeRootItem2((int)swFeatMgrPane_e.swFeatMgrPaneTop), pListeFonction, NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
+
+            return pListeFonction;
+        }
+
+        /// <summary>
+        /// Renvoi la liste des fonctions filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <param name="AvecLesSousFonctions"></param>
+        /// <returns></returns>
+        public ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
+        {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
+            List<eFonction> pListeFonctions = ListListeDesFonctionsDeArbre(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
+            ArrayList pArrayFonctions = new ArrayList();
+
+            if (pListeFonctions.Count > 0)
+                pArrayFonctions = new ArrayList(pListeFonctions);
+
+            return pArrayFonctions;
         }
 
 #endregion

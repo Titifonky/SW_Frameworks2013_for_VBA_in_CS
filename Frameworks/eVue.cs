@@ -4,6 +4,8 @@ using SolidWorks.Interop.sldworks;
 using System.Reflection;
 using System.Collections.Generic;
 using SolidWorks.Interop.swconst;
+using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace Framework_SW2013
 {
@@ -21,6 +23,7 @@ namespace Framework_SW2013
         Boolean AfficherLignesDePliage { get; set; }
         Boolean AfficherNotesDePliage { get; set; }
         void Selectionner(Boolean Ajouter = false);
+        ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -28,36 +31,36 @@ namespace Framework_SW2013
     [ProgId("Frameworks.eVue")]
     public class eVue : IeVue
     {
-#region "Variables locales"
-        
+        #region "Variables locales"
+
         private Boolean _EstInitialise = false;
 
         private eFeuille _Feuille = null;
         private View _SwVue = null;
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eVue() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet View associé.
         /// </summary>
-        public View SwVue { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwVue; } }
+        public View SwVue { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwVue; } }
 
         /// <summary>
         /// Retourne le parent ExtFeuille.
         /// </summary>
-        public eFeuille Feuille { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Feuille; } }
+        public eFeuille Feuille { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Feuille; } }
 
         /// <summary>
-        /// Retourne ou défini le nom de la feuille.
+        /// Retourne ou défini le nom de la vue.
         /// </summary>
-        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwVue.GetName2(); } set { Debug.Print(MethodBase.GetCurrentMethod());  _SwVue.SetName2(value); } }
+        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwVue.GetName2(); } set { Debug.Print(MethodBase.GetCurrentMethod()); _SwVue.SetName2(value); } }
 
         /// <summary>
         /// Retourne le modele ExtModele référencé par la vue.
@@ -128,7 +131,7 @@ namespace Framework_SW2013
                 {
                     ConfigurationDeReference.Activer();
                     List<eCorps> pListeCorps = ModeleDeReference.Composant.ListListeDesCorps();
-                    
+
                     if (pListeCorps.Count > 0)
                     {
                         eCorps pCorps = pListeCorps[0];
@@ -192,11 +195,11 @@ namespace Framework_SW2013
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtModele.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -264,7 +267,105 @@ namespace Framework_SW2013
             _Feuille.Dessin.Modele.SW.Modele().SwModele.Extension.SelectByID2(Nom, "DRAWINGVIEW", pCentre.X, pCentre.Y, pCentre.Z, Ajouter, -1, null, 0);
         }
 
-#endregion
+        /// <summary>
+        /// Scanne les fonctions du FeatureManager
+        /// </summary>
+        /// <param name="Noeud"></param>
+        /// <param name="ListeFonctions"></param>
+        /// <param name="AvecLesSousFonctions"></param>
+        private void ScannerFonctionsFeatureManager(TreeControlItem Noeud, List<eFonction> ListeFonctions, String NomARechercher, String TypeDeLaFonction, Boolean AvecLesSousFonctions)
+        {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
+            TreeControlItem pNoeud = Noeud.GetFirstChild();
+
+            while (pNoeud != null)
+            {
+                eFonction pFonction = new eFonction();
+                if (pNoeud.ObjectType == (int)swTreeControlItemType_e.swFeatureManagerItem_Feature)
+                {
+                    if (pFonction.Init(pNoeud.Object, ModeleDeReference)
+                        && Regex.IsMatch(pFonction.Nom, NomARechercher)
+                        && Regex.IsMatch(pFonction.SwFonction.GetTypeName2(), TypeDeLaFonction))
+                    {
+                        ListeFonctions.Add(pFonction);
+                    }
+                }
+
+                // On scanne dans tous les cas le dossier Tôlerie et le dossier Etat déplié 
+                if (AvecLesSousFonctions || (pNoeud.Text == "Etat déplié")) //(pFonction.TypeDeLaFonction == "TemplateSheetMetal") || 
+                    ScannerFonctionsFeatureManager(pNoeud, ListeFonctions, NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
+
+                pNoeud = pNoeud.GetNext();
+            }
+        }
+
+        internal List<eFonction> ListListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
+        {
+            List<eFonction> pListeFonction = new List<eFonction>();
+
+            ScannerFonctionsFeatureManager(NoeudVue(), pListeFonction, NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
+
+            return pListeFonction;
+        }
+
+        /// <summary>
+        /// Renvoi la liste des fonctions filtrée par les arguments.
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <param name="AvecLesSousFonctions"></param>
+        /// <returns></returns>
+        public ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
+        {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
+            List<eFonction> pListeFonctions = ListListeDesFonctionsDeArbre(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
+            ArrayList pArrayFonctions = new ArrayList();
+
+            if (pListeFonctions.Count > 0)
+                pArrayFonctions = new ArrayList(pListeFonctions);
+
+            return pArrayFonctions;
+        }
+
+        private void ScannerVueFeatureManager(TreeControlItem Noeud, ref TreeControlItem NoeudVue)
+        {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
+            TreeControlItem pNoeud = Noeud.GetFirstChild();
+
+            while (pNoeud != null)
+            {
+
+                if (pNoeud.Text == _SwVue.GetName2())
+                {
+                    NoeudVue = pNoeud;
+                    return;
+                }
+
+                if (pNoeud.ObjectType != (int)swTreeControlItemType_e.swFeatureManagerItem_Component)
+                    ScannerVueFeatureManager(pNoeud, ref NoeudVue);
+
+                if (NoeudVue != null)
+                    return;
+
+                pNoeud = pNoeud.GetNext();
+            }
+        }
+
+        private TreeControlItem NoeudVue()
+        {
+            TreeControlItem pNoeudVue = null;
+
+            ScannerVueFeatureManager(Feuille.Dessin.Modele.SwModele.FeatureManager.GetFeatureTreeRootItem2((int)swFeatMgrPane_e.swFeatMgrPaneTop), ref pNoeudVue);
+
+            if (pNoeudVue != null)
+                pNoeudVue = pNoeudVue.GetFirstChild();
+
+            return pNoeudVue;
+        }
+
+        #endregion
 
     }
 }
