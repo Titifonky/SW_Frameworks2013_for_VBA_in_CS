@@ -278,6 +278,8 @@ namespace Framework_SW2013
 
         private void MajPID()
         {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
             if (_SwModeleFonction == null)
                 return;
             // Si la fonction est de type "MaterialFolder", la méthode GetPersistReference3 plante lamentablement

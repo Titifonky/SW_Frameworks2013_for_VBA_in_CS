@@ -25,6 +25,7 @@ namespace Framework_SW2013
         TypeFichier_e TypeDuModele { get; }
         eFichierSW FichierSw { get; }
         Boolean EstActif { get; set; }
+        Boolean ActiverInterfaceUtilisateur { get; set; }
         void Activer(swRebuildOnActivation_e Reconstruire = swRebuildOnActivation_e.swUserDecision);
         void Sauver();
         void Fermer();
@@ -33,7 +34,6 @@ namespace Framework_SW2013
         void ForcerAToutReconstruire();
         void ZoomEtendu();
         void EffacerLesSelections();
-        void ActiverInterfaceUtilisateur(Boolean Activer);
         ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false, Boolean AvecLesFonctionsDeArbre = false);
         eFonction DerniereFonction();
     }
@@ -285,8 +285,31 @@ namespace Framework_SW2013
 
                 if (value)
                 {
-                    _SW.SwSW.ActivateDoc3(SwModele.GetPathName(), true, (int)swRebuildOnActivation_e.swUserDecision, Erreur);
-                    //_Composant.Configuration.Activer();
+                    Activer();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Activer ou désactiver les éléments de l'interface pour accélérer les macros
+        /// </summary>
+        public Boolean ActiverInterfaceUtilisateur
+        {
+            get
+            {
+                return _SwModele.FeatureManager.EnableFeatureTree && _SwModele.FeatureManager.EnableFeatureTreeWindow && _SwModele.ConfigurationManager.EnableConfigurationTree;
+            }
+            set
+            {
+                _SwModele.FeatureManager.EnableFeatureTree = value;
+                _SwModele.FeatureManager.EnableFeatureTreeWindow = value;
+                _SwModele.ConfigurationManager.EnableConfigurationTree = value;
+                //_SwModele.Lock();
+
+                if (value)
+                {
+                    _SwModele.FeatureManager.UpdateFeatureTree();
+                    //_SwModele.UnLock();
                 }
             }
         }
@@ -448,24 +471,6 @@ namespace Framework_SW2013
         public void EffacerLesSelections()
         {
             _SwModele.ClearSelection2(true);
-        }
-
-        /// <summary>
-        /// Activer ou désactiver les éléments de l'interface pour accélérer les macros
-        /// </summary>
-        /// <param name="Activer"></param>
-        public void ActiverInterfaceUtilisateur(Boolean Activer)
-        {
-            _SwModele.FeatureManager.EnableFeatureTree = Activer;
-            _SwModele.FeatureManager.EnableFeatureTreeWindow = Activer;
-            _SwModele.ConfigurationManager.EnableConfigurationTree = Activer;
-            //_SwModele.Lock();
-
-            if (Activer)
-            {
-                _SwModele.FeatureManager.UpdateFeatureTree();
-                //_SwModele.UnLock();
-            }
         }
 
         /// <summary>

@@ -189,6 +189,8 @@ namespace Framework_SW2013
 
         private void MajPID()
         {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
             if (_SwDossier == null)
                 return;
             _PID = _Piece.Modele.SwModele.Extension.GetPersistReference3(_SwDossier.GetFeature());

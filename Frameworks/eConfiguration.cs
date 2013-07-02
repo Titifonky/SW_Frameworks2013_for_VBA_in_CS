@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 
 namespace Framework_SW2013
 {
@@ -43,6 +44,7 @@ namespace Framework_SW2013
 
         private Configuration _SwConfiguration = null;
         private eModele _Modele = null;
+        private Object _PID = null;
         private int _ID = 0;
 
 #endregion
@@ -63,6 +65,21 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
+
+                if (_PID != null)
+                {
+                    int pErreur = 0;
+                    Feature pSwFonction = Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
+                    Debug.Print("PID Erreur : " + pErreur);
+                    if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
+                        || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
+                        _SwConfiguration = pSwFonction.GetSpecificFeature2();
+                }
+                else
+                {
+                    Debug.Print("Pas de PID");
+                    MajPID();
+                }
                 
                 if (_SwConfiguration == null)
                 {
@@ -282,6 +299,7 @@ namespace Framework_SW2013
                 _SwConfiguration = Config;
                 _Modele = Modele;
                 _ID = _SwConfiguration.GetID();
+                MajPID();
 
                 Debug.Print(this.Nom);
                 _EstInitialise = true;
@@ -292,6 +310,16 @@ namespace Framework_SW2013
             }
 
             return _EstInitialise;
+        }
+
+        private void MajPID()
+        {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
+            if (_SwConfiguration == null)
+                return;
+
+            _PID = Modele.SwModele.Extension.GetPersistReference3(_SwConfiguration);
         }
 
         /// <summary>
@@ -319,7 +347,19 @@ namespace Framework_SW2013
         public Boolean Activer()
         {
             Debug.Print(MethodBase.GetCurrentMethod());
-            return Convert.ToBoolean(_Modele.SwModele.ShowConfiguration2(Nom));
+            
+            Boolean pResultat = false;
+            ConfigurationManager pConfigManager = Modele.SwModele.ConfigurationManager;
+            Boolean pEnableConfigurationTree = pConfigManager.EnableConfigurationTree;
+
+            if (!pEnableConfigurationTree)
+                pConfigManager.EnableConfigurationTree = true;
+
+            pResultat = Modele.SwModele.ShowConfiguration2(Nom);
+
+            pConfigManager.EnableConfigurationTree = pEnableConfigurationTree;
+
+            return pResultat;
         }
 
         /// <summary>

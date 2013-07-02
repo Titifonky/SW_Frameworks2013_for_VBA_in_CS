@@ -192,8 +192,7 @@ namespace Framework_SW2013
                         break;
 
                     case swSelectType_e.swSelCONFIGURATIONS:
-                        Feature pSwFonction = pSwObjet;
-                        Configuration pSwConfiguration = pSwFonction.GetSpecificFeature2();
+                        Configuration pSwConfiguration = pSwObjet;
                         eConfiguration pConfiguration = new eConfiguration();
                         if (pConfiguration.Init(pSwConfiguration, pModele))
                             return pConfiguration;
