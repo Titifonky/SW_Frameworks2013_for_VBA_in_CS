@@ -20,10 +20,10 @@ namespace Framework_SW2013
         eModele ModeleDeReference { get; }
         eConfiguration ConfigurationDeReference { get; }
         eDimensionVue Dimensions { get; }
-        Boolean AfficherLignesDePliage { get; set; }
+        Boolean AfficherLignesDePliage { set; }
         Boolean AfficherNotesDePliage { get; set; }
         void Selectionner(Boolean Ajouter = false);
-        ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
+        //ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -123,50 +123,32 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Afficher ou masquer les lignes de pliage
+        /// </summary>
         public Boolean AfficherLignesDePliage
         {
-            get
-            {
-                if (ConfigurationDeReference.Est(TypeConfig_e.cDepliee))
-                {
-                    ConfigurationDeReference.Activer();
-                    List<eCorps> pListeCorps = ModeleDeReference.Composant.ListListeDesCorps();
-
-                    if (pListeCorps.Count > 0)
-                    {
-                        eCorps pCorps = pListeCorps[0];
-                        eFonction pFonction = pCorps.Tole.FonctionDeplie;
-                        pFonction = pFonction.ListListeDesSousFonctions()[0];
-                        if (pFonction.EstInitialise && (pFonction.SwFonction.Visible == (int)swVisibilityState_e.swVisibilityStateShown))
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
-            }
             set
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
 
-                if (ConfigurationDeReference.Est(TypeConfig_e.cDepliee))
-                {
-                    ConfigurationDeReference.Activer();
-                    List<eCorps> pListeCorps = ModeleDeReference.Composant.ListListeDesCorps();
+                ModelDoc2 pSwModele = Feuille.Dessin.Modele.SwModele;
+                eConfiguration pConfig = ConfigurationDeReference;
 
-                    if (pListeCorps.Count > 0)
+                if (pConfig.Est(TypeConfig_e.cDepliee))
+                {
+                    foreach (eFonction pFonction in ListListeDesFonctionsDeArbre("", "^FlatPattern$", true))
                     {
-                        eCorps pCorps = pListeCorps[0];
-                        eFonction pFonction = pCorps.Tole.FonctionDeplie;
-                        pFonction = pFonction.ListListeDesSousFonctions()[0];
-                        if (pFonction.EstInitialise)
+                        eFonction pFonctionEsquisse = pFonction.ListListeDesSousFonctions()[0];
+                        if (pFonctionEsquisse != null)
                         {
-                            ModelDoc2 pSwModele = Feuille.Dessin.Modele.SwModele;
-                            String pNomPourSelection = pFonction.Nom + "@" + SwVue.RootDrawingComponent.Name + "@" + Nom;
-                            Debug.Print("=====================================================> " + pNomPourSelection);
-                            pSwModele.Extension.SelectByID2(pNomPourSelection, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                            if (value)
+                            String T;
+                            String pNomPourSelection = pFonctionEsquisse.SwFonction.GetNameForSelection(out T);
+                            pSwModele.Extension.SelectByID2(pNomPourSelection, T, 0, 0, 0, false, 0, null, 0);
+
+                            // On affiche les lignes seulement si c'est la bonne fonction
+                            // Sinon, on cache tout
+                            if (value && (pFonction.Etat(pConfig) == EtatFonction_e.cActivee))
                                 pSwModele.UnblankSketch();
                             else
                                 pSwModele.BlankSketch();
@@ -176,7 +158,9 @@ namespace Framework_SW2013
             }
         }
 
-
+        /// <summary>
+        /// Afficher ou masquer les notes de pliage
+        /// </summary>
         public Boolean AfficherNotesDePliage
         {
             get
@@ -268,10 +252,12 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Scanne les fonctions du FeatureManager
+        /// Scanner les fonctions de la vue à partir du FeatureManager
         /// </summary>
         /// <param name="Noeud"></param>
         /// <param name="ListeFonctions"></param>
+        /// <param name="NomARechercher"></param>
+        /// <param name="TypeDeLaFonction"></param>
         /// <param name="AvecLesSousFonctions"></param>
         private void ScannerFonctionsFeatureManager(TreeControlItem Noeud, List<eFonction> ListeFonctions, String NomARechercher, String TypeDeLaFonction, Boolean AvecLesSousFonctions)
         {
@@ -286,20 +272,28 @@ namespace Framework_SW2013
                 {
                     if (pFonction.Init(pNoeud.Object, ModeleDeReference)
                         && Regex.IsMatch(pFonction.Nom, NomARechercher)
-                        && Regex.IsMatch(pFonction.SwFonction.GetTypeName2(), TypeDeLaFonction))
+                        && Regex.IsMatch(pFonction.TypeDeLaFonction, TypeDeLaFonction))
                     {
                         ListeFonctions.Add(pFonction);
                     }
                 }
-
                 // On scanne dans tous les cas le dossier Tôlerie et le dossier Etat déplié 
-                if (AvecLesSousFonctions || (pNoeud.Text == "Etat déplié")) //(pFonction.TypeDeLaFonction == "TemplateSheetMetal") || 
+                if (AvecLesSousFonctions ||
+                    (pFonction.EstInitialise && (pFonction.TypeDeLaFonction == "TemplateSheetMetal"))
+                    || (pFonction.EstInitialise && (pFonction.TypeDeLaFonction == "TemplateFlatPattern")))
                     ScannerFonctionsFeatureManager(pNoeud, ListeFonctions, NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
 
                 pNoeud = pNoeud.GetNext();
             }
         }
 
+        /// <summary>
+        /// Renvoi la liste des fonctions de la vue à partir du FeatureManager
+        /// </summary>
+        /// <param name="NomARechercher"></param>
+        /// <param name="TypeDeLaFonction"></param>
+        /// <param name="AvecLesSousFonctions"></param>
+        /// <returns></returns>
         internal List<eFonction> ListListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
             List<eFonction> pListeFonction = new List<eFonction>();
@@ -309,25 +303,24 @@ namespace Framework_SW2013
             return pListeFonction;
         }
 
+        //public ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
+        //{
+        //    Debug.Print(MethodBase.GetCurrentMethod());
+
+        //    List<eFonction> pListeFonctions = ListListeDesFonctionsDeArbre(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
+        //    ArrayList pArrayFonctions = new ArrayList();
+
+        //    if (pListeFonctions.Count > 0)
+        //        pArrayFonctions = new ArrayList(pListeFonctions);
+
+        //    return pArrayFonctions;
+        //}
+
         /// <summary>
-        /// Renvoi la liste des fonctions filtrée par les arguments.
+        /// Scanner le FeatureManager pour rechercher la vue
         /// </summary>
-        /// <param name="NomARechercher"></param>
-        /// <param name="AvecLesSousFonctions"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eFonction> pListeFonctions = ListListeDesFonctionsDeArbre(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
-            ArrayList pArrayFonctions = new ArrayList();
-
-            if (pListeFonctions.Count > 0)
-                pArrayFonctions = new ArrayList(pListeFonctions);
-
-            return pArrayFonctions;
-        }
-
+        /// <param name="Noeud"></param>
+        /// <param name="NoeudVue"></param>
         private void ScannerVueFeatureManager(TreeControlItem Noeud, ref TreeControlItem NoeudVue)
         {
             Debug.Print(MethodBase.GetCurrentMethod());
@@ -353,6 +346,10 @@ namespace Framework_SW2013
             }
         }
 
+        /// <summary>
+        /// Renvoi le noeud de la vue
+        /// </summary>
+        /// <returns></returns>
         private TreeControlItem NoeudVue()
         {
             TreeControlItem pNoeudVue = null;

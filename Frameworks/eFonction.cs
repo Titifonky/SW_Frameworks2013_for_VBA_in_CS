@@ -15,13 +15,15 @@ namespace Framework_SW2013
     public interface IeFonction
     {
         Feature SwFonction { get; }
+        Feature SwFonctionOriginale { get; }
         eModele Modele { get; }
         String Nom { get; set; }
         String TypeDeLaFonction { get; }
-        EtatFonction_e Etat { get; }
+        EtatFonction_e EtatCourant { get; }
         eFonction FonctionParent { get; }
         String DateDeCreation { get; }
         String DateDeModification { get; }
+        EtatFonction_e Etat(eConfiguration Config);
         void Activer(eConfiguration Config = null, Boolean ActiverLesFonctionsDependantes = false);
         void Desactiver(eConfiguration Config = null);
         void Supprimer(swDeleteSelectionOptions_e Options);
@@ -42,7 +44,8 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
-        private Feature _SwModeleFonction = null;
+        private Feature _SwFonctionModele = null;
+        private Feature _SwFonctionOriginale = null;
         private Object _PID = null;
 
         #endregion
@@ -64,14 +67,14 @@ namespace Framework_SW2013
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
 
-                if (_PID != null) //(_SwModeleFonction == null) && 
+                if (_PID != null)
                 {
                     int pErreur = 0;
                     Feature pSwFonction = Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
                     Debug.Print("PID Erreur : " + pErreur);
                     if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
                         || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
-                        _SwModeleFonction = pSwFonction;
+                        _SwFonctionModele = pSwFonction;
                 }
                 else
                 {
@@ -86,15 +89,20 @@ namespace Framework_SW2013
                 else
                 {
                     Debug.Print("Fonction du composant");
-                    if (_SwModeleFonction != null)
+                    if (_SwFonctionModele != null)
                     {
-                        _SwModeleFonction = Modele.Composant.SwComposant.FeatureByName(_SwModeleFonction.Name);
+                        _SwFonctionModele = Modele.Composant.SwComposant.FeatureByName(_SwFonctionModele.Name);
                     }
                 }
 
-                return _SwModeleFonction;
+                return _SwFonctionModele;
             }
         }
+
+        /// <summary>
+        /// Retourne le parent ExtModele.
+        /// </summary>
+        public Feature SwFonctionOriginale { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwFonctionOriginale; } }
 
         /// <summary>
         /// Retourne le parent ExtModele.
@@ -135,20 +143,17 @@ namespace Framework_SW2013
 
         /// <summary>
         /// Renvoi l'etat "Supprimer" ou "Actif" de la fonction
-        /// A tester, je ne suis pas sûr du fonctionnement avec les objets
         /// </summary>
-        public EtatFonction_e Etat
+        public EtatFonction_e EtatCourant
         {
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                String NomConfig = _Modele.GestDeConfigurations.ConfigurationActive.Nom;
-                Object[] pArrayConfig = { NomConfig };
                 Boolean[] pArrayResult;
 
-                pArrayResult = SwFonction.IsSuppressed2((int)swInConfigurationOpts_e.swThisConfiguration, pArrayConfig);
+                pArrayResult = SwFonction.IsSuppressed2((int)swInConfigurationOpts_e.swThisConfiguration, null);
 
-                if (Convert.ToBoolean(pArrayResult[0]) == false)
+                if ((pArrayResult != null) && (Convert.ToBoolean(pArrayResult[0]) == false))
                     return EtatFonction_e.cActivee;
 
                 return EtatFonction_e.cDesactivee;
@@ -219,50 +224,24 @@ namespace Framework_SW2013
             if ((SwFonction != null) && (Modele != null) && Modele.EstInitialise)
             {
                 _Modele = Modele;
-                _SwModeleFonction = SwFonction;
+                _SwFonctionModele = SwFonction;
+                _SwFonctionOriginale = SwFonction;
 
-                // Si le NomPourLaSelection contient un @, c'est une fonction sélectionné.
-                // Donc on passe par le modele pour récupèrer la fonction originale.
-                // Sinon, c'est la bonne.
-
-                String T = "";
-
-                if (Regex.IsMatch(SwFonction.GetNameForSelection(out T), "@"))
-                {
-                    _SwModeleFonction = null;
-                    String pNomFonction = SwFonction.Name;
-                    Feature pSwFonction = _Modele.SwModele.FirstFeature();
-
-                    while (pSwFonction != null)
-                    {
-
-                        if (pSwFonction.Name.Equals(pNomFonction))
-                        {
-                            _SwModeleFonction = pSwFonction;
-                            break;
-                        }
-
-                        Feature pSwSousFonction = pSwFonction.GetFirstSubFeature();
-
-                        while (pSwSousFonction != null)
-                        {
-
-                            if (pSwSousFonction.Name.Equals(pNomFonction))
-                            {
-                                _SwModeleFonction = pSwSousFonction;
-                                break;
-                            }
-
-                            pSwSousFonction = pSwSousFonction.GetNextSubFeature();
-                        }
-
-                        pSwFonction = pSwFonction.GetNextFeature();
-                    }
-                }
-
+                // On met à jour le PID
                 MajPID();
 
-                if (_SwModeleFonction != null)
+                // On met à jour la fonction pour récupérer celle du modèle si ce n'est pas le cas
+                if (_PID != null)
+                {
+                    int pErreur = 0;
+                    Feature pSwFonction = Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
+                    Debug.Print("PID Erreur : " + pErreur);
+                    if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
+                        || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
+                        _SwFonctionModele = pSwFonction;
+                }
+
+                if (_SwFonctionModele != null)
                 {
                     Debug.Print(this.Nom);
                     _EstInitialise = true;
@@ -280,12 +259,31 @@ namespace Framework_SW2013
         {
             Debug.Print(MethodBase.GetCurrentMethod());
 
-            if (_SwModeleFonction == null)
+            if (_SwFonctionModele == null)
                 return;
             // Si la fonction est de type "MaterialFolder", la méthode GetPersistReference3 plante lamentablement
             swFeatureType_e TypeFonction = new swFeatureType_e();
-            if (_SwModeleFonction.GetTypeName2() != TypeFonction.swTnMaterialFolder)
-                _PID = _Modele.SwModele.Extension.GetPersistReference3(_SwModeleFonction);
+            if (_SwFonctionModele.GetTypeName2() != TypeFonction.swTnMaterialFolder)
+                _PID = _Modele.SwModele.Extension.GetPersistReference3(_SwFonctionModele);
+        }
+
+        /// <summary>
+        /// Renvoi l'etat "Supprimer" ou "Actif" de la fonction suivant la configuration donnée
+        /// </summary>
+        public EtatFonction_e Etat(eConfiguration Config)
+        {
+            Debug.Print(MethodBase.GetCurrentMethod());
+            String[] pArrayConfig = { Config.Nom };
+            Boolean[] pArrayResult;
+
+            Feature pSwFonction = SwFonction;
+
+            pArrayResult = pSwFonction.IsSuppressed2((int)swInConfigurationOpts_e.swSpecifyConfiguration, pArrayConfig);
+
+            if ((pArrayResult != null) && (Convert.ToBoolean(pArrayResult[0]) == false))
+                return EtatFonction_e.cActivee;
+
+            return EtatFonction_e.cDesactivee;
         }
 
         /// <summary>
@@ -294,12 +292,6 @@ namespace Framework_SW2013
         public void Activer(eConfiguration Config = null, Boolean ActiverLesFonctionsDependantes = false)
         {
             Debug.Print(MethodBase.GetCurrentMethod());
-
-            //Selectionner(false);
-            //Modele.SwModele.EditUnsuppress2();
-            //Modele.SwModele.EditUnsuppressDependent2();
-            //Modele.SW.Modele().SwModele.EditUnsuppress2();
-            //Modele.SW.Modele().SwModele.EditUnsuppressDependent2();
 
             String pNomConfig;
 
@@ -345,15 +337,6 @@ namespace Framework_SW2013
             String[] pTabConfig = { pNomConfig };
 
             pSwFonction.SetSuppression2((int)swFeatureSuppressionAction_e.swSuppressFeature, (int)swInConfigurationOpts_e.swSpecifyConfiguration, pTabConfig);
-
-            // Si la fonction est une instance de bloc, on selectionne la fonction Esquisse parent pour la desactiver
-            //if (TypeDeLaFonction == "SketchBlockInst")
-            //    FonctionParent.Selectionner(false);
-            //else
-            //    Selectionner(false);
-
-            //Modele.SwModele.EditSuppress2();
-            //Modele.SW.Modele().SwModele.EditSuppress2();
         }
 
         /// <summary>
@@ -411,7 +394,7 @@ namespace Framework_SW2013
             if (SwFonction.GetFaceCount() == 0)
                 return pListeCorps;
 
-            foreach (Face2 Face in _SwModeleFonction.GetFaces())
+            foreach (Face2 Face in _SwFonctionModele.GetFaces())
             {
                 eCorps Corps = new eCorps();
                 if (Corps.Init(Face.GetBody(), _Modele.Piece) && (pListeCorps.Contains(Corps) == false))
@@ -536,17 +519,17 @@ namespace Framework_SW2013
 
         public int CompareTo(eFonction Fonction)
         {
-            return (_Modele.SwModele.GetPathName() + _SwModeleFonction.Name).CompareTo(Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name);
+            return (_Modele.SwModele.GetPathName() + _SwFonctionModele.Name).CompareTo(Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name);
         }
 
         public int Compare(eFonction Fonction1, eFonction Fonction2)
         {
-            return (Fonction1.Modele.SwModele.GetPathName() + Fonction1._SwModeleFonction.Name).CompareTo(Fonction2.Modele.SwModele.GetPathName() + Fonction2._SwModeleFonction.Name);
+            return (Fonction1.Modele.SwModele.GetPathName() + Fonction1._SwFonctionModele.Name).CompareTo(Fonction2.Modele.SwModele.GetPathName() + Fonction2._SwFonctionModele.Name);
         }
 
         public Boolean Equals(eFonction Fonction)
         {
-            return (Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name).Equals(_Modele.SwModele.GetPathName() + _SwModeleFonction.Name);
+            return (Fonction.Modele.SwModele.GetPathName() + Fonction.SwFonction.Name).Equals(_Modele.SwModele.GetPathName() + _SwFonctionModele.Name);
         }
 
         #endregion

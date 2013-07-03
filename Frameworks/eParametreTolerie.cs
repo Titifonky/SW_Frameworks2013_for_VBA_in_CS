@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Framework_SW2013
 {
@@ -64,47 +65,35 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                eFonction pFonctionTolerie = FonctionTolerie;
 
-                //if (pFonctionTolerie == null)
-                //    return 0;
-
-                //Dimension pSwDim = pFonctionTolerie.SwFonction.Parameter("D7");
-                //if (pSwDim != null)
-                //{
-                //    return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0] * 1000, 5);
-                //}
-
-                //pSwDim = pFonctionTolerie.SwFonction.Parameter("Epaisseur");
-                //if (pSwDim != null)
-                //{
-                //    return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0] * 1000, 5);
-                //}
-
-                //return _Tole.Corps.Piece.ParametresDeTolerie.Epaisseur;
-                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
                 return Math.Round(pParam.Thickness * 1000, 5);
             }
             set
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
                 eFonction pFonctionTolerie = FonctionTolerie;
+                Dimension pSwDim;
 
-                if (pFonctionTolerie == null)
-                    return;
-
-                Dimension pSwDim = pFonctionTolerie.SwFonction.Parameter("D7");
-                if (pSwDim != null)
+                if (_Tole != null)
                 {
-                    pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null);
-                    return;
+                    pSwDim = FonctionToleDeBase.SwFonction.Parameter("D7");
+                    if (pSwDim != null)
+                    {
+                        pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null);
+                    }
+
+                    pSwDim = pFonctionTolerie.SwFonction.Parameter("D7");
+                    if (pSwDim != null)
+                    {
+                        pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null);
+                    }
                 }
 
                 pSwDim = pFonctionTolerie.SwFonction.Parameter("Epaisseur");
                 if (pSwDim != null)
                 {
                     pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null);
-                    return;
                 }
             }
         }
@@ -118,17 +107,7 @@ namespace Framework_SW2013
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
 
-                //eFonction pFonctionTolerie = FonctionTolerie;
-
-                //if (pFonctionTolerie == null)
-                //    return 0;
-
-                //Dimension pSwDim = pFonctionTolerie.SwFonction.Parameter(_DimRayon);
-                //if (pSwDim != null)
-                //    return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0] * 1000, 5);
-                //else
-                //    return _Tole.Corps.Piece.ParametresDeTolerie.Epaisseur;
-                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                BaseFlangeFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
                 return Math.Round(pParam.BendRadius * 1000, 5);
             }
             set
@@ -136,7 +115,7 @@ namespace Framework_SW2013
                 Debug.Print(MethodBase.GetCurrentMethod());
                 Dimension pSwDim = FonctionTolerie.SwFonction.Parameter(_DimRayon);
                 if (pSwDim == null) return;
-                Debug.Print("Modification du rayon : " + pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null).ToString());
+                pSwDim.SetSystemValue3(value * 0.001, (int)swInConfigurationOpts_e.swThisConfiguration, null).ToString();
             }
         }
 
@@ -148,18 +127,8 @@ namespace Framework_SW2013
             get
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                //eFonction pFonctionTolerie = FonctionTolerie;
 
-                //if (pFonctionTolerie == null)
-                //    return 0;
-
-                //Dimension pSwDim = pFonctionTolerie.SwFonction.Parameter(_DimK);
-                //if (pSwDim != null)
-                //    return Math.Round(pSwDim.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null)[0], 5);
-                //else
-                //    return _Tole.Corps.Piece.ParametresDeTolerie.Epaisseur;
-
-                BaseFlangeFeatureData pParam = FonctionToleDeBase.SwFonction.GetDefinition();
+                BaseFlangeFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
                 return Math.Round(pParam.KFactor, 5);
             }
             set
@@ -261,14 +230,7 @@ namespace Framework_SW2013
 
                 if (_Piece != null)
                 {
-                    List<eFonction> pListeFoncs = _Piece.ListListeDesFonctionsDeArbre("", "TemplateSheetMetal", false);
-                    if (pListeFoncs.Count == 0)
-                    {
-                        Debug.Print("=======> Pas de dossier de tolerie dans cette piece");
-                        return null;
-                    }
-
-                    return pListeFoncs[0];
+                    return DossierTolerie();
                 }
                 else
                 {
@@ -372,6 +334,32 @@ namespace Framework_SW2013
                 Debug.Print("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
+        }
+
+        /// <summary>
+        /// Renvoi le dossier Tôlerie à partir du FeatureManager
+        /// </summary>
+        /// <returns></returns>
+        private eFonction DossierTolerie()
+        {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
+            TreeControlItem pNoeud = Piece.Modele.SwModele.FeatureManager.GetFeatureTreeRootItem2((int)swFeatMgrPane_e.swFeatMgrPaneTop).GetFirstChild();
+
+            while (pNoeud != null)
+            {
+                eFonction pFonction = new eFonction();
+                if (pNoeud.ObjectType == (int)swTreeControlItemType_e.swFeatureManagerItem_Feature)
+                {
+                    if (pFonction.Init(pNoeud.Object, Piece.Modele)
+                        && (pFonction.TypeDeLaFonction == "TemplateSheetMetal"))
+                        return pFonction;
+                }
+
+                pNoeud = pNoeud.GetNext();
+            }
+
+            return null;
         }
 
         #endregion

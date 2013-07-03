@@ -359,12 +359,15 @@ namespace Framework_SW2013
                 {
                     if (pFonction.Init(pNoeud.Object, Modele)
                         && Regex.IsMatch(pFonction.Nom, NomARechercher)
-                        && Regex.IsMatch(pFonction.SwFonction.GetTypeName2(), TypeDeLaFonction))
+                        && Regex.IsMatch(pFonction.TypeDeLaFonction, TypeDeLaFonction))
                         ListeFonctions.Add(pFonction);
                 }
 
-                // On scanne dans tous les cas le dossier Tôlerie et le dossier Etat déplié 
-                if (AvecLesSousFonctions || (pFonction.TypeDeLaFonction == "TemplateSheetMetal") || (pNoeud.Text == "Etat déplié"))
+                // On scanne dans tous les cas le dossier Tôlerie et le dossier Etat déplié
+                // On rajoute un test d'initialisation de la fonction pour éviter les erreurs
+                if (AvecLesSousFonctions ||
+                    (pFonction.EstInitialise && (pFonction.TypeDeLaFonction == "TemplateSheetMetal"))
+                    || (pFonction.EstInitialise && (pFonction.TypeDeLaFonction == "TemplateFlatPattern")))
                     ScannerFonctionsFeatureManager(pNoeud, ListeFonctions, NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
 
                 pNoeud = pNoeud.GetNext();
