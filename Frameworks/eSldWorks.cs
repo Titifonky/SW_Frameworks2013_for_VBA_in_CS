@@ -43,6 +43,7 @@ namespace Framework_SW2013
         private String _Revision = "";
         private int Erreur = 0;
         private int Warning = 0;
+        private eGestOptions _GestOptions = null;
 
         private Boolean _ActiverLesConfigurations = false;
 
@@ -109,9 +110,14 @@ namespace Framework_SW2013
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
 
-                eGestOptions pOptions = new eGestOptions();
-                if (pOptions.Init(this))
-                    return pOptions;
+                if (_GestOptions == null)
+                {
+                    _GestOptions = new eGestOptions();
+                    _GestOptions.Init(this);
+                }
+
+                if (_GestOptions.EstInitialise)
+                    return _GestOptions;
 
                 return null;
             }

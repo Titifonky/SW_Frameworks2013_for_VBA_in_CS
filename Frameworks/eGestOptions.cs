@@ -29,6 +29,10 @@ namespace Framework_SW2013
         Boolean Pdf_ExporterEnHauteQualite { get; set; }
         Boolean Pdf_ImprimerEnTeteEtPiedDePage { get; set; }
         Boolean Pdf_UtiliserLesEpaisseursDeLigneDeImprimante { get; set; }
+
+        void ActiverEffetsVisuels();
+        void DesactiverEffetsVisuels();
+
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -41,6 +45,12 @@ namespace Framework_SW2013
         private Boolean _EstInitialise = false;
 
         private eSldWorks _SW = null;
+
+        private Boolean _TransitionDesactive = false;
+        private Double _TransitionVue = 0;
+        private Double _TransitionAfficherCacher = 0;
+        private Double _TransitionIsoler = 0;
+        private Double _TransitionSelecteur = 0;
 
 #endregion
 
@@ -295,6 +305,34 @@ namespace Framework_SW2013
             }
 
             return _EstInitialise;
+        }
+
+        public void ActiverEffetsVisuels()
+        {
+            if (_TransitionDesactive)
+            {
+                _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewAnimationSpeed, _TransitionVue);
+                _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionHideShowComponent, _TransitionAfficherCacher);
+                _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionIsolate, _TransitionIsoler);
+                _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewSelectorSpeed, _TransitionSelecteur);
+            }
+
+            _TransitionDesactive = false;
+        }
+
+        public void DesactiverEffetsVisuels()
+        {
+            _TransitionVue = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewAnimationSpeed);
+            _TransitionAfficherCacher = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionHideShowComponent);
+            _TransitionIsoler = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionIsolate);
+            _TransitionSelecteur = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewSelectorSpeed);
+
+            _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewAnimationSpeed, 0);
+            _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionHideShowComponent, 0);
+            _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionIsolate, 0);
+            _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewSelectorSpeed, 0);
+
+            _TransitionDesactive = true;
         }
 
 #endregion
