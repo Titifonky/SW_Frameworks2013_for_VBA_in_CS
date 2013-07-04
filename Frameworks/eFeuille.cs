@@ -371,13 +371,13 @@ namespace Framework_SW2013
         public void Supprimer()
         {
             Debug.Print(MethodBase.GetCurrentMethod());
-            if (Dessin.Modele.SW.TypeDuModeleActif == TypeFichier_e.cDessin)
-            {
-                eModele pModeleActif = Dessin.Modele.SW.Modele();
-                pModeleActif.SwModele.Extension.SelectByID2(Nom, "SHEET", 0, 0, 0, false, 0, null, 0);
-                pModeleActif.SwModele.DeleteSelection(false);
-                pModeleActif.SwModele.ClearSelection2(true);
-            }
+
+            eModele pModeleDessin = Dessin.Modele;
+            pModeleDessin.Activer();
+
+            pModeleDessin.SwModele.Extension.SelectByID2(Nom, "SHEET", 0, 0, 0, false, 0, null, 0);
+            pModeleDessin.SwModele.DeleteSelection(false);
+            pModeleDessin.SwModele.ClearSelection2(true);
         }
 
         /// <summary>

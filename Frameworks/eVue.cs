@@ -23,6 +23,7 @@ namespace Framework_SW2013
         Boolean AfficherLignesDePliage { set; }
         Boolean AfficherNotesDePliage { get; set; }
         void Selectionner(Boolean Ajouter = false);
+        void Supprimer();
         //ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
     }
 
@@ -242,13 +243,30 @@ namespace Framework_SW2013
         }
 
         /// <summary>
+        /// Supprimer la vue
+        /// </summary>
+        public void Supprimer()
+        {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
+            Selectionner();
+            eModele pModeleDessin = Feuille.Dessin.Modele;
+            pModeleDessin.Activer();
+            pModeleDessin.SwModele.DeleteSelection(false);
+            pModeleDessin.SwModele.ClearSelection2(true);
+        }
+
+        /// <summary>
         /// Selectionner la vue
         /// </summary>
         /// <param name="Ajouter"></param>
         public void Selectionner(Boolean Ajouter = false)
         {
+            eModele pModeleDessin = Feuille.Dessin.Modele;
+            pModeleDessin.Activer();
+
             ePoint pCentre = Dimensions.Centre;
-            _Feuille.Dessin.Modele.SW.Modele().SwModele.Extension.SelectByID2(Nom, "DRAWINGVIEW", pCentre.X, pCentre.Y, pCentre.Z, Ajouter, -1, null, 0);
+            pModeleDessin.SwModele.Extension.SelectByID2(Nom, "DRAWINGVIEW", pCentre.X, pCentre.Y, pCentre.Z, Ajouter, -1, null, 0);
         }
 
         /// <summary>

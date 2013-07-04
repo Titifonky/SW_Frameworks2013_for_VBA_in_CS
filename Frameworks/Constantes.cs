@@ -146,6 +146,8 @@ namespace Framework_SW2013
         String MODELE_DE_DESSIN_LASER { get; }
         String NOM_CORPS_DEPLIEE { get; }
         String ETAT_D_AFFICHAGE { get; }
+        String Extension(TypeFichier_e TypeFichier);
+
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -165,6 +167,13 @@ namespace Framework_SW2013
         public String NOM_CORPS_DEPLIEE { get { return CONSTANTES.NOM_CORPS_DEPLIEE; } }
         public String ETAT_D_AFFICHAGE { get { return CONSTANTES.ETAT_D_AFFICHAGE; } }
 
+#endregion
+
+#region "Méthodes"
+        public String Extension(TypeFichier_e TypeFichier)
+        {
+            return CONSTANTES.Extension(TypeFichier);
+        }
 #endregion
     }
 
