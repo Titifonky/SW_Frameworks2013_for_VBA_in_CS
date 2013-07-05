@@ -51,6 +51,7 @@ namespace Framework_SW2013
         private Double _TransitionAfficherCacher = 0;
         private Double _TransitionIsoler = 0;
         private Double _TransitionSelecteur = 0;
+        private Double _AnimationContrainte = 0;
 
 #endregion
 
@@ -315,6 +316,7 @@ namespace Framework_SW2013
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionHideShowComponent, _TransitionAfficherCacher);
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionIsolate, _TransitionIsoler);
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewSelectorSpeed, _TransitionSelecteur);
+                _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swMateAnimationSpeed, _AnimationContrainte);
             }
 
             _TransitionDesactive = false;
@@ -326,11 +328,13 @@ namespace Framework_SW2013
             _TransitionAfficherCacher = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionHideShowComponent);
             _TransitionIsoler = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionIsolate);
             _TransitionSelecteur = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewSelectorSpeed);
+            _AnimationContrainte = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swMateAnimationSpeed);
 
             _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewAnimationSpeed, 0);
             _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionHideShowComponent, 0);
             _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionIsolate, 0);
             _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewSelectorSpeed, 0);
+            _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swMateAnimationSpeed, 0);
 
             _TransitionDesactive = true;
         }
