@@ -24,7 +24,7 @@ namespace Framework_SW2013
         eDossier Dossier { get; }
         eFonction PremiereFonction { get; }
         void Selectionner(Boolean Ajouter = true);
-        ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false);
+        ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
         int NbIntersection(eCorps Corps);
     }
 
@@ -345,7 +345,7 @@ namespace Framework_SW2013
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Print(MethodBase.GetCurrentMethod());
 
@@ -355,7 +355,9 @@ namespace Framework_SW2013
             {
                 eFonction pFonction = new eFonction();
 
-                if ((Regex.IsMatch(pSwFonction.Name, NomARechercher)) && pFonction.Init(pSwFonction, _Piece.Modele))
+                if ((Regex.IsMatch(pSwFonction.Name, NomARechercher))
+                    && (Regex.IsMatch(pSwFonction.GetTypeName2(), TypeDeLaFonction))
+                    && pFonction.Init(pSwFonction, _Piece.Modele))
                     pListeFonctions.Add(pFonction);
 
                 if (AvecLesSousFonctions)
@@ -366,7 +368,9 @@ namespace Framework_SW2013
                     {
                         eFonction pSousFonction = new eFonction();
 
-                        if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher)) && pSousFonction.Init(pSwSousFonction, _Piece.Modele))
+                        if ((Regex.IsMatch(pSwSousFonction.Name, NomARechercher))
+                            && (Regex.IsMatch(pSwSousFonction.GetTypeName2(), TypeDeLaFonction))
+                            && pSousFonction.Init(pSwSousFonction, _Piece.Modele))
                             pListeFonctions.Add(pSousFonction);
 
                         pSwSousFonction = pSwSousFonction.GetNextSubFeature();
@@ -383,11 +387,11 @@ namespace Framework_SW2013
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        public ArrayList ListeDesFonctions(String NomARechercher = "", Boolean AvecLesSousFonctions = false)
+        public ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
             Debug.Print(MethodBase.GetCurrentMethod());
 
-            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, AvecLesSousFonctions);
+            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
             ArrayList pArrayFonctions = new ArrayList();
 
             if (pListeFonctions.Count > 0)
