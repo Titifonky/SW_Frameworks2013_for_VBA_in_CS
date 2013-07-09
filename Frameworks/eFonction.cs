@@ -19,6 +19,7 @@ namespace Framework_SW2013
         eModele Modele { get; }
         String Nom { get; set; }
         String TypeDeLaFonction { get; }
+        TypeFonction_e TypeFonction { get; }
         EtatFonction_e EtatCourant { get; }
         eFonction FonctionParent { get; }
         String DateDeCreation { get; }
@@ -82,7 +83,9 @@ namespace Framework_SW2013
                     MajPID();
                 }
 
-                if (Modele.SwModele.GetPathName().Equals(Modele.SW.Modele().SwModele.GetPathName()) || Modele.Composant.SwComposant.IsRoot())
+                ModelDoc2 pDocActif = Modele.SW.SwSW.ActiveDoc;
+
+                if (Modele.SwModele.GetPathName().Equals(pDocActif.GetPathName()) || Modele.Composant.SwComposant.IsRoot())
                 {
                     Debug.Print("Fonction du modele");
                 }
@@ -137,9 +140,17 @@ namespace Framework_SW2013
         }
 
         /// <summary>
-        /// Retourne le type de la fonction.
+        /// Retourne le type de la fonction SW.
         /// </summary>
         public String TypeDeLaFonction { get { Debug.Print(MethodBase.GetCurrentMethod()); return SwFonction.GetTypeName2(); } }
+
+        public TypeFonction_e TypeFonction
+        {
+            get
+            {
+                return (TypeFonction_e)Enum.Parse(typeof(TypeFonction_e), "c" + TypeDeLaFonction, true);
+            }
+        }
 
         /// <summary>
         /// Renvoi l'etat "Supprimer" ou "Actif" de la fonction
@@ -243,7 +254,7 @@ namespace Framework_SW2013
 
                 if (_SwFonctionModele != null)
                 {
-                    Debug.Print(this.Nom);
+                    Debug.Print(_SwFonctionModele.Name);
                     _EstInitialise = true;
                 }
                 else
@@ -363,9 +374,10 @@ namespace Framework_SW2013
             {
                 pSwFonction.Select2(Ajouter, -1);
 
-                String T;
-                String NomSel = pSwFonction.GetNameForSelection(out T);
-                Modele.SW.Modele().SwModele.Extension.SelectByID2(NomSel, T, 0, 0, 0, Ajouter, -1, null, 0);
+                //String T;
+                //String NomSel = pSwFonction.GetNameForSelection(out T);
+                //Debug.Print("===========================> Selectionner : " + NomSel);
+                //Modele.SwModele.Extension.SelectByID2(NomSel, T, 0, 0, 0, Ajouter, -1, null, 0);
             }
             else
                 Debug.Print("===========================> Selectionner : Erreur");

@@ -549,6 +549,8 @@ namespace Framework_SW2013
         /// <returns></returns>
         public eFonction DerniereFonction()
         {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
             swFeatureType_e TypeF = new swFeatureType_e();
             int i = 0;
             Feature pSwFonc = _SwModele.FeatureByPositionReverse(i);

@@ -81,30 +81,30 @@ namespace Framework_SW2013
 
     internal static class CONSTANTES
     {
-#region "Variables locales"
+        #region "Variables locales"
 
-        internal static String CONFIG_DEPLIEE_PATTERN = "^*SM-FLAT-PATTERN*";
-        internal static String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
-        internal static String CONFIG_PLIEE_PATTERN = "^[0-9]";
-        internal static String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
-        internal static String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
-        internal static String NO_DOSSIER = "NoDossier";
-        internal static String NO_CONFIG = "NoConfig";
-        internal static String NOM_ELEMENT = "Element";
-        internal static String PROFIL_NOM = "Profil";
-        internal static String PROFIL_ANGLE1 = "ANGLE1";
-        internal static String PROFIL_ANGLE2 = "ANGLE2";
-        internal static String PROFIL_LONGUEUR = "LONGUEUR";
-        internal static String PROFIL_MASSE = "Masse";
-        internal static String PROFIL_MATERIAU = "MATERIAL";
-        internal static String LIGNE_DE_PLIAGE = "Lignes de pliage";
-        internal static String CUBE_DE_VISUALISATION = "Cube de visualisation";
-        internal static String MODELE_DE_DESSIN_LASER = "MacroLaser";
-        internal static String NOM_CORPS_DEPLIEE = "Etat déplié";
-        internal static String ETAT_D_AFFICHAGE = "Etat d'affichage-";
+        internal const String CONFIG_DEPLIEE_PATTERN = "^*SM-FLAT-PATTERN*";
+        internal const String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
+        internal const String CONFIG_PLIEE_PATTERN = "^[0-9]";
+        internal const String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
+        internal const String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
+        internal const String NO_DOSSIER = "NoDossier";
+        internal const String NO_CONFIG = "NoConfig";
+        internal const String NOM_ELEMENT = "Element";
+        internal const String PROFIL_NOM = "Profil";
+        internal const String PROFIL_ANGLE1 = "ANGLE1";
+        internal const String PROFIL_ANGLE2 = "ANGLE2";
+        internal const String PROFIL_LONGUEUR = "LONGUEUR";
+        internal const String PROFIL_MASSE = "Masse";
+        internal const String PROFIL_MATERIAU = "MATERIAL";
+        internal const String LIGNE_DE_PLIAGE = "Lignes de pliage";
+        internal const String CUBE_DE_VISUALISATION = "Cube de visualisation";
+        internal const String MODELE_DE_DESSIN_LASER = "MacroLaser";
+        internal const String NOM_CORPS_DEPLIEE = "Etat déplié";
+        internal const String ETAT_D_AFFICHAGE = "Etat d'affichage-";
 
-#endregion
-#region "Méthodes"
+        #endregion
+        #region "Méthodes"
         internal static String Extension(TypeFichier_e TypeFichier, Boolean Gabarit = false)
         {
             String pDocExt = "";
@@ -130,7 +130,7 @@ namespace Framework_SW2013
             else
                 return pDocExt;
         }
-#endregion
+        #endregion
     }
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -147,7 +147,6 @@ namespace Framework_SW2013
         String NOM_CORPS_DEPLIEE { get; }
         String ETAT_D_AFFICHAGE { get; }
         String Extension(TypeFichier_e TypeFichier);
-
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -155,7 +154,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.Constantes")]
     public class Constantes : IConstantes
     {
-#region "Propriétés"
+        #region "Propriétés"
 
         public String ARTICLE_LISTE_DES_PIECES_SOUDEES { get { return CONSTANTES.ARTICLE_LISTE_DES_PIECES_SOUDEES; } }
         public String CONFIG_DEPLIEE { get { return CONSTANTES.CONFIG_DEPLIEE; } }
@@ -167,14 +166,14 @@ namespace Framework_SW2013
         public String NOM_CORPS_DEPLIEE { get { return CONSTANTES.NOM_CORPS_DEPLIEE; } }
         public String ETAT_D_AFFICHAGE { get { return CONSTANTES.ETAT_D_AFFICHAGE; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
         public String Extension(TypeFichier_e TypeFichier)
         {
             return CONSTANTES.Extension(TypeFichier);
         }
-#endregion
+        #endregion
     }
 
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -403,8 +402,7 @@ namespace Framework_SW2013
     [ProgId("Frameworks.swFeatureType_e")]
     public class swFeatureType_e : IswFeatureType_e
     {
-#region "Propriétés"
-
+        #region "Propriétés"
         public String swTnExplodeLineProfileFeature { get { return "ExplodeLineProfileFeature"; } }
         public String swTnInContextFeatHolder { get { return "InContextFeatHolder"; } }
         public String swTnMateCoincident { get { return "MateCoincident"; } }
@@ -621,6 +619,6 @@ namespace Framework_SW2013
         public String swTnWeldmentTableAnchor { get { return "WeldmentTableAnchor"; } }
         public String swTnWeldmentTableFeature { get { return "WeldmentTableFeat"; } }
 
-#endregion
+        #endregion
     }
 }

@@ -359,7 +359,7 @@ namespace Framework_SW2013
                 {
                     if (pFonction.Init(pNoeud.Object, Modele)
                         && Regex.IsMatch(pFonction.Nom, NomARechercher)
-                        && Regex.IsMatch(pFonction.TypeDeLaFonction, TypeDeLaFonction))
+                        && Regex.IsMatch(pFonction.TypeDeLaFonction,TypeDeLaFonction))
                         ListeFonctions.Add(pFonction);
                 }
 

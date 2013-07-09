@@ -234,6 +234,7 @@ namespace Framework_SW2013
                     case swSelectType_e.swSelCAMERAS:
                     case swSelectType_e.swSelSWIFTANNOTATIONS:
                     case swSelectType_e.swSelSWIFTFEATURES:
+                    case swSelectType_e.swSelCTHREADS:
                         eFonction pFonction = new eFonction();
                         if (pFonction.Init(pSwObjet, pModele))
                             return pFonction;
