@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -372,13 +373,27 @@ namespace Framework_SW2013
                 // On valide l'initialisation avant de recupérer la configuration
                 _EstInitialise = true;
 
+                String pNomConfig = SwComposant.ReferencedConfiguration;
+
+                // Quelque fois, le nom de la configuration référencée n'existe pas donc il faut vérifier.
+                String[] ListeNomConfigs = Modele.SwModele.GetConfigurationNames();
+
+                if (!ListeNomConfigs.Contains(pNomConfig))
+                {
+                    pNomConfig = (String)ListeNomConfigs[0];
+                    Debug.Print("La Config \"" + pNomConfig + "\"n'existe pas, nouveau nom : NomConfig = " + pNomConfig);
+                }
+
                 _Configuration = new eConfiguration();
 
                 // Si la configuration referencé est vide, on recupère la configuration active.
-                if (String.IsNullOrEmpty(SwComposant.ReferencedConfiguration))
+                if (String.IsNullOrEmpty(pNomConfig))
                     _Configuration = Modele.GestDeConfigurations.ConfigurationActive;
                 else
-                    _Configuration = Modele.GestDeConfigurations.ConfigurationAvecLeNom(SwComposant.ReferencedConfiguration);
+                {
+                    Configuration pSwConfig = Modele.SwModele.GetConfigurationByName(pNomConfig);
+                    _Configuration.Init(pSwConfig, Modele);
+                }
 
                 // Si la config est ok
                 if (_Configuration.EstInitialise)

@@ -158,8 +158,10 @@ namespace Framework_SW2013
         {
             Debug.Print(MethodBase.GetCurrentMethod());
 
+            Configuration pSwConfig = _Modele.SwModele.GetConfigurationByName(NomConfiguration);
             eConfiguration pConfig = new eConfiguration();
-            if (pConfig.Init(_Modele.SwModele.GetConfigurationByName(NomConfiguration), _Modele))
+
+            if (pConfig.Init(pSwConfig, _Modele))
                 return pConfig;
 
             return null;

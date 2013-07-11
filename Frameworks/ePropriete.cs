@@ -17,6 +17,7 @@ namespace Framework_SW2013
         String Valeur { get; }
         Boolean Renommer(String NvNom);
         Boolean Supprimer();
+        ePropriete CopierVers(eGestDeProprietes GestDeProprietes, Boolean Ecraser = false);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -203,6 +204,21 @@ namespace Framework_SW2013
             }
             else
                 return false;
+        }
+
+        /// <summary>
+        /// Copier une propriété d'un modèle à un autre
+        /// </summary>
+        /// <param name="GestDeProprietes"></param>
+        /// <param name="Ecraser"></param>
+        public ePropriete CopierVers(eGestDeProprietes GestDeProprietes, Boolean Ecraser = false)
+        {
+            if ((GestDeProprietes != null) && (GestDeProprietes.EstInitialise))
+            {
+                return GestDeProprietes.AjouterPropriete(Nom, TypeDeLaPropriete, Expression, Ecraser);
+            }
+
+            return null;
         }
 
 #endregion
