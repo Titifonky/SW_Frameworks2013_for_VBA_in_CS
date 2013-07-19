@@ -3,8 +3,8 @@
 
 #define Application "Framework VBA pour Solidworks 2012"
 #define Developpeur "Etienne Canuel"
-#define Version "1.1"
-#define FichierFW "Framework_SW2012-V" 
+#define Version "1-1"
+#define FichierFW "Framework_SW2012_V" 
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.

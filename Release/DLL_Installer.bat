@@ -10,7 +10,7 @@ for %%i in (*.dll) do (
 set NomTLB=%%~ni.tlb
 )
 
-for /r %%i in (%NomTLB%) do (
+for %%i in (%NomTLB%) do (
 set FichierTLB=%%i
 )
 
@@ -38,12 +38,12 @@ set NomDLL=%%~ni.dll
 set NomTLB=%%~ni.tlb
 )
 
-for /r %%i in (%NomTLB%) do (
-set FichierTLB=%%i
+for %%i in (%NomTLB%) do (
+set FichierTLB=%%~si
 )
 
-for /r %%i in (%NomDLL%) do (
-set FichierDLL=%%i
+for %%i in (%NomDLL%) do (
+set FichierDLL=%%~si
 )
 
 set DossierCourant=%cd%

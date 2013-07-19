@@ -25,13 +25,16 @@ set NomDLL=%%~ni.dll
 set NomTLB=%%~ni.tlb
 )
 
-for /r %%i in (%NomTLB%) do (
-set FichierTLB=%%i
+for %%i in (%NomTLB%) do (
+set FichierTLB=%%~si
 )
 
-for /r %%i in (%NomDLL%) do (
-set FichierDLL=%%i
+for %%i in (%NomDLL%) do (
+set FichierDLL=%%~si
 )
+
+echo.
+echo %FichierTLB%
 
 if not exist "%FichierTLB%" (
 echo.
