@@ -7,11 +7,8 @@ mode con cols=150 lines=60
 
 setlocal enableDelayedExpansion
 for %%i in (*.dll) do (
-set NomTLB=%%~ni.tlb
-)
-
-for %%i in (%NomTLB%) do (
-set FichierTLB=%%i
+set FichierDLL=%%~fi
+set FichierTLB=%%~dpni.tlb
 )
 
 if exist "%FichierTLB%" (
@@ -32,20 +29,6 @@ echo.
 echo Dossier courant :
 echo    %cd%
 
-setlocal enableDelayedExpansion
-for %%i in (*.dll) do (
-set NomDLL=%%~ni.dll
-set NomTLB=%%~ni.tlb
-)
-
-for %%i in (%NomTLB%) do (
-set FichierTLB=%%~si
-)
-
-for %%i in (%NomDLL%) do (
-set FichierDLL=%%~si
-)
-
 set DossierCourant=%cd%
 set DossierNET="%WINDIR%\Microsoft.NET\Framework\v4.0.30319"
 set DossierNET64="%WINDIR%\Microsoft.NET\Framework64\v4.0.30319"
@@ -65,10 +48,9 @@ echo.
 echo.
 echo %Titre%
 echo --------------------------------------------------------
-echo Nom de la DLL :
-echo    %NomDLL%
-echo Dossier courant :
-echo    %cd%
+echo Nom de la DLL a inscrire :
+echo    %FichierDLL%
+
 if "%DossierCourant%"==%cd% (
 echo.
 echo Le framework .NET v4.0.30319 n'est pas installe sur la machine
@@ -78,8 +60,6 @@ echo FIN
 pause
 exit
 )
-
-
 
 echo.
 echo --------------------------------------------------------
