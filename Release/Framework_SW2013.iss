@@ -29,10 +29,14 @@ PrivilegesRequired=admin
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
+[Dirs]
+Name: "{app}"; Permissions: users-modify
+
 [Files]
-Source: "{#FichierFW}{#Version}.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DLL_Desinstaller.bat"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DLL_Installer.bat"; DestDir: "{app}"; Flags: ignoreversion
+
+Source: "{#FichierFW}{#Version}.dll"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
+Source: "DLL_Desinstaller.bat"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
+Source: "DLL_Installer.bat"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Run]

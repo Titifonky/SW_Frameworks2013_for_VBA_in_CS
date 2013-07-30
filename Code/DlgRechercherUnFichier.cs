@@ -116,27 +116,21 @@ namespace Framework
 
             if (FiltreDistinct)
             {
-                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cAssemblage))
-                    Filtre.Add("Assemblage (*.SLDASM)|*.SLDASM");
-
-                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cPiece))
-                    Filtre.Add("Pièce (*.SLDPRT)|*.SLDPRT");
-
-                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cDessin))
-                    Filtre.Add("Mise en plan (*.SLDDRW)|*.SLDDRW");
+                foreach (TypeFichier_e T in Enum.GetValues(typeof(TypeFichier_e)))
+                {
+                    if (TypeDesFichiersFiltres.HasFlag(T))
+                        Filtre.Add(CONSTANTES.InfoFichier(T,InfoFichier_e.cNom) + " (*" + CONSTANTES.InfoFichier(T) + "|*" + CONSTANTES.InfoFichier(T));
+                }
 
                 TxtFiltre = String.Join("|", Filtre);
             }
             else
             {
-                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cAssemblage))
-                    Filtre.Add("*.SLDASM");
-
-                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cPiece))
-                    Filtre.Add("*.SLDPRT");
-
-                if (TypeDesFichiersFiltres.HasFlag(TypeFichier_e.cDessin))
-                    Filtre.Add("*.SLDDRW");
+                foreach (TypeFichier_e T in Enum.GetValues(typeof(TypeFichier_e)))
+                {
+                    if (TypeDesFichiersFiltres.HasFlag(T))
+                        Filtre.Add("*" + CONSTANTES.InfoFichier(T));
+                }
 
                 TxtFiltre = "Fichier SolidWorks (" + String.Join(", ", Filtre) + ")" + "|" + String.Join("; ", Filtre);
             }

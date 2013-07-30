@@ -297,7 +297,7 @@ namespace Framework
 
                 foreach (String Chemin in pTabCheminsGabarit)
                 {
-                    pCheminGabarit = Chemin + @"\" + Gabarit + CONSTANTES.Extension(TypeDeDocument, true);
+                    pCheminGabarit = Chemin + @"\" + Gabarit + CONSTANTES.InfoFichier(TypeDeDocument,InfoFichier_e.cGabarit);
                     if (File.Exists(pCheminGabarit))
                         break;
                 }
@@ -320,7 +320,7 @@ namespace Framework
             Debug.Print(Ht.ToString());
 
             pSwModele = _SwSW.NewDocument(pCheminGabarit, Format, Lg, Ht);
-            pSwModele.Extension.SaveAs(Dossier + @"\" + NomDuDocument + CONSTANTES.Extension(TypeDeDocument),
+            pSwModele.Extension.SaveAs(Dossier + @"\" + NomDuDocument + CONSTANTES.InfoFichier(TypeDeDocument),
                                         (int)swSaveAsVersion_e.swSaveAsCurrentVersion,
                                         (int)swSaveAsOptions_e.swSaveAsOptions_Silent,
                                         null,
