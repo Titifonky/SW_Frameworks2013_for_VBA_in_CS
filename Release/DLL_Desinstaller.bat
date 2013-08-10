@@ -25,20 +25,6 @@ set FichierDLL=%%~fi
 set FichierTLB=%%~dpni.tlb
 )
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-for %%i in (%NomTLB%) do (
-set FichierTLB=%%~si
-)
-
-for %%i in (%NomDLL%) do (
-set FichierDLL=%%~si
-)
-
-=======
->>>>>>> b53be8ba9234f98978e3808d465d384100e015d9
-=======
->>>>>>> b53be8ba9234f98978e3808d465d384100e015d9
 if not exist "%FichierTLB%" (
 echo.
 echo Pas de fichier .tlb pour la desinscription de la dll
