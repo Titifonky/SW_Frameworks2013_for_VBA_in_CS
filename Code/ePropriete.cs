@@ -12,7 +12,7 @@ namespace Framework
     {
         eGestDeProprietes GestDeProprietes { get; }
         String Nom { get; }
-        swCustomInfoType_e TypeDeLaPropriete { get; }
+        swCustomInfoType_e TypeDeLaPropriete { get;}
         String Expression { get; set; }
         String Valeur { get; }
         Boolean Renommer(String NvNom);
@@ -25,21 +25,21 @@ namespace Framework
     [ProgId("Frameworks.ePropriete")]
     public class ePropriete : IePropriete, IComparable<ePropriete>, IComparer<ePropriete>, IEquatable<ePropriete>
     {
-#region "Variables locales"
+        #region "Variables locales"
 
         private Boolean _EstInitialise = false;
 
         private eGestDeProprietes _GestDeProprietes = null;
         private String _Nom = "";
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public ePropriete() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne le parent GestDeProprietes.
@@ -100,9 +100,9 @@ namespace Framework
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -163,7 +163,7 @@ namespace Framework
 #if SW2013
             _GestDeProprietes.SwGestDeProprietes.Get4(_Nom, true, out Expression, out Valeur);
 #else
-                _GestDeProprietes.SwGestDeProprietes.Get2(_Nom, out Expression, out Valeur);
+            _GestDeProprietes.SwGestDeProprietes.Get2(_Nom, out Expression, out Valeur);
 #endif
 
         }
@@ -221,9 +221,9 @@ namespace Framework
             return null;
         }
 
-#endregion
+        #endregion
 
-#region "Interfaces génériques"
+        #region "Interfaces génériques"
 
         public int CompareTo(ePropriete Prop)
         {
@@ -246,7 +246,7 @@ namespace Framework
             return Nom1.Equals(Nom2);
         }
 
-#endregion
+        #endregion
     }
 }
 

@@ -45,13 +45,13 @@ namespace Framework
         public AssemblyDoc SwAssemblage { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwAssemblage; } }
 
         /// <summary>
-        /// Retourne le parent ExtModele.
+        /// Retourne le parent eModele.
         /// </summary>
         public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
         /// Fonction interne.
-        /// Test l'initialisation de l'objet ExtAssemblage.
+        /// Test l'initialisation de l'objet eAssemblage.
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
@@ -61,7 +61,7 @@ namespace Framework
 
         /// <summary>
         /// Méthode interne.
-        /// Initialiser l'objet ExtAssemblage.
+        /// Initialiser l'objet eAssemblage.
         /// </summary>
         /// <param name="Modele"></param>
         /// <returns></returns>

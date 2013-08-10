@@ -74,7 +74,7 @@ namespace Framework
         }
 
         /// <summary>
-        /// Retourne le modele ExtModele associé.
+        /// Retourne le modele eModele associé.
         /// Active la configuration du composant si celle-ci ne l'est pas
         /// Cela permet de récupérer les corps et les fonctions de la configuration
         /// </summary>
@@ -119,7 +119,7 @@ namespace Framework
         }
 
         /// <summary>
-        /// Retourne la configuration ExtConfiguration associée.
+        /// Retourne la configuration eConfiguration associée.
         /// </summary>
         public eConfiguration Configuration
         {
@@ -348,7 +348,7 @@ namespace Framework
 
         /// <summary>
         /// Fonction interne.
-        /// Test l'initialisation de l'objet ExtComposant.
+        /// Test l'initialisation de l'objet eComposant.
         /// </summary>
         public Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
@@ -358,7 +358,7 @@ namespace Framework
 
         /// <summary>
         /// Méthode interne.
-        /// Initialiser l'objet ExtComposant.
+        /// Initialiser l'objet eComposant.
         /// </summary>
         /// <param name="SwComposant"></param>
         /// <param name="Modele"></param>

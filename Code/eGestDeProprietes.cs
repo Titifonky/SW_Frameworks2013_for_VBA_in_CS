@@ -15,6 +15,7 @@ namespace Framework
     {
         CustomPropertyManager SwGestDeProprietes { get; }
         eModele Modele { get; }
+        eConfiguration Configuration { get; }
         ePropriete AjouterPropriete(String Nom, swCustomInfoType_e TypePropriete, String Expression, Boolean EcraserExistante = false);
         ePropriete RecupererPropriete(String Nom);
         Boolean SupprimerPropriete(String Nom);
@@ -32,6 +33,7 @@ namespace Framework
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
+        private eConfiguration _Configuration = null;
         private CustomPropertyManager _SwGestDeProprietes = null;
 
 #endregion
@@ -50,13 +52,18 @@ namespace Framework
         public CustomPropertyManager SwGestDeProprietes { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwGestDeProprietes; } }
 
         /// <summary>
-        /// Retourne le parent ExtModele 
+        /// Retourne le parent eModele 
         /// </summary>
         public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
 
         /// <summary>
+        /// Retourne le parent eModele 
+        /// </summary>
+        public eConfiguration Configuration { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Configuration; } }
+
+        /// <summary>
         /// Fonction interne
-        /// Test l'initialisation de l'objet ExtModele
+        /// Test l'initialisation de l'objet eModele
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
@@ -79,6 +86,32 @@ namespace Framework
             {
                 _SwGestDeProprietes = SwGestionnaire;
                 _Modele = Modele;
+                _EstInitialise = true;
+            }
+            else
+            {
+                Debug.Print("!!!!! Erreur d'initialisation");
+            }
+
+            return _EstInitialise;
+        }
+
+        /// <summary>
+        /// Méthode interne
+        /// Initialise l'objet GestDeProprietes
+        /// </summary>
+        /// <param name="SwGestionnaire"></param>
+        /// <param name="Modele"></param>
+        /// <returns></returns>
+        internal Boolean Init(CustomPropertyManager SwGestionnaire, eConfiguration Configuration)
+        {
+            Debug.Print(MethodBase.GetCurrentMethod());
+
+            if ((SwGestionnaire != null) && (Configuration != null) && Configuration.EstInitialise)
+            {
+                _SwGestDeProprietes = SwGestionnaire;
+                _Configuration = Configuration;
+                _Modele = Configuration.Modele;
                 _EstInitialise = true;
             }
             else

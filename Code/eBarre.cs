@@ -45,7 +45,7 @@ namespace Framework
 #region "Propriétés"
 
         /// <summary>
-        /// Retourne le parent ExtPiece.
+        /// Retourne le parent ePiece.
         /// </summary>
         public eCorps Corps { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Corps; } }
 
@@ -113,7 +113,7 @@ namespace Framework
 
         /// <summary>
         /// Fonction interne.
-        /// Test l'initialisation de l'objet ExtCorps.
+        /// Test l'initialisation de l'objet eCorps.
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 

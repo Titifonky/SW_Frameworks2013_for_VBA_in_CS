@@ -99,7 +99,7 @@ namespace Framework
         }
 
         /// <summary>
-        /// Retourne le parent ExtModele.
+        /// Retourne le parent eModele.
         /// </summary>
         public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Modele; } }
 
@@ -197,7 +197,7 @@ namespace Framework
                 Debug.Print(MethodBase.GetCurrentMethod());
 
                 eGestDeProprietes pGestProps = new eGestDeProprietes();
-                if (pGestProps.Init(SwConfiguration.CustomPropertyManager, _Modele))
+                if (pGestProps.Init(SwConfiguration.CustomPropertyManager, this))
                     return pGestProps;
 
                 return null;
@@ -275,7 +275,7 @@ namespace Framework
 
         /// <summary>
         /// Fonction interne.
-        /// Test l'initialisation de l'objet ExtConfiguration.
+        /// Test l'initialisation de l'objet eConfiguration.
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
 
@@ -285,7 +285,7 @@ namespace Framework
 
         /// <summary>
         /// Méthode interne.
-        /// Initialiser l'objet ExtConfiguration.
+        /// Initialiser l'objet eConfiguration.
         /// </summary>
         /// <param name="Config"></param>
         /// <param name="Modele"></param>

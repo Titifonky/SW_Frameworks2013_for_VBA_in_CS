@@ -77,7 +77,7 @@ namespace Framework
         }
 
         /// <summary>
-        /// Retourne le parent ExtPiece.
+        /// Retourne le parent ePiece.
         /// </summary>
         public ePiece Piece { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Piece; } }
 
@@ -233,7 +233,7 @@ namespace Framework
         }
 
         /// <summary>
-        /// Retourne le parent ExtDossier.
+        /// Retourne le parent eDossier.
         /// </summary>
         public eDossier Dossier
         {
@@ -284,7 +284,7 @@ namespace Framework
 
         /// <summary>
         /// Méthode interne.
-        /// Initialiser l'objet ExtCorps.
+        /// Initialiser l'objet eCorps.
         /// </summary>
         /// <param name="SwCorps"></param>
         /// <param name="Piece"></param>
@@ -312,7 +312,7 @@ namespace Framework
 
         /// <summary>
         /// Méthode interne.
-        /// Initialiser l'objet ExtCorps.
+        /// Initialiser l'objet eCorps.
         /// </summary>
         /// <param name="SwCorps"></param>
         /// <param name="Modele"></param>

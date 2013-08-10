@@ -64,6 +64,9 @@ namespace Framework
                     case ".SLDPRT":
                         return TypeFichier_e.cPiece;
 
+                    case ".SLDLFP":
+                        return TypeFichier_e.cLibrairie;
+
                     case ".SLDDRW":
                         return TypeFichier_e.cDessin;
 

@@ -21,10 +21,11 @@ echo    %cd%
 
 setlocal enableDelayedExpansion
 for %%i in (*.dll) do (
-set NomDLL=%%~ni.dll
-set NomTLB=%%~ni.tlb
+set FichierDLL=%%~fi
+set FichierTLB=%%~dpni.tlb
 )
 
+<<<<<<< HEAD
 for %%i in (%NomTLB%) do (
 set FichierTLB=%%~si
 )
@@ -33,6 +34,8 @@ for %%i in (%NomDLL%) do (
 set FichierDLL=%%~si
 )
 
+=======
+>>>>>>> b53be8ba9234f98978e3808d465d384100e015d9
 if not exist "%FichierTLB%" (
 echo.
 echo Pas de fichier .tlb pour la desinscription de la dll
@@ -53,13 +56,16 @@ cd /d %DossierNET64%
 )
 
 echo.
+echo Dossier du framework .NET
+echo    %cd%
+
+echo.
 echo.
 echo %Titre%
 echo --------------------------------------------------------
-echo Nom de la DLL :
-echo    %NomDLL%
-echo Dossier courant :
-echo    %cd%
+echo Nom de la DLL a supprimer :
+echo    %FichierDLL%
+
 if "%DossierCourant%"=="%cd%" (
 echo.
 echo Le framework .NET v4.0.30319 n'est pas installe sur la machine
@@ -69,8 +75,6 @@ echo FIN
 pause
 exit
 )
-
-
 
 echo.
 echo --------------------------------------------------------

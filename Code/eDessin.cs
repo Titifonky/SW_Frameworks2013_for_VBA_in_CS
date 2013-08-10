@@ -47,7 +47,7 @@ namespace Framework
         public DrawingDoc SwDessin { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwDessin; } }
 
         /// <summary>
-        /// Retourne le parent ExtModele.
+        /// Retourne le parent eModele.
         /// </summary>
         public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
 
@@ -71,7 +71,7 @@ namespace Framework
 
         /// <summary>
         /// Fonction interne.
-        /// Test l'initialisation de l'objet ExtDessin.
+        /// Test l'initialisation de l'objet eDessin.
         /// </summary>
         internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
 
@@ -81,7 +81,7 @@ namespace Framework
 
         /// <summary>
         /// Méthode interne.
-        /// Initialiser l'objet ExtDessin.
+        /// Initialiser l'objet eDessin.
         /// </summary>
         /// <param name="Modele"></param>
         /// <returns></returns>

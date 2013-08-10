@@ -12,7 +12,8 @@ namespace Framework
     {
         cAssemblage = 1,
         cPiece = 2,
-        cDessin = 4
+        cLibrairie = 4,
+        cDessin = 8
     }
 
     //Cet attribut permet de combiner les valeurs d'enumération
@@ -77,6 +78,13 @@ namespace Framework
         cDechirureProlonge = 5
     }
 
+    public enum InfoFichier_e
+    {
+        cExt = 1,
+        cGabarit = 2,
+        cNom = 3
+    }
+
     #endregion
 
     internal static class CONSTANTES
@@ -105,31 +113,48 @@ namespace Framework
 
         #endregion
         #region "Méthodes"
-        internal static String Extension(TypeFichier_e TypeFichier, Boolean Gabarit = false)
+        internal static String InfoFichier(TypeFichier_e TypeFichier, InfoFichier_e Info = InfoFichier_e.cExt)
         {
             String pDocExt = "";
             String pGabaritExt = "";
+            String pNom = "";
             switch (TypeFichier)
             {
                 case TypeFichier_e.cAssemblage:
                     pDocExt = ".SLDASM";
                     pGabaritExt = ".ASMDOT";
+                    pNom = "Assemblage";
                     break;
                 case TypeFichier_e.cPiece:
                     pDocExt = ".SLDPRT";
                     pGabaritExt = ".PRTDOT";
+                    pNom = "Pièce";
+                    break;
+                case TypeFichier_e.cLibrairie:
+                    pDocExt = ".SLDLFP";
+                    pGabaritExt = ".PRTDOT";
+                    pNom = "Librairie";
                     break;
                 case TypeFichier_e.cDessin:
                     pDocExt = ".SLDDRW";
                     pGabaritExt = ".DRWDOT";
+                    pNom = "Mise en plan";
                     break;
             }
 
-            if (Gabarit)
-                return pGabaritExt;
-            else
-                return pDocExt;
+            switch (Info)
+            {
+                case InfoFichier_e.cExt:
+                    return pDocExt;
+                case InfoFichier_e.cGabarit:
+                    return pGabaritExt;
+                case InfoFichier_e.cNom:
+                    return pNom;
+            }
+
+            return "";
         }
+
         #endregion
     }
 
@@ -171,7 +196,7 @@ namespace Framework
         #region "Méthodes"
         public String Extension(TypeFichier_e TypeFichier)
         {
-            return CONSTANTES.Extension(TypeFichier);
+            return CONSTANTES.InfoFichier(TypeFichier);
         }
         #endregion
     }
