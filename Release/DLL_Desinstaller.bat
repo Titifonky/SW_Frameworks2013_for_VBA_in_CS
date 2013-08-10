@@ -33,9 +33,6 @@ for %%i in (%NomDLL%) do (
 set FichierDLL=%%~si
 )
 
-echo.
-echo %FichierTLB%
-
 if not exist "%FichierTLB%" (
 echo.
 echo Pas de fichier .tlb pour la desinscription de la dll
