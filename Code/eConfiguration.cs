@@ -370,12 +370,12 @@ namespace Framework
         {
             Debug.Print(MethodBase.GetCurrentMethod());
 
-            Boolean UneConfig = (Modele.SwModele.GetConfigurationCount() == 1);
-            String[] pTabNomAff = _SwConfiguration.GetDisplayStates();
+            String[] pTabNomAff = Modele.GestDeConfigurations.ConfigurationActive.SwConfiguration.GetDisplayStates();
+            String pAffichageCourant = pTabNomAff[0];
+            pTabNomAff = _SwConfiguration.GetDisplayStates();
 
             if (pTabNomAff != null)
             {
-                String pAffichageCourant = pTabNomAff[0];
                 foreach (String pNomEtatAffichage in pTabNomAff)
                 {
                     if (pNomEtatAffichage != pAffichageCourant)
@@ -383,7 +383,7 @@ namespace Framework
                 }
             }
 
-            if (!UneConfig)
+            if (Modele.SwModele.GetConfigurationCount() > 1)
             {
                 _EstInitialise = false;
                 return _Modele.SwModele.DeleteConfiguration2(Nom);

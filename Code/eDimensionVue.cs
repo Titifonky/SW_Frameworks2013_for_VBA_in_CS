@@ -112,11 +112,11 @@ namespace Framework
         {
             get {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                return _Vue.SwVue.Angle;
+                return _Vue.SwVue.Angle * 180.0 / Math.PI;
             }
             set {
                 Debug.Print(MethodBase.GetCurrentMethod());
-                _Vue.SwVue.Angle = value;
+                _Vue.SwVue.Angle = value * Math.PI / 180.0;
             }
         }
 

@@ -262,7 +262,11 @@ namespace Framework
                 if (Composant != null)
                 {
                     _FichierSw.Nb = Composant.Nb;
-                    _FichierSw.Configuration = Composant.Configuration.Nom;
+                    if (Composant.SwComposant.IsRoot())
+                        _FichierSw.Configuration = GestDeConfigurations.ConfigurationActive.Nom;
+                    else
+                        _FichierSw.Configuration = Composant.Configuration.Nom;
+
                 }
                 return _FichierSw;
             }

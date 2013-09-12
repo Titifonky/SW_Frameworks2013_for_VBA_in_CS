@@ -20,6 +20,7 @@ namespace Framework
         eModele ModeleDeReference { get; }
         eConfiguration ConfigurationDeReference { get; }
         eDimensionVue Dimensions { get; }
+        Orientation_e Orientation { get; set; }
         Boolean AfficherLignesDePliage { set; }
         Boolean AfficherNotesDePliage { get; set; }
         void Selectionner(Boolean Ajouter = false);
@@ -121,6 +122,29 @@ namespace Framework
                     return pDimensions;
 
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Orientation de la vue, Portrait ou Paysage
+        /// </summary>
+        public Orientation_e Orientation
+        {
+            get
+            {
+                eRectangle Rect = Dimensions.Rectangle;
+                if (Rect.Ht > Rect.Lg)
+                    return Orientation_e.cPortrait;
+
+                return Orientation_e.cPaysage;
+            }
+            set
+            {
+                eDimensionVue Dim = Dimensions;
+                if ((Orientation == Orientation_e.cPaysage) && (value == Orientation_e.cPortrait))
+                    Dimensions.Angle = 90;
+                else if ((Orientation == Orientation_e.cPortrait) && (value == Orientation_e.cPaysage))
+                    Dimensions.Angle = -90;
             }
         }
 
