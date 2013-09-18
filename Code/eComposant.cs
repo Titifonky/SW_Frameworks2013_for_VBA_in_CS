@@ -16,7 +16,7 @@ namespace Framework
     {
         Component2 SwComposant { get; }
         eModele Modele { get; }
-        eConfiguration Configuration { get; }
+        eConfiguration Configuration { get; set; }
         String Nom { get; }
         Boolean EstExclu { get; set; }
         Boolean EstSupprime { get; set; }
@@ -128,7 +128,7 @@ namespace Framework
                 Debug.Print(MethodBase.GetCurrentMethod());
                 return _Configuration;
             }
-            internal set
+            set
             {
                 Debug.Print(MethodBase.GetCurrentMethod());
                 if (value.Modele.Equals(_Modele))

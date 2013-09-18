@@ -62,7 +62,10 @@ namespace Framework
             get
             {
                 String Db = "";
-                return _SwPiece.GetMaterialPropertyName2(_Modele.GestDeConfigurations.ConfigurationActive.Nom, out Db);
+                String pMateriau = _SwPiece.GetMaterialPropertyName2(_Modele.GestDeConfigurations.ConfigurationActive.Nom, out Db);
+                if (String.IsNullOrEmpty(pMateriau))
+                    pMateriau = CONSTANTES.MATERIAUX_NON_SPECIFIE;
+                return pMateriau;
             }
             set
             {
@@ -314,7 +317,7 @@ namespace Framework
                     Dossier = null;
                 }
 
-                pFonction = pFonction.GetNextFeature();
+                pFonction = pFonction.GetNextSubFeature();
             }
 
             return Liste;
