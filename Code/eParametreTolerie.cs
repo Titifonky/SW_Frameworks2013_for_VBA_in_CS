@@ -1,10 +1,7 @@
-﻿using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
+﻿using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System;
+using System.Runtime.InteropServices;
 
 namespace Framework
 {
@@ -28,6 +25,8 @@ namespace Framework
     {
         #region "Variables locales"
 
+        private static readonly String cNOMCLASSE = typeof(eParametreTolerie).Name;
+
         private Boolean _EstInitialise = false;
 
         private ePiece _Piece = null;
@@ -49,12 +48,12 @@ namespace Framework
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public ePiece Piece { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Piece; } }
+        public ePiece Piece { get { Log.Methode(cNOMCLASSE); return _Piece; } }
 
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public eTole Tole { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Tole; } }
+        public eTole Tole { get { Log.Methode(cNOMCLASSE); return _Tole; } }
 
         /// <summary>
         /// Retourne ou défini l'épaisseur de la tole
@@ -63,14 +62,14 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
                 return Math.Round(pParam.Thickness * 1000, 5);
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 Dimension pSwDim;
                 if (_Tole != null)
                 {
@@ -115,14 +114,14 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
                 return Math.Round(pParam.BendRadius * 1000, 5);
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (_Methode)
                 {
@@ -149,14 +148,14 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 SheetMetalFeatureData pParam = FonctionTolerie.SwFonction.GetDefinition();
                 return Math.Round(pParam.KFactor, 5);
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 if (_Methode)
                 {
                     String pDimK = "D2";
@@ -183,7 +182,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (_Tole != null)
                 {
@@ -204,7 +203,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (_Tole != null)
                     return _Tole.FonctionToleDeBase;
@@ -217,7 +216,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (Piece.Modele.Equals(Piece.Modele.SW.Modele()))
                     return Piece.Modele.SwModele;
@@ -230,7 +229,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 if (SwModele == null)
                     return Piece.Modele.Composant.SwComposant;
 
@@ -242,7 +241,7 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet eTole.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
         #endregion
 
@@ -257,7 +256,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eTole Tole)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Tole != null) && Tole.EstInitialise)
             {
@@ -267,7 +266,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
@@ -281,7 +280,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(ePiece Piece)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Piece != null) && Piece.EstInitialise && (Piece.Contient(TypeCorps_e.cTole)))
             {
@@ -290,7 +289,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
@@ -301,7 +300,7 @@ namespace Framework
         /// <returns></returns>
         private eFonction DossierTolerie()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             TreeControlItem pNoeud = Piece.Modele.GestDeFonction_NoeudRacine().GetFirstChild();
 

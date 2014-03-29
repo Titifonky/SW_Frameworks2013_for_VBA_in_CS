@@ -80,15 +80,15 @@ namespace Framework
 
             try
             {
-                StreamWriter pFichierDebug = new StreamWriter(_Chemin_Fichier, true, System.Text.Encoding.Unicode);
-                pFichierDebug.WriteLine(Date() + "  " + "\t".Repeter(Tab + 1) + Message);
-                pFichierDebug.Close();
+                StreamWriter pFichierLog = new StreamWriter(_Chemin_Fichier, true, System.Text.Encoding.Unicode);
+                pFichierLog.WriteLine(Date() + "  " + "\t".Repeter(Tab + 1) + Message);
+                pFichierLog.Close();
             }
             catch
             {
-                StreamWriter pFichierDebug = new StreamWriter(_Chemin_Fichier, true, System.Text.Encoding.Unicode);
-                pFichierDebug.WriteLine(Date() + " -> Erreur");
-                pFichierDebug.Close();
+                StreamWriter pFichierLog = new StreamWriter(_Chemin_Fichier, true, System.Text.Encoding.Unicode);
+                pFichierLog.WriteLine(Date() + " -> Erreur");
+                pFichierLog.Close();
             }
 
         }

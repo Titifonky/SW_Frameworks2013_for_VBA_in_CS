@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using SolidWorks.Interop.sldworks;
 using System.Collections.Generic;
+using log4net;
 
 namespace Framework
 {

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 
 namespace Framework
 {
@@ -26,6 +25,7 @@ namespace Framework
         void Selectionner(Boolean Ajouter = true);
         ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
         int NbIntersection(eCorps Corps);
+        eModele EnregistrerSous(String NomDuFichier);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -33,7 +33,9 @@ namespace Framework
     [ProgId("Frameworks.eCorps")]
     public class eCorps : IeCorps, IComparable<eCorps>, IComparer<eCorps>, IEquatable<eCorps>
     {
-#region "Variables locales"
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eCorps).Name;
 
         private Boolean _EstInitialise = false;
 
@@ -44,15 +46,15 @@ namespace Framework
         private String _Nom = "";
         private Object _PID = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eCorps() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet Body2 associé.
@@ -61,13 +63,13 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 // On recupère le corps avec le PID, comme ça, ya plus de pb.
                 if (_PID != null) // && (_SwCorps == null))
                 {
                     int pErreur = 0;
                     Body2 pSwCorps = Piece.Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
-                    Debug.Print("PID Erreur : " + pErreur);
+                    Log.Message("PID Erreur : " + pErreur);
                     if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok) || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
                         _SwCorps = pSwCorps;
                 }
@@ -79,7 +81,7 @@ namespace Framework
         /// <summary>
         /// Retourne le parent ePiece.
         /// </summary>
-        public ePiece Piece { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Piece; } }
+        public ePiece Piece { get { Log.Methode(cNOMCLASSE); return _Piece; } }
 
         /// <summary>
         /// Retourne l'objet Tole
@@ -88,7 +90,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (_Tole == null)
                 {
@@ -110,7 +112,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (_Barre == null)
                 {
@@ -132,12 +134,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return SwCorps.Name;
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 FeatureManager SwGestFonc = _Piece.Modele.SwModele.FeatureManager;
                 String pNom = value;
                 int Indice = 1;
@@ -159,7 +161,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 foreach (Feature Fonction in SwCorps.GetFeatures())
                 {
                     switch (Fonction.GetTypeName2())
@@ -171,9 +173,45 @@ namespace Framework
                             return TypeCorps_e.cTole;
                         case "WeldMemberFeat":
                             return TypeCorps_e.cBarre;
+                        default:
+                            break;
                     }
                 }
 
+                String pNom = Nom;
+
+                Feature pFonction = Piece.DossierDesCorps();
+
+                // S'il n'y a pas de liste, on arrete là
+                if (pFonction != null)
+                {
+                    pFonction = pFonction.GetFirstSubFeature();
+
+                    while (pFonction != null)
+                    {
+                        if (pFonction.GetTypeName2() == "CutListFolder")
+                        {
+                            BodyFolder pSwDossier = pFonction.GetSpecificFeature2();
+
+                            if ((pSwDossier != null) && (pSwDossier.GetBodyCount() > 0))
+                            {
+                                foreach (Body2 pSwCorps in pSwDossier.GetBodies())
+                                {
+                                    if (pSwCorps.Name == pNom)
+                                    {
+                                        if (eDossier.EstUnDossierDeBarres(pSwDossier))
+                                            return TypeCorps_e.cBarre;
+                                        else if (eDossier.EstUnDossierDeToles(pSwDossier))
+                                            return TypeCorps_e.cTole;
+                                        else
+                                            return TypeCorps_e.cAutre;
+                                    }
+                                }
+                            }
+                        }
+                        pFonction = pFonction.GetNextSubFeature();
+                    }
+                }
                 return TypeCorps_e.cAutre;
             }
         }
@@ -182,7 +220,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 String Db = "";
                 String pNomConfigActive = Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom;
                 String Materiau = SwCorps.GetMaterialPropertyName(pNomConfigActive, out Db);
@@ -193,7 +231,7 @@ namespace Framework
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 String[] pBaseDeDonnees = Piece.Modele.SW.SwSW.GetMaterialDatabases();
 
                 String pNomConfigActive = Piece.Modele.GestDeConfigurations.ConfigurationActive.Nom;
@@ -215,12 +253,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return !SwCorps.DisableDisplay;
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 SwCorps.DisableDisplay = !value;
                 SwCorps.HideBody(!value);
                 Selectionner(false);
@@ -239,13 +277,13 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
-                
+                Log.Methode(cNOMCLASSE);
+
                 String pNom = Nom;
-                
+
                 foreach (eDossier pDossier in _Piece.ListeDesDossiersDePiecesSoudees(TypeDeCorps, true))
                 {
-                    List<eCorps> pListeCorps = pDossier.ListListeDesCorps("^" + Regex.Escape(pNom) + "$");
+                    ArrayList pListeCorps = pDossier.ListeDesCorps("^" + Regex.Escape(pNom) + "$");
                     if (pListeCorps.Count > 0)
                         return pDossier;
                 }
@@ -261,7 +299,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 eFonction pFonction = new eFonction();
 
@@ -276,11 +314,11 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet eBarre.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -291,7 +329,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(Body2 SwCorps, ePiece Piece)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((SwCorps != null) && (Piece != null) && Piece.EstInitialise)
             {
@@ -300,12 +338,12 @@ namespace Framework
                 _Nom = SwCorps.Name;
                 _PID = Piece.Modele.SwModele.Extension.GetPersistReference3(_SwCorps);
 
-                Debug.Print(this.Nom);
+                Log.Message(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
@@ -319,7 +357,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(Body2 SwCorps, eModele Modele)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             Init(SwCorps, Modele.Piece);
             return _EstInitialise;
@@ -345,11 +383,11 @@ namespace Framework
         /// <param name="NomARechercher"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        internal List<eFonction> ListListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
+        public ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eFonction> pListeFonctions = new List<eFonction>();
+            ArrayList pListeFonctions = new ArrayList();
 
             foreach (Feature pSwFonction in SwCorps.GetFeatures())
             {
@@ -382,32 +420,13 @@ namespace Framework
         }
 
         /// <summary>
-        /// Renvoi la liste des fonctions d'un corps filtrée par les arguments.
-        /// </summary>
-        /// <param name="NomARechercher"></param>
-        /// <param name="AvecLesSousFonctions"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eFonction> pListeFonctions = ListListeDesFonctions(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
-            ArrayList pArrayFonctions = new ArrayList();
-
-            if (pListeFonctions.Count > 0)
-                pArrayFonctions = new ArrayList(pListeFonctions);
-
-            return pArrayFonctions;
-        }
-
-        /// <summary>
         /// Renvoi le nb d'intersection avec le corps
         /// </summary>
         /// <param name="Composant"></param>
         /// <returns></returns>
         public int NbIntersection(eCorps Corps)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             int pNbInt = 0;
 
@@ -417,8 +436,8 @@ namespace Framework
             Body2 pCopieCorpsBase = SwCorps.Copy();
             Body2 pCopieCorpsTest = Corps.SwCorps.Copy();
 
-            Debug.Print(pCopieCorpsBase.ApplyTransform(pXFormBase).ToString());
-            Debug.Print(pCopieCorpsTest.ApplyTransform(pXFormTest).ToString());
+            Log.Message(pCopieCorpsBase.ApplyTransform(pXFormBase).ToString());
+            Log.Message(pCopieCorpsTest.ApplyTransform(pXFormTest).ToString());
 
             // SWBODYINTERSECT = 15901
             int Err;
@@ -437,9 +456,34 @@ namespace Framework
             return pNbInt;
         }
 
-#endregion
+        /// <summary>
+        /// Enregistrer un corps en externe
+        /// </summary>
+        /// <param name="NomDuFichier"></param>
+        /// <returns></returns>
+        public eModele EnregistrerSous(String NomDuFichier)
+        {
+            int pStatut;
+            int pWarning;
+            this.Selectionner(false);
+            Boolean Resultat = this.Piece.SwPiece.SaveToFile3(
+                                                                NomDuFichier,
+                                                                (int)swSaveAsOptions_e.swSaveAsOptions_Silent,
+                                                                (int)swCutListTransferOptions_e.swCutListTransferOptions_CutListProperties,
+                                                                false,
+                                                                "",
+                                                                out pStatut,
+                                                                out pWarning)
+                                                                ;
+            if (Resultat)
+                return Piece.Modele.SW.Modele(NomDuFichier);
 
-#region "Interfaces génériques"
+            return null;
+        }
+
+        #endregion
+
+        #region "Interfaces génériques"
 
         public int CompareTo(eCorps Corps)
         {
@@ -462,6 +506,6 @@ namespace Framework
             return Nom1.Equals(Nom2);
         }
 
-#endregion
+        #endregion
     }
 }

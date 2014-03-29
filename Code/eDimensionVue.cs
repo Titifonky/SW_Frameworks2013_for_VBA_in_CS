@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Framework
@@ -21,25 +20,27 @@ namespace Framework
     [ProgId("Frameworks.eDimensionVue")]
     public class eDimensionVue : IeDimensionVue
     {
-#region "Variables locales"
-        
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eDimensionVue).Name;
+
         private Boolean _EstInitialise = false;
 
         private eVue _Vue = null;
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eDimensionVue() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne le parent ExtVue.
         /// </summary>
-        public eVue Vue { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Vue; } }
+        public eVue Vue { get { Log.Methode(cNOMCLASSE); return _Vue; } }
 
         /// <summary>
         /// Retourne ou défini le centre de la vue.
@@ -48,8 +49,8 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
-                
+                Log.Methode(cNOMCLASSE);
+
                 ePoint pCentre = new ePoint();
                 Double[] pArrayResult;
                 pArrayResult = _Vue.SwVue.Position;
@@ -62,7 +63,7 @@ namespace Framework
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 Double[] pCentre = { value.X, value.Y };
                 _Vue.SwVue.Position = pCentre;
@@ -76,8 +77,8 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
-                eRectangle pDim = new eRectangle() ;
+                Log.Methode(cNOMCLASSE);
+                eRectangle pDim = new eRectangle();
                 pDim.Lg = Zone.PointMax.X - Zone.PointMin.X;
                 pDim.Ht = Zone.PointMax.Y - Zone.PointMin.Y;
 
@@ -92,7 +93,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 eZone pCoord = new eZone();
                 Double[] pArr = _Vue.SwVue.GetOutline();
 
@@ -103,19 +104,21 @@ namespace Framework
 
                 return pCoord;
             }
-            }
+        }
 
         /// <summary>
         /// Retourne ou défini l'angle de la vue.
         /// </summary>
         public Double Angle
         {
-            get {
-                Debug.Print(MethodBase.GetCurrentMethod());
+            get
+            {
+                Log.Methode(cNOMCLASSE);
                 return _Vue.SwVue.Angle * 180.0 / Math.PI;
             }
-            set {
-                Debug.Print(MethodBase.GetCurrentMethod());
+            set
+            {
+                Log.Methode(cNOMCLASSE);
                 _Vue.SwVue.Angle = value * Math.PI / 180.0;
             }
         }
@@ -124,11 +127,11 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtDimensionVue.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -138,7 +141,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eVue Vue)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Vue != null) && Vue.EstInitialise)
             {
@@ -148,12 +151,12 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
-#endregion
+        #endregion
 
     }
 }

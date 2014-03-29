@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -31,19 +28,21 @@ namespace Framework
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("DC7FCAF0-3569-40CB-A281-5143BC990C8F")]
     [ProgId("Frameworks.DlgSauverUnFichier")]
-    public class DlgSauverUnFichier : IDlgSauverUnFichier
+    public class DlgSauverUnFichier : IDlgSauverUnFichier, IDisposable
     {
-#region "Variables locales"
+        #region "Variables locales"
 
-#endregion
+        private static readonly String cNOMCLASSE = typeof(DlgSauverUnFichier).Name;
 
-#region "Constructeur\Destructeur"
+        #endregion
+
+        #region "Constructeur\Destructeur"
 
         public DlgSauverUnFichier() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         private SaveFileDialog _Dialogue = new SaveFileDialog();
 
@@ -61,9 +60,9 @@ namespace Framework
         public Boolean ExtensionsMultiple { get { return _Dialogue.SupportMultiDottedExtensions; } set { _Dialogue.SupportMultiDottedExtensions = value; } }
 
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         public String SauverUnFichier()
         {
@@ -82,6 +81,11 @@ namespace Framework
                 return null;
         }
 
-#endregion
+        #endregion
+
+        void IDisposable.Dispose()
+        {
+            _Dialogue.Dispose();
+        }
     }
 }

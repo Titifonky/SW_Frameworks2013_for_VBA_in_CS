@@ -1,10 +1,9 @@
-﻿using System;
+﻿using SolidWorks.Interop.sldworks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using SolidWorks.Interop.sldworks;
 
 namespace Framework
 {
@@ -28,8 +27,10 @@ namespace Framework
     [ProgId("Frameworks.eRecherche")]
     public class eRecherche : IeRecherche
     {
-#region "Variables locales"
-        
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eRecherche).Name;
+
         private Boolean _EstInitialise = false;
 
         private eComposant _Composant = null;
@@ -41,58 +42,58 @@ namespace Framework
         private Boolean _RenvoyerConfigComposantRacine = false;
         private static Double _IndexComposant = 0;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eRecherche() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne le parent ExtComposant.
         /// </summary>
-        public eComposant Composant { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Composant; } }
+        public eComposant Composant { get { Log.Methode(cNOMCLASSE); return _Composant; } }
 
         /// <summary>
         /// Filtre sur les configurations.
         /// </summary>
-        public Boolean PrendreEnCompteConfig { get { Debug.Print(MethodBase.GetCurrentMethod());  return _PrendreEnCompteConfig; } set { Debug.Print(MethodBase.GetCurrentMethod());  _PrendreEnCompteConfig = value; } }
+        public Boolean PrendreEnCompteConfig { get { Log.Methode(cNOMCLASSE); return _PrendreEnCompteConfig; } set { Log.Methode(cNOMCLASSE); _PrendreEnCompteConfig = value; } }
 
         /// <summary>
         /// Filtre sur les composants exclus.
         /// </summary>
-        public Boolean PrendreEnCompteExclus { get { Debug.Print(MethodBase.GetCurrentMethod());  return _PrendreEnCompteExclus; } set { Debug.Print(MethodBase.GetCurrentMethod());  _PrendreEnCompteExclus = value; } }
+        public Boolean PrendreEnCompteExclus { get { Log.Methode(cNOMCLASSE); return _PrendreEnCompteExclus; } set { Log.Methode(cNOMCLASSE); _PrendreEnCompteExclus = value; } }
 
         /// <summary>
         /// Filtre sur les composants supprimés.
         /// </summary>
-        public Boolean PrendreEnCompteSupprime { get { Debug.Print(MethodBase.GetCurrentMethod());  return _PrendreEnCompteSupprime; } set { Debug.Print(MethodBase.GetCurrentMethod());  _PrendreEnCompteSupprime = value; } }
+        public Boolean PrendreEnCompteSupprime { get { Log.Methode(cNOMCLASSE); return _PrendreEnCompteSupprime; } set { Log.Methode(cNOMCLASSE); _PrendreEnCompteSupprime = value; } }
 
         /// <summary>
         /// Filtre sur les doublons.
         /// </summary>
-        public Boolean SupprimerDoublons { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SupprimerDoublons; } set { Debug.Print(MethodBase.GetCurrentMethod()); _SupprimerDoublons = value; } }
+        public Boolean SupprimerDoublons { get { Log.Methode(cNOMCLASSE); return _SupprimerDoublons; } set { Log.Methode(cNOMCLASSE); _SupprimerDoublons = value; } }
 
         /// <summary>
         /// Inclus le composant racine dans la liste,
         /// si celui ci est de même type que le type de composant filtré.
         /// </summary>
-        public Boolean RenvoyerComposantRacine { get { Debug.Print(MethodBase.GetCurrentMethod());  return _RenvoyerComposantRacine; } set { Debug.Print(MethodBase.GetCurrentMethod());  _RenvoyerComposantRacine = value; } }
+        public Boolean RenvoyerComposantRacine { get { Log.Methode(cNOMCLASSE); return _RenvoyerComposantRacine; } set { Log.Methode(cNOMCLASSE); _RenvoyerComposantRacine = value; } }
 
-        public Boolean RenvoyerConfigComposantRacine { get { Debug.Print(MethodBase.GetCurrentMethod());  return _RenvoyerConfigComposantRacine; } set { Debug.Print(MethodBase.GetCurrentMethod());  _RenvoyerConfigComposantRacine = value; } }
+        public Boolean RenvoyerConfigComposantRacine { get { Log.Methode(cNOMCLASSE); return _RenvoyerConfigComposantRacine; } set { Log.Methode(cNOMCLASSE); _RenvoyerConfigComposantRacine = value; } }
 
         /// <summary>
         /// Fonction interne
         /// Test l'initialisation de l'objet ExtRecherche
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -102,7 +103,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eComposant Composant)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Composant != null) && Composant.EstInitialise)
             {
@@ -111,7 +112,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -125,8 +126,8 @@ namespace Framework
         /// <returns></returns>
         private String NomCle(eComposant Composant)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
-            
+            Log.Methode(cNOMCLASSE);
+
             String pNomCle = "";
             if ((Composant != null) && Composant.EstInitialise)
             {
@@ -151,11 +152,11 @@ namespace Framework
         /// <param name="TypeComposant"></param>
         /// <param name="DicComposants"></param>
         /// <param name="NomComposant"></param>
-        private void RecListListerComposants(eComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, eComposant> DicComposants, String NomComposant = "")
+        private void RecListerComposants(eComposant ComposantRacine, TypeFichier_e TypeComposant, Dictionary<String, eComposant> DicComposants, String NomComposant = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            foreach (eComposant pComp in ComposantRacine.ListComposantsEnfants("",_PrendreEnCompteSupprime))
+            foreach (eComposant pComp in ComposantRacine.ComposantsEnfants("", _PrendreEnCompteSupprime))
             {
                 // Operateur "Implique" sur la propriété EstExclu
                 if (!pComp.EstExclu | _PrendreEnCompteExclus)
@@ -167,7 +168,7 @@ namespace Framework
                         eComposant pComposant = new eComposant();
                         String pCle = NomCle(pComp);
 
-                        Debug.Print("Clé : " + pCle);
+                        Log.Message("Clé : " + pCle);
 
                         // S'il est déjà dans le dico, on on rajoute 1
                         if (DicComposants.ContainsKey(pCle))
@@ -200,7 +201,7 @@ namespace Framework
                     // Si c'est un assemblage et qu'il n'est pas supprimé, on scan
                     if ((pComp.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (pComp.EstSupprime == false))
                     {
-                        RecListListerComposants(pComp, TypeComposant, DicComposants, NomComposant);
+                        RecListerComposants(pComp, TypeComposant, DicComposants, NomComposant);
                     }
 
                 }
@@ -214,9 +215,9 @@ namespace Framework
         /// <param name="TypeComposant"></param>
         /// <param name="NomComposant"></param>
         /// <returns></returns>
-        internal List<eComposant> ListListerComposants(TypeFichier_e TypeComposant, String NomComposant = "")
+        public ArrayList ListeComposants(TypeFichier_e TypeComposant, String NomComposant = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             Dictionary<String, eComposant> pDicComposants = new Dictionary<string, eComposant>();
 
@@ -229,7 +230,7 @@ namespace Framework
                 // On renvoi un composant par config
                 if (_PrendreEnCompteConfig && _RenvoyerConfigComposantRacine)
                 {
-                    foreach (eConfiguration pConfig in _Composant.Modele.GestDeConfigurations.ListListerLesConfigs(TypeConfig_e.cDeBase))
+                    foreach (eConfiguration pConfig in _Composant.Modele.GestDeConfigurations.ListerLesConfigs(TypeConfig_e.cDeBase))
                     {
                         Component2 pSwComp = pConfig.SwConfiguration.GetRootComponent3(false);
                         eModele pModele = _Composant.Modele.SW.Modele(pSwComp.GetPathName());
@@ -246,38 +247,19 @@ namespace Framework
 
             // Si le composant est un assemblage contenant plusieurs composants, on renvoi la liste des composants recherchés
             if ((_Composant.Modele.TypeDuModele == TypeFichier_e.cAssemblage) && (_Composant.SwComposant.IGetChildrenCount() > 0))
-                RecListListerComposants(_Composant, TypeComposant, pDicComposants, NomComposant);
+                RecListerComposants(_Composant, TypeComposant, pDicComposants, NomComposant);
 
             // Nouvelle liste à renvoyer
-            List<eComposant> pListeComposants = new List<eComposant>();
+            ArrayList pListeComposants = new ArrayList();
 
             // Si le dictionnaire n'est pas vide, on rempli la liste avec les valeurs du dictionnaire
             if (pDicComposants.Count > 0)
-                pListeComposants = new List<eComposant>(pDicComposants.Values);
+                pListeComposants = new ArrayList(pDicComposants.Values);
 
             // On trie et c'est parti
-            pListeComposants.Sort();
+            //pListeComposants.Sort();
 
             return pListeComposants;
-        }
-
-        /// <summary>
-        /// Renvoi la liste des composants filtrées par les arguments
-        /// </summary>
-        /// <param name="TypeComposant"></param>
-        /// <param name="NomComposant"></param>
-        /// <returns></returns>
-        public ArrayList ListeComposants(TypeFichier_e TypeComposant, String NomComposant = "")
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
-            ArrayList pArrayComps = new ArrayList();
-
-            if (pListeComps.Count > 0)
-                pArrayComps = new ArrayList(pListeComps);
-
-            return pArrayComps;
         }
 
         /// <summary>
@@ -291,9 +273,9 @@ namespace Framework
         /// <returns></returns>
         public ArrayList ListeFichiers(TypeFichier_e TypeComposant, String NomComposant = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eComposant> pListeComps = ListListerComposants(TypeComposant, NomComposant);
+            ArrayList pListeComps = ListeComposants(TypeComposant, NomComposant);
             ArrayList pArrayComps = new ArrayList();
 
             if (pListeComps.Count > 0)
@@ -314,6 +296,6 @@ namespace Framework
             return pArrayComps;
         }
 
-#endregion
+        #endregion
     }
 }

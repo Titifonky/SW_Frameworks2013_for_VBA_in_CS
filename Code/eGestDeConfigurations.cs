@@ -1,10 +1,8 @@
-﻿using System;
+﻿using SolidWorks.Interop.sldworks;
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using SolidWorks.Interop.sldworks;
 
 namespace Framework
 {
@@ -14,6 +12,7 @@ namespace Framework
     {
         eModele Modele { get; }
         eConfiguration ConfigurationActive { get; }
+        Boolean LierLesAffichagesAuxConfigurations { get; set; }
         ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "");
         eConfiguration ConfigurationAvecLeNom(String NomConfiguration);
         eConfiguration AjouterUneConfigurationRacine(String NomConfiguration, Boolean Ecraser = false);
@@ -28,26 +27,28 @@ namespace Framework
     [ProgId("Frameworks.eGestDeConfigurations")]
     public class eGestDeConfigurations : IeGestDeConfigurations
     {
-#region "Variables locales"
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eGestDeConfigurations).Name;
 
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eGestDeConfigurations() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele { get { Log.Methode(cNOMCLASSE); return _Modele; } }
 
         /// <summary>
         /// Retourne la configuration active.
@@ -56,7 +57,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 eConfiguration pConfig = new eConfiguration();
 
@@ -69,15 +70,34 @@ namespace Framework
             }
         }
 
+        public Boolean LierLesAffichagesAuxConfigurations
+        {
+            get
+            {
+                if (_Modele.SwModele.ConfigurationManager.LinkDisplayStatesToConfigurations == false)
+                    return false;
+                else
+                    return true;
+            }
+            set
+            {
+                ConfigurationManager ConfigMgr = _Modele.SwModele.ConfigurationManager;
+                if (value)
+                    ConfigMgr.LinkDisplayStatesToConfigurations = true;
+                else
+                    ConfigMgr.LinkDisplayStatesToConfigurations = false;
+            }
+        }
+
         /// <summary>
         /// Fonction interne.
         /// Test l'initialisation de l'objet GestDeConfigurations.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -87,7 +107,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eModele Modele)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Modele != null) && Modele.EstInitialise)
             {
@@ -96,7 +116,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -109,11 +129,11 @@ namespace Framework
         /// <param name="TypeConfig"></param>
         /// <param name="NomConfigDeBase"></param>
         /// <returns></returns>
-        internal List<eConfiguration> ListListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "")
+        public ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eConfiguration> pListConfig = new List<eConfiguration>();
+            ArrayList pListConfig = new ArrayList();
 
             foreach (String pNomConfig in _Modele.SwModele.GetConfigurationNames())
             {
@@ -131,32 +151,13 @@ namespace Framework
         }
 
         /// <summary>
-        /// Renvoi la liste des configurations filtrée par les arguments.
-        /// </summary>
-        /// <param name="TypeConfig"></param>
-        /// <param name="NomConfigDeBase"></param>
-        /// <returns></returns>
-        public ArrayList ListerLesConfigs(TypeConfig_e TypeConfig = TypeConfig_e.cTous, String NomConfigDeBase = "")
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eConfiguration> pListeConfigs = ListListerLesConfigs(TypeConfig, NomConfigDeBase);
-            ArrayList pArrayConfigs = new ArrayList();
-
-            if (pListeConfigs.Count > 0)
-                pArrayConfigs = new ArrayList(pListeConfigs);
-
-            return pArrayConfigs;
-        }
-
-        /// <summary>
         /// Renvoi la configuration à partir du nom.
         /// </summary>
         /// <param name="NomConfiguration"></param>
         /// <returns></returns>
         public eConfiguration ConfigurationAvecLeNom(String NomConfiguration)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             Configuration pSwConfig = _Modele.SwModele.GetConfigurationByName(NomConfiguration);
             eConfiguration pConfig = new eConfiguration();
@@ -174,7 +175,7 @@ namespace Framework
         /// <returns></returns>
         public eConfiguration AjouterUneConfigurationRacine(String NomConfiguration, Boolean Ecraser = false)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             eConfiguration pConfig = ConfigurationAvecLeNom(NomConfiguration);
 
@@ -211,7 +212,7 @@ namespace Framework
         /// <returns></returns>
         public void SupprimerConfiguration(String NomConfiguration)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             Configuration pSwConfig = _Modele.SwModele.GetConfigurationByName(NomConfiguration);
             eConfiguration pConfig = new eConfiguration();
@@ -225,11 +226,11 @@ namespace Framework
         /// <param name="NomConfigurationPliee"></param>
         public void SupprimerLesConfigurationsDepliee(String NomConfigurationPliee = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             ConfigurationActive.ConfigurationRacine.Activer();
 
-            foreach (eConfiguration Config in ListListerLesConfigs(TypeConfig_e.cDepliee, NomConfigurationPliee))
+            foreach (eConfiguration Config in ListerLesConfigs(TypeConfig_e.cDepliee, NomConfigurationPliee))
             {
                 Config.Supprimer();
             }
@@ -243,6 +244,6 @@ namespace Framework
             return false;
         }
 
-#endregion
+        #endregion
     }
 }

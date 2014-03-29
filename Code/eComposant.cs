@@ -1,12 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 
 namespace Framework
 {
@@ -42,7 +41,9 @@ namespace Framework
     [ProgId("Frameworks.eComposant")]
     public class eComposant : IeComposant, IComparable<eComposant>, IComparer<eComposant>, IEquatable<eComposant>
     {
-#region "Variables locales"
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eComposant).Name;
 
         private Boolean _EstInitialise = false;
 
@@ -51,15 +52,15 @@ namespace Framework
         private eConfiguration _Configuration = null;
         private int _Nb = 0;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eComposant() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet Component2 associé.
@@ -68,7 +69,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _SwComposant;
             }
         }
@@ -82,7 +83,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 // Augmente énormément le temps de traitement
                 //if (!_Modele.GestDeConfigurations.ConfigurationActive.Equals(_Configuration) && _Modele.SW.ActiverLesConfigurations)
                 //    _Configuration.Activer();
@@ -98,7 +99,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 ModelDoc2 pSwModele = _SwComposant.GetModelDoc2();
 
                 switch (pSwModele.GetType())
@@ -125,12 +126,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _Configuration;
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 if (value.Modele.Equals(_Modele))
                 {
                     _Configuration = value;
@@ -138,24 +139,24 @@ namespace Framework
                 }
             }
         }
-        
+
         /// <summary>
         /// Retourne le nom du composant tel qu'il est dans l'arbre de création.
         /// </summary>
-        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwComposant.Name2; } }
-        
+        public String Nom { get { Log.Methode(cNOMCLASSE); return _SwComposant.Name2; } }
+
         /// <summary>
         /// Retourne le nonbre de composant.
         /// </summary>
-        public int Nb { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Nb; } internal set { Debug.Print(MethodBase.GetCurrentMethod()); _Nb = value; } }
+        public int Nb { get { Log.Methode(cNOMCLASSE); return _Nb; } internal set { Log.Methode(cNOMCLASSE); _Nb = value; } }
 
         /// <summary>
         /// Retourne ou défini si le composant est exclu de la nomenclature.
         /// </summary>
         public Boolean EstExclu
         {
-            get { Debug.Print(MethodBase.GetCurrentMethod()); return Convert.ToBoolean(SwComposant.ExcludeFromBOM); }
-            set { Debug.Print(MethodBase.GetCurrentMethod()); SwComposant.ExcludeFromBOM = value; }
+            get { Log.Methode(cNOMCLASSE); return Convert.ToBoolean(SwComposant.ExcludeFromBOM); }
+            set { Log.Methode(cNOMCLASSE); SwComposant.ExcludeFromBOM = value; }
         }
 
         /// <summary>
@@ -163,11 +164,11 @@ namespace Framework
         /// </summary>
         public Boolean EstSupprime
         {
-            get { Debug.Print(MethodBase.GetCurrentMethod()); return Convert.ToBoolean(SwComposant.IsSuppressed()); }
+            get { Log.Methode(cNOMCLASSE); return Convert.ToBoolean(SwComposant.IsSuppressed()); }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
-                
+                Log.Methode(cNOMCLASSE);
+
                 if (value == true)
                     SwComposant.SetSuppression2((int)swComponentSuppressionState_e.swComponentSuppressed);
                 else
@@ -182,12 +183,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return Convert.ToBoolean(_SwComposant.Visible);
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 if (value)
                     _SwComposant.Visible = (int)swComponentVisibilityState_e.swComponentVisible;
                 else
@@ -202,12 +203,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _SwComposant.IsFixed();
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (_Modele.SW.TypeDuModeleActif == TypeFichier_e.cAssemblage)
                 {
@@ -217,7 +218,7 @@ namespace Framework
                     else
                         _Modele.SW.Modele().Assemblage.SwAssemblage.UnfixComponent();
                 }
-             }
+            }
         }
 
         /// <summary>
@@ -227,7 +228,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _SwComposant.IsPatternInstance();
             }
         }
@@ -239,7 +240,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _SwComposant.IsLoaded();
             }
         }
@@ -251,7 +252,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _SwComposant.IsMirrored();
             }
         }
@@ -263,7 +264,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 int pNo = 0;
                 String[] pTab = _SwComposant.Name2.Split('-');
@@ -280,7 +281,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 eRecherche pNouvelleRecherche = new eRecherche();
 
@@ -298,7 +299,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 Double[] pMatrice = _SwComposant.Transform2.ArrayData;
                 eRepere pRepere = new eRepere();
@@ -350,11 +351,11 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet eComposant.
         /// </summary>
-        public Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        public Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -365,7 +366,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(Component2 SwComposant, eModele Modele)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             // On teste si le Modele est valide
             if ((SwComposant != null) && (Modele != null) && Modele.EstInitialise)
@@ -381,7 +382,7 @@ namespace Framework
                 if (!ListeNomConfigs.Contains(pNomConfig))
                 {
                     pNomConfig = (String)ListeNomConfigs[0];
-                    Debug.Print("La Config \"" + pNomConfig + "\"n'existe pas, nouveau nom : NomConfig = " + pNomConfig);
+                    Log.Message("La Config \"" + pNomConfig + "\"n'existe pas, nouveau nom : NomConfig = " + pNomConfig);
                 }
 
                 _Configuration = new eConfiguration();
@@ -402,7 +403,7 @@ namespace Framework
                     _Modele = Modele;
                     _Nb = 1;
 
-                    Debug.Print(this.Modele.FichierSw.Chemin);
+                    Log.Message(this.Modele.FichierSw.Chemin);
                 }
                 else
                 {
@@ -411,7 +412,7 @@ namespace Framework
             }
             else // Sinon, on envoi pour le debug
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -423,7 +424,7 @@ namespace Framework
         /// <param name="Ajouter"></param>
         public void Selectionner(Boolean Ajouter = true)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
             _SwComposant.Select4(Ajouter, null, false);
         }
 
@@ -432,7 +433,7 @@ namespace Framework
         /// </summary>
         public void DeSelectionner()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
             _SwComposant.DeSelect();
         }
 
@@ -443,11 +444,11 @@ namespace Framework
         /// <param name="NomComposant"></param>
         /// <param name="PrendreEnCompteSupprime"></param>
         /// <returns></returns>
-        internal List<eComposant> ListComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
+        public ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eComposant> pListe = new List<eComposant>();
+            ArrayList pListe = new ArrayList();
 
             if (SwComposant.IGetChildrenCount() == 0)
                 return pListe;
@@ -472,28 +473,9 @@ namespace Framework
                 }
             }
 
-            pListe.Sort();
+            //pListe.Sort();
             return pListe;
 
-        }
-
-        /// <summary>
-        /// Renvoi la liste des composants enfants filtrée par les arguments.
-        /// </summary>
-        /// <param name="NomComposant"></param>
-        /// <param name="PrendreEnCompteSupprime"></param>
-        /// <returns></returns>
-        public ArrayList ComposantsEnfants(String NomComposant = "", Boolean PrendreEnCompteSupprime = false)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eComposant> pListeComps = ListComposantsEnfants(NomComposant, PrendreEnCompteSupprime);
-            ArrayList pArrayComps = new ArrayList();
-
-            if (pListeComps.Count > 0)
-                pArrayComps = new ArrayList(pListeComps);
-
-            return pArrayComps;
         }
 
         /// <summary>
@@ -503,13 +485,13 @@ namespace Framework
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteCache"></param>
         /// <returns></returns>
-        internal List<eCorps> ListListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
+        public ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             //_Modele.Composant.Configuration.Activer();
 
-            List<eCorps> Liste = new List<eCorps>();
+            ArrayList Liste = new ArrayList();
             Object pInfosCorps = null;
             Object[] TableauDesCorps = _SwComposant.GetBodies3((int)swBodyType_e.swAllBodies, out pInfosCorps);
 
@@ -532,33 +514,14 @@ namespace Framework
             return Liste;
         }
 
-        /// <summary>
-        /// Renvoi la liste des corps de la pièces filtrée par les arguments.
-        /// </summary>
-        /// <param name="TypeDeCorps"></param>
-        /// <param name="PrendreEnCompteCache"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
+        #endregion
 
-            List<eCorps> pListeCorps = ListListeDesCorps(NomARechercher, TypeDeCorps, PrendreEnCompteCache);
-            ArrayList pArrayCorps = new ArrayList();
-
-            if (pListeCorps.Count > 0)
-                pArrayCorps = new ArrayList(pListeCorps);
-
-            return pArrayCorps;
-        }
-
-#endregion
-
-#region "Interfaces génériques"
+        #region "Interfaces génériques"
 
         public int CompareTo(eComposant Comp)
         {
-            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom + "_" + NoOccurence.ToString().PadLeft(10,'0');
-            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom + "_" + Comp.NoOccurence.ToString().PadLeft(10,'0');
+            String Nom1 = _SwComposant.GetPathName() + _Configuration.Nom + "_" + NoOccurence.ToString().PadLeft(10, '0');
+            String Nom2 = Comp.SwComposant.GetPathName() + Comp.Configuration.Nom + "_" + Comp.NoOccurence.ToString().PadLeft(10, '0');
             return Nom1.CompareTo(Nom2);
         }
 
@@ -576,6 +539,6 @@ namespace Framework
             return Nom1.Equals(Nom2);
         }
 
-#endregion
+        #endregion
     }
 }

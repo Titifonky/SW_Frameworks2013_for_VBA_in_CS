@@ -1,11 +1,9 @@
-﻿using System;
+﻿using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 
 namespace Framework
 {
@@ -29,33 +27,35 @@ namespace Framework
     [ProgId("Frameworks.ePiece")]
     public class ePiece : IePiece
     {
-#region "Variables locales"
-        
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(ePiece).Name;
+
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
         private PartDoc _SwPiece = null;
         private eParametreTolerie _ParamTolerie = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public ePiece() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Renvoi l'objet PartDoc.
         /// </summary>
-        public PartDoc SwPiece { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwPiece; } }
+        public PartDoc SwPiece { get { Log.Methode(cNOMCLASSE); return _SwPiece; } }
 
         /// <summary>
         /// Renvoi l'objet ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Log.Methode(cNOMCLASSE); return _Modele; } }
 
         public String Materiau
         {
@@ -70,7 +70,7 @@ namespace Framework
             set
             {
                 String[] pBaseDeDonnees = _Modele.SW.SwSW.GetMaterialDatabases();
-                
+
                 // On test si pour chaque Base de donnée si le matériau à bien été appliqué.
                 // Si oui, on sort de la boucle
                 foreach (String Bdd in pBaseDeDonnees)
@@ -89,7 +89,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (_ParamTolerie == null)
                 {
@@ -107,11 +107,11 @@ namespace Framework
         /// <summary>
         /// Renvoi la valeur de l'initialisation.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -121,11 +121,11 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eModele Modele)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cPiece))
             {
-                Debug.Print(Modele.FichierSw.Chemin);
+                Log.Message(Modele.FichierSw.Chemin);
 
                 _Modele = Modele;
                 _SwPiece = Modele.SwModele as PartDoc;
@@ -133,7 +133,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -145,7 +145,7 @@ namespace Framework
         /// <returns></returns>
         internal Feature DossierDesCorps()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             Feature pFonctionPiecesSoudees = _SwPiece.FirstFeature();
 
@@ -163,7 +163,7 @@ namespace Framework
 
             return null;
         }
-        
+
         /// <summary>
         /// Renvoi Vrai si la piece contient des corps du type T
         /// A tester. Peut dans certain cas renvoyer un resultat erroné. ex :
@@ -174,11 +174,11 @@ namespace Framework
         /// <returns></returns>
         public Boolean Contient(TypeCorps_e T)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (T.HasFlag(TypeCorps_e.cTole))
             {
-                foreach (eFonction Fonction in _Modele.ListListeDesFonctions())
+                foreach (eFonction Fonction in _Modele.ListeDesFonctions())
                 {
                     if ((Fonction.TypeDeLaFonction == "SMBaseFlange")
                         || (Fonction.TypeDeLaFonction == "SolidToSheetMetal")
@@ -190,13 +190,13 @@ namespace Framework
 
             if (T.HasFlag(TypeCorps_e.cBarre))
             {
-                if (_Modele.ListListeDesFonctions("", "WeldMemberFeat", false).Count > 0)
+                if (_Modele.ListeDesFonctions("", "WeldMemberFeat", false).Count > 0)
                     return true;
             }
 
             if (T.HasFlag(TypeCorps_e.cAutre))
             {
-                if (ListListeDesDossiersDePiecesSoudees(TypeCorps_e.cAutre, false).Count > 0)
+                if (ListeDesDossiersDePiecesSoudees(TypeCorps_e.cAutre, false).Count > 0)
                     return true;
             }
 
@@ -210,7 +210,7 @@ namespace Framework
         {
             int pNoDossierMax = 0;
 
-            foreach(eDossier pDossier in ListListeDesDossiersDePiecesSoudees(TypeCorps_e.cTous, true))
+            foreach (eDossier pDossier in ListeDesDossiersDePiecesSoudees(TypeCorps_e.cTous, true))
             {
                 eGestDeProprietes pGestProps = pDossier.GestDeProprietes;
                 if (pGestProps.ProprieteExiste(CONSTANTES.NO_DOSSIER))
@@ -222,7 +222,7 @@ namespace Framework
                 }
             }
 
-            foreach (eDossier pDossier in ListListeDesDossiersDePiecesSoudees(TypeCorps_e.cTous, true))
+            foreach (eDossier pDossier in ListeDesDossiersDePiecesSoudees(TypeCorps_e.cTous, true))
             {
                 eGestDeProprietes pGestProps = pDossier.GestDeProprietes;
                 if (!pGestProps.ProprieteExiste(CONSTANTES.NO_DOSSIER))
@@ -240,11 +240,11 @@ namespace Framework
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteCache"></param>
         /// <returns></returns>
-        internal List<eCorps> ListListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
+        public ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eCorps> Liste = new List<eCorps>();
+            ArrayList Liste = new ArrayList();
 
             Object[] TableauDesCorps = _SwPiece.GetBodies2((int)swBodyType_e.swAllBodies, !PrendreEnCompteCache);
 
@@ -255,32 +255,13 @@ namespace Framework
                     Body2 pSwCorps = (Body2)ObjetCorps;
                     eCorps pCorps = new eCorps();
                     if (pCorps.Init(pSwCorps, this) && TypeDeCorps.HasFlag(pCorps.TypeDeCorps) && Regex.IsMatch(pSwCorps.Name, NomARechercher))
-                        {
-                            Liste.Add(pCorps);
-                        }
+                    {
+                        Liste.Add(pCorps);
+                    }
                 }
             }
 
             return Liste;
-        }
-
-        /// <summary>
-        /// Renvoi la liste des corps de la pièces filtrée par les arguments.
-        /// </summary>
-        /// <param name="TypeDeCorps"></param>
-        /// <param name="PrendreEnCompteCache"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eCorps> pListeCorps = ListListeDesCorps(NomARechercher, TypeDeCorps, PrendreEnCompteCache);
-            ArrayList pArrayCorps = new ArrayList();
-
-            if (pListeCorps.Count > 0)
-                pArrayCorps = new ArrayList(pListeCorps);
-
-            return pArrayCorps;
         }
 
         /// <summary>
@@ -290,11 +271,11 @@ namespace Framework
         /// <param name="TypeDeCorps"></param>
         /// <param name="PrendreEnCompteExclus"></param>
         /// <returns></returns>
-        internal List<eDossier> ListListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false)
+        public ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eDossier> Liste = new List<eDossier>();
+            ArrayList Liste = new ArrayList();
 
             Feature pFonction = DossierDesCorps();
 
@@ -321,26 +302,6 @@ namespace Framework
             }
 
             return Liste;
-
-        }
-
-        /// <summary>
-        /// Renvoi la liste des dossiers de pièces soudées de la pièce filtrée par les arguments.
-        /// </summary>
-        /// <param name="TypeDeCorps"></param>
-        /// <param name="PrendreEnCompteExclus"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eDossier> pListeDossier = ListListeDesDossiersDePiecesSoudees(TypeDeCorps, PrendreEnCompteExclus);
-            ArrayList pArrayDossiers = new ArrayList();
-
-            if (pListeDossier.Count > 0)
-                pArrayDossiers = new ArrayList(pListeDossier);
-
-            return pArrayDossiers;
         }
 
         /// <summary>
@@ -349,9 +310,9 @@ namespace Framework
         /// <param name="Noeud"></param>
         /// <param name="ListeFonctions"></param>
         /// <param name="AvecLesSousFonctions"></param>
-        private void ScannerFonctionsFeatureManager(TreeControlItem Noeud, List<eFonction> ListeFonctions, String NomARechercher, String TypeDeLaFonction, Boolean AvecLesSousFonctions)
+        private void ScannerFonctionsFeatureManager(TreeControlItem Noeud, ArrayList ListeFonctions, String NomARechercher, String TypeDeLaFonction, Boolean AvecLesSousFonctions)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             TreeControlItem pNoeud = Noeud.GetFirstChild();
 
@@ -362,7 +323,7 @@ namespace Framework
                 {
                     if (pFonction.Init(pNoeud.Object, Modele)
                         && Regex.IsMatch(pFonction.Nom, NomARechercher)
-                        && Regex.IsMatch(pFonction.TypeDeLaFonction,TypeDeLaFonction))
+                        && Regex.IsMatch(pFonction.TypeDeLaFonction, TypeDeLaFonction))
                         ListeFonctions.Add(pFonction);
                 }
 
@@ -377,35 +338,16 @@ namespace Framework
             }
         }
 
-        internal List<eFonction> ListListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
+        public ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
-            List<eFonction> pListeFonction = new List<eFonction>();
+            ArrayList pListeFonction = new ArrayList();
 
             ScannerFonctionsFeatureManager(Modele.GestDeFonction_NoeudRacine(), pListeFonction, NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
 
             return pListeFonction;
         }
 
-        /// <summary>
-        /// Renvoi la liste des fonctions filtrée par les arguments.
-        /// </summary>
-        /// <param name="NomARechercher"></param>
-        /// <param name="AvecLesSousFonctions"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eFonction> pListeFonctions = ListListeDesFonctionsDeArbre(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
-            ArrayList pArrayFonctions = new ArrayList();
-
-            if (pListeFonctions.Count > 0)
-                pArrayFonctions = new ArrayList(pListeFonctions);
-
-            return pArrayFonctions;
-        }
-
-#endregion
+        #endregion
 
     }
 }

@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BDAE5B58-B8F5-4AB3-A290-DB77FC38F7F2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Framework</RootNamespace>
+    <AssemblyName>Framework_SW2014_V1-1</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <PublishUrl>publier\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Release\</OutputPath>
+    <DefineConstants>DEBUG;SW2011 SW2012 SW2013 SW2014</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Code\Etienne.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SolidWorks.Interop.sldworks">
+      <HintPath>..\DLL_SW2014\SolidWorks.Interop.sldworks.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="SolidWorks.Interop.swconst">
+      <HintPath>..\DLL_SW2014\SolidWorks.Interop.swconst.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Code\Constantes.cs">
+      <Link>Constantes.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\DlgRechercherUnDossier.cs">
+      <Link>DlgRechercherUnDossier.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\DlgRechercherUnFichier.cs">
+      <Link>DlgRechercherUnFichier.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\DlgSauverUnFichier.cs">
+      <Link>DlgSauverUnFichier.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eAssemblage.cs">
+      <Link>eAssemblage.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eBarre.cs">
+      <Link>eBarre.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eComposant.cs">
+      <Link>eComposant.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eConfiguration.cs">
+      <Link>eConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eCorps.cs">
+      <Link>eCorps.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eDessin.cs">
+      <Link>eDessin.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eDimensionVue.cs">
+      <Link>eDimensionVue.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eDossier.cs">
+      <Link>eDossier.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eEquation.cs">
+      <Link>eEquation.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eFeuille.cs">
+      <Link>eFeuille.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eFichierSW.cs">
+      <Link>eFichierSW.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eFonction.cs">
+      <Link>eFonction.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eGeometrie.cs">
+      <Link>eGeometrie.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eGestDeConfigurations.cs">
+      <Link>eGestDeConfigurations.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eGestDeProprietes.cs">
+      <Link>eGestDeProprietes.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eGestDeSelection.cs">
+      <Link>eGestDeSelection.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eGestEquations.cs">
+      <Link>eGestEquations.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eGestOptions.cs">
+      <Link>eGestOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eModele.cs">
+      <Link>eModele.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eObjet.cs">
+      <Link>eObjet.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eParametreTolerie.cs">
+      <Link>eParametreTolerie.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\ePiece.cs">
+      <Link>ePiece.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\ePropriete.cs">
+      <Link>ePropriete.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eRecherche.cs">
+      <Link>eRecherche.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eSldWorks.cs">
+      <Link>eSldWorks.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eTole.cs">
+      <Link>eTole.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\eVue.cs">
+      <Link>eVue.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\intChaine.cs">
+      <Link>intChaine.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\intTypeFonction.cs">
+      <Link>intTypeFonction.cs</Link>
+    </Compile>
+    <Compile Include="..\Code\Log.cs">
+      <Link>Log.cs</Link>
+    </Compile>
+    <Compile Include="intRegex.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Code\Etienne.snk">
+      <Link>Etienne.snk</Link>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 et x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>call $(TargetDir)DLL_Installer.bat</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

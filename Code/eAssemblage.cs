@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using SolidWorks.Interop.sldworks;
+using System;
 using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
-using System.Reflection;
 
 namespace Framework
 {
@@ -22,42 +19,44 @@ namespace Framework
     [ProgId("Frameworks.eAssemblage")]
     public class eAssemblage : IeAssemblage
     {
-#region "Variables locales"
-        
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eAssemblage).Name;
+
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
         private AssemblyDoc _SwAssemblage = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eAssemblage() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet AssemblyDoc associé.
         /// </summary>
-        public AssemblyDoc SwAssemblage { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwAssemblage; } }
+        public AssemblyDoc SwAssemblage { get { Log.Methode(cNOMCLASSE); return _SwAssemblage; } }
 
         /// <summary>
         /// Retourne le parent eModele.
         /// </summary>
-        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Log.Methode(cNOMCLASSE); return _Modele; } }
 
         /// <summary>
         /// Fonction interne.
         /// Test l'initialisation de l'objet eAssemblage.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -67,12 +66,12 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eModele Modele)
         {
-            
-            Debug.Print(MethodBase.GetCurrentMethod());
+
+            Log.Methode(cNOMCLASSE);
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cAssemblage))
             {
-                Debug.Print(Modele.FichierSw.Chemin);
+                Log.Message(Modele.FichierSw.Chemin);
 
                 _Modele = Modele;
                 _SwAssemblage = Modele.SwModele as AssemblyDoc;
@@ -80,7 +79,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -106,6 +105,6 @@ namespace Framework
             _SwAssemblage.EditAssembly();
         }
 
-#endregion
+        #endregion
     }
 }

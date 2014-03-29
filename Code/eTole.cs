@@ -1,9 +1,6 @@
-﻿using System;
-using System.Reflection;
+﻿using SolidWorks.Interop.swconst;
+using System;
 using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
-using System.Collections.Generic;
 
 namespace Framework
 {
@@ -29,6 +26,8 @@ namespace Framework
     {
         #region "Variables locales"
 
+        private static readonly String cNOMCLASSE = typeof(eTole).Name;
+
         private Boolean _EstInitialise = false;
 
         private eCorps _Corps = null;
@@ -47,21 +46,21 @@ namespace Framework
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public eCorps Corps { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Corps; } }
+        public eCorps Corps { get { Log.Methode(cNOMCLASSE); return _Corps; } }
 
         public eParametreTolerie ParametresDeTolerie
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (_ParamTolerie == null)
                 {
                     _ParamTolerie = new eParametreTolerie();
                     _ParamTolerie.Init(this);
                 }
-                    
-                if(_ParamTolerie.EstInitialise)
+
+                if (_ParamTolerie.EstInitialise)
                     return _ParamTolerie;
 
                 return null;
@@ -76,11 +75,11 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 swFeatureType_e TypeFonc = new swFeatureType_e();
 
-                foreach (eFonction pFonc in _Corps.ListListeDesFonctions())
+                foreach (eFonction pFonc in _Corps.ListeDesFonctions())
                 {
                     if (pFonc.TypeDeLaFonction == TypeFonc.swTnSheetMetal)
                         return pFonc;
@@ -98,11 +97,11 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 swFeatureType_e TypeFonc = new swFeatureType_e();
 
-                foreach (eFonction pFonc in _Corps.ListListeDesFonctions())
+                foreach (eFonction pFonc in _Corps.ListeDesFonctions())
                 {
                     if ((pFonc.TypeDeLaFonction == TypeFonc.swTnBaseFlange) || (pFonc.TypeDeLaFonction == TypeFonc.swTnSolidToSheetMetal))
                         return pFonc;
@@ -121,11 +120,11 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 swFeatureType_e TypeFonc = new swFeatureType_e();
 
-                foreach (eFonction pFonc in _Corps.ListListeDesFonctions())
+                foreach (eFonction pFonc in _Corps.ListeDesFonctions())
                 {
                     if (pFonc.TypeDeLaFonction == TypeFonc.swTnFlatPattern)
                         return pFonc;
@@ -143,9 +142,9 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
-                return this.FonctionDeplie.ListListeDesSousFonctions(CONSTANTES.CUBE_DE_VISUALISATION)[0];
+                return (eFonction)this.FonctionDeplie.ListeDesSousFonctions(CONSTANTES.CUBE_DE_VISUALISATION)[0];
             }
         }
 
@@ -154,7 +153,7 @@ namespace Framework
         /// </summary>
         public void Deplier(Boolean T)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
             if (T)
                 FonctionDeplie.Activer();
 
@@ -168,7 +167,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 eGestDeConfigurations pGestConfig = _Corps.Piece.Modele.GestDeConfigurations;
                 eGestDeProprietes pGestProps = _Corps.Dossier.GestDeProprietes;
 
@@ -191,7 +190,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _Corps.Piece.Modele.GestDeConfigurations.ConfigurationAvecLeNom(NomConfigDepliee);
             }
         }
@@ -200,7 +199,7 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet eTole.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
         #endregion
 
@@ -215,7 +214,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eCorps Corps)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Corps != null) && Corps.EstInitialise && (Corps.TypeDeCorps == TypeCorps_e.cTole))
             {
@@ -224,7 +223,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
@@ -236,7 +235,7 @@ namespace Framework
         /// <returns></returns>
         public eConfiguration CreerConfigurationDepliee(Boolean Ecraser = false)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             eGestDeConfigurations pGestConfig = _Corps.Piece.Modele.GestDeConfigurations;
             eConfiguration pConfigActive = pGestConfig.ConfigurationActive;
@@ -255,7 +254,7 @@ namespace Framework
                 if (pConfigDepliee == null)
                     pConfigDepliee = pConfigActive.AjouterUneConfigurationDerivee(pNomConfigDepliee);
 
-                Debug.Print(" ==========================   " + (pConfigDepliee != null).ToString());
+                Log.Message(" ==========================   " + (pConfigDepliee != null).ToString());
 
                 if (pConfigDepliee != null)
                 {

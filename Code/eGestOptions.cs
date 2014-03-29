@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using SolidWorks.Interop.swconst;
+using System;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
-using System.Reflection;
 
 namespace Framework
 {
@@ -22,10 +17,7 @@ namespace Framework
         Boolean DxfDwg_JoindreExtremitesHauteQualite { get; set; }
         Boolean DxfDwg_ExporterSplineEnPolyligne { get; set; }
         swDxfMultisheet_e DxfDwg_ExporterToutesLesFeuilles { get; set; }
-
-#if SW2012
         Boolean DxfDwg_ExporterFeuilleDansEspacePapier { get; set; }
-#endif
 
         Boolean Pdf_ExporterEnCouleur { get; set; }
         Boolean Pdf_IncorporerLesPolices { get; set; }
@@ -43,7 +35,9 @@ namespace Framework
     [ProgId("Frameworks.eGestOptions")]
     public class eGestOptions : IeGestOptions
     {
-#region "Variables locales"
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eGestOptions).Name;
 
         private Boolean _EstInitialise = false;
 
@@ -53,31 +47,29 @@ namespace Framework
         private Double _TransitionVue = 0;
         private Double _TransitionAfficherCacher = 0;
         private Double _TransitionIsoler = 0;
-#if SW2013
         private Double _TransitionSelecteur = 0;
-#endif
         private Double _AnimationContrainte = 0;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eGestOptions() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         public swDxfFormat_e DxfDwg_Version
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return (swDxfFormat_e)_SW.SwSW.GetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfVersion);
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfVersion, (int)value);
             }
         }
@@ -86,12 +78,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return !Convert.ToBoolean(_SW.SwSW.GetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputFonts));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputFonts, Convert.ToInt32(!value));
             }
         }
@@ -100,12 +92,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return !Convert.ToBoolean(_SW.SwSW.GetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputLineStyles));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputLineStyles, Convert.ToInt32(!value));
             }
         }
@@ -114,12 +106,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputNoScale));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfOutputNoScale, Convert.ToInt32(value));
             }
         }
@@ -128,12 +120,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfEndPointMerge));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfEndPointMerge, value);
             }
         }
@@ -142,12 +134,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swDxfMergingDistance);
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swDxfMergingDistance, value);
             }
         }
@@ -156,12 +148,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDXFHighQualityExport));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDXFHighQualityExport, value);
             }
         }
@@ -170,13 +162,13 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return !Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportSplinesAsSplines));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
-                Debug.Print("--------------------> " + !value);
+                Log.Methode(cNOMCLASSE);
+                Log.Message("--------------------> " + !value);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportSplinesAsSplines, !value);
             }
         }
@@ -185,41 +177,40 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return (swDxfMultisheet_e)_SW.SwSW.GetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfMultiSheetOption);
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceIntegerValue((int)swUserPreferenceIntegerValue_e.swDxfMultiSheetOption, (int)value);
             }
         }
-#if SW2012
+
         public Boolean DxfDwg_ExporterFeuilleDansEspacePapier
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportAllSheetsToPaperSpace));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDxfExportAllSheetsToPaperSpace, value);
             }
         }
-#endif
 
         public Boolean Pdf_ExporterEnCouleur
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportInColor));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportInColor, value);
             }
         }
@@ -228,54 +219,54 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportEmbedFonts));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportEmbedFonts, value);
             }
         }
-        
+
         public Boolean Pdf_ExporterEnHauteQualite
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportHighQuality));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportHighQuality, value);
             }
         }
-        
+
         public Boolean Pdf_ImprimerEnTeteEtPiedDePage
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportPrintHeaderFooter));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportPrintHeaderFooter, value);
             }
         }
-        
+
         public Boolean Pdf_UtiliserLesEpaisseursDeLigneDeImprimante
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return Convert.ToBoolean(_SW.SwSW.GetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportUseCurrentPrintLineWeights));
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SW.SwSW.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swPDFExportUseCurrentPrintLineWeights, value);
             }
         }
@@ -284,11 +275,11 @@ namespace Framework
         /// Fonction interne
         /// Test l'initialisation de l'objet GestOptions
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne
@@ -299,7 +290,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eSldWorks SW)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((SW != null) && SW.EstInitialise)
             {
@@ -308,7 +299,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -321,9 +312,7 @@ namespace Framework
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewAnimationSpeed, _TransitionVue);
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionHideShowComponent, _TransitionAfficherCacher);
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionIsolate, _TransitionIsoler);
-#if SW2013
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewSelectorSpeed, _TransitionSelecteur);
-#endif
                 _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swMateAnimationSpeed, _AnimationContrainte);
             }
 
@@ -335,22 +324,18 @@ namespace Framework
             _TransitionVue = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewAnimationSpeed);
             _TransitionAfficherCacher = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionHideShowComponent);
             _TransitionIsoler = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionIsolate);
-#if SW2013
             _TransitionSelecteur = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewSelectorSpeed);
-#endif
             _AnimationContrainte = _SW.SwSW.GetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swMateAnimationSpeed);
 
             _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewAnimationSpeed, 0);
             _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionHideShowComponent, 0);
             _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewTransitionIsolate, 0);
-#if SW2013
             _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swViewSelectorSpeed, 0);
-#endif
             _SW.SwSW.SetUserPreferenceDoubleValue((int)swUserPreferenceDoubleValue_e.swMateAnimationSpeed, 0);
 
             _TransitionDesactive = true;
         }
 
-#endregion
+        #endregion
     }
 }

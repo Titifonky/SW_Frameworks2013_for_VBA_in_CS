@@ -1,8 +1,7 @@
-﻿using System;
+﻿using SolidWorks.Interop.swconst;
+using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using SolidWorks.Interop.swconst;
 
 namespace Framework
 {
@@ -12,7 +11,7 @@ namespace Framework
     {
         eGestDeProprietes GestDeProprietes { get; }
         String Nom { get; }
-        swCustomInfoType_e TypeDeLaPropriete { get;}
+        swCustomInfoType_e TypeDeLaPropriete { get; }
         String Expression { get; set; }
         String Valeur { get; }
         Boolean Renommer(String NvNom);
@@ -26,6 +25,8 @@ namespace Framework
     public class ePropriete : IePropriete, IComparable<ePropriete>, IComparer<ePropriete>, IEquatable<ePropriete>
     {
         #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(ePropriete).Name;
 
         private Boolean _EstInitialise = false;
 
@@ -44,19 +45,19 @@ namespace Framework
         /// <summary>
         /// Retourne le parent GestDeProprietes.
         /// </summary>
-        public eGestDeProprietes GestDeProprietes { get { Debug.Print(MethodBase.GetCurrentMethod()); return _GestDeProprietes; } }
+        public eGestDeProprietes GestDeProprietes { get { Log.Methode(cNOMCLASSE); return _GestDeProprietes; } }
 
         /// <summary>
         /// Retourne le nom de la propriété.
         /// </summary>
-        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Nom; } }
+        public String Nom { get { Log.Methode(cNOMCLASSE); return _Nom; } }
 
         /// <summary>
         /// Retourne le type de la propriété.
         /// </summary>
         public swCustomInfoType_e TypeDeLaPropriete
         {
-            get { Debug.Print(MethodBase.GetCurrentMethod()); return (swCustomInfoType_e)_GestDeProprietes.SwGestDeProprietes.GetType2(_Nom); }
+            get { Log.Methode(cNOMCLASSE); return (swCustomInfoType_e)_GestDeProprietes.SwGestDeProprietes.GetType2(_Nom); }
         }
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 String Expression;
                 String Valeur;
 
@@ -74,7 +75,7 @@ namespace Framework
 
                 return Expression;
             }
-            set { Debug.Print(MethodBase.GetCurrentMethod()); _GestDeProprietes.SwGestDeProprietes.Set(_Nom, value); }
+            set { Log.Methode(cNOMCLASSE); _GestDeProprietes.SwGestDeProprietes.Set(_Nom, value); }
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 String Expression;
                 String Valeur;
 
@@ -98,7 +99,7 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtPropriete.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
         #endregion
 
@@ -113,7 +114,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eGestDeProprietes Gestionnaire, String Nom)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Gestionnaire != null) && Gestionnaire.EstInitialise && !String.IsNullOrEmpty(Nom))
             {
@@ -124,7 +125,7 @@ namespace Framework
 
                 if ((pListeNom != null) && (pListeNom.Contains(Nom)))
                 {
-                    Debug.Print(this.Nom);
+                    Log.Message(this.Nom);
 
                     _GestDeProprietes = Gestionnaire;
                     _Nom = Nom;
@@ -133,7 +134,7 @@ namespace Framework
                 }
                 else
                 {
-                    Debug.Print("!!!!! Erreur d'initialisation");
+                    Log.Message("!!!!! Erreur d'initialisation");
                 }
             }
 
@@ -149,7 +150,7 @@ namespace Framework
         /// <param name="Valeur"></param>
         private void Get(out String Expression, out String Valeur)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (String.IsNullOrEmpty(this.Nom))
             {
@@ -160,11 +161,7 @@ namespace Framework
             }
 
             // Pour la compatibilité
-#if SW2013
             _GestDeProprietes.SwGestDeProprietes.Get4(_Nom, true, out Expression, out Valeur);
-#else
-            _GestDeProprietes.SwGestDeProprietes.Get2(_Nom, out Expression, out Valeur);
-#endif
 
         }
 
@@ -175,7 +172,7 @@ namespace Framework
         /// <returns></returns>
         public Boolean Renommer(String NvNom)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             swCustomInfoType_e pTypeDeLaPropriete = TypeDeLaPropriete;
             String pExpression = Expression;
@@ -194,7 +191,7 @@ namespace Framework
         /// <returns></returns>
         public Boolean Supprimer()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (_GestDeProprietes.SwGestDeProprietes.Delete(Nom) == 1)
             {

@@ -1,12 +1,10 @@
-﻿using System;
+﻿using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 
 namespace Framework
 {
@@ -43,6 +41,8 @@ namespace Framework
     {
         #region "Variables locales"
 
+        private static readonly String cNOMCLASSE = typeof(eFeuille).Name;
+
         private Boolean _EstInitialise = false;
 
         private eDessin _Dessin = null;
@@ -60,17 +60,17 @@ namespace Framework
         /// <summary>
         /// Retourne l'objet Sheet associé.
         /// </summary>
-        public Sheet SwFeuille { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwFeuille; } }
+        public Sheet SwFeuille { get { Log.Methode(cNOMCLASSE); return _SwFeuille; } }
 
         /// <summary>
         /// Retourne le parent ExtDessin.
         /// </summary>
-        public eDessin Dessin { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Dessin; } }
+        public eDessin Dessin { get { Log.Methode(cNOMCLASSE); return _Dessin; } }
 
         /// <summary>
         /// Retourne ou défini le nom de la feuille.
         /// </summary>
-        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwFeuille.GetName(); } set { Debug.Print(MethodBase.GetCurrentMethod()); _SwFeuille.SetName(value); } }
+        public String Nom { get { Log.Methode(cNOMCLASSE); return _SwFeuille.GetName(); } set { Log.Methode(cNOMCLASSE); _SwFeuille.SetName(value); } }
 
         /// <summary>
         /// Retourne la première vue du dessin
@@ -79,7 +79,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 eVue pVue = new eVue();
 
                 object[] pObjVues = _SwFeuille.GetViews();
@@ -98,7 +98,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 eVue pVue = new eVue();
 
                 object[] pObjVues = _SwFeuille.GetViews();
@@ -117,7 +117,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 object[] pObjVues = _SwFeuille.GetViews();
 
@@ -135,7 +135,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 eZone pEnveloppe = new eZone();
 
@@ -144,9 +144,9 @@ namespace Framework
                 pEnveloppe.PointMin.X = 10000;
                 pEnveloppe.PointMin.Y = 10000;
 
-                List<eVue> pListeVues = ListListeDesVues();
+                ArrayList pListeVues = ListeDesVues();
 
-                Debug.Print("============================= " + pListeVues.Count.ToString());
+                Log.Message("============================= " + pListeVues.Count.ToString());
 
                 if (pListeVues.Count == 0)
                 {
@@ -174,7 +174,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 Double pLargeur = 0;
                 Double pHauteur = 0;
@@ -209,7 +209,7 @@ namespace Framework
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 Double pLargeur = 0;
                 Double pHauteur = 0;
@@ -254,7 +254,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 Double pLargeur = 0;
                 Double pHauteur = 0;
@@ -266,7 +266,7 @@ namespace Framework
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 Double pLargeur = 0;
                 Double pHauteur = 0;
@@ -284,12 +284,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _SwFeuille.GetTemplateName();
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SwFeuille.SetTemplateName(value);
             }
         }
@@ -298,7 +298,7 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtFeuille.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
         #endregion
 
@@ -313,19 +313,19 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(Sheet SwFeuille, eDessin Dessin)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((SwFeuille != null) && (Dessin != null) && Dessin.EstInitialise)
             {
                 _Dessin = Dessin;
                 _SwFeuille = SwFeuille;
 
-                Debug.Print(this.Nom);
+                Log.Message(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
@@ -339,19 +339,19 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(Sheet SwFeuille, eModele Modele)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((SwFeuille != null) && (Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cDessin))
             {
                 _Dessin = Modele.Dessin;
                 _SwFeuille = SwFeuille;
 
-                Debug.Print(this.Nom);
+                Log.Message(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
@@ -361,7 +361,7 @@ namespace Framework
         /// </summary>
         public void Activer()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
             Dessin.SwDessin.ActivateSheet(Nom);
         }
 
@@ -370,7 +370,7 @@ namespace Framework
         /// </summary>
         public void Supprimer()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             eModele pModeleDessin = Dessin.Modele;
             pModeleDessin.Activer();
@@ -385,7 +385,7 @@ namespace Framework
         /// </summary>
         public void ZoomEtendu()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
             Dessin.Modele.SW.Modele().SwModele.ViewZoomtofit2();
         }
 
@@ -394,7 +394,7 @@ namespace Framework
         /// </summary>
         public void AjusterAutourDesVues()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             eZone pEnveloppe = EnveloppeDesVues;
 
@@ -409,7 +409,7 @@ namespace Framework
         /// </summary>
         public void Redimensionner(Double Largeur, Double Hauteur)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Largeur == 0) || (Hauteur == 0))
                 return;
@@ -426,15 +426,20 @@ namespace Framework
         /// <returns></returns>
         public eVue CreerVueToleDvp(ePiece Piece, eConfiguration Configuration, Boolean AfficherLesLignesDePliage)
         {
+            Piece.Modele.GestDeConfigurations.LierLesAffichagesAuxConfigurations = true;
             eVue pVue = new eVue();
             View pSwVue = null;
             Configuration.Activer();
 
             // Si des corps autre que la tole dépliée sont encore visible dans la config, on les cache et on recontruit tout
-            List<eCorps> pListeCorps = Piece.ListListeDesCorps("^((?!" + CONSTANTES.NOM_CORPS_DEPLIEE + ").)*$");
+            ArrayList pListeCorps = Piece.ListeDesCorps();
             foreach (eCorps pCorps in pListeCorps)
-                pCorps.Visible = false;
-
+            {
+                if (pCorps.Nom == CONSTANTES.NOM_CORPS_DEPLIEE)
+                    pCorps.Visible = true;
+                else
+                    pCorps.Visible = false;
+            }
             if (pListeCorps.Count > 0)
                 Piece.Modele.ForcerAToutReconstruire();
 
@@ -443,11 +448,11 @@ namespace Framework
 
             if (pVue.Init(pSwVue, this))
             {
-                Debug.Print("Vue dvp crée");
+                Log.Message("Vue dvp crée");
                 return pVue;
             }
 
-            Debug.Print("Vue dvp non crée");
+            Log.Message("Vue dvp non crée");
             return null;
         }
 
@@ -459,7 +464,7 @@ namespace Framework
         /// <param name="NomDuFichierAlternatif"></param>
         public void ExporterEn(Extension_e TypeExport, String CheminDossier, String NomDuFichierAlternatif = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             Activer();
             ZoomEtendu();
@@ -495,7 +500,7 @@ namespace Framework
 
             CheminFichier = Path.Combine(CheminDossier, CheminFichier + Ext);
             Dessin.Modele.SwModele.Extension.SaveAs(CheminFichier, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, OptionsPDF, Erreur, Warning);
-            Debug.Print(CheminFichier);
+            Log.Message(CheminFichier);
         }
 
         /// <summary>
@@ -505,11 +510,11 @@ namespace Framework
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<eVue> ListListeDesVues(String NomARechercher = "")
+        public ArrayList ListeDesVues(String NomARechercher = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eVue> pListeVues = new List<eVue>();
+            ArrayList pListeVues = new ArrayList();
 
             Object[] pTabVues = _SwFeuille.GetViews();
 
@@ -524,25 +529,6 @@ namespace Framework
             }
 
             return pListeVues;
-        }
-
-        /// <summary>
-        /// Renvoi la liste des vues de la feuille filtrée par les arguments.
-        /// Si NomARechercher est vide, toutes les vues sont retournées.
-        /// </summary>
-        /// <param name="NomARechercher"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesVues(String NomARechercher = "")
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eVue> pListeVues = ListListeDesVues(NomARechercher);
-            ArrayList pArrayVues = new ArrayList();
-
-            if (pListeVues.Count > 0)
-                pArrayVues = new ArrayList(pListeVues);
-
-            return pArrayVues;
         }
 
         /// <summary>

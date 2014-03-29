@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
+﻿using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System;
+using System.Collections;
+using System.Runtime.InteropServices;
 
 namespace Framework
 {
@@ -38,42 +36,44 @@ namespace Framework
     [ProgId("Frameworks.eGestDeSelection")]
     public class eGestDeSelection : IeGestDeSelection
     {
-#region "Variables locales"
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eGestDeSelection).Name;
 
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
         private SelectionMgr _SwGestDeSelection = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eGestDeSelection() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Renvoi l'objet SelectionMgr.
         /// </summary>
-        public SelectionMgr SwGestDeSelection { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwGestDeSelection; } }
+        public SelectionMgr SwGestDeSelection { get { Log.Methode(cNOMCLASSE); return _SwGestDeSelection; } }
 
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele { get { Log.Methode(cNOMCLASSE); return _Modele; } }
 
         /// <summary>
         /// Fonction interne
         /// Test l'initialisation de l'objet GestDeSelection
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -83,7 +83,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(SelectionMgr SwGestionnaire, eModele Modele)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((SwGestionnaire != null) && (Modele != null) && Modele.EstInitialise)
             {
@@ -93,7 +93,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -106,7 +106,7 @@ namespace Framework
         /// <returns></returns>
         public int NbObjetsSelectionnes(int Marque = -1)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
             return _SwGestDeSelection.GetSelectedObjectCount2(Marque);
         }
 
@@ -118,7 +118,7 @@ namespace Framework
         /// <returns></returns>
         public ePoint PointDeSelectionObjet(int Index, int Marque = -1)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             Double[] pSwPoint = _SwGestDeSelection.GetSelectionPoint2(Index, Marque);
             return new ePoint(pSwPoint[0], pSwPoint[1], pSwPoint[2]);
@@ -132,7 +132,7 @@ namespace Framework
         /// <returns></returns>
         public swSelectType_e TypeObjet(int Index, int Marque = -1)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (NbObjetsSelectionnes(Marque) > 0)
                 return (swSelectType_e)_SwGestDeSelection.GetSelectedObjectType3(Index, Marque);
@@ -147,7 +147,7 @@ namespace Framework
         /// <returns></returns>
         public int MarqueObjet(int Index)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (NbObjetsSelectionnes() > 0)
                 return _SwGestDeSelection.GetSelectedObjectMark(Index);
@@ -163,7 +163,7 @@ namespace Framework
         /// <returns></returns>
         public dynamic Objet(int Index, int Marque = -1, Boolean RenvoyerObjet = false)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (NbObjetsSelectionnes() == 0)
                 return null;
@@ -240,9 +240,9 @@ namespace Framework
                             return pFonction;
                         break;
 
-                    default :
+                    default:
                         eObjet pObjet = new eObjet();
-                        
+
                         eModele pInitModele;
                         if ((pModele != null) && pModele.EstInitialise)
                             pInitModele = pModele;
@@ -280,15 +280,12 @@ namespace Framework
         /// <returns></returns>
         public eComposant Composant(int Index, int Marque = -1)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (NbObjetsSelectionnes() == 0)
                 return null;
-#if SW2013
+
             Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(Index, Marque);
-#else
-            Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent3(Index, Marque);
-#endif
 
             // Si le composant racine est sélectionné et que l'on est dans un assemblage, rien n'est renvoyé.
             // Donc on le récupère.
@@ -303,16 +300,17 @@ namespace Framework
                 return null;
 
             if (pSwComposant == null)
-                Debug.Print(" ========================= Erreur de composant");
+                Log.Message(" ========================= Erreur de composant");
 
             // Pour intitialiser le composant correctement il faut un peu de bidouille
             // sinon on à le droit à une belle reference circulaire
             // Donc d'abord, on recherche le modele du SwComposant
-            Debug.Print(pSwComposant.GetPathName());
+            Log.Message(pSwComposant.GetPathName());
             eModele pModele = _Modele.SW.Modele(pSwComposant.GetPathName());
-            
+
             // Ensuite, on créer un nouveau Composant avec la ref du SwComposant et du modele
             eComposant pComposant = new eComposant();
+
             // Et pour que les deux soit liés, on passe la ref du Composant que l'on vient de creer
             // au modele. Comme ca, Modele.Composant pointe sur Composant et Composant.Modele pointe sur Modele,
             // la boucle est bouclée
@@ -333,7 +331,7 @@ namespace Framework
         /// <returns></returns>
         public eVue Vue(int Index, int Marque = -1)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (NbObjetsSelectionnes() == 0)
                 return null;
@@ -352,11 +350,11 @@ namespace Framework
         /// <param name="TypeObjet"></param>
         /// <param name="Marque"></param>
         /// <returns></returns>
-        internal List<dynamic> ListListeDesObjetsSelectionnes(swSelectType_e TypeObjet, int Marque = -1)
+        public ArrayList ListeDesObjetsSelectionnes(swSelectType_e TypeObjet, int Marque = -1)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<dynamic> pListeObjets = new List<dynamic>();
+            ArrayList pListeObjets = new ArrayList();
 
             if (NbObjetsSelectionnes() > 0)
             {
@@ -375,39 +373,20 @@ namespace Framework
         }
 
         /// <summary>
-        /// Renvoi la liste des objets sélectionnés.
-        /// </summary>
-        /// <param name="Marque"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesObjetsSelectionnes(swSelectType_e TypeObjet, int Marque = -1)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<dynamic> pListeObjets = ListListeDesObjetsSelectionnes(TypeObjet,Marque);
-            ArrayList pArrayObjets = new ArrayList();
-
-            if (pListeObjets.Count > 0)
-                pArrayObjets = new ArrayList(pListeObjets);
-
-            return pArrayObjets;
-        }
-
-        /// <summary>
         /// Fonction interne, renvoi la liste des composants sélectionnés.
         /// </summary>
         /// <param name="NomComposant"></param>
         /// <param name="Marque"></param>
         /// <returns></returns>
-        internal List<eComposant> ListListeDesComposantsSelectionnes(TypeFichier_e TypeDeFichier, String NomComposant = "", int Marque = -1)
+        public ArrayList ListeDesComposantsSelectionnes(TypeFichier_e TypeDeFichier, String NomComposant = "", int Marque = -1)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             // Liste à renvoyer
-            List<eComposant> pListeComposants = new List<eComposant>();
+            ArrayList pListeComposants = new ArrayList();
 
             for (int i = 1; i <= _SwGestDeSelection.GetSelectedObjectCount2(Marque); i++)
             {
-
                 eComposant pComposant = Composant(i, Marque);
 
                 if ((pComposant != null) && pComposant.EstInitialise && TypeDeFichier.HasFlag(pComposant.TypeDuModele))
@@ -418,35 +397,16 @@ namespace Framework
         }
 
         /// <summary>
-        /// Renvoi la liste des composants sélectionnés dans l'assemblage.
-        /// </summary>
-        /// <param name="NomComposant"></param>
-        /// <param name="Marque"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesComposantsSelectionnes(TypeFichier_e TypeDeFichier, String NomComposant = "", int Marque = -1)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eComposant> pListeComps = ListListeDesComposantsSelectionnes(TypeDeFichier, NomComposant, Marque);
-            ArrayList pArrayComps = new ArrayList();
-
-            if (pListeComps.Count > 0)
-                pArrayComps = new ArrayList(pListeComps);
-
-            return pArrayComps;
-        }
-
-        /// <summary>
         /// Fonction interne, renvoi la liste des vues sélectionnées.
         /// </summary>
         /// <param name="Marque"></param>
         /// <returns></returns>
-        internal List<eVue> ListListeDesVuesSelectionnes(int Marque = -1)
+        public ArrayList ListeDesVuesSelectionnees(int Marque = -1)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             // Liste à renvoyer
-            List<eVue> pListeVues = new List<eVue>();
+            ArrayList pListeVues = new ArrayList();
 
             if (_Modele.TypeDuModele == TypeFichier_e.cDessin)
             {
@@ -463,24 +423,6 @@ namespace Framework
             return pListeVues;
         }
 
-        /// <summary>
-        /// Renvoi la liste des vues sélectionnées dans le dessin.
-        /// </summary>
-        /// <param name="Marque"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesVuesSelectionnees(int Marque = -1)
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eVue> pListeVues = ListListeDesVuesSelectionnes(Marque);
-            ArrayList pArrayVues = new ArrayList();
-
-            if (pListeVues.Count > 0)
-                pArrayVues = new ArrayList(pListeVues);
-
-            return pArrayVues;
-        }
-
-#endregion
+        #endregion
     }
 }

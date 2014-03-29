@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
+using System;
 using System.Linq;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
+using System.Collections;
 
 namespace Framework
 {
@@ -42,6 +41,8 @@ namespace Framework
     {
         #region "Variables locales"
 
+        private static readonly String cNOMCLASSE = typeof(eFonction).Name;
+
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
@@ -66,20 +67,20 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (_PID != null)
                 {
                     int pErreur = 0;
                     Feature pSwFonction = Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
-                    Debug.Print("PID Erreur : " + pErreur);
+                    Log.Message("PID Erreur : " + pErreur);
                     if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
                         || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
                         _SwFonctionModele = pSwFonction;
                 }
                 else
                 {
-                    Debug.Print("Pas de PID");
+                    Log.Message("Pas de PID");
                     MajPID();
                 }
 
@@ -87,11 +88,11 @@ namespace Framework
 
                 if (Modele.SwModele.GetPathName().Equals(pDocActif.GetPathName()) || Modele.Composant.SwComposant.IsRoot())
                 {
-                    Debug.Print("Fonction du modele");
+                    Log.Message("Fonction du modele");
                 }
                 else
                 {
-                    Debug.Print("Fonction du composant");
+                    Log.Message("Fonction du composant");
                     if (_SwFonctionModele != null)
                     {
                         _SwFonctionModele = Modele.Composant.SwComposant.FeatureByName(_SwFonctionModele.Name);
@@ -105,12 +106,12 @@ namespace Framework
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public Feature SwFonctionOriginale { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwFonctionOriginale; } }
+        public Feature SwFonctionOriginale { get { Log.Methode(cNOMCLASSE); return _SwFonctionOriginale; } }
 
         /// <summary>
         /// Retourne le parent ExtModele.
         /// </summary>
-        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Modele; } }
+        public eModele Modele { get { Log.Methode(cNOMCLASSE); return _Modele; } }
 
         /// <summary>
         /// Retourne ou défini le nom de la fonction.
@@ -119,12 +120,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return SwFonction.Name;
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 FeatureManager SwGestFonc = Modele.SwModele.FeatureManager;
                 String pNomBase = value;
                 String pNom = pNomBase;
@@ -142,7 +143,7 @@ namespace Framework
         /// <summary>
         /// Retourne le type de la fonction SW.
         /// </summary>
-        public String TypeDeLaFonction { get { Debug.Print(MethodBase.GetCurrentMethod()); return SwFonction.GetTypeName2(); } }
+        public String TypeDeLaFonction { get { Log.Methode(cNOMCLASSE); return SwFonction.GetTypeName2(); } }
 
         public TypeFonction_e TypeFonction
         {
@@ -159,7 +160,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 Boolean[] pArrayResult;
 
                 pArrayResult = SwFonction.IsSuppressed2((int)swInConfigurationOpts_e.swThisConfiguration, null);
@@ -178,7 +179,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 eFonction pFonctionParent = new eFonction();
                 if (pFonctionParent.Init(SwFonction.GetOwnerFeature(), Modele))
                     return pFonctionParent;
@@ -194,7 +195,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return SwFonction.DateCreated;
             }
         }
@@ -206,7 +207,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return SwFonction.DateModified;
             }
         }
@@ -215,7 +216,7 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtModele.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
         #endregion
 
@@ -230,7 +231,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(Feature SwFonction, eModele Modele)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((SwFonction != null) && (Modele != null) && Modele.EstInitialise)
             {
@@ -246,7 +247,7 @@ namespace Framework
                 {
                     int pErreur = 0;
                     Feature pSwFonction = Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
-                    Debug.Print("PID Erreur : " + pErreur);
+                    Log.Message("PID Erreur : " + pErreur);
                     if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
                         || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
                         _SwFonctionModele = pSwFonction;
@@ -254,12 +255,12 @@ namespace Framework
 
                 if (_SwFonctionModele != null)
                 {
-                    Debug.Print(_SwFonctionModele.Name);
+                    Log.Message(_SwFonctionModele.Name);
                     _EstInitialise = true;
                 }
                 else
                 {
-                    Debug.Print("!!!!! Erreur d'initialisation");
+                    Log.Message("!!!!! Erreur d'initialisation");
                 }
             }
 
@@ -268,7 +269,7 @@ namespace Framework
 
         private void MajPID()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (_SwFonctionModele == null)
                 return;
@@ -283,7 +284,7 @@ namespace Framework
         /// </summary>
         public EtatFonction_e Etat(eConfiguration Config)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
             String[] pArrayConfig = { Config.Nom };
             Boolean[] pArrayResult;
 
@@ -302,7 +303,7 @@ namespace Framework
         /// </summary>
         public void Activer(eConfiguration Config = null, Boolean ActiverLesFonctionsDependantes = false)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             String pNomConfig;
 
@@ -319,7 +320,7 @@ namespace Framework
             String[] pTabConfig = { pNomConfig };
 
             pSwFonction.SetSuppression2((int)swFeatureSuppressionAction_e.swUnSuppressFeature, (int)swInConfigurationOpts_e.swSpecifyConfiguration, pTabConfig);
-            
+
             if (ActiverLesFonctionsDependantes)
                 pSwFonction.SetSuppression2((int)swFeatureSuppressionAction_e.swUnSuppressDependent, (int)swInConfigurationOpts_e.swSpecifyConfiguration, pTabConfig);
 
@@ -331,7 +332,7 @@ namespace Framework
         /// </summary>
         public void Desactiver(eConfiguration Config = null)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             String pNomConfig;
 
@@ -356,7 +357,7 @@ namespace Framework
         /// <param name="Options"></param>
         public void Supprimer(swDeleteSelectionOptions_e Options)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             Selectionner(false);
             Modele.SW.Modele().SwModele.Extension.DeleteSelection2((int)Options);
@@ -368,7 +369,7 @@ namespace Framework
         /// <param name="Ajouter"></param>
         public void Selectionner(Boolean Ajouter = true)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
             Feature pSwFonction = SwFonction;
             if (pSwFonction != null)
             {
@@ -376,11 +377,11 @@ namespace Framework
 
                 //String T;
                 //String NomSel = pSwFonction.GetNameForSelection(out T);
-                //Debug.Print("===========================> Selectionner : " + NomSel);
+                //Log.Print("===========================> Selectionner : " + NomSel);
                 //Modele.SwModele.Extension.SelectByID2(NomSel, T, 0, 0, 0, Ajouter, -1, null, 0);
             }
             else
-                Debug.Print("===========================> Selectionner : Erreur");
+                Log.Message("===========================> Selectionner : Erreur");
         }
 
         /// <summary>
@@ -388,7 +389,7 @@ namespace Framework
         /// </summary>
         public void DeSelectionner()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
             SwFonction.DeSelect();
         }
 
@@ -397,11 +398,11 @@ namespace Framework
         /// Renvoi la liste des corps associés à la fonction.
         /// </summary>
         /// <returns></returns>
-        internal List<eCorps> ListListeDesCorps()
+        public ArrayList ListeDesCorps()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eCorps> pListeCorps = new List<eCorps>();
+            ArrayList pListeCorps = new ArrayList();
 
             if (SwFonction.GetFaceCount() == 0)
                 return pListeCorps;
@@ -417,33 +418,16 @@ namespace Framework
         }
 
         /// <summary>
-        /// Renvoi la liste des corps associés à la fonction.
-        /// </summary>
-        /// <returns></returns>
-        public ArrayList ListeDesCorps()
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eCorps> pListeCorps = ListListeDesCorps();
-            ArrayList pArrayCorps = new ArrayList();
-
-            if (pListeCorps.Count > 0)
-                pArrayCorps = new ArrayList(pListeCorps);
-
-            return pArrayCorps;
-        }
-
-        /// <summary>
         /// Méthode interne.
         /// Renvoi la liste des fonctions parent
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<eFonction> ListListeDesFonctionsParent(string NomARechercher = "")
+        public ArrayList ListeDesFonctionsParent(string NomARechercher = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eFonction> pListeFonctions = new List<eFonction>();
+            ArrayList pListeFonctions = new ArrayList();
 
             Array pFonctionsParent = SwFonction.GetParents();
 
@@ -459,34 +443,16 @@ namespace Framework
         }
 
         /// <summary>
-        /// Renvoi la liste des fonction parent
-        /// </summary>
-        /// <param name="NomARechercher"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesFonctionsParent(string NomARechercher = "")
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eFonction> pListeFonctions = ListListeDesFonctionsParent(NomARechercher);
-            ArrayList pArrayFonctions = new ArrayList();
-
-            if (pListeFonctions.Count > 0)
-                pArrayFonctions = new ArrayList(pListeFonctions);
-
-            return pArrayFonctions;
-        }
-
-        /// <summary>
         /// Méthode interne.
         /// Renvoi la liste des sous-fonctions
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<eFonction> ListListeDesSousFonctions(string NomARechercher = "")
+        public ArrayList ListeDesSousFonctions(string NomARechercher = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eFonction> pListeFonctions = new List<eFonction>();
+            ArrayList pListeFonctions = new ArrayList();
 
             Feature pSwSousFonction = SwFonction.GetFirstSubFeature();
 
@@ -503,26 +469,8 @@ namespace Framework
             }
 
 
-            return pListeFonctions.Distinct().ToList();
+            return pListeFonctions;
 
-        }
-
-        /// <summary>
-        /// Renvoi la liste des sous-fonctions
-        /// </summary>
-        /// <param name="NomARechercher"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesSousFonctions(string NomARechercher = "")
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eFonction> pListeFonctions = ListListeDesSousFonctions(NomARechercher);
-            ArrayList pArrayFonctions = new ArrayList();
-
-            if (pListeFonctions.Count > 0)
-                pArrayFonctions = new ArrayList(pListeFonctions);
-
-            return pArrayFonctions;
         }
 
         #endregion

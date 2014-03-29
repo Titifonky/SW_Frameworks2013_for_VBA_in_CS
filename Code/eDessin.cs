@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
-using System.Text.RegularExpressions;
-using System.Reflection;
+﻿using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using System;
+using System.Collections;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Framework
 {
@@ -26,30 +24,33 @@ namespace Framework
     [ProgId("Frameworks.eDessin")]
     public class eDessin : IeDessin
     {
-#region "Variables locales"
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eDessin).Name;
+
         private Boolean _EstInitialise = false;
 
         private eModele _Modele = null;
         private DrawingDoc _SwDessin = null;
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eDessin() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet DrawingDoc associé.
         /// </summary>
-        public DrawingDoc SwDessin { get { Debug.Print(MethodBase.GetCurrentMethod());  return _SwDessin; } }
+        public DrawingDoc SwDessin { get { Log.Methode(cNOMCLASSE); return _SwDessin; } }
 
         /// <summary>
         /// Retourne le parent eModele.
         /// </summary>
-        public eModele Modele { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Modele; } }
+        public eModele Modele { get { Log.Methode(cNOMCLASSE); return _Modele; } }
 
         /// <summary>
         /// Retourne la feuille active.
@@ -58,7 +59,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 eFeuille pFeuille = new eFeuille();
                 Sheet pSwFeuille = _SwDessin.GetCurrentSheet();
@@ -73,11 +74,11 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet eDessin.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -87,11 +88,11 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eModele Modele)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cDessin))
             {
-                Debug.Print(Modele.FichierSw.Chemin);
+                Log.Message(Modele.FichierSw.Chemin);
 
                 _Modele = Modele;
                 _SwDessin = Modele.SwModele as DrawingDoc;
@@ -100,7 +101,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("\t !!!!! Erreur d'initialisation");
+                Log.Message("\t !!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -113,7 +114,7 @@ namespace Framework
         /// <returns></returns>
         public eFeuille Feuille(String Nom)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             eFeuille pFeuille = new eFeuille();
             Sheet pSwFeuille = _SwDessin.get_Sheet(Nom);
@@ -131,7 +132,7 @@ namespace Framework
         /// <returns></returns>
         public Boolean FeuilleExiste(String Nom)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (_SwDessin.GetSheetCount() == 0)
                 return false;
@@ -151,11 +152,11 @@ namespace Framework
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<eFeuille> ListListeDesFeuilles(String NomARechercher = "")
+        public ArrayList ListeDesFeuilles(String NomARechercher = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eFeuille> pListeFeuilles = new List<eFeuille>();
+            ArrayList pListeFeuilles = new ArrayList();
 
             if (_SwDessin.GetSheetCount() == 0)
                 return pListeFeuilles;
@@ -175,25 +176,7 @@ namespace Framework
 
         }
 
-        /// <summary>
-        /// Renvoi la liste des feuilles filtrée par les arguments.
-        /// </summary>
-        /// <param name="NomARechercher"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesFeuilles(String NomARechercher = "")
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
-
-            List<eFeuille> pListeFeuilles = ListListeDesFeuilles(NomARechercher);
-            ArrayList pArrayFeuilles = new ArrayList();
-
-            if (pListeFeuilles.Count > 0)
-                pArrayFeuilles = new ArrayList(pListeFeuilles);
-
-            return pArrayFeuilles;
-        }
-
-#endregion
+        #endregion
 
     }
 }

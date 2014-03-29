@@ -1,11 +1,10 @@
-﻿using System;
+﻿using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 
 namespace Framework
 {
@@ -29,23 +28,25 @@ namespace Framework
     [ProgId("Frameworks.ePiece")]
     public class eDossier : IeDossier, IComparable<eDossier>, IComparer<eDossier>, IEquatable<eDossier>
     {
-#region "Variables locales"
-        
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eDossier).Name;
+
         private Boolean _EstInitialise = false;
 
         private ePiece _Piece = null;
         private BodyFolder _SwDossier = null;
         private Object _PID = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eDossier() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne l'objet BodyFolder associé.
@@ -54,20 +55,20 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 if (_PID != null)
                 {
                     int pErreur = 0;
                     Feature pSwFonction = _Piece.Modele.SwModele.Extension.GetObjectByPersistReference3(_PID, out pErreur);
-                    Debug.Print("PID Erreur : " + pErreur);
+                    Log.Message("PID Erreur : " + pErreur);
                     if ((pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Ok)
                         || (pErreur == (int)swPersistReferencedObjectStates_e.swPersistReferencedObject_Suppressed))
                         _SwDossier = pSwFonction.GetSpecificFeature2();
                 }
                 else
                 {
-                    Debug.Print("Pas de PID");
+                    Log.Message("Pas de PID");
                     MajPID();
                 }
 
@@ -78,20 +79,20 @@ namespace Framework
         /// <summary>
         /// Retourne le parent ExtPiece.
         /// </summary>
-        public ePiece Piece { get { Debug.Print(MethodBase.GetCurrentMethod());  return _Piece; } }
+        public ePiece Piece { get { Log.Methode(cNOMCLASSE); return _Piece; } }
 
         /// <summary>
         /// Retourne ou défini le nom du dossier.
         /// </summary>
-        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod()); return SwDossier.GetFeature().Name; } set { Debug.Print(MethodBase.GetCurrentMethod()); SwDossier.GetFeature().Name = value; } }
+        public String Nom { get { Log.Methode(cNOMCLASSE); return SwDossier.GetFeature().Name; } set { Log.Methode(cNOMCLASSE); SwDossier.GetFeature().Name = value; } }
 
         /// <summary>
         /// Retourne ou défini si le dossier est exclu de la nomenclature.
         /// </summary>
         public Boolean EstExclu
         {
-            get { Debug.Print(MethodBase.GetCurrentMethod());  return Convert.ToBoolean(SwDossier.GetFeature().ExcludeFromCutList); }
-            set { Debug.Print(MethodBase.GetCurrentMethod());  SwDossier.GetFeature().ExcludeFromCutList = value; }
+            get { Log.Methode(cNOMCLASSE); return Convert.ToBoolean(SwDossier.GetFeature().ExcludeFromCutList); }
+            set { Log.Methode(cNOMCLASSE); SwDossier.GetFeature().ExcludeFromCutList = value; }
         }
 
         /// <summary>
@@ -101,13 +102,58 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
+
+                if (EstUnDossierDeBarres(SwDossier))
+                    return TypeCorps_e.cBarre;
+
+                if (EstUnDossierDeToles(SwDossier))
+                    return TypeCorps_e.cTole;
+
                 eCorps pCorps = PremierCorps;
                 if (pCorps.EstInitialise)
                     return pCorps.TypeDeCorps;
 
                 return TypeCorps_e.cAucun;
             }
+        }
+
+        static internal Boolean EstUnDossierDeBarres(BodyFolder SwDossier)
+        {
+            CustomPropertyManager pPropMgr = SwDossier.GetFeature().CustomPropertyManager;
+
+            foreach (String iNom in pPropMgr.GetNames())
+            {
+                String pVal, pResult;
+                Boolean Resolved;
+
+                pPropMgr.Get5(iNom, false, out pVal, out pResult, out Resolved);
+
+                Log.Message("                        " + pVal);
+                if (Regex.IsMatch(pVal, "^\"LENGTH@@@"))
+                    return true;
+            }
+
+            return false;
+        }
+
+        static internal Boolean EstUnDossierDeToles(BodyFolder SwDossier)
+        {
+            CustomPropertyManager pPropMgr = SwDossier.GetFeature().CustomPropertyManager;
+
+            foreach (String iNom in pPropMgr.GetNames())
+            {
+                String pVal, pResult;
+                Boolean Resolved;
+
+                pPropMgr.Get5(iNom, false, out pVal, out pResult, out Resolved);
+
+                Log.Message("                        " + pVal);
+                if (Regex.IsMatch(pVal, "^\"SW-Longueur du flanc de tôle@@@"))
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -117,7 +163,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 eGestDeProprietes pGestProps = new eGestDeProprietes();
                 if (pGestProps.Init(SwDossier.GetFeature().CustomPropertyManager, _Piece.Modele))
                     return pGestProps;
@@ -130,7 +176,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return SwDossier.GetBodyCount();
             }
         }
@@ -142,7 +188,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 eCorps pCorps = new eCorps();
                 if ((SwDossier.GetBodyCount() > 0) && pCorps.Init(SwDossier.GetBodies()[0], _Piece))
                     return pCorps;
@@ -155,11 +201,11 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtDossier.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod());  return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -170,26 +216,26 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(BodyFolder SwDossier, ePiece Piece)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((SwDossier != null) && (SwDossier.GetBodyCount() > 0) && (Piece != null) && Piece.EstInitialise)
             {
                 _Piece = Piece;
                 _SwDossier = SwDossier;
                 MajPID();
-                Debug.Print(this.Nom);
+                Log.Message(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
         private void MajPID()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if (_SwDossier == null)
                 return;
@@ -202,11 +248,11 @@ namespace Framework
         /// </summary>
         /// <param name="NomARechercher"></param>
         /// <returns></returns>
-        internal List<eCorps> ListListeDesCorps(String NomARechercher = "")
+        public ArrayList ListeDesCorps(String NomARechercher = "")
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
-            List<eCorps> pListeCorps = new List<eCorps>();
+            ArrayList pListeCorps = new ArrayList();
 
             foreach (Body2 pSwCorps in SwDossier.GetBodies())
             {
@@ -221,27 +267,9 @@ namespace Framework
             return pListeCorps;
         }
 
-        /// <summary>
-        /// Renvoi la liste des corps du dossier filtrée par les arguments.
-        /// </summary>
-        /// <param name="NomARechercher"></param>
-        /// <returns></returns>
-        public ArrayList ListeDesCorps(String NomARechercher = "")
-        {
-            Debug.Print(MethodBase.GetCurrentMethod());
+        #endregion
 
-            List<eCorps> pListeCorps = ListListeDesCorps(NomARechercher);
-            ArrayList pArrayCorps = new ArrayList();
-
-            if (pListeCorps.Count > 0)
-                pArrayCorps = new ArrayList(pListeCorps);
-
-            return pArrayCorps;
-        }
-
-#endregion
-
-#region "Interfaces génériques"
+        #region "Interfaces génériques"
 
         public int CompareTo(eDossier Dossier)
         {
@@ -264,7 +292,7 @@ namespace Framework
             return Nom1.Equals(Nom2);
         }
 
-#endregion
+        #endregion
 
     }
 }

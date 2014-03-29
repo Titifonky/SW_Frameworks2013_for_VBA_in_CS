@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using System.Reflection;
 using System.Collections;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Framework
 {
+
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("64A83C8C-997C-4266-83EC-E6B99A58FE94")]
     public interface IDlgRechercherUnDossier
@@ -28,23 +25,25 @@ namespace Framework
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("BADDD2D2-9D97-4D6B-8F49-C9BC161E3E06")]
     [ProgId("Frameworks.DlgRechercherUnDossier")]
-    public class DlgRechercherUnDossier : IDlgRechercherUnDossier
+    public class DlgRechercherUnDossier : IDlgRechercherUnDossier, IDisposable
     {
-#region "Variables locales"
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(DlgRechercherUnDossier).Name;
 
         private Boolean _EstInitialise = false;
 
         private eSldWorks _SW = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public DlgRechercherUnDossier() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         private FolderBrowserDialog _Dialogue = new FolderBrowserDialog();
 
@@ -52,11 +51,11 @@ namespace Framework
         public Environment.SpecialFolder DossierRacine { get { return _Dialogue.RootFolder; } set { _Dialogue.RootFolder = value; } }
         public Boolean BoutonNouveauDossier { get { return _Dialogue.ShowNewFolderButton; } set { _Dialogue.ShowNewFolderButton = value; } }
 
-        public Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        public Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Initialiser l'objet.
@@ -65,7 +64,7 @@ namespace Framework
         /// <returns></returns>
         public Boolean Init(eSldWorks Sw)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Sw != null) && Sw.EstInitialise)
             {
@@ -75,7 +74,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -89,7 +88,7 @@ namespace Framework
         {
             if (_Dialogue.ShowDialog() == DialogResult.OK)
                 return _Dialogue.SelectedPath;
-            
+
             return "";
         }
 
@@ -118,7 +117,7 @@ namespace Framework
                     if (pFichierSW.Init(_SW))
                     {
                         pFichierSW.Chemin = CheminFichier;
-                        if(TypeDesFichiers.HasFlag(pFichierSW.TypeDuFichier))
+                        if (TypeDesFichiers.HasFlag(pFichierSW.TypeDuFichier))
                             pArrayFichiers.Add(pFichierSW);
                     }
                 }
@@ -127,6 +126,11 @@ namespace Framework
             return pArrayFichiers;
         }
 
-#endregion
+        #endregion
+
+        void IDisposable.Dispose()
+        {
+            _Dialogue.Dispose();
+        }
     }
 }

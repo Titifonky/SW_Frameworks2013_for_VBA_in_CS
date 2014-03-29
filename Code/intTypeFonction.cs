@@ -13,8 +13,6 @@ namespace Framework
         }
     }
 
-
-
     public enum TypeFonction_e
     {
         c3DProfileFeature = 1,

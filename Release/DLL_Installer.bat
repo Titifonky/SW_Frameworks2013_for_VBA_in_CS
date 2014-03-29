@@ -5,14 +5,16 @@ mode con cols=150 lines=60
 @setlocal enableextensions
 @cd /d "%~dp0"
 
+set Nom=Framework
+
 setlocal enableDelayedExpansion
-for %%i in (*.dll) do (
+for %%i in (%Nom%*.dll) do (
 set FichierDLL=%%~fi
 set FichierTLB=%%~dpni.tlb
 )
 
 if exist "%FichierTLB%" (
-call "DLL_Desinstaller.bat"
+call "DLL_Desinstaller.bat" %Nom%
 )
 
 set Titre=Inscription des DLLs
@@ -67,4 +69,4 @@ RegAsm.exe "%FichierDLL%" /codebase /tlb:"%FichierTLB%"
 echo --------------------------------------------------------
 echo.
 echo FIN
-Pause
+rem Pause

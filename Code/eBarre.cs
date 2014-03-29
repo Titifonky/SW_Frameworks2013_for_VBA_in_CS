@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
-using System.Collections;
-using System.Reflection;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace Framework
 {
@@ -28,32 +22,34 @@ namespace Framework
     [ProgId("Frameworks.eBarre")]
     public class eBarre : IeBarre
     {
-#region "Variables locales"
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eBarre).Name;
 
         private Boolean _EstInitialise = false;
 
         private eCorps _Corps = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eBarre() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         /// <summary>
         /// Retourne le parent ePiece.
         /// </summary>
-        public eCorps Corps { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Corps; } }
+        public eCorps Corps { get { Log.Methode(cNOMCLASSE); return _Corps; } }
 
         public String Profil
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_NOM).Valeur;
             }
         }
@@ -62,7 +58,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 NumberFormatInfo pFormat = new NumberFormatInfo();
                 pFormat.NumberDecimalSeparator = ".";
                 return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_LONGUEUR).Valeur, pFormat);
@@ -73,7 +69,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 NumberFormatInfo pFormat = new NumberFormatInfo();
                 pFormat.NumberDecimalSeparator = ".";
                 return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_ANGLE1).Valeur, pFormat);
@@ -84,7 +80,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 NumberFormatInfo pFormat = new NumberFormatInfo();
                 pFormat.NumberDecimalSeparator = ".";
                 return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_ANGLE2).Valeur, pFormat);
@@ -95,7 +91,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 NumberFormatInfo pFormat = new NumberFormatInfo();
                 pFormat.NumberDecimalSeparator = ".";
                 return Convert.ToDouble(_Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_MASSE).Valeur, pFormat);
@@ -106,7 +102,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _Corps.Dossier.GestDeProprietes.RecupererPropriete(CONSTANTES.PROFIL_MATERIAU).Valeur;
             }
         }
@@ -115,11 +111,11 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet eCorps.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -130,7 +126,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eCorps Corps)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Corps != null) && Corps.EstInitialise && (Corps.TypeDeCorps == TypeCorps_e.cBarre))
             {
@@ -139,11 +135,11 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
 
-#endregion
+        #endregion
     }
 }

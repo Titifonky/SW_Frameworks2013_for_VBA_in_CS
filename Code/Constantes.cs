@@ -91,6 +91,8 @@ namespace Framework
     {
         #region "Variables locales"
 
+        private static readonly String cNOMCLASSE = typeof(CONSTANTES).Name;
+
         internal const String CONFIG_DEPLIEE_PATTERN = "^*SM-FLAT-PATTERN*";
         internal const String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
         internal const String CONFIG_PLIEE_PATTERN = "^[0-9]";

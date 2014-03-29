@@ -2,6 +2,12 @@ echo off
 
 mode con cols=150 lines=60
 
+set Nom=%~1
+
+if "%Nom%" == "" (
+set Nom=Framework
+)
+
 set Titre=Suppression des DLLs
 echo.
 echo ================================================================
@@ -20,7 +26,7 @@ echo Dossier courant :
 echo    %cd%
 
 setlocal enableDelayedExpansion
-for %%i in (*.dll) do (
+for %%i in (%Nom%*.dll) do (
 set FichierDLL=%%~fi
 set FichierTLB=%%~dpni.tlb
 )
@@ -74,4 +80,4 @@ echo.
 del "%FichierTLB%"
 
 echo FIN
-Pause
+rem Pause

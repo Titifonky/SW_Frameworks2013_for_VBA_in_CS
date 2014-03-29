@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -39,23 +38,25 @@ namespace Framework
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("736A58F3-6B78-4826-A919-82E817206398")]
     [ProgId("Frameworks.DlgRechercherUnFichier")]
-    public class DlgRechercherUnFichier : IDlgRechercherUnFichier
+    public class DlgRechercherUnFichier : IDlgRechercherUnFichier, IDisposable
     {
-#region "Variables locales"
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(DlgRechercherUnFichier).Name;
 
         private Boolean _EstInitialise = false;
 
         private eSldWorks _SW = null;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public DlgRechercherUnFichier() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         private OpenFileDialog _Dialogue = new OpenFileDialog();
 
@@ -73,11 +74,11 @@ namespace Framework
         public Boolean ExtensionsMultiple { get { return _Dialogue.SupportMultiDottedExtensions; } set { _Dialogue.SupportMultiDottedExtensions = value; } }
         public Boolean LectureSeuleSelectionne { get { return _Dialogue.ReadOnlyChecked; } set { _Dialogue.ReadOnlyChecked = value; } }
 
-        public Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        public Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Initialiser l'objet.
@@ -86,7 +87,7 @@ namespace Framework
         /// <returns></returns>
         public Boolean Init(eSldWorks Sw)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Sw != null) && Sw.EstInitialise)
             {
@@ -96,7 +97,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -108,7 +109,7 @@ namespace Framework
         /// <param name="TypeDesFichiersFiltres"></param>
         public void FiltreSW(TypeFichier_e TypeDesFichiersFiltres, Boolean FiltreDistinct = true)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             String TxtFiltre;
 
@@ -119,7 +120,7 @@ namespace Framework
                 foreach (TypeFichier_e T in Enum.GetValues(typeof(TypeFichier_e)))
                 {
                     if (TypeDesFichiersFiltres.HasFlag(T))
-                        Filtre.Add(CONSTANTES.InfoFichier(T,InfoFichier_e.cNom) + " (*" + CONSTANTES.InfoFichier(T) + "|*" + CONSTANTES.InfoFichier(T));
+                        Filtre.Add(CONSTANTES.InfoFichier(T, InfoFichier_e.cNom) + " (*" + CONSTANTES.InfoFichier(T) + "|*" + CONSTANTES.InfoFichier(T));
                 }
 
                 TxtFiltre = String.Join("|", Filtre);
@@ -145,7 +146,7 @@ namespace Framework
         /// <returns></returns>
         public String SelectionnerUnFichier(Boolean CheminComplet = true)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             _Dialogue.Multiselect = false;
 
@@ -167,7 +168,7 @@ namespace Framework
         /// <returns></returns>
         public eFichierSW SelectionnerUnFichierSW()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             eFichierSW pFichierSW = new eFichierSW();
             if (pFichierSW.Init(_SW))
@@ -187,7 +188,7 @@ namespace Framework
         /// <returns></returns>
         public ArrayList SelectionnerPlusieursFichiers(Boolean CheminComplet = true)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             _Dialogue.Multiselect = true;
             ArrayList pArrayFichiers = new ArrayList();
@@ -199,7 +200,7 @@ namespace Framework
                 else
                     pArrayFichiers = new ArrayList(_Dialogue.SafeFileNames);
             }
-            
+
             return pArrayFichiers;
         }
 
@@ -210,7 +211,7 @@ namespace Framework
         /// <returns></returns>
         public ArrayList SelectionnerPlusieursFichierSW()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             ArrayList pArrayFichiers = new ArrayList();
 
@@ -228,6 +229,11 @@ namespace Framework
             return pArrayFichiers;
         }
 
-#endregion
+        #endregion
+
+        void IDisposable.Dispose()
+        {
+            _Dialogue.Dispose();
+        }
     }
 }

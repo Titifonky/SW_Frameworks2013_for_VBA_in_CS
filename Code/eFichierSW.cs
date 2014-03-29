@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Framework
@@ -25,7 +24,9 @@ namespace Framework
     [ProgId("Frameworks.eFichierSW")]
     public class eFichierSW : IeFichierSW
     {
-#region "Variables locales"
+        #region "Variables locales"
+
+        private static readonly String cNOMCLASSE = typeof(eFichierSW).Name;
         private Boolean _EstInitialise = false;
 
         private eSldWorks _SW = null;
@@ -33,15 +34,15 @@ namespace Framework
         private String _NomConfiguration = "";
         private int _Nb = 1;
 
-#endregion
+        #endregion
 
-#region "Constructeur\Destructeur"
+        #region "Constructeur\Destructeur"
 
         public eFichierSW() { }
 
-#endregion
+        #endregion
 
-#region "Propriétés"
+        #region "Propriétés"
 
         public eSldWorks SW { get { return _SW; } }
         public String Chemin { get { return _Chemin; } internal set { _Chemin = value; } }
@@ -55,7 +56,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 switch (Path.GetExtension(_Chemin).ToUpper())
                 {
                     case ".SLDASM":
@@ -83,8 +84,8 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
-                if(!String.IsNullOrEmpty(_Chemin))
+                Log.Methode(cNOMCLASSE);
+                if (!String.IsNullOrEmpty(_Chemin))
                     return Path.GetFileName(_Chemin);
 
                 return "";
@@ -98,8 +99,8 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
-                if(!String.IsNullOrEmpty(_Chemin))
+                Log.Methode(cNOMCLASSE);
+                if (!String.IsNullOrEmpty(_Chemin))
                     return Path.GetFileNameWithoutExtension(_Chemin);
 
                 return "";
@@ -113,8 +114,8 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
-                if(!String.IsNullOrEmpty(_Chemin))
+                Log.Methode(cNOMCLASSE);
+                if (!String.IsNullOrEmpty(_Chemin))
                     return Path.GetDirectoryName(_Chemin);
 
                 return "";
@@ -126,11 +127,11 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtFichierSW.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
-#endregion
+        #endregion
 
-#region "Méthodes"
+        #region "Méthodes"
 
         /// <summary>
         /// Méthode interne.
@@ -140,7 +141,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(eSldWorks Sw)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((Sw != null) && Sw.EstInitialise)
             {
@@ -150,7 +151,7 @@ namespace Framework
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
 
             return _EstInitialise;
@@ -158,7 +159,7 @@ namespace Framework
 
         public eModele Ouvrir()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((TypeFichier_e.cAssemblage | TypeFichier_e.cPiece | TypeFichier_e.cDessin).HasFlag(TypeDuFichier))
             {
@@ -177,6 +178,6 @@ namespace Framework
             return null;
         }
 
-#endregion
+        #endregion
     }
 }

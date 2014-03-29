@@ -1,11 +1,9 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using SolidWorks.Interop.sldworks;
-using System.Reflection;
-using System.Collections.Generic;
+﻿using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-using System.Text.RegularExpressions;
+using System;
 using System.Collections;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Framework
 {
@@ -35,10 +33,13 @@ namespace Framework
     {
         #region "Variables locales"
 
+        private static readonly String cNOMCLASSE = typeof(eVue).Name;
+
         private Boolean _EstInitialise = false;
 
         private eFeuille _Feuille = null;
         private View _SwVue = null;
+
         #endregion
 
         #region "Constructeur\Destructeur"
@@ -52,17 +53,17 @@ namespace Framework
         /// <summary>
         /// Retourne l'objet View associé.
         /// </summary>
-        public View SwVue { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwVue; } }
+        public View SwVue { get { Log.Methode(cNOMCLASSE); return _SwVue; } }
 
         /// <summary>
         /// Retourne le parent ExtFeuille.
         /// </summary>
-        public eFeuille Feuille { get { Debug.Print(MethodBase.GetCurrentMethod()); return _Feuille; } }
+        public eFeuille Feuille { get { Log.Methode(cNOMCLASSE); return _Feuille; } }
 
         /// <summary>
         /// Retourne ou défini le nom de la vue.
         /// </summary>
-        public String Nom { get { Debug.Print(MethodBase.GetCurrentMethod()); return _SwVue.GetName2(); } set { Debug.Print(MethodBase.GetCurrentMethod()); _SwVue.SetName2(value); } }
+        public String Nom { get { Log.Methode(cNOMCLASSE); return _SwVue.GetName2(); } set { Log.Methode(cNOMCLASSE); _SwVue.SetName2(value); } }
 
         /// <summary>
         /// Retourne le modele ExtModele référencé par la vue.
@@ -71,7 +72,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 eModele pModele = new eModele();
                 if (pModele.Init(_SwVue.ReferencedDocument, _Feuille.Dessin.Modele.SW))
                 {
@@ -99,7 +100,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 eConfiguration pConfig = new eConfiguration();
                 if (pConfig.Init(_SwVue.ReferencedDocument.GetConfigurationByName(_SwVue.ReferencedConfiguration), ModeleDeReference))
                     return pConfig;
@@ -115,7 +116,7 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 eDimensionVue pDimensions = new eDimensionVue();
 
                 if (pDimensions.Init(this))
@@ -155,16 +156,16 @@ namespace Framework
         {
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
 
                 ModelDoc2 pSwModele = Feuille.Dessin.Modele.SwModele;
                 eConfiguration pConfig = ConfigurationDeReference;
 
                 if (pConfig.Est(TypeConfig_e.cDepliee))
                 {
-                    foreach (eFonction pFonction in ListListeDesFonctionsDeArbre("", "^FlatPattern$", true))
+                    foreach (eFonction pFonction in ListeDesFonctionsDeArbre("", "^FlatPattern$", true))
                     {
-                        eFonction pFonctionEsquisse = pFonction.ListListeDesSousFonctions()[0];
+                        eFonction pFonctionEsquisse = (eFonction)pFonction.ListeDesSousFonctions()[0];
                         if (pFonctionEsquisse != null)
                         {
                             String T;
@@ -190,12 +191,12 @@ namespace Framework
         {
             get
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 return _SwVue.ShowSheetMetalBendNotes;
             }
             set
             {
-                Debug.Print(MethodBase.GetCurrentMethod());
+                Log.Methode(cNOMCLASSE);
                 _SwVue.ShowSheetMetalBendNotes = value;
             }
         }
@@ -204,7 +205,7 @@ namespace Framework
         /// Fonction interne.
         /// Test l'initialisation de l'objet ExtModele.
         /// </summary>
-        internal Boolean EstInitialise { get { Debug.Print(MethodBase.GetCurrentMethod()); return _EstInitialise; } }
+        internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
 
         #endregion
 
@@ -219,19 +220,19 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(View SwVue, eFeuille Feuille)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((SwVue != null) && (Feuille != null) && Feuille.EstInitialise)
             {
                 _Feuille = Feuille;
                 _SwVue = SwVue;
 
-                Debug.Print(this.Nom);
+                Log.Message(this.Nom);
                 _EstInitialise = true;
             }
             else
             {
-                Debug.Print("!!!!! Erreur d'initialisation");
+                Log.Message("!!!!! Erreur d'initialisation");
             }
             return _EstInitialise;
         }
@@ -245,7 +246,7 @@ namespace Framework
         /// <returns></returns>
         internal Boolean Init(View SwVue, eModele Modele)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             if ((SwVue != null) && (Modele != null) && Modele.EstInitialise && (Modele.TypeDuModele == TypeFichier_e.cDessin))
             {
@@ -255,12 +256,12 @@ namespace Framework
                     _Feuille = Feuille;
                     _SwVue = SwVue;
 
-                    Debug.Print(this.Nom);
+                    Log.Message(this.Nom);
                     _EstInitialise = true;
                 }
                 else
                 {
-                    Debug.Print("!!!!! Erreur d'initialisation");
+                    Log.Message("!!!!! Erreur d'initialisation");
                 }
             }
             return _EstInitialise;
@@ -271,7 +272,7 @@ namespace Framework
         /// </summary>
         public void Supprimer()
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             Selectionner();
             eModele pModeleDessin = Feuille.Dessin.Modele;
@@ -301,9 +302,9 @@ namespace Framework
         /// <param name="NomARechercher"></param>
         /// <param name="TypeDeLaFonction"></param>
         /// <param name="AvecLesSousFonctions"></param>
-        private void ScannerFonctionsFeatureManager(TreeControlItem Noeud, List<eFonction> ListeFonctions, String NomARechercher, String TypeDeLaFonction, Boolean AvecLesSousFonctions)
+        private void ScannerFonctionsFeatureManager(TreeControlItem Noeud, ArrayList ListeFonctions, String NomARechercher, String TypeDeLaFonction, Boolean AvecLesSousFonctions)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             TreeControlItem pNoeud = Noeud.GetFirstChild();
 
@@ -336,9 +337,9 @@ namespace Framework
         /// <param name="TypeDeLaFonction"></param>
         /// <param name="AvecLesSousFonctions"></param>
         /// <returns></returns>
-        internal List<eFonction> ListListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
+        public ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         {
-            List<eFonction> pListeFonction = new List<eFonction>();
+            ArrayList pListeFonction = new ArrayList();
 
             ScannerFonctionsFeatureManager(NoeudVue(), pListeFonction, NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
 
@@ -347,9 +348,9 @@ namespace Framework
 
         //public ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false)
         //{
-        //    Debug.Print(MethodBase.GetCurrentMethod());
+        //    Log.Print(cNOMCLASSE);
 
-        //    List<eFonction> pListeFonctions = ListListeDesFonctionsDeArbre(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
+        //    List<eFonction> pListeFonctions = ListeDesFonctionsDeArbre(NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
         //    ArrayList pArrayFonctions = new ArrayList();
 
         //    if (pListeFonctions.Count > 0)
@@ -365,7 +366,7 @@ namespace Framework
         /// <param name="NoeudVue"></param>
         private void ScannerVueFeatureManager(TreeControlItem Noeud, ref TreeControlItem NoeudVue)
         {
-            Debug.Print(MethodBase.GetCurrentMethod());
+            Log.Methode(cNOMCLASSE);
 
             TreeControlItem pNoeud = Noeud.GetFirstChild();
 
