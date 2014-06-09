@@ -13,7 +13,15 @@ namespace Framework
         cAssemblage = 1,
         cPiece = 2,
         cLibrairie = 4,
-        cDessin = 8
+        cDessin = 8,
+    }
+
+    [Flags]
+    public enum TypeFichierExport_e
+    {
+        cPiece = 0,
+        cParasolid = 1,
+        cParasolidBinary = 2,
     }
 
     //Cet attribut permet de combiner les valeurs d'enumération
