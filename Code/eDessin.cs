@@ -17,6 +17,7 @@ namespace Framework
         eFeuille Feuille(String Nom);
         Boolean FeuilleExiste(String Nom);
         ArrayList ListeDesFeuilles(String NomARechercher = "");
+        Boolean AfficherNotesDePliage { get; set; }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -75,6 +76,27 @@ namespace Framework
         /// Test l'initialisation de l'objet eDessin.
         /// </summary>
         internal Boolean EstInitialise { get { Log.Methode(cNOMCLASSE); return _EstInitialise; } }
+
+        public Boolean AfficherNotesDePliage
+        {
+            get
+            {
+                Log.Methode(cNOMCLASSE);
+                return _Modele.SwModele.Extension.GetUserPreferenceToggle(
+                                                                            (int)swUserPreferenceToggle_e.swShowSheetMetalBendNotes,
+                                                                            (int)swUserPreferenceOption_e.swDetailingNoOptionSpecified
+                                                                            );
+            }
+            set
+            {
+                Log.Methode(cNOMCLASSE);
+                _Modele.SwModele.Extension.SetUserPreferenceToggle(
+                                                                    (int)swUserPreferenceToggle_e.swShowSheetMetalBendNotes,
+                                                                    (int)swUserPreferenceOption_e.swDetailingNoOptionSpecified,
+                                                                    value
+                                                                    );
+            }
+        }
 
         #endregion
 

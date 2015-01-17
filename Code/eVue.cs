@@ -163,22 +163,21 @@ namespace Framework
 
                 if (pConfig.Est(TypeConfig_e.cDepliee))
                 {
-                    foreach (eFonction pFonction in ListeDesFonctionsDeArbre("", "^FlatPattern$", true))
-                    {
-                        eFonction pFonctionEsquisse = (eFonction)pFonction.ListeDesSousFonctions()[0];
-                        if (pFonctionEsquisse != null)
-                        {
-                            String T;
-                            String pNomPourSelection = pFonctionEsquisse.SwFonction.GetNameForSelection(out T);
-                            pSwModele.Extension.SelectByID2(pNomPourSelection, T, 0, 0, 0, false, 0, null, 0);
 
-                            // On affiche les lignes seulement si c'est la bonne fonction
-                            // Sinon, on cache tout
-                            if (value && (pFonction.Etat(pConfig) == EtatFonction_e.cActivee))
-                                pSwModele.UnblankSketch();
-                            else
-                                pSwModele.BlankSketch();
-                        }
+                    eTole pTole = pConfig.ToleDeplie();
+
+                    if (pTole != null)
+                    {
+                        eFonction FonctionLignePliage = pTole.FonctionDepliee.ListeDesSousFonctions(CONSTANTES.LIGNES_DE_PLIAGE)[0] as eFonction;
+                        String NomFonctionLignePliagePourSelection = FonctionLignePliage.Nom + "@" + SwVue.RootDrawingComponent.Name + "@" + SwVue.Name;
+                        Feuille.Dessin.Modele.SwModele.Extension.SelectByID2(NomFonctionLignePliagePourSelection, "SKETCH", 0, 0, 0, false, 0, null, 0);
+
+                        if (value)
+                            Feuille.Dessin.Modele.SwModele.UnblankSketch();
+                        else
+                            Feuille.Dessin.Modele.SwModele.BlankSketch();
+
+                        Feuille.Dessin.Modele.EffacerLesSelections();
                     }
                 }
             }

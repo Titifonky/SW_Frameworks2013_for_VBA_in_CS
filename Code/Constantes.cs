@@ -115,12 +115,13 @@ namespace Framework
         internal const String PROFIL_LONGUEUR = "LONGUEUR";
         internal const String PROFIL_MASSE = "Masse";
         internal const String PROFIL_MATERIAU = "MATERIAL";
-        internal const String LIGNE_DE_PLIAGE = "Lignes de pliage";
+        internal const String LIGNES_DE_PLIAGE = "Lignes de pliage";
         internal const String CUBE_DE_VISUALISATION = "Cube de visualisation";
         internal const String MODELE_DE_DESSIN_LASER = "MacroLaser";
         internal const String NOM_CORPS_DEPLIEE = "Etat déplié";
         internal const String ETAT_D_AFFICHAGE = "Etat d'affichage-";
         internal const String MATERIAUX_NON_SPECIFIE = "Materiau non spécifié";
+        internal const String DEPLIAGE = "Dépliage";
 
         #endregion
         #region "Méthodes"
@@ -183,6 +184,9 @@ namespace Framework
         String NOM_CORPS_DEPLIEE { get; }
         String ETAT_D_AFFICHAGE { get; }
         String MATERIAUX_NON_SPECIFIE { get; }
+        String LIGNES_DE_PLIAGE { get; }
+        String CUBE_DE_VISUALISATION { get; }
+        String DEPLIAGE { get; }
         String Extension(TypeFichier_e TypeFichier);
     }
 
@@ -203,6 +207,9 @@ namespace Framework
         public String NOM_CORPS_DEPLIEE { get { return CONSTANTES.NOM_CORPS_DEPLIEE; } }
         public String ETAT_D_AFFICHAGE { get { return CONSTANTES.ETAT_D_AFFICHAGE; } }
         public String MATERIAUX_NON_SPECIFIE { get { return CONSTANTES.MATERIAUX_NON_SPECIFIE; } }
+        public String LIGNES_DE_PLIAGE { get { return CONSTANTES.LIGNES_DE_PLIAGE; } }
+        public String CUBE_DE_VISUALISATION { get { return CONSTANTES.CUBE_DE_VISUALISATION; } }
+        public String DEPLIAGE { get { return CONSTANTES.DEPLIAGE; } }
 
         #endregion
 

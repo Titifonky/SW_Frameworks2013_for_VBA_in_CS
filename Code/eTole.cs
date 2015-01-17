@@ -1,6 +1,8 @@
 ﻿using SolidWorks.Interop.swconst;
 using System;
+using System.Collections;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Framework
 {
@@ -12,11 +14,14 @@ namespace Framework
         eParametreTolerie ParametresDeTolerie { get; }
         eFonction FonctionTolerie { get; }
         eFonction FonctionToleDeBase { get; }
-        eFonction FonctionDeplie { get; }
+        eFonction FonctionDepliee { get; }
         eFonction FonctionCubeDeVisualisation { get; }
         eConfiguration ConfigurationDepliee { get; }
+        Boolean EstDepliee { get; }
+        String NomVueDepliee { get; }
         void Deplier(Boolean T);
         eConfiguration CreerConfigurationDepliee(Boolean Ecraser = false);
+        void MajConfigurationDepliee();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -31,6 +36,7 @@ namespace Framework
         private Boolean _EstInitialise = false;
 
         private eCorps _Corps = null;
+        private ePiece _Piece = null;
         private eParametreTolerie _ParamTolerie = null;
 
         #endregion
@@ -44,7 +50,7 @@ namespace Framework
         #region "Propriétés"
 
         /// <summary>
-        /// Retourne le parent ExtPiece.
+        /// Retourne le parent eCorps.
         /// </summary>
         public eCorps Corps { get { Log.Methode(cNOMCLASSE); return _Corps; } }
 
@@ -116,7 +122,7 @@ namespace Framework
         /// Renvoi la fonction EtatDeplie du corps
         /// </summary>
         /// <returns></returns>
-        public eFonction FonctionDeplie
+        public eFonction FonctionDepliee
         {
             get
             {
@@ -134,6 +140,14 @@ namespace Framework
             }
         }
 
+        public String NomVueDepliee
+        {
+            get
+            {
+                return _Corps.Piece.Modele.FichierSw.NomDuFichierSansExt + " - " + NomConfigDepliee;
+            }
+        }
+
         /// <summary>
         /// Renvoi la fonction CubeDeVisualisation du corps
         /// </summary>
@@ -144,7 +158,7 @@ namespace Framework
             {
                 Log.Methode(cNOMCLASSE);
 
-                return (eFonction)this.FonctionDeplie.ListeDesSousFonctions(CONSTANTES.CUBE_DE_VISUALISATION)[0];
+                return (eFonction)this.FonctionDepliee.ListeDesSousFonctions(CONSTANTES.CUBE_DE_VISUALISATION)[0];
             }
         }
 
@@ -155,9 +169,12 @@ namespace Framework
         {
             Log.Methode(cNOMCLASSE);
             if (T)
-                FonctionDeplie.Activer();
+            {
+                FonctionDepliee.Activer();
+                return;
+            }
 
-            FonctionDeplie.Desactiver();
+            FonctionDepliee.Desactiver();
         }
 
         /// <summary>
@@ -168,7 +185,12 @@ namespace Framework
             get
             {
                 Log.Methode(cNOMCLASSE);
-                eGestDeConfigurations pGestConfig = _Corps.Piece.Modele.GestDeConfigurations;
+
+                eConfiguration pConfigActive = _Piece.Modele.GestDeConfigurations.ConfigurationActive;
+
+                if (EstDepliee && pConfigActive.Est(TypeConfig_e.cDepliee))
+                    return pConfigActive.Nom;
+
                 eGestDeProprietes pGestProps = _Corps.Dossier.GestDeProprietes;
 
                 String pNoDossier = "";
@@ -176,7 +198,11 @@ namespace Framework
                 if (pGestProps.ProprieteExiste(CONSTANTES.NO_DOSSIER))
                 {
                     pNoDossier = pGestProps.RecupererPropriete(CONSTANTES.NO_DOSSIER).Valeur;
-                    return pGestConfig.ConfigurationActive.Nom + CONSTANTES.CONFIG_DEPLIEE + pNoDossier;
+
+                    if (pConfigActive.Est(TypeConfig_e.cPliee))
+                        return pConfigActive.Nom + CONSTANTES.CONFIG_DEPLIEE + pNoDossier;
+                    else if (pConfigActive.Est(TypeConfig_e.cDepliee))
+                        return pConfigActive.ConfigurationParent.Nom + CONSTANTES.CONFIG_DEPLIEE + pNoDossier;
                 }
 
                 return "";
@@ -191,7 +217,21 @@ namespace Framework
             get
             {
                 Log.Methode(cNOMCLASSE);
-                return _Corps.Piece.Modele.GestDeConfigurations.ConfigurationAvecLeNom(NomConfigDepliee);
+                return _Piece.Modele.GestDeConfigurations.ConfigurationAvecLeNom(NomConfigDepliee);
+            }
+        }
+
+        public Boolean EstDepliee
+        {
+            get
+            {
+
+                eCorps pCorps = _Piece.CorpsDeplie();
+
+                if ((pCorps != null) && (_Piece.Modele.SwModele.Extension.IsSamePersistentID(_Corps.PID, pCorps.PID) == 1))
+                    return true;
+
+                return false;
             }
         }
 
@@ -219,6 +259,7 @@ namespace Framework
             if ((Corps != null) && Corps.EstInitialise && (Corps.TypeDeCorps == TypeCorps_e.cTole))
             {
                 _Corps = Corps;
+                _Piece = Corps.Piece;
                 _EstInitialise = true;
             }
             else
@@ -237,7 +278,7 @@ namespace Framework
         {
             Log.Methode(cNOMCLASSE);
 
-            eGestDeConfigurations pGestConfig = _Corps.Piece.Modele.GestDeConfigurations;
+            eGestDeConfigurations pGestConfig = _Piece.Modele.GestDeConfigurations;
             eConfiguration pConfigActive = pGestConfig.ConfigurationActive;
             String pNomConfigDepliee = NomConfigDepliee;
 
@@ -246,9 +287,10 @@ namespace Framework
                 if (Ecraser)
                 {
                     pGestConfig.SupprimerConfiguration(pNomConfigDepliee);
-                    _Corps.Piece.Modele.Sauver();
+                    _Piece.Modele.Sauver();
                 }
 
+                Log.Message("------------------------------> " + pNomConfigDepliee);
                 eConfiguration pConfigDepliee = ConfigurationDepliee;
 
                 if (pConfigDepliee == null)
@@ -260,10 +302,31 @@ namespace Framework
                 {
                     pConfigDepliee.GestDeProprietes.AjouterPropriete(CONSTANTES.NO_CONFIG, swCustomInfoType_e.swCustomInfoText, pConfigActive.Nom, true);
                     pConfigDepliee.RenommerEtatAffichage();
+
+                    MajConfigurationDepliee();
+
                     return pConfigDepliee;
                 }
             }
             return null;
+        }
+
+        public void MajConfigurationDepliee()
+        {
+            ConfigurationDepliee.Activer();
+            FonctionDepliee.Activer(ConfigurationDepliee, true);
+
+            foreach (eFonction sF in FonctionDepliee.ListeDesSousFonctions())
+            {
+                sF.Activer(ConfigurationDepliee);
+                if ((Regex.IsMatch(sF.Nom, CONSTANTES.LIGNES_DE_PLIAGE)) ||
+                    (Regex.IsMatch(sF.Nom, CONSTANTES.CUBE_DE_VISUALISATION)))
+                {
+                    sF.Selectionner(false);
+                    _Piece.Modele.SwModele.UnblankSketch();
+                    _Piece.Modele.EffacerLesSelections();
+                }
+            }
         }
 
         #endregion

@@ -56,6 +56,14 @@ namespace Framework
 
         #region "Propriétés"
 
+        internal Object PID
+        {
+            get
+            {
+                return _PID;
+            }
+        }
+
         /// <summary>
         /// Retourne l'objet Body2 associé.
         /// </summary>
@@ -476,7 +484,7 @@ namespace Framework
                                                                 out pWarning)
                                                                 ;
             if (Resultat)
-                return Piece.Modele.SW.Modele(NomDuFichier);
+                return Piece.Modele.SW.Modele();
 
             return null;
         }

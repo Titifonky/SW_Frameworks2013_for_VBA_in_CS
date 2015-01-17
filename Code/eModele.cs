@@ -28,6 +28,7 @@ namespace Framework
         Boolean ActiverInterfaceUtilisateur { get; set; }
         void Activer(swRebuildOnActivation_e Reconstruire = swRebuildOnActivation_e.swUserDecision);
         void Sauver();
+        Boolean SauverEnPdf3D(String Chemin);
         void Fermer();
         void Redessiner();
         void Reconstruire();
@@ -36,6 +37,7 @@ namespace Framework
         void EffacerLesSelections();
         ArrayList ListeDesFonctions(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
         eFonction DerniereFonction();
+        Boolean NomFonctionExiste(String NomFonction);
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -442,13 +444,31 @@ namespace Framework
         }
 
         /// <summary>
+        /// Sauve le modele en Pdf 3D
+        /// </summary>
+        public Boolean SauverEnPdf3D(String Chemin)
+        {
+            Log.Methode(cNOMCLASSE);
+
+            if ((TypeDuModele == TypeFichier_e.cAssemblage) || (TypeDuModele == TypeFichier_e.cPiece))
+            {
+                ExportPdfData pExportPdfData = _SW.SwSW.GetExportFileData((int)swExportDataFileType_e.swExportPdfData);
+                pExportPdfData.ExportAs3D = true;
+                pExportPdfData.ViewPdfAfterSaving = false;
+                return SwModele.Extension.SaveAs(Chemin, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, pExportPdfData, ref Erreur, ref Warning);
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Ferme le modele.
         /// </summary>
         public void Fermer()
         {
             Log.Methode(cNOMCLASSE);
 
-            _SW.SwSW.CloseDoc(SwModele.GetPathName());
+            _SW.SwSW.CloseDoc(SwModele.GetTitle());
         }
 
         /// <summary>
@@ -579,6 +599,11 @@ namespace Framework
         internal TreeControlItem GestDeFonction_NoeudRacine()
         {
             return SwModele.FeatureManager.GetFeatureTreeRootItem2((int)swFeatMgrPane_e.swFeatMgrPaneTop);
+        }
+
+        public Boolean NomFonctionExiste(String NomFonction)
+        {
+            return _SwModele.FeatureManager.IsNameUsed((int)swNameType_e.swFeatureName, NomFonction);
         }
 
         #endregion

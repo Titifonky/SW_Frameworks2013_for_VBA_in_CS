@@ -16,7 +16,7 @@ namespace Framework
         String Materiau { get; set; }
         Boolean Contient(TypeCorps_e T);
         eParametreTolerie ParametresDeTolerie { get; }
-        void NumeroterDossier();
+        void NumeroterDossier(Boolean Reinitialiser = false, Boolean Complet = false);
         ArrayList ListeDesCorps(String NomARechercher = "", TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteCache = false);
         ArrayList ListeDesDossiersDePiecesSoudees(TypeCorps_e TypeDeCorps = TypeCorps_e.cTous, Boolean PrendreEnCompteExclus = false);
         ArrayList ListeDesFonctionsDeArbre(String NomARechercher = "", String TypeDeLaFonction = "", Boolean AvecLesSousFonctions = false);
@@ -206,31 +206,69 @@ namespace Framework
         /// <summary>
         /// Ajoute un No à chaque dossier
         /// </summary>
-        public void NumeroterDossier()
+        public void NumeroterDossier(Boolean Reinitialiser = false, Boolean Complet = false)
         {
             int pNoDossierMax = 0;
 
-            foreach (eDossier pDossier in ListeDesDossiersDePiecesSoudees(TypeCorps_e.cTous, true))
+            ArrayList ListeConfigs = new ArrayList();
+
+            eConfiguration ConfCourante = _Modele.GestDeConfigurations.ConfigurationActive;
+
+            if (Complet != false)
             {
-                eGestDeProprietes pGestProps = pDossier.GestDeProprietes;
-                if (pGestProps.ProprieteExiste(CONSTANTES.NO_DOSSIER))
+                ListeConfigs = _Modele.GestDeConfigurations.ListerLesConfigs();
+            }
+            else
+            {
+                ListeConfigs.Add(_Modele.GestDeConfigurations.ConfigurationActive);
+            }
+
+            foreach (eConfiguration pConfig in ListeConfigs)
+            {
+                pConfig.Activer();
+
+                foreach (eDossier pDossier in ListeDesDossiersDePiecesSoudees(TypeCorps_e.cTous, true))
                 {
-                    ePropriete pProp = pGestProps.RecupererPropriete(CONSTANTES.NO_DOSSIER);
-                    int pNoDossier = Convert.ToInt32(pProp.Valeur);
-                    if (pNoDossier > pNoDossierMax)
-                        pNoDossierMax = pNoDossier;
+                    eGestDeProprietes pGestProps = pDossier.GestDeProprietes;
+
+                    if (Reinitialiser != false)
+                    {
+                        pGestProps.SupprimerPropriete(CONSTANTES.NO_DOSSIER);
+                    }
+                    else if (pGestProps.ProprieteExiste(CONSTANTES.NO_DOSSIER))
+                    {
+                        ePropriete pProp = pGestProps.RecupererPropriete(CONSTANTES.NO_DOSSIER);
+                        int pNoDossier = Convert.ToInt32(pProp.Valeur);
+                        if (pNoDossier > pNoDossierMax)
+                            pNoDossierMax = pNoDossier;
+                    }
                 }
             }
 
-            foreach (eDossier pDossier in ListeDesDossiersDePiecesSoudees(TypeCorps_e.cTous, true))
+            foreach (eConfiguration pConfig in ListeConfigs)
             {
-                eGestDeProprietes pGestProps = pDossier.GestDeProprietes;
-                if (!pGestProps.ProprieteExiste(CONSTANTES.NO_DOSSIER))
+                pConfig.Activer();
+
+                foreach (eDossier pDossier in ListeDesDossiersDePiecesSoudees(TypeCorps_e.cTous, true))
                 {
-                    pNoDossierMax++;
-                    pGestProps.AjouterPropriete(CONSTANTES.NO_DOSSIER, swCustomInfoType_e.swCustomInfoText, pNoDossierMax.ToString());
+                    eGestDeProprietes pGestProps = pDossier.GestDeProprietes;
+                    if (!pGestProps.ProprieteExiste(CONSTANTES.NO_DOSSIER))
+                    {
+                        pNoDossierMax++;
+                        pGestProps.AjouterPropriete(CONSTANTES.NO_DOSSIER, swCustomInfoType_e.swCustomInfoText, pNoDossierMax.ToString());
+                    }
+                    else if (Reinitialiser != false)
+                    {
+                        pNoDossierMax++;
+
+                        ePropriete pProp = pGestProps.RecupererPropriete(CONSTANTES.NO_DOSSIER);
+                        pProp.Expression = pNoDossierMax.ToString();
+                    }
+                        
                 }
             }
+
+            ConfCourante.Activer();
         }
 
         /// <summary>
@@ -345,6 +383,16 @@ namespace Framework
             ScannerFonctionsFeatureManager(Modele.GestDeFonction_NoeudRacine(), pListeFonction, NomARechercher, TypeDeLaFonction, AvecLesSousFonctions);
 
             return pListeFonction;
+        }
+
+        internal eCorps CorpsDeplie()
+        {
+            ArrayList pListe = ListeDesCorps(CONSTANTES.NOM_CORPS_DEPLIEE);
+            if (pListe.Count == 0)
+                return null;
+
+            eCorps pCorps = (eCorps)pListe[0];
+            return pCorps;
         }
 
         #endregion

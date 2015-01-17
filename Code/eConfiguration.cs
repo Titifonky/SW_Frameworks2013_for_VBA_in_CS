@@ -28,8 +28,8 @@ namespace Framework
         Boolean Supprimer();
         ArrayList ConfigurationsEnfants(String NomConfiguration = "", TypeConfig_e TypeDeLaConfig = TypeConfig_e.cTous);
         eConfiguration AjouterUneConfigurationDerivee(String NomConfigDerivee);
-        void RenommerEtatAffichage(Boolean Ecraser = false);
-        eCorps CorpsDeplie();
+        void RenommerEtatAffichage(Boolean Ecraser = false, String NouveauNom = "");
+        eTole ToleDeplie();
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -445,11 +445,14 @@ namespace Framework
         /// <summary>
         /// Renomme les états d'affichages associés à la configuration
         /// </summary>
-        public void RenommerEtatAffichage(Boolean Ecraser = false)
+        public void RenommerEtatAffichage(Boolean Ecraser = false, String NouveauNom = "")
         {
             Log.Methode(cNOMCLASSE);
 
             int Index = 1;
+
+            if (String.IsNullOrEmpty(NouveauNom))
+                NouveauNom = Nom;
 
             if (_SwConfiguration.GetDisplayStatesCount() > 0)
             {
@@ -457,10 +460,10 @@ namespace Framework
                 {
                     if (Regex.IsMatch(pNomEtatAffichage, "^" + CONSTANTES.ETAT_D_AFFICHAGE) || Ecraser)
                     {
-                        String NomTmp = Nom;
+                        String NomTmp = NouveauNom;
                         if (!_SwConfiguration.RenameDisplayState(pNomEtatAffichage, NomTmp))
                         {
-                            NomTmp = Nom + "_" + Index.ToString();
+                            NomTmp = NouveauNom + "_" + Index.ToString();
                             Index++;
                         }
                     }
@@ -472,7 +475,7 @@ namespace Framework
         /// Renvoi le corps déplié d'une configuration dépliée
         /// </summary>
         /// <returns></returns>
-        public eCorps CorpsDeplie()
+        public eTole ToleDeplie()
         {
             // Si c'est une configuration dépliée
             if (Est(TypeConfig_e.cDepliee))
@@ -480,7 +483,12 @@ namespace Framework
                 Activer();
                 // On recherche le corps déplié
                 ArrayList pListeCorps = Modele.Piece.ListeDesCorps(CONSTANTES.NOM_CORPS_DEPLIEE);
-                return (eCorps)pListeCorps[0];
+
+                if (pListeCorps.Count > 0)
+                {
+                    eTole pTole = ((eCorps)pListeCorps[0]).Tole;
+                    return pTole;
+                }
             }
 
             return null;

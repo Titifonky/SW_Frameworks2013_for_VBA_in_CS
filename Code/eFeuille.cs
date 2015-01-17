@@ -28,7 +28,7 @@ namespace Framework
         void ZoomEtendu();
         void AjusterAutourDesVues();
         void Redimensionner(Double Largeur, Double Hauteur);
-        eVue CreerVueToleDvp(ePiece Piece, eConfiguration Configuration, Boolean AfficherLesLignesDePliage);
+        eVue CreerVueToleDvp(eTole Tole, Boolean AfficherLesLignesDePliage);
         void ExporterEn(Extension_e TypeExport, String CheminDossier, String NomDuFichierAlternatif = "");
         ArrayList ListeDesVues(String NomARechercher = "");
         void MettreEnPagePourImpression(swPageSetupDrawingColor_e Couleur = swPageSetupDrawingColor_e.swPageSetup_AutomaticDrawingColor, Boolean HauteQualite = false);
@@ -424,15 +424,18 @@ namespace Framework
         /// <param name="Piece"></param>
         /// <param name="Configuration"></param>
         /// <returns></returns>
-        public eVue CreerVueToleDvp(ePiece Piece, eConfiguration Configuration, Boolean AfficherLesLignesDePliage)
+        public eVue CreerVueToleDvp(eTole Tole, Boolean AfficherLesLignesDePliage)
         {
-            Piece.Modele.GestDeConfigurations.LierLesAffichagesAuxConfigurations = true;
+            ePiece pPiece = Tole.Corps.Piece;
+            eConfiguration pConfiguration = Tole.ConfigurationDepliee;
+
+            pPiece.Modele.GestDeConfigurations.LierLesAffichagesAuxConfigurations = true;
             eVue pVue = new eVue();
             View pSwVue = null;
-            Configuration.Activer();
+            pConfiguration.Activer();
 
             // Si des corps autre que la tole dépliée sont encore visible dans la config, on les cache et on recontruit tout
-            ArrayList pListeCorps = Piece.ListeDesCorps();
+            ArrayList pListeCorps = pPiece.ListeDesCorps();
             foreach (eCorps pCorps in pListeCorps)
             {
                 if (pCorps.Nom == CONSTANTES.NOM_CORPS_DEPLIEE)
@@ -440,15 +443,19 @@ namespace Framework
                 else
                     pCorps.Visible = false;
             }
+
             if (pListeCorps.Count > 0)
-                Piece.Modele.ForcerAToutReconstruire();
+                pPiece.Modele.ForcerAToutReconstruire();
 
             _Dessin.Modele.Activer();
-            pSwVue = _Dessin.SwDessin.CreateFlatPatternViewFromModelView3(Piece.Modele.FichierSw.Chemin, Configuration.Nom, 0, 0, 0, AfficherLesLignesDePliage, false);
+            pSwVue = _Dessin.SwDessin.CreateFlatPatternViewFromModelView3(pPiece.Modele.FichierSw.Chemin, pConfiguration.Nom, 0, 0, 0, !AfficherLesLignesDePliage, false);
 
             if (pVue.Init(pSwVue, this))
             {
                 Log.Message("Vue dvp crée");
+
+                pVue.AfficherLignesDePliage = AfficherLesLignesDePliage;
+
                 return pVue;
             }
 

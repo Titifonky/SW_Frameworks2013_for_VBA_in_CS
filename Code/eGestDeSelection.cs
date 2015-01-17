@@ -286,17 +286,19 @@ namespace Framework
                 return null;
 
             Component2 pSwComposant = _SwGestDeSelection.GetSelectedObjectsComponent4(Index, Marque);
-
+            Log.Message("OKKKKKK");
             // Si le composant racine est sélectionné et que l'on est dans un assemblage, rien n'est renvoyé.
             // Donc on le récupère.
             if ((pSwComposant == null) && (Modele.TypeDuModele == TypeFichier_e.cAssemblage))
+            {
+                Log.Message("OKKKKKK222222222222222");
                 pSwComposant = _SwGestDeSelection.GetSelectedObject6(Index, Marque);
-
-            if ((pSwComposant == null) && (Modele.TypeDuModele == TypeFichier_e.cPiece))
+                Log.Message("OKKKKKK3333333333333333");
+            }
+            else if ((pSwComposant == null) && (Modele.TypeDuModele == TypeFichier_e.cPiece))
                 pSwComposant = Modele.Composant.SwComposant;
-
             // Si c'est un dessin, pas de composant
-            if ((pSwComposant == null) && (Modele.TypeDuModele == TypeFichier_e.cDessin))
+            else if ((pSwComposant == null) && (Modele.TypeDuModele == TypeFichier_e.cDessin))
                 return null;
 
             if (pSwComposant == null)

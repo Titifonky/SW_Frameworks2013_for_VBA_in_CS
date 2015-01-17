@@ -209,6 +209,7 @@ namespace Framework
                 Log.Message("Document actif");
                 ModelDoc2 pModeleActif = _SwSW.ActiveDoc;
                 pModele.Init(pModeleActif, this);
+                pModele.ReinitialiserComposant();
             }
             else
             {

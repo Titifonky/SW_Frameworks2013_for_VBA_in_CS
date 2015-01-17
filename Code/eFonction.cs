@@ -468,7 +468,6 @@ namespace Framework
                 pSwSousFonction = pSwSousFonction.GetNextSubFeature();
             }
 
-
             return pListeFonctions;
 
         }
